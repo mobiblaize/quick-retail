@@ -38,7 +38,7 @@ const FormSelect = ({
         <label
           style={{ color: (error && "#D42620") || color }}
           className={`${
-            labelPosition === "flex" ? "whitespace-nowrap" : "mb-2 block"
+            labelPosition === "flex" ? "whitespace-nowrap" : "block"
           } text-${fontSize} font-normal`}
         >
           {label}{" "}

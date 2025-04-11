@@ -74,6 +74,12 @@ export enum ReturnsStep {
   SEND_MAIL = "SEND_MAIL",
 }
 
+export enum StoreOverviewStep {
+  STORE_OVERVIEW = "STORE_OVERVIEW",
+  ORDER_DETAILS = "ORDER_DETAILS",
+  VIEW_PRODUCT = "VIEW_PRODUCT",
+}
+
 export const {
   SlideProvider: OrderCreationProvider,
   useSlideContext: useOrderCreation,
@@ -86,4 +92,11 @@ export const {
 export const { SlideProvider: ReturnsProvider, useSlideContext: useReturns } =
   createSlideProvider([ReturnsStep.VIEW_RETURNS, ReturnsStep.SEND_MAIL]);
 
-  
+export const {
+  SlideProvider: StoreOrderProvider,
+  useSlideContext: useStoreOrder,
+} = createSlideProvider([
+  StoreOverviewStep.STORE_OVERVIEW,
+  StoreOverviewStep.ORDER_DETAILS,
+  StoreOverviewStep.VIEW_PRODUCT,
+]);
