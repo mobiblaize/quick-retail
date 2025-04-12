@@ -55,6 +55,8 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
                   label={item.label}
                   inactiveIcon={item.inactiveIcon}
                   activeIcon={item.activeIcon}
+                  hasChildren={item.hasChildren}
+                  children={item.children}
                 />
               ))}
             </List>

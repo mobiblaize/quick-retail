@@ -31,8 +31,9 @@ interface NavItem {
   href: string;
   inactiveIcon?: React.ElementType;
   activeIcon?: React.ElementType;
+  hasChildren?: boolean;
+  children?: { label: string; href: string }[];
 }
-
 export const PointOfSale: NavItem[] = [
   {
     label: "Dashboard",
@@ -81,6 +82,11 @@ export const PointOfSale: NavItem[] = [
     href: ROUTES.happyTime,
     inactiveIcon: InActiveHappyTime,
     activeIcon: ActiveHappyTime,
+    hasChildren: true,
+    children: [
+      { label: "Discounts", href: `${ROUTES.happyTime}` },
+      { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
+    ],
   },
   {
     label: "Transaction",
