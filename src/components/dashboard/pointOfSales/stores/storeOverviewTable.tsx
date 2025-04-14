@@ -1,15 +1,23 @@
+import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { TableRowData } from "../../../../types";
-import { Text } from "@mantine/core";
+import { Text, Switch } from "@mantine/core";
 import TanTable from "../../../General/table";
-import {
-  storeOverviewData,
-  storeTargetOrder,
-} from "../../../../utils/mockData";
+import { storeOverviewData as initialData, storeTargetOrder } from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { PaidDot, UnpaidDot } from "../../../../assets/svg";
+import { TableRowData } from "../../../../types";
 
 const StoreOverviewTable = () => {
+  const [tableData, setTableData] = useState(initialData);
+
+  const handleToggle = (index: number) => {
+    const updatedData = [...tableData];
+    const currentStatus = updatedData[index].status;
+    updatedData[index].status = currentStatus === "Active" ? "Inactive" : "Active";
+    setTableData(updatedData);
+  };
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Store Name",
@@ -31,10 +39,10 @@ const StoreOverviewTable = () => {
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {props.row.original.storeSizeA}
+            GLA: {props.row.original.storeSizeA}
           </Text>
           <Text fw={400} className="text-sm">
-            Store ID: {props.row.original.storeSizeA}
+            GSA: {props.row.original.storeSizeB}
           </Text>
         </div>
       ),
@@ -47,20 +55,49 @@ const StoreOverviewTable = () => {
     {
       header: "Date Created",
       accessorKey: "dateCreated",
-      cell: ({ row }) => (
-        <Text c={"black"} fw={500} className="text-sm font-medium">
-          {row.original.dateCreated}
+      cell: (props) => (
+        <Text c="black" fw={500} className="text-sm font-medium">
+          {props.row.original.dateCreated}
         </Text>
       ),
     },
     {
       header: "Total Customers",
-      accessorKey: "totalCustomers",
-      cell: ({ row }) => (
-        <Text c={"black"} fw={500} className="text-sm font-medium">
-          {row.original.dateCreated}
+      accessorKey: "totalCustomer",
+      cell: (props) => (
+        <Text c="black" fw={500} className="text-sm font-medium">
+          {props.row.original.totalCustomer}
         </Text>
       ),
+    },
+    {
+      header: "Status",
+      accessorKey: "status",
+      cell: (props) => {
+        const rowIndex = props.row.index;
+        const status = props.row.original.status;
+
+        return (
+          <div className="flex items-center gap-2">
+            <div
+              className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+                status === "Active"
+                  ? "bg-[#ECFDF3] text-[#027A48]"
+                  : "bg-[#F2F4F7] text-[#667085]"
+              }`}
+            >
+              {status === "Active" ? <PaidDot /> : <UnpaidDot />}
+              <span className="ml-2">{status}</span>
+            </div>
+            <Switch
+              checked={status === "Active"}
+              onChange={() => handleToggle(rowIndex)}
+              color="orange"
+              size="md"
+            />
+          </div>
+        );
+      },
     },
     {
       header: "",
@@ -74,12 +111,13 @@ const StoreOverviewTable = () => {
       ),
     },
   ];
+
   return (
     <div>
       <main className="w-full h-auto py-6 rounded-lg bg-white">
         <TanTable
           columnData={columns}
-          data={storeOverviewData}
+          data={tableData}
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"

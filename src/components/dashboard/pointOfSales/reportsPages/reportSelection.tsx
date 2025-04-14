@@ -16,7 +16,7 @@ const ReportSelection = () => {
           <button
             key={report.path}
             onClick={() =>
-                navigate("/dashboard/reportsPages/report-date-input", {
+                navigate("/dashboard/reports/report-date-input", {
                   state: {
                     reportType: report.path,
                     reportLabel: report.label,

@@ -3,7 +3,7 @@ import LandingPage from "./pages/pointOfSales/landingPage";
 import DashboardLayout from "./layout/layout";
 import ProductManagementPage from "./pages/pointOfSales/productManagementPage";
 import SalesProcessingPage from "./pages/pointOfSales/saleProcessing/salesProcessingPage";
-import CategoriesPage from "./pages/pointOfSales/categoriesPage";
+import CategoriesPage from "./pages/pointOfSales/categories/categoriesPage";
 import StoresPage from "./pages/pointOfSales/stores/storesPage";
 import ReportsPage from "./pages/pointOfSales/reportsPage";
 import CustomerPage from "./pages/pointOfSales/customerPage";
@@ -27,6 +27,11 @@ import ProductReportPage from "./pages/pointOfSales/productReportPage";
 import View from "./pages/pointOfSales/stores/view";
 import RetunsRefundsReportPage from "./pages/pointOfSales/returnsRefundsReportPage";
 import StoreTarget from "./pages/pointOfSales/stores/storeTarget";
+import SubCategories from "./pages/pointOfSales/categories/subCategories";
+import ViewCollection from "./pages/pointOfSales/categories/viewCollection";
+import BillingInformation from "./pages/pointOfSales/stores/billingInformation";
+import AboutProduct from "./pages/pointOfSales/stores/aboutProduct";
+import ViewOrderPage from "./pages/pointOfSales/saleProcessing/viewOrderPage";
 
 export default function App() {
   return (
@@ -43,6 +48,7 @@ export default function App() {
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
+          <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
           <Route
             path={ROUTES.inventory}
@@ -51,6 +57,16 @@ export default function App() {
           <Route path={ROUTES.updateInventory} element={<UpdateInventory />} />
           <Route path={ROUTES.triggerOrder} element={<TriggerOrder />} />
           <Route path={ROUTES.category} element={<CategoriesPage />} />
+          <Route path={ROUTES.subCategory} element={<SubCategories />} />
+          <Route
+            path={ROUTES.categoryCollection}
+            element={<ViewCollection />}
+          />
+          <Route
+            path={ROUTES.storeBillingInformation}
+            element={<BillingInformation />}
+          />
+          <Route path={ROUTES.aboutProduct} element={<AboutProduct />} />
           <Route path={ROUTES.returns} element={<ReturnsPage />} />
           <Route path={ROUTES.viewReturns} element={<ViewReturnsPage />} />
           <Route path={ROUTES.customer} element={<CustomerPage />} />

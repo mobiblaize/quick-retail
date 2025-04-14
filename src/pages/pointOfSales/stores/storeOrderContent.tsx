@@ -1,5 +1,5 @@
 import React from "react";
-import { Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { motion, AnimatePresence } from "framer-motion";
@@ -9,9 +9,9 @@ import {
   StoreOverviewStep,
   useStoreOrder,
 } from "../../../components/General/orderContext/orderCreationContext";
-import StoreOverview from "../../../components/dashboard/pointOfSales/stores/storeOverview";
 import OrderDetails from "../../../components/dashboard/pointOfSales/returnsRefunds/orderDetails";
 import ViewProduct from "../../../components/General/orderContext/viewProduct";
+import AllOrders from "./allOrders";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -73,52 +73,20 @@ const StoreOrderContent: React.FC = () => {
         </div>
       </div>,
       <div key="2">
-        <Text fw={500} size="xl" c="black">
-          Ikeja City Mall
-        </Text>
+        <div className="flex justify-between items-center">
+          <Text fw={500} size="xl" c="black">
+            Ikeja City Mall
+          </Text>
+          <div className="flex gap-4">
+            <Button variant="filled-primary">Edit Store</Button>
+            <Button variant="outline-primary">View Store</Button>
+          </div>
+        </div>
       </div>,
     ];
 
     return subHeaders;
   };
-
-  //   const getBottomButtons = () => {
-  //     switch (currentStep) {
-  //       case StoreOverviewStep.STORE_OVERVIEW:
-  //         return (
-  //           <div key="search-product-buttons" className="flex gap-4 justify-end">
-  //             <Button variant="outline-primary" onClick={() => navigate(-1)}>
-  //               Cancel
-  //             </Button>
-  //             <Button variant="filled-primary" onClick={nextStep}>
-  //               Confirm Order
-  //             </Button>
-  //           </div>
-  //         );
-  //       case StoreOverviewStep.ORDER_DETAILS:
-  //         return (
-  //           <div key="confirm-payment-buttons" className="flex gap-4 justify-end">
-  //             <Button variant="outline-primary" onClick={prevStep}>
-  //               Save to Draft
-  //             </Button>
-  //             <Button variant="filled-primary" onClick={nextStep}>
-  //               Confirm Payment
-  //             </Button>
-  //           </div>
-  //         );
-  //       case StoreOverviewStep.VIEW_PRODUCT:
-  //         return (
-  //           <div
-  //             key="customer-receipt-buttons"
-  //             className="flex gap-4 justify-end"
-  //           >
-  //             <Button variant="filled-primary">Download Receipt</Button>
-  //           </div>
-  //         );
-  //       default:
-  //         return null;
-  //     }
-  //   };
 
   const renderStepContent = () => {
     switch (currentStep) {
@@ -133,7 +101,7 @@ const StoreOrderContent: React.FC = () => {
             exit="exit"
             className="flex flex-col gap-4"
           >
-            <StoreOverview />
+            <AllOrders />
           </motion.div>
         );
       case StoreOverviewStep.ORDER_DETAILS:

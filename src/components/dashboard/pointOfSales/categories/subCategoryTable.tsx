@@ -2,18 +2,22 @@ import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
-import { allCategories } from "../../../../utils/mockData";
+import { useState } from "react";
+import DeleteSubCategory from "./modals/deleteSubCategory";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { subCategoriesData } from "../../../../utils/mockData";
 
-const CategoriesTable = () => {
+const SubCategoryTable = () => {
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+
   const columns: ColumnDef<TableRowData>[] = [
     {
-      header: "Category",
-      accessorKey: "category",
+      header: "Division",
+      accessorKey: "division",
       cell: ({ row }) => (
-        <Text c="textSecondary.9" fw={500}>
-          {row.original.category}
+        <Text fw={700} c="#101928">
+          {row.original.division}
         </Text>
       ),
     },
@@ -22,26 +26,28 @@ const CategoriesTable = () => {
       accessorKey: "totalProduct",
     },
     {
-      header: "Total Amount",
-      accessorKey: "totalAmount",
-      cell: ({ row }) => (
-        <span className=" text-gray-900 text-sm font-medium">
-          {row.original.totalAmount}
-        </span>
-      ),
-    },
-    {
       header: "Date Modified",
       accessorKey: "dateModified",
       cell: ({ row }) => <Text>{row.original.dateModified}</Text>,
     },
     {
-      header: "Status",
+      header: "",
       accessorKey: "action",
       cell: () => (
-        <Link to={ROUTES.subCategory}>
+        <button onClick={() => setIsDeleteOpen(true)}>
+          <Text fw={600} c="#1D2939" className="cursor-pointer">
+            Delete
+          </Text>
+        </button>
+      ),
+    },
+    {
+      header: "",
+      accessorKey: "action",
+      cell: () => (
+        <Link to={ROUTES.categoryCollection}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-            View Order
+            View
           </Text>
         </Link>
       ),
@@ -52,7 +58,7 @@ const CategoriesTable = () => {
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={allCategories}
+        data={subCategoriesData}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -60,16 +66,20 @@ const CategoriesTable = () => {
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              All Category
+              All Sub-categories
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{allCategories.length}</Text>
+              <Text c="customPrimary.10">{subCategoriesData.length}</Text>
             </div>
           </div>
         }
+      />
+      <DeleteSubCategory
+        opened={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
       />
     </main>
   );
 };
 
-export default CategoriesTable;
+export default SubCategoryTable;

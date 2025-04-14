@@ -14,7 +14,7 @@ const ReportDateSelect = () => {
     if (!reportType || !startDate || !endDate) return;
 
     navigate(
-      `/dashboard/reportsPages/${reportType}?from=${startDate}&to=${endDate}`
+      `/dashboard/reports/${reportType}?from=${startDate}&to=${endDate}`
     );
   };
 
