@@ -1,11 +1,15 @@
 import { Button, Text } from "@mantine/core";
-import { ChevronRight } from "lucide-react";
+import { ChevronRight, Plus } from "lucide-react";
 import PageContainer from "../../../layout/pageContainer";
 import { Link } from "react-router";
 import { ROUTES } from "../../../constants/routes";
 import StoreTargetTable from "../../../components/dashboard/pointOfSales/stores/storeTargetTable";
+import { useState } from "react";
+import SetStoreTarget from "../../../components/dashboard/pointOfSales/stores/modals/setStoreTarget";
 
 const StoresPage = () => {
+  const [isSetStoreOpen, setIsSetStoreOpen] = useState(false);
+
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
@@ -17,9 +21,10 @@ const StoresPage = () => {
             variant="filled-primary"
             className="flex gap-1.5"
             style={{ padding: "0.8rem 1rem" }}
+            onClick={() => setIsSetStoreOpen(true)}
           >
             Set New Store Target
-            <ChevronRight />
+            <Plus />
           </Button>
           <Link to={ROUTES.storeTarget}>
             <Button
@@ -39,6 +44,10 @@ const StoresPage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       <StoreTargetTable />
+      <SetStoreTarget
+        opened={isSetStoreOpen}
+        onClose={() => setIsSetStoreOpen(false)}
+      />
     </PageContainer>
   );
 };

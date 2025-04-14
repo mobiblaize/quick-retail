@@ -5,8 +5,12 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../constants/routes";
 import AnalysisOverview from "../../../components/dashboard/pointOfSales/stores/analysisOverview";
 import StoreOverviewTable from "../../../components/dashboard/pointOfSales/stores/storeOverviewTable";
+import AddNewStore from "../../../components/dashboard/pointOfSales/stores/modals/addNewStore";
+import { useState } from "react";
 
 const StoreTarget = () => {
+  const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
+  
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
@@ -18,6 +22,7 @@ const StoreTarget = () => {
             variant="filled-primary"
             className="flex gap-1.5"
             style={{ padding: "0.8rem 1rem" }}
+            onClick={() => setIsAddNewStoreOpen(true)}
           >
             Add New Store
             <Plus />
@@ -41,6 +46,10 @@ const StoreTarget = () => {
     <PageContainer subHeaders={subHeaders}>
       <AnalysisOverview />
       <StoreOverviewTable />
+      <AddNewStore
+        opened={isAddNewStoreOpen}
+        onClose={() => setIsAddNewStoreOpen(false)}
+      />
     </PageContainer>
   );
 };

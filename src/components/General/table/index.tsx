@@ -134,18 +134,13 @@ const TanTable: FC<TanTableProps> = ({
           style={{
             color: isPageActive(i, currentPage) ? "black" : "#98A2B3",
             backgroundColor: "transparent",
-            borderRadius: "0.375rem",
-            padding: "0.25rem 1rem",
-            border: isPageActive(i, currentPage)
-              ? "1px solid #F56630"
-              : "1px solid transparent",
             display: "flex",
             alignItems: "center",
-            fontSize: "1rem",
+            fontSize: "1.2rem",
             fontWeight: "600",
             cursor: "pointer",
-            marginLeft: "0.25rem",
-            marginRight: "0.25rem",
+            marginLeft: "0.2rem",
+            marginRight: "0.2rem",
           }}
         >
           {i + 1}

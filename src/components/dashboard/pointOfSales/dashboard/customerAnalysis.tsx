@@ -3,6 +3,8 @@ import DateFilterMenu from "../../../General/filterMenu";
 import { salesCustomer } from "../../../../utils/mockData";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
+import { Link } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
 
 const CustomerAnalysis = () => {
   return (
@@ -69,14 +71,16 @@ const CustomerAnalysis = () => {
             </div>
           ))}
         </div>
-        <Text
-          className="text-center cursor-pointer"
-          c="customPrimary.10"
-          fw={600}
-          mt={32}
-        >
-          View All
-        </Text>
+        <Link to={ROUTES.customer}>
+          <Text
+            className="text-center cursor-pointer"
+            c="customPrimary.10"
+            fw={600}
+            mt={32}
+          >
+            View All
+          </Text>
+        </Link>
       </div>
     </main>
   );

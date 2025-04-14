@@ -3,10 +3,12 @@ import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { storeTargetOrder } from "../../../../utils/mockData";
-import { Link } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
+import { useState } from "react";
+import ViewStoreTarget from "./modals/viewStoreTarget";
 
 const StoreTargetTable = () => {
+  const [isViewTargetOpen, setIsViewTargetOpen] = useState(false);
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Customer Name",
@@ -45,11 +47,11 @@ const StoreTargetTable = () => {
       header: "",
       accessorKey: "action",
       cell: () => (
-        <Link to={ROUTES.viewStore}>
+        <button onClick={() => setIsViewTargetOpen(true)}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View
           </Text>
-        </Link>
+        </button>
       ),
     },
   ];
@@ -75,6 +77,10 @@ const StoreTargetTable = () => {
           }
         />
       </main>
+      <ViewStoreTarget
+        opened={isViewTargetOpen}
+        onClose={() => setIsViewTargetOpen(false)}
+      />
     </div>
   );
 };
