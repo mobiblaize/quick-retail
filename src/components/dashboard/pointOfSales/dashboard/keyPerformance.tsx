@@ -47,14 +47,15 @@ const KeyPerformance = () => {
       perce: "8,000",
     },
   ];
+
   return (
-    <main className="w-full h-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex mb-8 justify-between items-center">
+    <main className="w-full h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
+      <header className="flex flex-row justify-between items-start md:mb-3 mb-8 gap-4">
         <div className="flex flex-col">
-          <Text size="xl" fw={600} c="textSecondary.9">
+          <Text size="lg" fw={600} c="textSecondary.9">
             Key Performance Indicator
           </Text>
-          <span className="text-gray-400 font-normal">
+          <span className="text-gray-400 font-normal text-sm">
             An Overview of sales made
           </span>
         </div>
@@ -62,38 +63,41 @@ const KeyPerformance = () => {
           <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
-            buttonSize="md"
+            buttonSize="sm"
+            showIconOnly
           />
         </Group>
       </header>
+
       <section>
-        <div className="grid gap-6 grid-cols-3">
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-3 gap-4">
           {performance.map((data, index) => (
             <div
               key={index}
               className="rounded-lg gap-2 p-3.5 bg-[#FFECE5] flex flex-col"
             >
-              <Text>{data.label}</Text>
-              <Text size="lg" fw={600} c="textSecondary.9">
+              <Text className="text-sm sm:text-md">{data.label}</Text>
+              <Text className="text-md sm:text-lg" fw={600} c="textSecondary.9">
                 {data.perce}
               </Text>
             </div>
           ))}
         </div>
 
-        <div className="mt-2.5">
-          <Text size="lg" fw={700} c="textSecondary.7">
-            Store Traget
+        <div className="mt-5">
+          <Text className="text-md sm:text-lg" fw={700} c="textSecondary.7">
+            Store Target
           </Text>
         </div>
-        <div className="grid gap-4 grid-cols-4">
+
+        <div className="grid grid-cols-1 xs:grid-cols-2 md:grid-cols-4 gap-4">
           {storeTarget.map((data, index) => (
             <div
               key={index}
               className="rounded-lg gap-2 p-3.5 bg-[#FFECE5] flex flex-col"
             >
-              <Text>{data.label}</Text>
-              <Text size="lg" fw={600} c="textSecondary.9">
+              <Text className="text-sm sm:text-md">{data.label}</Text>
+              <Text className="text-md sm:text-lg" fw={600} c="textSecondary.9">
                 {data.perce}
               </Text>
             </div>

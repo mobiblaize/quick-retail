@@ -9,7 +9,7 @@ const InformationTab = () => {
       <Text>You're viewing product information below</Text>
       <hr className="text-gray-200 mt-3" />
       <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 max-w-6xl">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-x-8 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Customer Name</Text>
             <Text size="lg" c={"black"} fw={"400"}>
@@ -36,7 +36,7 @@ const InformationTab = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-8 mt-6 max-w-6xl">
+        <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-x-8 mt-4 md:mt-6 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>State</Text>
             <Text size="lg" c={"black"} fw={"400"}>

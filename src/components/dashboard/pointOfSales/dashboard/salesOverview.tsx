@@ -35,8 +35,8 @@ const SalesOverview = () => {
   }, []);
 
   return (
-    <main className="w-full h-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center mb-6">
+    <main className="w-full h-auto px-3 sm:px-6 py-4 sm:py-8 rounded-lg bg-white">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4 sm:mb-6 gap-3 sm:gap-0">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
             Sales overview
@@ -45,30 +45,35 @@ const SalesOverview = () => {
             An overview of sales made
           </Text>
         </div>
-        <Group>
+        <Group className="w-full sm:w-auto">
           <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
+            showIconOnly
           />
         </Group>
       </header>
 
-      <div className="mt-4">
+      <div className="mt-2 sm:mt-4">
         <div className="flex items-center mb-2">
           <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
           <Text size="sm">Revenue</Text>
         </div>
 
-        <div className="mt-4">
-          <LineChart
-            data={chartData}
-            lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
-            height={280}
-            yAxisFormatter={(value) => `${value}M`}
-            showLegend={false}
-            highlightedPoint={highlightedPoint}
-          />
+        <div className="mt-2 sm:mt-4 overflow-x-auto">
+          <div className="min-w-[320px] w-full">
+            <LineChart
+              data={chartData}
+              lines={[
+                { dataKey: "revenue", color: "#F16722", name: "Revenue" },
+              ]}
+              height={220}
+              yAxisFormatter={(value) => `${value}M`}
+              showLegend={false}
+              highlightedPoint={highlightedPoint}
+            />
+          </div>
         </div>
       </div>
     </main>

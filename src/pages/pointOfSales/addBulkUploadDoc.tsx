@@ -3,50 +3,50 @@ import csv from "../../assets/images/excelimg.png";
 import { CheckCircle, FileText, UploadCloud } from "lucide-react";
 
 const AddBulkUploadDoc = () => {
-    const fileInputRef = useRef<HTMLInputElement>(null);
-    const [file, setFile] = useState<File | null>(null);
-    const [error, setError] = useState<string | null>(null);
-    const [uploadProgress, setUploadProgress] = useState<number>(0);
-  
-    const simulateUpload = () => {
-      let progress = 0;
-      const interval = setInterval(() => {
-        progress += 10;
-        setUploadProgress(progress);
-        if (progress >= 100) clearInterval(interval);
-      }, 100);
-    };
-  
-    const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-      const selectedFile = event.target.files?.[0];
-      if (!selectedFile) return;
-  
-      const allowedTypes = [
-        "text/csv",
-        "application/vnd.ms-excel",
-        "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
-      ];
-      if (!allowedTypes.includes(selectedFile.type)) {
-        setError("Only CSV or XLSX files are allowed.");
-        setFile(null);
-        return;
-      }
-  
-      if (selectedFile.size > 4 * 1024 * 1024) {
-        setError("File size must be under 4MB.");
-        setFile(null);
-        return;
-      }
-  
-      setError(null);
-      setFile(selectedFile);
-      setUploadProgress(0);
-      simulateUpload();
-    };
-  
-    const handleClickUpload = () => {
-      fileInputRef.current?.click();
-    };
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState<string | null>(null);
+  const [uploadProgress, setUploadProgress] = useState<number>(0);
+
+  const simulateUpload = () => {
+    let progress = 0;
+    const interval = setInterval(() => {
+      progress += 10;
+      setUploadProgress(progress);
+      if (progress >= 100) clearInterval(interval);
+    }, 100);
+  };
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const selectedFile = event.target.files?.[0];
+    if (!selectedFile) return;
+
+    const allowedTypes = [
+      "text/csv",
+      "application/vnd.ms-excel",
+      "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+    ];
+    if (!allowedTypes.includes(selectedFile.type)) {
+      setError("Only CSV or XLSX files are allowed.");
+      setFile(null);
+      return;
+    }
+
+    if (selectedFile.size > 4 * 1024 * 1024) {
+      setError("File size must be under 4MB.");
+      setFile(null);
+      return;
+    }
+
+    setError(null);
+    setFile(selectedFile);
+    setUploadProgress(0);
+    simulateUpload();
+  };
+
+  const handleClickUpload = () => {
+    fileInputRef.current?.click();
+  };
 
   return (
     <div>
@@ -55,7 +55,6 @@ const AddBulkUploadDoc = () => {
           FOLLOW THE INSTRUCTIONS TO UPLOAD BULK PRODUCTS
         </h3>
 
-        {/* CSV Format Sample Image */}
         <div className="border border-gray-300 rounded-md overflow-hidden mb-6">
           <img
             src={csv}
@@ -66,7 +65,6 @@ const AddBulkUploadDoc = () => {
           />
         </div>
 
-        {/* Instructions */}
         <ul className="text-gray-700 text-sm space-y-3 list-disc pl-5">
           <li>
             Download the product template CSV file{" "}
@@ -92,7 +90,7 @@ const AddBulkUploadDoc = () => {
 
         {!file ? (
           <div
-            className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center text-center cursor-pointer transition hover:bg-gray-50 w-[20%]"
+            className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center text-center cursor-pointer transition hover:bg-gray-50 w-full md:w-[20%]"
             onClick={handleClickUpload}
           >
             <UploadCloud className="h-8 w-8 text-gray-400 mb-2" />

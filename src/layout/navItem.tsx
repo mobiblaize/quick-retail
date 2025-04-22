@@ -10,6 +10,8 @@ interface NavItemProps {
   href: string;
   hasChildren?: boolean;
   children?: { label: string; href: string }[];
+  active?: boolean;
+  onNavigate?: () => void;
 }
 
 const NavItem = ({
@@ -19,6 +21,7 @@ const NavItem = ({
   activeIcon: ActiveIcon,
   hasChildren,
   children = [],
+  onNavigate,
 }: NavItemProps) => {
   const location = useLocation();
   const [opened, setOpened] = useState(false);
@@ -100,6 +103,7 @@ const NavItem = ({
                   component={Link}
                   to={child.href}
                   underline="never"
+                  onClick={onNavigate}
                 >
                   <List.Item
                     className={`py-3 px-4 ${
@@ -117,9 +121,8 @@ const NavItem = ({
     );
   }
 
-  // Regular menu item without children
   return (
-    <Anchor component={Link} to={href} underline="never">
+    <Anchor component={Link} to={href} underline="never" onClick={onNavigate}>
       <List.Item
         className={`cursor-pointer ${
           isActive ? "bg-[#FCE7DD] rounded-lg" : ""

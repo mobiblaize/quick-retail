@@ -20,7 +20,7 @@ const ReportDateSelect = () => {
 
   if (!reportType) {
     return (
-      <div className="text-red-600">
+      <div className="text-red-600 p-4 text-center">
         Invalid access. Please select a report first.
       </div>
     );
@@ -28,15 +28,15 @@ const ReportDateSelect = () => {
 
   return (
     <>
-      <div className="flex items-center justify-between bg-white p-6 shadow-md">
-        <Text fw={500} size="xl" c="black">
+      <div className="flex items-center justify-between bg-white p-4 sm:p-6 shadow-md">
+        <Text fw={500} size="lg" c="black">
           Reports Module
         </Text>
       </div>
 
-      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-[#F2F4F7]">
-        <div className="w-full max-w-md bg-white p-8 rounded-xl shadow-md ">
-          <h2 className="text-lg font-semibold text-gray-700 mb-4 text-center">
+      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-[#F2F4F7] px-4 py-6">
+        <div className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-md">
+          <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4 text-center">
             {reportLabel || "Enter the details below to create your report"}
           </h2>
 
@@ -65,7 +65,7 @@ const ReportDateSelect = () => {
           <button
             disabled={!startDate || !endDate}
             onClick={handleGenerate}
-            className={`w-full py-3 rounded-md font-semibold text-white transition-all cursor-pointer ${
+            className={`w-full py-2 sm:py-3 rounded-md font-semibold text-white transition-all cursor-pointer ${
               startDate && endDate
                 ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
                 : "bg-orange-200 cursor-not-allowed"

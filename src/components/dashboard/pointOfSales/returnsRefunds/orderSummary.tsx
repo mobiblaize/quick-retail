@@ -7,7 +7,7 @@ const OrderSummary = () => {
         Order Details
       </Text>
       <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 md:gap-x-8 w-full gap-3 md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Cashier</Text>
             <Text size="lg" c={"black"} fw={"400"}>

@@ -11,12 +11,25 @@ body {
   height: 100vh;
   background-color: #f2f4f7;
 }
-
-.hide-scrollbar {
-  scrollbar-width: none;
-  -ms-overflow-style: none;
-}
+/* Add these to your global CSS file */
 
 .hide-scrollbar::-webkit-scrollbar {
   display: none;
+}
+
+.hide-scrollbar {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+
+/* Bottom padding for content to account for mobile nav */
+@media (max-width: 767px) {
+  .content-container {
+    padding-bottom: 70px; /* Height of bottom nav + some extra space */
+  }
+
+  /* Adjust for mobile view */
+  .mantine-Drawer-content {
+    box-shadow: -2px 0 8px rgba(0, 0, 0, 0.1);
+  }
 }

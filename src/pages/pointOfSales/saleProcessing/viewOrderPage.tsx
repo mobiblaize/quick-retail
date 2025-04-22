@@ -11,25 +11,30 @@ const ViewOrderPage = () => {
     navigate(-1);
   };
 
+  const backButton = (
+    <button
+      onClick={handleBack}
+      className="flex cursor-pointer gap-2 items-center"
+    >
+      <ChevronLeft />
+      <Text fw={500} c="black">
+        Back
+      </Text>
+    </button>
+  );
+
   const subHeaders = [
     <div key="1" className="py-2.5">
-      <div className="flex gap-8 items-center">
-        <button
-          onClick={handleBack}
-          className="flex cursor-pointer gap-2 items-center"
-        >
-          <ChevronLeft />
-          <Text fw={500} c="black">
-            Back
-          </Text>
-        </button>
+      <div className="hidden sm:flex gap-8 items-center">
+        {backButton}
         <div className="flex items-center">
           <Text>Sales processing</Text>
           <span className="mx-2">/</span>
           <Text c="black">View Order</Text>
-          View
         </div>
       </div>
+
+      <div className="flex sm:hidden">{backButton}</div>
     </div>,
     <div key="2" className="justify-between flex items-center">
       <Text fw={500} size="xl" c="black">
@@ -47,4 +52,5 @@ const ViewOrderPage = () => {
     </PageContainer>
   );
 };
+
 export default ViewOrderPage;

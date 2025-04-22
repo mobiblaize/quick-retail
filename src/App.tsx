@@ -48,7 +48,7 @@ export default function App() {
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
-          <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
+          <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
           <Route
             path={ROUTES.inventory}

@@ -65,21 +65,25 @@ const StoreOrderContent: React.FC = () => {
       <div key="1" className="py-2.5">
         <div className="flex gap-8 items-center">
           {backButton}
-          <div className="flex items-center">
+          <div className="md:flex hidden items-center">
             <Text>Stores</Text>
             <span className="mx-2">/</span>
             <Text c={"black"}>Ikeja City Mall</Text>
           </div>
         </div>
       </div>,
-      <div key="2">
-        <div className="flex justify-between items-center">
+      <div key="2" className="w-full">
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
           <Text fw={500} size="xl" c="black">
             Ikeja City Mall
           </Text>
-          <div className="flex gap-4">
-            <Button variant="filled-primary">Edit Store</Button>
-            <Button variant="outline-primary">View Store</Button>
+          <div className="flex gap-2 sm:gap-4 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
+            <Button variant="filled-primary" className="whitespace-nowrap">
+              Edit Store
+            </Button>
+            <Button variant="outline-primary" className="whitespace-nowrap">
+              View Store
+            </Button>
           </div>
         </div>
       </div>,

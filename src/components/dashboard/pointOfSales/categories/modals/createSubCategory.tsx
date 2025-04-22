@@ -14,11 +14,24 @@ const CreateSubCategory = ({ opened, onClose }: ResolveProps) => {
         opened={opened}
         onClose={onClose}
         title={
-          <div>
-            <Text size="1.8rem" c="black" fw={800}>
+          <div style={{ wordBreak: "break-word" }}>
+            <Text
+              c="black"
+              fw={800}
+              style={{
+                fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
+              }}
+            >
               Create Sub-Category
             </Text>
-            <Text mt="5">fill the details below.</Text>
+            <Text
+              mt="5"
+              style={{
+                fontSize: "clamp(0.875rem, 2vw, 1rem)",
+              }}
+            >
+              fill the details below.
+            </Text>
           </div>
         }
         centered

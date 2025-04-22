@@ -29,8 +29,8 @@ const ViewOrderReceipt = () => {
   return (
     <main className="w-full border border-[#E4E7EC] py-6 h-auto rounded-lg bg-white">
       <div className="px-7 flex flex-col gap-4">
-        <header className="max-w-[45%]">
-          <div className="flex gap-2">
+        <header className="w-full md:max-w-[45%]">
+          <div className="flex flex-wrap gap-2 items-center">
             <Text size="2rem" c="black" fw={600}>
               Order ID: #23456
             </Text>
@@ -39,7 +39,7 @@ const ViewOrderReceipt = () => {
               <span className="ml-2">Paid</span>
             </div>
           </div>
-          <div className="flex mt-2 gap-5">
+          <div className="flex flex-wrap mt-2 gap-5">
             <Text fw={400} className="text-xl">
               Order Date:{" "}
               <span className="ml-2 text-gray-400">June 7, 2024</span>
@@ -50,7 +50,7 @@ const ViewOrderReceipt = () => {
           </div>
         </header>
         <section className="border-t py-2 mt-3 border-b border-[#E4E7EC]">
-          <div className="max-w-5xl flex justify-between py-4">
+          <div className="md:max-w-5xl w-full md:flex-row flex-col col gap-4 flex justify-between py-4">
             <Text size="lg">
               Customer Name:
               <span className="ml-3 text-[#101928] text-lg">
@@ -71,13 +71,16 @@ const ViewOrderReceipt = () => {
             </Text>
           </div>
         </section>
-        <div className="max-w-6xl">
-          <section className="py-4">
+        <div className="md:max-w-6xl w-full">
+          <section className="md:py-4 py-2">
             <Text fw="400" size="lg">
               Items
             </Text>
             {productItems.map((item, index) => (
-              <div key={index} className="flex mt-8 justify-between">
+              <div
+                key={index}
+                className="md:flex md:flex-row flex-col mt-4 md:mt-8 justify-between"
+              >
                 <div className="flex gap-6">
                   <Avatar
                     src={imageSrc}

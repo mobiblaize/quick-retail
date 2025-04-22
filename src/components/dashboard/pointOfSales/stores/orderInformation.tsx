@@ -4,8 +4,8 @@ import { PaidDot } from "../../../../assets/svg";
 const OrderInformation = () => {
   return (
     <main className="w-full h-auto rounded-lg bg-[#F9FAFB] px-6 py-8">
-      <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 max-w-6xl">
+      <section className="md:mt-6 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-4  gap-3 gap-x-8 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Order Number</Text>
             <Text size="lg" c={"black"} fw={"400"}>

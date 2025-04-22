@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Menu, Button, ButtonProps, Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
 import { CalendaIcon } from "../../assets/svg";
@@ -18,6 +18,7 @@ interface DateFilterMenuProps {
   disabled?: boolean;
   className?: string;
   style?: React.CSSProperties;
+  showIconOnly?: boolean | "sm" | "md" | "lg" | "xl";
 }
 
 function DateFilterMenu({
@@ -28,9 +29,37 @@ function DateFilterMenu({
   disabled = false,
   className,
   style,
+  showIconOnly = "md",
 }: DateFilterMenuProps) {
   const [selectedFilter, setSelectedFilter] =
     useState<FilterOption>(defaultFilter);
+  const [isIconOnly, setIsIconOnly] = useState(false);
+
+  useEffect(() => {
+    const checkScreenSize = () => {
+      if (showIconOnly === true) {
+        setIsIconOnly(true);
+        return;
+      }
+
+      if (typeof showIconOnly === "string") {
+        const breakpoints = {
+          sm: 640,
+          md: 768,
+          lg: 1024,
+          xl: 1280,
+        };
+        const breakpoint = breakpoints[showIconOnly];
+        setIsIconOnly(window.innerWidth < breakpoint);
+      } else {
+        setIsIconOnly(false);
+      }
+    };
+
+    checkScreenSize();
+    window.addEventListener("resize", checkScreenSize);
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, [showIconOnly]);
 
   const handleFilterSelect = (filter: FilterOption): void => {
     setSelectedFilter(filter);
@@ -61,6 +90,17 @@ function DateFilterMenu({
       onDateFilterChange({ startDate, endDate });
     }
   };
+
+  const getResponsiveClasses = (isForLargeScreen = false) => {
+    if (typeof showIconOnly !== "string") return "";
+
+    if (isForLargeScreen) {
+      return `hidden ${showIconOnly}:block`;
+    }
+    return `block ${showIconOnly}:hidden`;
+  };
+
+  const buttonClasses = `${className || ""} transition-all`;
 
   return (
     <Menu
@@ -99,10 +139,18 @@ function DateFilterMenu({
           variant={buttonVariant}
           size={buttonSize}
           disabled={disabled}
-          className={className}
+          className={buttonClasses}
           style={style}
-          leftSection={<CalendaIcon />}
-          rightSection={<ChevronDown size={24} color="#667185" />}
+          leftSection={isIconOnly ? undefined : <CalendaIcon />}
+          rightSection={
+            isIconOnly ? undefined : (
+              <ChevronDown
+                size={24}
+                color="#667185"
+                className={getResponsiveClasses(true)}
+              />
+            )
+          }
           styles={(theme) => ({
             root: {
               border: `1px solid ${theme.colors.textSecondary[1] || "#D0D5DD"}`,
@@ -112,16 +160,45 @@ function DateFilterMenu({
               "&:hover": {
                 backgroundColor: theme.colors.gray[0],
               },
+              ...(isIconOnly && {
+                padding: 0,
+                width: "40px",
+                height: "40px",
+                minWidth: "40px",
+                display: "flex",
+                justifyContent: "center",
+                alignItems: "center",
+              }),
+            },
+            inner: {
+              justifyContent: isIconOnly ? "center" : "flex-start",
+              width: "100%",
+            },
+            leftSection: {
+              marginRight: isIconOnly ? 0 : 8,
             },
             rightSection: {
-              marginLeft: theme.spacing.xs,
+              marginLeft: isIconOnly ? 0 : 8,
             },
             label: {
               fontWeight: 400,
+              display: "flex",
+              justifyContent: "center",
+              alignItems: "center",
+              width: isIconOnly ? "100%" : "auto",
             },
           })}
         >
-          <Text fw={500}>{selectedFilter}</Text>
+          {isIconOnly ? (
+            <CalendaIcon />
+          ) : (
+            <div className="flex items-center">
+              <div className={getResponsiveClasses()}></div>
+              <Text fw={500} className={getResponsiveClasses(true)}>
+                {selectedFilter}
+              </Text>
+            </div>
+          )}
         </Button>
       </Menu.Target>
 

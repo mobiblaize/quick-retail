@@ -5,13 +5,16 @@ import { ArrowUpRight, ChevronRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { useMediaQuery } from "@mantine/hooks";
 
 const CustomerAnalysis = () => {
+  const isSmallScreen = useMediaQuery("(max-width: 640px)");
+
   return (
-    <main className="flex gap-6">
-      <div className="w-[65%] h-auto px-4 py-8 rounded-lg bg-white">
+    <main className="flex flex-col lg:flex-row gap-6">
+      <div className="w-full lg:w-[65%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
         <div className="flex justify-between items-center">
-          <div className="flex-col ">
+          <div className="flex-col">
             <Text size="xl" fw={600} c="textSecondary.9">
               Recent Customers
             </Text>
@@ -19,30 +22,34 @@ const CustomerAnalysis = () => {
               An overview of sales made
             </span>
           </div>
-          <div className="flex gap-4 items-center">
-            <Group>
+          <div className="flex items-center gap-2 sm:gap-4">
+            <Group className="w-auto">
               <DateFilterMenu
                 defaultFilter="This Month"
                 buttonVariant="subtle"
                 buttonSize="md"
+                showIconOnly
               />
             </Group>
-            <Button
-              rightSection={<ChevronRight />}
-              variant="default"
-              px={10}
-              py={2}
-              className="rounded-lg"
-            >
-              <Text c="textSecondary.8" fw={500}>
-                View Report
-              </Text>
-            </Button>
+            {!isSmallScreen && (
+              <Button
+                rightSection={<ChevronRight />}
+                variant="default"
+                px={6}
+                py={2}
+                className="rounded-lg"
+              >
+                <Text c="textSecondary.8" fw={500}>
+                  View Report
+                </Text>
+              </Button>
+            )}
           </div>
         </div>
         <DivisionSaleChart />
       </div>
-      <div className="w-[35%] h-auto px-4 py-8 rounded-lg bg-white">
+
+      <div className="w-full lg:w-[35%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
             Customer Analysis
@@ -56,15 +63,22 @@ const CustomerAnalysis = () => {
             <div key={index}>
               <div className="flex px-2 justify-between items-center">
                 <div className="flex items-center gap-2.5">
-                  <span>{<data.usericon />}</span>
+                  <span className="flex-shrink-0">{<data.usericon />}</span>
                   <div className="flex flex-col">
-                    <Text size="lg" fw={600} c="textSecondary.9">
+                    <Text
+                      size="lg"
+                      fw={600}
+                      c="textSecondary.9"
+                      className="break-all sm:break-normal"
+                    >
                       {data.customerName}
                     </Text>
-                    <Text className="secondary font-normal">{data.email}</Text>
+                    <Text className="secondary font-normal text-sm sm:text-base break-all sm:break-normal">
+                      {data.email}
+                    </Text>
                   </div>
                 </div>
-                <ArrowUpRight color="#003399" />
+                <ArrowUpRight color="#003399" className="flex-shrink-0" />
               </div>
 
               <Divider size="sm" className="mt-3" color="#E4E7EC" />
@@ -76,7 +90,7 @@ const CustomerAnalysis = () => {
             className="text-center cursor-pointer"
             c="customPrimary.10"
             fw={600}
-            mt={32}
+            mt={6}
           >
             View All
           </Text>

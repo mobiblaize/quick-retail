@@ -2,26 +2,50 @@ import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../filterMenu";
 import AnalyticsCard from "../card";
 import { analyticsData } from "../../../utils/mockData";
+import { useEffect, useState } from "react";
 
 const OverviewBox = () => {
+  const [isMobile, setIsMobile] = useState(false);
+
+  const checkScreenSize = () => {
+    setIsMobile(window.innerWidth < 640);
+  };
+
+  useEffect(() => {
+    checkScreenSize();
+
+    window.addEventListener("resize", checkScreenSize);
+
+    return () => window.removeEventListener("resize", checkScreenSize);
+  }, []);
+
   return (
-    <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center">
-        <div className="flex flex-col">
-          <Text size="xl" fw={600} c="textSecondary.9">
+    <main className="w-full h-auto overflow-auto px-3 sm:px-6 py-4 sm:py-8 rounded-lg bg-white">
+      <header className="flex flex-row justify-between sm:items-center">
+        <div className="flex flex-col mb-3 sm:mb-0">
+          <Text size="xl" fw={600}>
             Analysis overview
           </Text>
-          <Text size="sm">An overview sales made</Text>
+
+          {isMobile ? (
+            <Text size="sm">An Overview of sales made</Text>
+          ) : (
+            <Text size="sm">
+              This is an overview summarizing sales, highlighting key trends and
+              strategies.
+            </Text>
+          )}
         </div>
-        <Group>
+        <Group className="mt-2 sm:mt-0">
           <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
+            showIconOnly="sm"
           />
         </Group>
       </header>
-      <section className="flex overflow-auto gap-2 mt-2.5">
+      <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5">
         {analyticsData.map((card, index) => (
           <AnalyticsCard
             key={index}

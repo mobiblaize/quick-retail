@@ -12,11 +12,24 @@ const Resolve = ({ opened, onClose }: ResolveProps) => {
         opened={opened}
         onClose={onClose}
         title={
-          <div>
-            <Text size="1.8rem" c="black" fw={700}>
+          <div style={{ wordBreak: "break-word" }}>
+            <Text
+              c="black"
+              fw={700}
+              style={{
+                fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
+              }}
+            >
               Complaints Resolved
             </Text>
-            <Text mt="5">Are you sure you want to resolve this complaints</Text>
+            <Text
+              mt="5"
+              style={{
+                fontSize: "clamp(0.875rem, 2vw, 1rem)",
+              }}
+            >
+              Are you sure you want to resolve this complaints
+            </Text>
           </div>
         }
         centered

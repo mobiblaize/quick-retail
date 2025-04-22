@@ -16,10 +16,11 @@ const StoreOverview = () => {
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
+            showIconOnly
           />
         </Group>
       </header>
-      <section className="grid gap-6 mt-6 grid-cols-5">
+      <section className="grid gap-4 md:gap-6 mt-6 grid-cols-1  md:grid-cols-5">
         <div className="bg-[#F1672226] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Total Orders

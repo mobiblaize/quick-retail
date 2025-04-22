@@ -5,9 +5,9 @@ import { useState } from "react";
 const StoreDetails = () => {
   const [isEnabled, setIsEnabled] = useState(false);
   return (
-    <main className="w-full h-auto rounded-lg bg-[#F9FAFB] px-6 py-8">
-      <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 gap-y-10 max-w-6xl">
+    <main className="w-full h-auto rounded-lg bg-[#F9FAFB] px-6 md:py-8">
+      <section className="md:mt-6 mt-4">
+        <div className="grid grid-cols-1 md:grid-cols-4 space-y-5 md:gap-x-8 md:gap-y-10 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Store ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
@@ -34,7 +34,7 @@ const StoreDetails = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-8 mt-6 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 gap-x-8 mt-6 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Registered Customers</Text>
             <Text size="lg" c={"black"} fw={"400"}>
@@ -61,7 +61,7 @@ const StoreDetails = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-8 mt-6 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 max-w-6xl">
           <div className="flex flex-col col-span-2">
             <Text fw={"500"}>Address</Text>
             <Text
