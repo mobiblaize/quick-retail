@@ -18,10 +18,11 @@ const AllProductData = () => {
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
+            showIconOnly
           />
         </Group>
       </header>
-      <section className="flex overflow-auto gap-2 mt-2.5">
+      <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
         {giftProductData.map((card, index) => (
           <AnalyticsCard
             key={index}

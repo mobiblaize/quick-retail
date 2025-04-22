@@ -70,7 +70,6 @@ const AddProductForm = () => {
             options={["Category 1", "Category 2", "Category 3"]}
             name="category"
             paddingY="4"
-            // onSelect={(e) => console.log("Selected:", e.target.value)}
           />
 
           <FormSelect
@@ -88,7 +87,6 @@ const AddProductForm = () => {
             options={["Supplier 1", "Supplier 2"]}
             name="supplier"
             paddingY="4"
-            // onSelect={(e) => console.log("Selected:", e.target.value)}
           />
         </div>
       </div>
@@ -131,10 +129,8 @@ const AddProductForm = () => {
             options={["0%", "5%", "10%", "15%"]}
             name="text"
             paddingY="4"
-            // onSelect={(e) => console.log("Selected:", e.target.value)}
           />
 
-          {/* Discount */}
           <FormInput
             type="number"
             label=" Discount"
@@ -143,13 +139,6 @@ const AddProductForm = () => {
           />
         </div>
       </div>
-
-      {/* <div className="flex justify-between items-center mt-[3em] bg-white p-6 rounded-lg shadow-md border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800">
-          PRODUCT VARIATIONS
-        </h2>
-        <Switch onLabel="On" offLabel="Off" size="md" />
-      </div> */}
 
       <div className="mt-12 bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <div className="flex justify-between items-center max-w-full w-full">
@@ -187,10 +176,10 @@ const AddProductForm = () => {
                   <div className="flex-1 flex flex-wrap gap-2">
                     {variation.values.map((value: string, i: number) => (
                       <span
-                      key={i}
-                      className="bg-gray-300 text-white text-xs font-medium px-3 py-1 rounded-full"
+                        key={i}
+                        className="bg-gray-300 text-white text-xs font-medium px-3 py-1 rounded-full"
                       >
-                      {value}
+                        {value}
                       </span>
                     ))}
                   </div>
@@ -237,13 +226,11 @@ const AddProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        {/* Header */}
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           ADDITIONAL INFORMATION
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* Short Description */}
           <FormInput
             type="text"
             label="Short Description"
@@ -251,7 +238,6 @@ const AddProductForm = () => {
             placeholder="Enter short product description"
           />
 
-          {/* Long Description */}
           <FormInput
             type="text"
             label="Long Description"
@@ -260,7 +246,6 @@ const AddProductForm = () => {
             optional
           />
 
-          {/* Tags */}
           <FormInput
             type="text"
             label="Tags"
@@ -268,7 +253,6 @@ const AddProductForm = () => {
             placeholder="Enter short product description"
           />
 
-          {/* Notes */}
           <FormInput
             type="text"
             label="Notes"
@@ -282,8 +266,7 @@ const AddProductForm = () => {
         <div className="mt-6">
           <h3 className="text-gray-800 font-medium mb-2">Product Images</h3>
 
-          <div className="flex items-center gap-6">
-            {/* Upload Box */}
+          <div className="flex md:flex-row flex-col md:items-center gap-6">
             <div className="w-48 h-48 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center rounded-md cursor-pointer hover:border-blue-500 transition">
               <UploadCloud className="text-gray-400" size={32} />
               <p className="text-orange-500 text-sm font-medium mt-2">
@@ -293,7 +276,6 @@ const AddProductForm = () => {
               <p className="text-gray-400 text-xs mt-1">PNG, JPEG (max 5 MB)</p>
             </div>
 
-            {/* Add More Photos */}
             <button className="text-orange-500 flex items-center gap-2 font-medium text-sm">
               + Add more photos
             </button>
@@ -302,14 +284,12 @@ const AddProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em] mb-5 ">
-        {/* Section Title */}
         <h3 className="text-lg font-semibold text-gray-800">
           COMPLIANCE INFORMATION{" "}
           <span className="text-gray-500">(optional)</span>
         </h3>
 
-        {/* Safety Instructions Input */}
-        <div className="mt-4 w-[700px]">
+        <div className="mt-4 w-full md:w-[700px]">
           <FormInput
             type="text"
             label="Safety Instructions"
@@ -318,7 +298,6 @@ const AddProductForm = () => {
           />
         </div>
 
-        {/* Compliance Certificates Upload */}
         <div className="mt-6">
           <label className="block text-gray-700 font-medium mb-2">
             Compliance Certificates

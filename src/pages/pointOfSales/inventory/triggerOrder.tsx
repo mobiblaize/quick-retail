@@ -21,7 +21,7 @@ const TriggerOrder = () => {
 
     return [
       <div key="1" className="py-2.5">
-        <div className="flex gap-8 items-center">
+        <div className="hidden sm:flex gap-8 items-center">
           {backButton}
           <div className="flex items-center">
             <Text>Inventory Management</Text>
@@ -31,6 +31,8 @@ const TriggerOrder = () => {
             </Text>
           </div>
         </div>
+
+        <div className="flex sm:hidden">{backButton}</div>
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">

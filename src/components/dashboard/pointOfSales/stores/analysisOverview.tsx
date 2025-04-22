@@ -13,7 +13,7 @@ const AnalysisOverview = () => {
           <Text size="sm">An overview sales made</Text>
         </div>
       </header>
-      <section className="flex overflow-auto gap-2 mt-2.5">
+      <section className="flex overflow-auto md:flex-row flex-col gap-4  mt-2.5">
         {storeAnalysisData.map((card, index) => (
           <AnalyticsCard
             key={index}

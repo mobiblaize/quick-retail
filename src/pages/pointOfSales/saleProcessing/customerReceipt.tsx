@@ -33,7 +33,7 @@ const productItems = [
 
 const CustomerReceipt = () => {
   return (
-    <main className="max-w-[45%] border border-[#E4E7EC] py-6 h-auto rounded-lg bg-white">
+    <main className="md:max-w-[45%] w-full border border-[#E4E7EC] py-6 h-auto rounded-lg bg-white">
       <div className="px-3.5">
         <header>
           <div className="flex gap-2">
@@ -50,7 +50,7 @@ const CustomerReceipt = () => {
               Order Date:{" "}
               <span className="ml-2 text-gray-400">June 7, 2024</span>
             </Text>
-            <Text fw={400} className="text-lg">
+            <Text fw={400} className="text-lg whitespace-nowrap">
               Payment Method: <span className="ml-2 text-gray-400">Card</span>
             </Text>
           </div>

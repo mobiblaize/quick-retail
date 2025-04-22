@@ -43,7 +43,7 @@ const SetStoreTarget = ({ opened, onClose }: AddNewStoreModalProps) => {
             <FormSelect options={["6 month"]} paddingY="3" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label htmlFor="" className="flex items-center gap-2 mb-1.5">
                 Average Transaction Value

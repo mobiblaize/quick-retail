@@ -70,7 +70,7 @@ const ViewReturnsContent: React.FC = () => {
       <div key="1" className="py-2.5">
         <div className="flex gap-8 items-center">
           {backButton}
-          <div className="flex items-center">
+          <div className="hidden md:flex items-center">
             <Text>Returns and Refund</Text>
             <span className="mx-2">/</span>
             <Text c="black" fw={500}>
@@ -86,7 +86,7 @@ const ViewReturnsContent: React.FC = () => {
           ) : (
             <>
               <div className="flex justify-between items-center">
-                <Text fw={400} size="xl" c="black">
+                <Text fw={400} size="xl" c="black" className="hidden md:block">
                   Returned Product
                 </Text>
                 <div className="flex gap-3.5 items-center">
@@ -134,17 +134,24 @@ const ViewReturnsContent: React.FC = () => {
       return [
         <div
           key="confirm-payment-buttons"
-          className="flex justify-between items-center"
+          className="flex flex-col sm:flex-row w-full gap-4"
         >
-          <div className="flex items-center gap-2.5">
+          <div className="flex items-center gap-2.5 w-full">
             <Attachment />
-            <Text>Attached</Text>
+            <Text className="text-sm">Attached</Text>
           </div>
-          <div className="flex gap-4 justify-end">
-            <Button variant="outline-primary" onClick={prevStep}>
+          <div className="flex gap-3 justify-between sm:justify-end w-full">
+            <Button
+              variant="outline-primary"
+              onClick={prevStep}
+              className="flex-1 sm:flex-none"
+            >
               Cancel
             </Button>
-            <Button variant="filled-primary" style={{ width: "10rem" }}>
+            <Button
+              variant="filled-primary"
+              className="flex-1 sm:flex-none sm:w-40"
+            >
               Send
             </Button>
           </div>

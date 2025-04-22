@@ -1,8 +1,8 @@
 import { Text } from "@mantine/core";
 import { useState } from "react";
 import Description from "./description";
-import Delivery from "./Delivery";
 import Review from "./review";
+import Delivery from "./delivery";
 
 const ProductDetails = () => {
   const [activeTab, setActiveTab] = useState("Description");

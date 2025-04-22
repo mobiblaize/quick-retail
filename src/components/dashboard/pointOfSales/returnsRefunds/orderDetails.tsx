@@ -1,6 +1,5 @@
 import { Text } from "@mantine/core";
-import product from "../../../../assets/images/Image.png"
-;
+import product from "../../../../assets/images/Image.png";
 const OrderDetails = () => {
   return (
     <main className="w-full h-auto rounded-lg bg-white px-6 py-8">
@@ -8,7 +7,7 @@ const OrderDetails = () => {
         Order Details
       </Text>
       <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 w-full gap-3 md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Product ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
@@ -35,7 +34,7 @@ const OrderDetails = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-8 mt-6 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full gap-3 md: max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Product</Text>
             <Text size="lg" c={"black"} fw={"400"}>
@@ -66,7 +65,7 @@ const OrderDetails = () => {
         <Text fw={"500"} size="xl">
           Product ID
         </Text>
-        <div className="flex mt-3 gap-3">
+        <div className="flex md:flex-row flex-col w-full mt-3 gap-3">
           <img src={product} alt="product" width={200} />
           <img src={product} alt="product" width={200} />
           <img src={product} alt="product" width={200} />

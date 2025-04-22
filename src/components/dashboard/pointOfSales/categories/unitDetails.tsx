@@ -2,9 +2,9 @@ import { Text } from "@mantine/core";
 
 const UnitDetails = () => {
   return (
-    <main className="w-full h-auto rounded-lg bg-[#F2E6E2] px-6 py-8">
+    <main className="w-full h-auto rounded-lg bg-[#F2E6E2]  px-6 py-8">
       <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 w-full gap-4 md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Subcategory</Text>
             <Text size="lg" c={"black"} fw={"400"}>
@@ -31,7 +31,7 @@ const UnitDetails = () => {
           </div>
         </div>
 
-        <div className="grid grid-cols-4 gap-x-8 mt-6 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Product Brand</Text>
             <Text size="lg" c={"black"} fw={"400"}>

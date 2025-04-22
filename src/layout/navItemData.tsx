@@ -23,6 +23,8 @@ import {
   InActiveReport,
   ActiveReport,
   Logout,
+  Settings,
+  NotificationIcon,
 } from "../assets/svg";
 import { ROUTES } from "../constants/routes";
 
@@ -143,4 +145,9 @@ export const Admin: NavItem[] = [
 
 export const otherMenu = [
   { label: "Log Out", href: ROUTES.test, icon: Logout },
+];
+
+export const mobileOtherMenu = [
+  { label: "Norification", href: ROUTES.test, icon: NotificationIcon },
+  { label: "Settings", icon: Settings, href: ROUTES.test },
 ];

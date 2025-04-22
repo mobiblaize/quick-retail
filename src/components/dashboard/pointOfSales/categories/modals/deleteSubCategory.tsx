@@ -12,11 +12,22 @@ const DeleteSubCategory = ({ opened, onClose }: ResolveProps) => {
         opened={opened}
         onClose={onClose}
         title={
-          <div>
-            <Text size="1.8rem" c="black" fw={700}>
+          <div style={{ wordBreak: "break-word" }}>
+            <Text
+              c="black"
+              fw={800}
+              style={{
+                fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
+              }}
+            >
               Delete Sub-Category
             </Text>
-            <Text mt="5">
+            <Text
+              mt="5"
+              style={{
+                fontSize: "clamp(0.875rem, 2vw, 1rem)",
+              }}
+            >
               Are you sure you want to delete this sub-category ?
             </Text>
           </div>

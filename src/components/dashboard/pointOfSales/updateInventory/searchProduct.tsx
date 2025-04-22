@@ -20,8 +20,8 @@ const SearchProduct = () => {
           rightIcon={<SqrCode />}
         />
       </div>
-      <section className="mt-3 px-6 pb-4 max-w-5xl flex justify-between">
-        <div className="flex gap-4">
+      <section className="mt-3 px-6 pb-4 max-w-5xl flex flex-col md:flex-row md:justify-between">
+        <div className="flex gap-4 mb-4 md:mb-0">
           <img src={product} alt="product_img" className="w-15 h-15" />
           <div className="flex flex-col space-y-1.5">
             <div>
@@ -49,23 +49,25 @@ const SearchProduct = () => {
             </div>
           </div>
         </div>
-        <div className="flex gap-3 flex-col">
-          <Text size="md" c="black" fw={600}>
-            Current Stock
-          </Text>
-          <Text>0</Text>
-        </div>
-        <div className="flex gap-3 flex-col">
-          <Text size="md" c="black" fw={600}>
-            Recorder Level
-          </Text>
-          <Text>100</Text>
-        </div>
-        <div className="flex gap-3 flex-col">
-          <Text size="md" c="black" fw={600}>
-            Location Warehouse
-          </Text>
-          <Text>100</Text>
+        <div className="grid grid-cols-1 md:grid-cols-3 md:flex gap-6 md:gap-3">
+          <div className="flex gap-3 flex-col">
+            <Text size="md" c="black" fw={600}>
+              Current Stock
+            </Text>
+            <Text>0</Text>
+          </div>
+          <div className="flex gap-3 flex-col">
+            <Text size="md" c="black" fw={600}>
+              Recorder Level
+            </Text>
+            <Text>100</Text>
+          </div>
+          <div className="flex gap-3 flex-col">
+            <Text size="md" c="black" fw={600}>
+              Location Warehouse
+            </Text>
+            <Text>100</Text>
+          </div>
         </div>
       </section>
     </main>

@@ -187,33 +187,14 @@ const TanTable: FC<TanTableProps> = ({
           }),
         }}
       >
-        <Box
-          style={{
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            marginBottom: "1rem",
-            width: "100%",
-            paddingLeft: "20px",
-            paddingRight: "20px",
-          }}
-        >
+        <div className="flex md:flex-row flex-col md:justify-between md:items-center mb-[1rem] w-full pl-[20px] pr-[20px]">
           <div>
             <Text fw={500} c="textSecondary.9">
               {tableTitle}
             </Text>
           </div>
 
-          <Box
-            style={{
-              display: "flex",
-              flexDirection: "row",
-              gap: "2rem",
-              alignItems: "center",
-              width: "600px",
-            }}
-          >
+          <div className="flex md:flex-row flex-col md:gap-[2rem] md:w-[600px] w-full md:items-center">
             {showSearch && (
               <SearchComp
                 setSearchTerm={setSearchTerm}
@@ -227,10 +208,9 @@ const TanTable: FC<TanTableProps> = ({
             )}
 
             {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
-          </Box>
-        </Box>
+          </div>
+        </div>
       </Box>
-
       <Box
         style={{
           backgroundColor: "var(--mantine-color-gray-0)",

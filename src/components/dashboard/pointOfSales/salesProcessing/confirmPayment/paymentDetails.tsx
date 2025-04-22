@@ -16,7 +16,7 @@ const PaymentDetails = () => {
       </header>
       <>
         <Divider size="sm" className="mt-3" color="#E4E7EC" />
-        <section className="grid grid-cols-2 pt-8 pb-6 items-center gap-10 px-3.5">
+        <section className="grid grid-cols-1 md:grid-cols-2 pt-8 pb-6 items-center gap-4 md:gap-10 px-3.5">
           <FormSelect
             label="Payment Method"
             options={[

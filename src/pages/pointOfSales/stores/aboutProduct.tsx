@@ -12,7 +12,7 @@ const AboutProduct = () => {
         <button onClick={() => navigate(-1)} className="cursor-pointer">
           Back
         </button>
-        <div className="flex items-center">
+        <div className="md:flex hidden items-center">
           <Text>Stores</Text>
           <span className="mx-2">/</span>
           <Text c={"black"}>Ikeja City Mall</Text>
@@ -23,9 +23,13 @@ const AboutProduct = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <main className="grid gap-8 grid-cols-2">
-        <ProductDetails />
-        <ProductImages />
+      <main className="grid gap-8 grid-cols-1 md:grid-cols-2">
+        <div className="order-2 md:order-1">
+          <ProductDetails />
+        </div>
+        <div className="order-1 md:order-2">
+          <ProductImages />
+        </div>
       </main>
     </PageContainer>
   );

@@ -18,7 +18,7 @@ const Description = () => {
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
         temporibus possimus dolor id, laboriosam est?
       </Text>
-      <section className="mt-8 grid gap-6 grid-cols-3">
+      <section className="mt-8 grid gap-6 grid-cols-1 md:grid-cols-3">
         <div className="bg-[#F7F9FC] p-2 rounded-full whitespace-nowrap">
           <Text fw={600}>
             Location: <span className="text-black ml-1">Warehouse 1</span>

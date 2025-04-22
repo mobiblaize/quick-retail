@@ -20,7 +20,7 @@ const CustomerDetails = () => {
         </Text>
       </div>
       <section className="mt-6">
-        <div className="grid grid-cols-4 gap-x-8 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-x-8 w-full md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Name</Text>
             <Text size="lg" c={"black"} fw={"400"}>

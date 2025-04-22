@@ -11,15 +11,15 @@ const StoresPage = () => {
   const [isSetStoreOpen, setIsSetStoreOpen] = useState(false);
 
   const subHeaders = [
-    <div key="1">
-      <div className="flex items-center justify-between">
+    <div key="1" className="w-full">
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <Text fw={500} size="xl" c="black">
           Store Target
         </Text>
-        <div className="flex gap-4">
+        <div className="flex gap-4 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
           <Button
             variant="filled-primary"
-            className="flex gap-1.5"
+            className="flex gap-1.5 items-center whitespace-nowrap"
             style={{ padding: "0.8rem 1rem" }}
             onClick={() => setIsSetStoreOpen(true)}
           >
@@ -29,7 +29,7 @@ const StoresPage = () => {
           <Link to={ROUTES.storeTarget}>
             <Button
               variant="outline-primary"
-              className="flex gap-1.5"
+              className="flex gap-1.5 items-center whitespace-nowrap"
               style={{ padding: "0.8rem 1rem" }}
             >
               Stores

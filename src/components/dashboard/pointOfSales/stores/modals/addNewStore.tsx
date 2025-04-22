@@ -46,7 +46,7 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
             <FormInput type="number" paddingY="6px" />
           </div>
 
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div className="flex flex-col">
               <label htmlFor="" className="flex items-center gap-2 mb-1.5">
                 GLA
@@ -74,9 +74,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 <CircleHelp color="#98A2B3" size={20} />
               </label>
               <FormInput type="text" paddingY="6px" />
-            </div>{" "}
-            <div className="col-span-2">
-              <div className="col-span-2">
+            </div>
+            <div className="col-span-1 sm:col-span-2">
+              <div>
                 <label htmlFor="" className="flex items-center gap-2 mb-1.5">
                   Address
                   <CircleHelp color="#98A2B3" size={20} />
@@ -105,10 +105,15 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 border: "1px solid #D0D5DD",
                 color: "#344054",
               }}
+              className="order-2 sm:order-1"
             >
               Cancel
             </Button>
-            <Button variant="filled-primary" onClick={handleActivateStore}>
+            <Button
+              variant="filled-primary"
+              onClick={handleActivateStore}
+              className="order-1 sm:order-2"
+            >
               Submit
             </Button>
           </div>

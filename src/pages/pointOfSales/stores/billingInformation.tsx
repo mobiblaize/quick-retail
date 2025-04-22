@@ -13,7 +13,7 @@ const BillingInformation = () => {
         <button onClick={() => navigate(-1)} className="cursor-pointer">
           Back
         </button>
-        <div className="flex items-center">
+        <div className="md:flex hidden items-center">
           <Text>Categories</Text>
           <span className="mx-2">/</span>
           <Text c={"black"}>Cosmetics</Text>

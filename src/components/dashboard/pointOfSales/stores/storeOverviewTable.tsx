@@ -2,7 +2,10 @@ import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch } from "@mantine/core";
 import TanTable from "../../../General/table";
-import { storeOverviewData as initialData, storeTargetOrder } from "../../../../utils/mockData";
+import {
+  storeOverviewData as initialData,
+  storeTargetOrder,
+} from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
@@ -14,7 +17,8 @@ const StoreOverviewTable = () => {
   const handleToggle = (index: number) => {
     const updatedData = [...tableData];
     const currentStatus = updatedData[index].status;
-    updatedData[index].status = currentStatus === "Active" ? "Inactive" : "Active";
+    updatedData[index].status =
+      currentStatus === "Active" ? "Inactive" : "Active";
     setTableData(updatedData);
   };
 
