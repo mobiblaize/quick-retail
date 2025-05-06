@@ -129,11 +129,11 @@ const NavItem = ({
         } rounded-none px-6 p-4`}
       >
         <div className="flex gap-2 items-center">
-          <div>
+          <div className="min-w-6 min-h-6 w-6 h-6 flex items-center justify-center">
             {isActive && ActiveIcon ? (
-              <ActiveIcon size="1.2rem" />
+              <ActiveIcon size={20} />
             ) : InactiveIcon ? (
-              <InactiveIcon size="1.2rem" />
+              <InactiveIcon size={20} />
             ) : null}
           </div>
           <p

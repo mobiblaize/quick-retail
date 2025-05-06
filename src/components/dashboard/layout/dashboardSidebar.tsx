@@ -7,6 +7,8 @@ import {
   Reports,
   Admin,
   otherMenu,
+  Procurement,
+  AssetManagement,
 } from "../../../layout/navItemData";
 import { useDashboard } from "../../../layout/dashboardContext";
 import { X } from "lucide-react";
@@ -20,6 +22,10 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         return PointOfSale;
       case "Financial Management":
         return FinancialManagement;
+      case "Procurement":
+        return Procurement;
+      case "Asset Management":
+        return AssetManagement;
       case "Reports":
         return Reports;
       case "Admin":

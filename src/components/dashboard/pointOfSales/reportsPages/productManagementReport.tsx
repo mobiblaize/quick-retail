@@ -5,8 +5,8 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import { Menu, Button } from "@mantine/core";
-import { MoreVertical } from "lucide-react";
+// import { Menu, Button } from "@mantine/core";
+// import { MoreVertical } from "lucide-react";
 
 
 const ProductManagementReport  = () => {
