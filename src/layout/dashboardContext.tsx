@@ -4,6 +4,8 @@ type DashboardSection =
   | "Overview"
   | "Point of Sales"
   | "Financial Management"
+  | "Procurement"
+  | "Asset Management"
   | "Reports"
   | "Admin";
 

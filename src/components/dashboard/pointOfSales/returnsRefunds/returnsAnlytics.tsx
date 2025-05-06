@@ -18,7 +18,7 @@ const ReturnsAnalytics = () => {
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
-            showIconOnly
+            showIconOnly="sm"
           />
         </Group>
       </header>

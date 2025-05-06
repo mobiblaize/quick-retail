@@ -64,7 +64,7 @@ const KeyPerformance = () => {
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="sm"
-            showIconOnly
+            showIconOnly="sm"
           />
         </Group>
       </header>

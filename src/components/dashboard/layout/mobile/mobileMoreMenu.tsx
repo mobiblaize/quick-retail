@@ -7,6 +7,8 @@ import {
   Reports,
   Admin,
   mobileOtherMenu,
+  Procurement,
+  AssetManagement,
 } from "../../../../layout/navItemData";
 import { useDashboard } from "../../../../layout/dashboardContext";
 import { MoreIcon, LogoutBlack } from "../../../../assets/svg";
@@ -24,6 +26,10 @@ const MobileMoreMnu = () => {
         return PointOfSale;
       case "Financial Management":
         return FinancialManagement;
+      case "Procurement":
+        return Procurement;
+      case "Asset Management":
+        return AssetManagement;
       case "Reports":
         return Reports;
       case "Admin":

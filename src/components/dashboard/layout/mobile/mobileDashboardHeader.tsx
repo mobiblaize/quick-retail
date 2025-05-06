@@ -8,6 +8,8 @@ const MobileDashboardHeader = () => {
   type DashboardSection =
     | "Overview"
     | "Point of Sales"
+    | "Procurement"
+    | "Asset Management"
     | "Financial Management"
     | "Reports"
     | "Admin";
@@ -22,6 +24,16 @@ const MobileDashboardHeader = () => {
       label: "Point of Sales" as DashboardSection,
       to: ROUTES.dashboard,
       active: activeSection === "Point of Sales",
+    },
+    {
+      label: "Procurement" as DashboardSection,
+      to: ROUTES.procurementDashboard,
+      active: activeSection === "Procurement",
+    },
+    {
+      label: "Asset Management" as DashboardSection,
+      to: ROUTES.test,
+      active: activeSection === "Asset Management",
     },
     {
       label: "Financial Management" as DashboardSection,

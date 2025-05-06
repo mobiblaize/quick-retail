@@ -18,10 +18,11 @@ const ReturnsReportAnalytics = () => {
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
+            showIconOnly="sm"
           />
         </Group>
       </header>
-      <section className="flex overflow-auto gap-2 mt-2.5">
+      <section className="grid grid-cols-1 md:grid-cols-3 overflow-auto gap-4 md:gap-2 mt-2.5">
         {returnsAnalyticsData.map((card, index) => (
           <AnalyticsCard
             key={index}

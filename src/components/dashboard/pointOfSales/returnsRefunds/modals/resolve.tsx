@@ -38,7 +38,7 @@ const Resolve = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
-        <div className="flex mt-7 gap-14">
+        <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <Button
             variant="outline"
             style={{

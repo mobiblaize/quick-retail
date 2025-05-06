@@ -28,7 +28,7 @@ const CustomerAnalysis = () => {
                 defaultFilter="This Month"
                 buttonVariant="subtle"
                 buttonSize="md"
-                showIconOnly
+                showIconOnly="sm"
               />
             </Group>
             {!isSmallScreen && (
