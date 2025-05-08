@@ -121,7 +121,7 @@ export const FinancialManagement: NavItem[] = [
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Customer",
+    label: "Sales",
     href: ROUTES.productManagement,
     inactiveIcon: InActiveReturns,
     activeIcon: ActiveReturns,

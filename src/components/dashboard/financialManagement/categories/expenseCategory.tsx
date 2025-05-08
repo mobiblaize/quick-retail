@@ -8,7 +8,7 @@ export default function ExpensePieChart() {
       </div>
 
       {/* Chart */}
-      <div className="flex mt-[-5em]">
+      <div className="flex mt-[-5em] ml-[-3em]">
         <div className="flex justify-start">
           <VictoryPie
             data={[
@@ -26,7 +26,7 @@ export default function ExpensePieChart() {
             }}
           />
         </div>
-        <div className="flex  flex-col gap-4 text-xs mt-[10em]">
+        <div className="flex  flex-col gap-4 text-xs mt-[10em] ml-[-5em]">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F16722]"></span>
             <span className="text-[#667085]">Category 1</span>

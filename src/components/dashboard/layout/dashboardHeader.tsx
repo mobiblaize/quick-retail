@@ -33,6 +33,11 @@ export const DashboardHeader = ({
       active: activeSection === "Point of Sales",
     },
     {
+      label: "Financial Management" as DashboardSection,
+      to: ROUTES.financialDashboard,
+      active: activeSection === "Financial Management",
+    },
+    {
       label: "Procurement" as DashboardSection,
       to: ROUTES.procurementDashboard,
       active: activeSection === "Procurement",
@@ -42,11 +47,7 @@ export const DashboardHeader = ({
       to: ROUTES.test,
       active: activeSection === "Asset Management",
     },
-    {
-      label: "Financial Management" as DashboardSection,
-      to: ROUTES.financialDashboard,
-      active: activeSection === "Financial Management",
-    },
+    
     {
       label: "Reports" as DashboardSection,
       to: ROUTES.dashboard,

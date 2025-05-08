@@ -2834,3 +2834,105 @@ export const financialMetricsOverviewData = [
       lightColor: "#667085",
     },
   ];
+
+  export const SalesMetricsOverviewData = [
+    {
+      title: "TOTAL REVENUE",
+      value: "$500,0000",
+      icon: dollar,
+      iconColor: "#099137",
+      textColor: "#E4E7EC",
+      cardBgColor: "#D75211",
+      percentageValue: 0.5,
+      altText: "approve-sign",
+    },
+  
+    {
+      title: "TOTAL SALES",
+      value: "$500,0000",
+      icon: orangeboxes ,
+      iconColor: "#DD900D",
+      textColor: "#1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "pending-icon",
+    },
+   
+  ];
+
+  export const salesManagementData = [
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "13 June 2024, 4:20pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Paid",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "14 June 2024, 2:15pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Pending",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "15 June 2024, 5:00pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Paid",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "16 June 2024, 1:30pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Pending",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "17 June 2024, 11:10am",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Pending",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "18 June 2024, 3:45pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Pending",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "14 June 2024, 2:15pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Pending",
+    },
+    {
+      name: "#123456778",
+      productCode: "Total Items: 10",
+      dateReturned: "15 June 2024, 5:00pm",
+      customer: "Adekunle Ibrahim",
+      requestValue: "31,000",
+      numberOfItems: "32",
+      status: "Paid",
+    },
+  ];
+  

@@ -62,6 +62,7 @@ import CreateTierTwo from "./pages/procurement/vendorManagement/createTierTwo";
 import EditVendor from "./pages/procurement/vendorManagement/editVendor";
 import TierOneVendorDetails from "./pages/procurement/vendorManagement/tierOneVendorDetails";
 import FinancialDashboard from "./pages/financialManagement/financialDashboard/dashboardPage";
+import SalesManagement from "./pages/financialManagement/financialDashboard/salesManagement";
 
 
 export default function App() {
@@ -167,6 +168,7 @@ export default function App() {
 
              {/* FINANCIAL-MANAGEMENT ROUTES */}
              <Route path={ROUTES.financialDashboard} element={<FinancialDashboard />} />    
+             <Route path={ROUTES.salesManagement} element={<SalesManagement/>} />  
         </Route>
       </Routes>
     </Router>

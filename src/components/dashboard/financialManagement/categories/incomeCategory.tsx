@@ -3,12 +3,12 @@ import { VictoryPie } from "victory";
 export default function IncomePieChart() {
   return (
     <div className="bg-white p-4 rounded-xl flex flex-col gap-4 w-full">
-      <div className="flex justify-between items-center">
+      <div className="flex items-center">
         <h3 className="text-sm font-medium">Top Income by Category</h3>
       </div>
 
       {/* Chart */}
-      <div className="flex mt-[-5em]">
+      <div className="flex mt-[-5em] ml-[-3em]">
         <div className="flex justify-start">
         <VictoryPie
           data={[
@@ -24,7 +24,7 @@ export default function IncomePieChart() {
           }}
         />
         </div>
-        <div className="flex  flex-col gap-4 text-xs mt-[10em]">
+        <div className="flex  flex-col gap-4 text-xs mt-[10em] ml-[-5em]">
           <div className="flex items-center gap-1.5">
             <span className="w-2.5 h-2.5 rounded-full bg-[#F16722]"></span>
             <span className="text-[#667085]">Sales</span>

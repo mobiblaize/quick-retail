@@ -66,4 +66,6 @@ export const ROUTES = {
 
     // FINANCIAL-MANAGEMENT SECTION
     financialDashboard: "/dashboard/financialManagement",
+    salesManagement: "/dashboard/salesManagement",
+    view: "/dashboard/sales/view_order",
 };
