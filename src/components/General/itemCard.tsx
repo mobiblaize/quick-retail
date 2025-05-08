@@ -18,7 +18,7 @@ interface AnalyticsCardProps {
   lightColor?: string;
 }
 
-const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
+const ItemAnalyticsCard: React.FC<AnalyticsCardProps> = ({
   title,
   value,
   icon,
@@ -51,34 +51,47 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
 
   return (
     <Card p="lg" radius="md" style={cardStyle}>
-      {icon && <div>{icon}</div>}
+  <Box
+    style={{
+      display: "flex",
+      alignItems: "center",
+      gap: "16px",
+    }}
+  >
+    {icon && <Box>{icon}</Box>}
 
-      <Text c={textColor} size="xs" fw={700} mt="xs" tt={"uppercase"}>
+    <Box style={{ display: "flex", flexDirection: "column", gap: "4px" }}>
+      <Text c={lightColor} size="xs" fw={700} tt="uppercase">
         {title}
       </Text>
 
-      <Text c={textColor} fz="24px" fw="600" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  {value}
-  {percentageValue !== undefined && (
-    <Group
-      gap="xs"
-      style={{
-        borderRadius: "0.8rem",
-        padding: "4px 8px",
-        display: "inline-flex",
-        backgroundColor: "#E7F6EC",
-      }}
-    >
-      <Text c="#036B26" size="sm" fw={500}>
-        {percentageValue}
+      <Text
+        c={textColor}
+        fz="24px"
+        fw={600}
+        style={{ display: "flex", alignItems: "center", gap: "8px" }}
+      >
+        {value}
+        {percentageValue !== undefined && (
+          <Group
+            gap="xs"
+            style={{
+              borderRadius: "0.8rem",
+              padding: "4px 8px",
+              display: "inline-flex",
+              backgroundColor: "#E7F6EC",
+            }}
+          >
+            <Text c="#036B26" size="sm" fw={500}>
+              {percentageValue}
+            </Text>
+            <ArrowIcon />
+          </Group>
+        )}
       </Text>
-      <ArrowIcon />
-    </Group>
+    </Box>
+  </Box>
+</Card>
   )}
-</Text>
 
-    </Card>
-  );
-};
-
-export default AnalyticsCard;
+export default ItemAnalyticsCard;

@@ -116,7 +116,7 @@ export const PointOfSale: NavItem[] = [
 export const FinancialManagement: NavItem[] = [
   {
     label: "Dashboard",
-    href: ROUTES.dashboard,
+    href: ROUTES.financialDashboard,
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },

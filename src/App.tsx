@@ -61,6 +61,8 @@ import CreateTierOne from "./pages/procurement/vendorManagement/createTierOne";
 import CreateTierTwo from "./pages/procurement/vendorManagement/createTierTwo";
 import EditVendor from "./pages/procurement/vendorManagement/editVendor";
 import TierOneVendorDetails from "./pages/procurement/vendorManagement/tierOneVendorDetails";
+import FinancialDashboard from "./pages/financialManagement/financialDashboard/dashboardPage";
+
 
 export default function App() {
   return (
@@ -162,6 +164,9 @@ export default function App() {
             <Route path={ROUTES.pendingNoteDetails} element={<PendingNoteDetails />} />
             <Route path={ROUTES.rejectedNoteDetails} element={<RejectedNoteDetails />} />
             <Route path={ROUTES.approvedNoteDetails} element={<ApprovedNoteDetails />} />
+
+             {/* FINANCIAL-MANAGEMENT ROUTES */}
+             <Route path={ROUTES.financialDashboard} element={<FinancialDashboard />} />    
         </Route>
       </Routes>
     </Router>

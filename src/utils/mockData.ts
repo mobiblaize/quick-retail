@@ -5,12 +5,22 @@ import approve from "../../src/assets/images/approved.png";
 import pending from "../../src/assets/images/pending.png";
 import rejected from "../../src/assets/images/rejected.png";
 import orangeBox from "../../src/assets/images/orangeBox.png";
+import orangeboxes from "../../src/assets/images/orangeboxes.png";
 import goldBox from "../../src/assets/images/goldBox.png";
 import greenBox from "../../src/assets/images/greenBox.png";
 import activeStore from "../../src/assets/images/inactiveStore.png";
 import inactiveStore from "../../src/assets/images/activeStore.png";
 import house from "../../src/assets/images/house.png";
 import { BlueUserIcon, PinkUserIcon, PurpleUserIcon } from "../assets/svg";
+import orangeDollar from "../../src/assets/images/orangeDollar.png";
+import greenDollar from "../../src/assets/images/greenDollar.png";
+import redDollar from "../../src/assets/images/redDollar.png";
+import greenCoin from "../../src/assets/images/greenCoin.png";
+import blueCoin from "../../src/assets/images/blueCoin.png";
+import redCoin from "../../src/assets/images/redCoin.png";
+import redBackgroundCoin from "../../src/assets/images/redBackgroundCoin.png";
+import totalItem from "../../src/assets/images/totalItem.png";
+import greenDollarBig from "../../src/assets/images/greenDollarBig.png";
 
 export const analyticsData = [
   {
@@ -2586,3 +2596,241 @@ export const productOrdered = [
     discountStatus: "Active",
   },
 ];
+
+export const financialMetricsOverviewData = [
+  {
+    title: "Gross Margin",
+    value: "$500,0000",
+    icon: dollar,
+    iconColor: "#099137",
+    textColor: "#E4E7EC",
+    cardBgColor: "#D75211",
+    percentageValue: 0.5,
+    altText: "approve-sign",
+  },
+
+  {
+    title: "EBITDA MARGIN",
+    value: "$400,0000",
+    icon: orangeboxes ,
+    iconColor: "#DD900D",
+    textColor: "#1D2739",
+    cardBgColor: "#FDFDFD",
+    percentageValue: 0.5,
+    borderColor: "#98A2B3",
+    altText: "pending-icon",
+  },
+  {
+    title: "OPERATING PROFIT / EBIT MARGIN",
+    value: "$50,0000",
+    icon: orangeboxes,
+    iconColor: "#CB1A14",
+    textColor: "#1D2739",
+    cardBgColor: "#FDFDFD",
+    percentageValue: 0.5,
+    borderColor: "#98A2B3",
+    altText: "rejected-icon",
+  },
+];
+
+  export const financialMetricsOverviewData2 = [
+  
+    {
+      title: "OCCUPANCY EXPENSES",
+      value: "$30,0000",
+      icon: orangeboxes ,
+      iconColor: "#DD900D",
+      textColor: "#1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "pending-icon",
+    },
+    {
+      title: "NET MARGIN",
+      value: "$200,0000",
+      icon: orangeboxes,
+      iconColor: "#CB1A14",
+      textColor: "#1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "rejected-icon",
+    },
+    
+  ];
+
+  export const ProfitAnalysisOverviewData = [
+    {
+      title: "TOTAL INCOME",
+      value: "$500,0000",
+      icon: orangeDollar,
+      iconColor: "#099137",
+      textColor: "#1D2739",
+      cardBgColor: "#FFE6D5",
+      percentageValue: 0.5,
+      altText: "approve-sign",
+      openBillsText:"Open Bills:",
+      overdueBillsText: "Overdue Bills:",
+      openBillsValue: "0.00",
+      overdueBillsValue: "0.00",
+      lightColor: "#667085",
+      nairaColor:"#B42318",
+    },
+  
+    {
+      title: "EBITDA MARGIN",
+      value: "$400,0000",
+      icon: greenDollar ,
+      iconColor: "#DD900D",
+      textColor: "#1D2739",
+      cardBgColor: "#E7F6EC",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "pending-icon",
+      openBillsText:"Open Bills:",
+      overdueBillsText: "Overdue Bills:",
+      openBillsValue: "0.00",
+      overdueBillsValue: "0.00",
+      lightColor: "#667085",
+      nairaColor:"#B42318",
+    },
+    {
+      title: "OPERATING PROFIT / EBIT MARGIN",
+      value: "$50,0000",
+      icon: redDollar,
+      iconColor: "#CB1A14",
+      textColor: "#1D2739",
+      cardBgColor: "#FBEAE9",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "rejected-icon",
+      openBillsText:"Open Bills:",
+      overdueBillsText: "Overdue Bills:",
+      openBillsValue: "0.00",
+      overdueBillsValue: "0.00",
+      lightColor: "#667085",
+      nairaColor:"#B42318",
+    },
+  ];
+  
+  export const paymentOverviewVendor= [
+    {
+      title: "TOTAL FULFILLED PAYMENT",
+      value: "$400,0000",
+      icon: greenCoin,
+      iconColor: "#099137",
+      textColor: "##1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      altText: "approve-sign",
+      lightColor: "#667085",
+      borderColor: "#98A2B3",
+    },
+  
+    {
+      title: "TOTAL PAYABLE",
+      value: "$400,0000",
+      icon: blueCoin ,
+      iconColor: "#DD900D",
+      textColor: "##1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "pending-icon",
+      lightColor: "#667085",
+    },
+    {
+      title: "TOTAL OVERDUE PAYABLE",
+      value: "$400,0000",
+      icon: redCoin,
+      iconColor: "#CB1A14",
+      textColor: "##1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "rejected-icon",
+      lightColor: "#667085",
+    },
+  ];
+
+   
+  export const paymentOverviewCustomer= [
+    {
+      title: "TOTAL Receivable PAYMENT",
+      value: "$400,0000",
+      icon: greenCoin,
+      iconColor: "#099137",
+      textColor: "##1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      altText: "approve-sign",
+      lightColor: "#667085",
+      borderColor: "#98A2B3",
+    },
+  
+    {
+      title: "TOTAL Receivable",
+      value: "$400,0000",
+      icon: blueCoin ,
+      iconColor: "#DD900D",
+      textColor: "##1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "pending-icon",
+      lightColor: "#667085",
+    },
+    {
+      title: "TOTAL OVERDUE Recieveable",
+      value: "$400,0000",
+      icon: redCoin,
+      iconColor: "#CB1A14",
+      textColor: "##1D2739",
+      cardBgColor: "#FDFDFD",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "rejected-icon",
+      lightColor: "#667085",
+    },
+  ];
+
+   
+  export const paymentOverviewItem= [
+    {
+      title: "TOTAL ITEM INCOME",
+      value: "$400,0000",
+      icon: greenDollarBig,
+      iconColor: "#099137",
+      textColor: "#1D2739",
+      cardBgColor: "#E7F6EC",
+      percentageValue: 0.5,
+      altText: "approve-sign",
+      lightColor: "#667085",
+     
+    },
+  
+    {
+      title: "TOTAL ITEM",
+      value: "$400,0000",
+      icon: totalItem ,
+      iconColor: "#DD900D",
+      textColor: "#1D2739",
+      cardBgColor: "#EFF4FF",
+      percentageValue: 0.5,
+      altText: "pending-icon",
+      lightColor: "#667085",
+    },
+    {
+      title: "TOTAL PAY EXPENSES",
+      value: "$400,0000",
+      icon: redBackgroundCoin,
+      iconColor: "#CB1A14",
+      textColor: "#1D2739",
+      cardBgColor: "#FBEAE9",
+      percentageValue: 0.5,
+      borderColor: "#98A2B3",
+      altText: "rejected-icon",
+      lightColor: "#667085",
+    },
+  ];

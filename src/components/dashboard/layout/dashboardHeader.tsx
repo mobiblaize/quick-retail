@@ -44,7 +44,7 @@ export const DashboardHeader = ({
     },
     {
       label: "Financial Management" as DashboardSection,
-      to: ROUTES.dashboard,
+      to: ROUTES.financialDashboard,
       active: activeSection === "Financial Management",
     },
     {
@@ -52,11 +52,11 @@ export const DashboardHeader = ({
       to: ROUTES.dashboard,
       active: activeSection === "Reports",
     },
-    {
-      label: "Admin" as DashboardSection,
-      to: ROUTES.dashboard,
-      active: activeSection === "Admin",
-    },
+    // {
+    //   label: "Admin" as DashboardSection,
+    //   to: ROUTES.dashboard,
+    //   active: activeSection === "Admin",
+    // },
   ];
 
   const handleNavClick = (section: DashboardSection) => {

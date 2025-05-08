@@ -63,4 +63,7 @@ export const ROUTES = {
   pendingNoteDetails: "/dashboard/goods-received/pending-note-details",
   rejectedNoteDetails: "/dashboard/goods-received/rejected-note-details",
   approvedNoteDetails: "/dashboard/goods-received/approved-note-details",
+
+    // FINANCIAL-MANAGEMENT SECTION
+    financialDashboard: "/dashboard/financialManagement",
 };

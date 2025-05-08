@@ -1,6 +1,7 @@
 import React, { ReactNode } from "react";
 import { Box, Text, Group, Card, useMantineTheme } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
+import { BlackNaira, RedNaira } from "../../assets/svg/index";
 
 interface AnalyticsCardProps {
   title: string;
@@ -15,10 +16,15 @@ interface AnalyticsCardProps {
   width?: string | number;
   height?: string | number;
   borderColor?: string;
+  openBillsText?: string;
+  overdueBillsText?: string;
+  openBillsValue?: number;
+  overdueBillsValue?: number;
   lightColor?: string;
+  nairaColor?:string;
 }
 
-const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
+const ProfitCard: React.FC<AnalyticsCardProps> = ({
   title,
   value,
   icon,
@@ -28,11 +34,19 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   width = "100%",
   height = "auto",
   borderColor,
+  openBillsText,
+  overdueBillsText,
+  openBillsValue,
+  overdueBillsValue,
   lightColor,
+  nairaColor,
 }) => {
   const theme = useMantineTheme();
 
   const defaultBgColor = cardBgColor || theme.colors.customPrimary[6];
+
+  const toSentenceCase = (text: string) => 
+  text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : '';
 
   const cardStyle: React.CSSProperties = {
     display: "flex",
@@ -53,7 +67,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     <Card p="lg" radius="md" style={cardStyle}>
       {icon && <div>{icon}</div>}
 
-      <Text c={textColor} size="xs" fw={700} mt="xs" tt={"uppercase"}>
+      <Text   c={lightColor} size="xs" fw={700} mt="xs" tt={"uppercase"}>
         {title}
       </Text>
 
@@ -76,9 +90,51 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     </Group>
   )}
 </Text>
+<Text
+  c={lightColor}
+  size="xs"
+  fw={700}
+  mt="xs"
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+  }}
+>
+  {openBillsText}
+  <div style={{ marginLeft: 'auto', display: 'flex', alignItems: 'center', gap: '4px', color: nairaColor, }}>
+    <BlackNaira /> {openBillsValue}
+  </div>
 
+</Text>
+<Text
+  c={lightColor}
+  size="xs"
+  fw={700}
+  mt="xs"
+  style={{
+    display: 'flex',
+    alignItems: 'center',
+  }}
+>
+  {overdueBillsText}
+  <div
+    style={{
+      marginLeft: 'auto',
+      display: 'flex',
+      alignItems: 'center',
+      gap: '4px',
+    }}
+  >
+    <RedNaira />
+    <Text c="red" size="xs" fw={700}>
+      {overdueBillsValue}
+    </Text>
+  </div>
+</Text>
+
+  
     </Card>
   );
 };
 
-export default AnalyticsCard;
+export default ProfitCard;
