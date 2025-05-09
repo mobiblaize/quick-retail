@@ -1,13 +1,14 @@
+import { ColumnDef } from "@tanstack/react-table";
+import { Text } from "@mantine/core";
+import { Link } from "react-router";
+import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
 import { salesManagementData } from "../../../../utils/mockData";
-import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Text } from "@mantine/core";
-import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 
-const SalesTable = () => {
+
+const ViewCustomerOrder = () => {
   const columns: ColumnDef<TableRowData>[] = [
     {
         id: 'select',
@@ -104,7 +105,7 @@ const SalesTable = () => {
       header: "",
       accessorKey: "action",
       cell: () => (
-        <Link to={ROUTES.view}>
+        <Link to={ROUTES.viewOrders}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View order
           </Text>
@@ -125,7 +126,7 @@ const SalesTable = () => {
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              Orders
+            Customer Orders
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">{salesManagementData.length}</Text>
@@ -137,4 +138,6 @@ const SalesTable = () => {
   );
 };
 
-export default SalesTable;
+export default ViewCustomerOrder;
+
+

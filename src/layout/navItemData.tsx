@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   InActiveDashboardIcon,
   ActiveDashboardIcon,
@@ -121,11 +121,27 @@ export const FinancialManagement: NavItem[] = [
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Sales",
-    href: ROUTES.productManagement,
+    label: "Sales Management",
+    href: ROUTES.customer,
     inactiveIcon: InActiveReturns,
     activeIcon: ActiveReturns,
+    hasChildren: true,
+    children: [
+      { label: "Customer", href: `${ROUTES.customerPage}` },
+      { label: "Receipt", href: `${ROUTES.createReceipt}` },
+      { label: "Receipt Allocation", href: `${ROUTES.customer}` },
+      { label: "Sales Invoice", href: `${ROUTES.happyGiftCard}` },
+      { label: "Sales Returns", href: `${ROUTES.customer}` },
+      { label: "Credit Note", href: `${ROUTES.happyGiftCard}` },
+      { label: "Sales Reports", href: `${ROUTES.customer}` },
+    ],
   },
+  // {
+  //   label: "Purchase",
+  //   href: ROUTES.financialDashboard,
+  //   inactiveIcon: InActivePurchaseOrderIcon,
+  //   activeIcon: ActiveProductIcon,
+  // },
 ];
 
 export const Procurement: NavItem[] = [

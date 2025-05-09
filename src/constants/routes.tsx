@@ -43,7 +43,8 @@ export const ROUTES = {
   purchaseOrder: "/dashboard/purchase-order",
   createPurchaseOrder: "/dashboard/purchase-order/create-purchase-order",
   purchaseInvoicePage: "/dashboard/purchase-order/purchase-invoice",
-  viewPurchaseOrderInvoicePage: "/dashboard/purchase-order/view-purchase-order-invoice",
+  viewPurchaseOrderInvoicePage:
+    "/dashboard/purchase-order/view-purchase-order-invoice",
   vendorManagement: "/dashboard/vendor-management",
   tierOneVendors: "/dashboard/vendor-management/tier-one-vendor",
   tierTwoVendors: "/dashboard/vendor-management/tier-two-vendor",
@@ -64,8 +65,15 @@ export const ROUTES = {
   rejectedNoteDetails: "/dashboard/goods-received/rejected-note-details",
   approvedNoteDetails: "/dashboard/goods-received/approved-note-details",
 
-    // FINANCIAL-MANAGEMENT SECTION
-    financialDashboard: "/dashboard/financialManagement",
-    salesManagement: "/dashboard/salesManagement",
-    view: "/dashboard/sales/view_order",
+  // FINANCIAL-MANAGEMENT SECTION
+  financialDashboard: "/dashboard/financial-management",
+  salesManagement: "/dashboard/sales-management",
+  view: "/dashboard/sales/view_order",
+  customerPage: "/dashboard/sales-management/customer",
+  viewCustomer: "/dashboard/sales-management/customer/view",
+  viewCustomerOrder: "/dashboard/sales-management/customer/view/order",
+  viewOrders: "/dashboard/sales-management/customer/view_order",
+  paymentMethod:"/dashboard/sales-management/customer/view/payment-method",
+  createReceipt: "/dashboard/sales-management/receipt/create-receipt",
+  confirmReceipt: "/dashboard/sales-management/receipt/confirm-receipt"
 };

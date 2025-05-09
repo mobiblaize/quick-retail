@@ -1,6 +1,4 @@
-// components/CustomerPaymentTable.tsx
 
-import React from "react";
 
 interface TableData {
   name: string;
