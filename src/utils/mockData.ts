@@ -3363,7 +3363,7 @@ export const PRODUCT_LIST = [
 
 export const allReceipts = [
   {
-    id:"17817",
+    id:"#17817",
     invoice: "Invoice no:",
     no:" 3180",
     name:"Grateful Erhis",
@@ -3531,4 +3531,88 @@ export const receiptOverviewData = [
     borderColor: "#98A2B3",
   },
 
+];
+export const partiallyPaid = [
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",  
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    date: "13 Jan, 2025",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    date: "13 Jan, 2025",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    date: "13 Jan, 2025",
+  },
+  
+];
+
+export const advancedPaid = [
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",  
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    date: "13 Jan, 2025",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    date: "13 Jan, 2025",
+  },
+  {
+    id:"#17817",
+    totalAmount: "₦31,000",
+    amount: "₦31,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    date: "13 Jan, 2025",
+  },
 ];

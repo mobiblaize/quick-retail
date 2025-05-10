@@ -81,6 +81,12 @@ import PreviewReceiptPage from "./pages/financialManagement/SalesManagement/Rece
 import AllReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/allReceiptsView";
 import ShareReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/shareReceipt";
 import ViewReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/viewReceipt";
+import GenerateReportPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/generateReport";
+import AllocateReceiptPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/allocateReceipt";
+import PartiallyPaidReceiptPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/partialPaidReceipt";
+import AdvancedPaidPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/advancedPaid";
+import FilledPartiallyPaidReceiptPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/filledPartialPaid";
+import FilledAdvancedPaidPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/filledAdvanvcedPaid";
 
 
 export default function App() {
@@ -266,6 +272,12 @@ export default function App() {
           <Route path={ROUTES.allReceiptView} element={<AllReceiptPage/>} />
           <Route path={ROUTES.shareReceiptView} element={<ShareReceiptPage/>} />
           <Route path={ROUTES.viewReceipt} element={<ViewReceiptPage/>} />
+          <Route path={ROUTES.generateReport} element={<GenerateReportPage/>} />
+          <Route path={ROUTES.allocateReceipt} element={<AllocateReceiptPage/>} />
+          <Route path={ROUTES.partiallyPaidReceipt} element={<PartiallyPaidReceiptPage/>} />
+          <Route path={ROUTES.advancedPaidReceipt} element={<AdvancedPaidPage/>} />
+          <Route path={ROUTES.filledPartiallyPaidReceipt} element={<FilledPartiallyPaidReceiptPage/>} />
+          <Route path={ROUTES.filledAvancedPaidReceipt} element={<FilledAdvancedPaidPage/>} />
         </Route>
       </Routes>
     </Router>

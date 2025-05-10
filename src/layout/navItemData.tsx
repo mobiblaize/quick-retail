@@ -130,7 +130,7 @@ export const FinancialManagement: NavItem[] = [
       { label: "Customer", href: `${ROUTES.customerPage}` },
       { label: "Receipt", href: `${ROUTES.createReceipt}` },
       { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
-      { label: "Receipt Allocation", href: `${ROUTES.customer}` },
+      { label: "Receipt Allocation", href: `${ROUTES.generateReport}` },
       { label: "Sales Returns", href: `${ROUTES.customer}` },
       { label: "Credit Note", href: `${ROUTES.happyGiftCard}` },
       { label: "Sales Reports", href: `${ROUTES.customer}` },

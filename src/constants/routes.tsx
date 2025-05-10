@@ -85,4 +85,10 @@ export const ROUTES = {
   allReceiptView :"/dashboard/sales-management/receipt/all-receipt", 
   shareReceiptView :"/dashboard/sales-management/receipt/share-receipt", 
   viewReceipt :"/dashboard/sales-management/receipt/view-receipt", 
+  generateReport :"/dashboard/sales-management/receipt-allocation/generate-report", 
+  allocateReceipt :"/dashboard/sales-management/receipt-allocation/allocate-receipt",
+ partiallyPaidReceipt :"/dashboard/sales-management/receipt-allocation/partially-paid-receipt",
+ advancedPaidReceipt :"/dashboard/sales-management/receipt-allocation/advance-paid-receipt",
+ filledPartiallyPaidReceipt :"/dashboard/sales-management/receipt-allocation/filled-partially-paid-receipt",
+ filledAvancedPaidReceipt :"/dashboard/sales-management/receipt-allocation/filled-advance-paid-receipt",
 };
