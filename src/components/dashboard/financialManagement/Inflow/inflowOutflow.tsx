@@ -6,7 +6,6 @@ import {
     ResponsiveContainer,
   } from 'recharts';
   import { useState } from 'react';
-import CustomDropdown from '../calendarDropdown';
 import DateFilterMenu from '../../../General/filterMenu';
 import { Group, } from "@mantine/core";
 

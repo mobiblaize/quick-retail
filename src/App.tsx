@@ -72,6 +72,15 @@ import ViewOrder from "./pages/financialManagement/SalesManagement/customer/view
 import PaymentMethodPage from "./pages/financialManagement/SalesManagement/customer/paymentMethod";
 import CreateReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/createReceipt";
 import ConfirmReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/confirmReceipt";
+import InvoiceOverview from "./pages/financialManagement/SalesManagement/SalesInvoice/invoiceOverview";
+import CreateInvoicePage from "./pages/financialManagement/SalesManagement/SalesInvoice/createInvoice";
+import PreviewInvoicePage from "./pages/financialManagement/SalesManagement/SalesInvoice/previewInvoice";
+import AttachInvoicePage from "./pages/financialManagement/SalesManagement/SalesInvoice/attachReceipient";
+import AttachReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/attachReceipent";
+import PreviewReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/previewReceipt";
+import AllReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/allReceiptsView";
+import ShareReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/shareReceipt";
+import ViewReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/viewReceipt";
 
 
 export default function App() {
@@ -248,6 +257,15 @@ export default function App() {
           <Route path={ROUTES.viewOrders} element={<ViewOrder />} />
           <Route path={ROUTES.createReceipt} element={<CreateReceiptPage />} />
           <Route path={ROUTES.confirmReceipt} element={<ConfirmReceiptPage />} />
+          <Route path={ROUTES.invoiceOverview} element={<InvoiceOverview />} />
+          <Route path={ROUTES.createInvoice} element={<CreateInvoicePage />} />
+          <Route path={ROUTES.previewInvoice} element={<PreviewInvoicePage />} />
+          <Route path={ROUTES.attachInvoice} element={<AttachInvoicePage />} />
+          <Route path={ROUTES.attachReceipent} element={<AttachReceiptPage />} />
+          <Route path={ROUTES.previewReceipt} element={<PreviewReceiptPage />} />
+          <Route path={ROUTES.allReceiptView} element={<AllReceiptPage/>} />
+          <Route path={ROUTES.shareReceiptView} element={<ShareReceiptPage/>} />
+          <Route path={ROUTES.viewReceipt} element={<ViewReceiptPage/>} />
         </Route>
       </Routes>
     </Router>

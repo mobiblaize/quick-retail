@@ -147,7 +147,7 @@ export default function CreateReceipt() {
               </div>
             </div>
           </div>
-          <div className="sticky bottom-0 right-0 w-full bg-white py-8 border-t border-gray-200 mt-12">
+          <div className="fixed bottom-0 right-0 w-full bg-white py-8 border-t border-gray-200 mt-12">
             <div className="w-[100%] mx-auto flex justify-end gap-4 items-end pr-4 cursor-pointer ">
               <button
                 className="bg-[white] cursor-pointer text-[#F16722] px-12 py-2 rounded-lg font-semibold hover:bg-orange-200 transition duration-300 border border-[#F16722]"

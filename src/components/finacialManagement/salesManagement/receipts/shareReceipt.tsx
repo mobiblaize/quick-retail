@@ -8,7 +8,7 @@ import CustomerInvoice from "./customerInvoices";
 import FileUpload from "./fileUpload";
 import ReceiptPreview from "./receiptPreview";
 
-export default function ConfirmReceipt() {
+export default function ShareReceipt() {
   const navigate = useNavigate();
   const handleContinue = () => {
     navigate(ROUTES.attachReceipent);
@@ -165,7 +165,7 @@ export default function ConfirmReceipt() {
                 Cancel
               </button>
               <button className="bg-[#F16722] text-white px-6 py-2 rounded-lg font-semibold hover:bg-orange-600 transition duration-300 cursor-pointer"  onClick={handleContinue}>
-                Create Receipt
+              Save & Update Changes
               </button>
             </div>
           </div>

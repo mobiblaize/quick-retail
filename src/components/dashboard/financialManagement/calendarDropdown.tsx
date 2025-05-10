@@ -1,6 +1,6 @@
 import React, { SetStateAction, useState } from 'react';
 
-const CustomDropdown = () => {
+const CalendarDropdown = () => {
   const [selectedRange, setSelectedRange] = useState('This Month');
   const [isOpen, setIsOpen] = useState(false);
 
@@ -83,4 +83,4 @@ const CustomDropdown = () => {
   );
 };
 
-export default CustomDropdown;
+export default CalendarDropdown ;

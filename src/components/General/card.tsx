@@ -1,5 +1,5 @@
 import React, { ReactNode } from "react";
-import { Box, Text, Group, Card, useMantineTheme } from "@mantine/core";
+import { Text, Group, Card, useMantineTheme } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
 
 interface AnalyticsCardProps {
@@ -40,7 +40,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     gap: "3px",
     width,
     height,
-    boxShadow: borderColor ? `0 0 0 0.5px ${borderColor}` : "none",
+    border: borderColor ? `1px solid ${borderColor}` : undefined,
   };
 
   if (defaultBgColor.includes("gradient")) {

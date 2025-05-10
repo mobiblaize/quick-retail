@@ -75,5 +75,14 @@ export const ROUTES = {
   viewOrders: "/dashboard/sales-management/customer/view_order",
   paymentMethod:"/dashboard/sales-management/customer/view/payment-method",
   createReceipt: "/dashboard/sales-management/receipt/create-receipt",
-  confirmReceipt: "/dashboard/sales-management/receipt/confirm-receipt"
+  confirmReceipt: "/dashboard/sales-management/receipt/confirm-receipt",
+  invoiceOverview:"/dashboard/sales-management/sales-invoice",
+  createInvoice:"/dashboard/sales-management/sales-invoice/create-invoice",
+  previewInvoice :"/dashboard/sales-management/sales-invoice/preview-invoice",
+  attachInvoice :"/dashboard/sales-management/sales-invoice/attach-invoice",
+  attachReceipent :"/dashboard/sales-management/receipt/attach-receipt", 
+  previewReceipt :"/dashboard/sales-management/receipt/preview-receipt", 
+  allReceiptView :"/dashboard/sales-management/receipt/all-receipt", 
+  shareReceiptView :"/dashboard/sales-management/receipt/share-receipt", 
+  viewReceipt :"/dashboard/sales-management/receipt/view-receipt", 
 };
