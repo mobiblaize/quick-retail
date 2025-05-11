@@ -87,6 +87,15 @@ import PartiallyPaidReceiptPage from "./pages/financialManagement/SalesManagemen
 import AdvancedPaidPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/advancedPaid";
 import FilledPartiallyPaidReceiptPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/filledPartialPaid";
 import FilledAdvancedPaidPage from "./pages/financialManagement/SalesManagement/ReceiptAllocation/filledAdvanvcedPaid";
+import OrderReceiptPage from "./pages/financialManagement/SalesManagement/SalesReturn/orderReceipt";
+import InStorePage from "./pages/financialManagement/SalesManagement/SalesReturn/instoreOverview";
+import FinancePage from "./pages/financialManagement/SalesManagement/SalesReturn/financeOverview";
+import ViewSalesReturnsPage from "./pages/financialManagement/SalesManagement/SalesReturn/view";
+import IssueCreditNotePage from "./pages/financialManagement/SalesManagement/CreditNote/issueCreditNote";
+import CreditNotePage from "./pages/financialManagement/SalesManagement/CreditNote/creditNote";
+import CreditNotePage2 from "./pages/financialManagement/SalesManagement/CreditNote/creditNote2";
+import ViewCreditNotePage from "./pages/financialManagement/SalesManagement/CreditNote/view";
+import ViewCreditNoteReceiptPage from "./pages/financialManagement/SalesManagement/CreditNote/view2";
 
 
 export default function App() {
@@ -278,8 +287,17 @@ export default function App() {
           <Route path={ROUTES.advancedPaidReceipt} element={<AdvancedPaidPage/>} />
           <Route path={ROUTES.filledPartiallyPaidReceipt} element={<FilledPartiallyPaidReceiptPage/>} />
           <Route path={ROUTES.filledAvancedPaidReceipt} element={<FilledAdvancedPaidPage/>} />
+          <Route path={ROUTES.orderReceipt} element={<OrderReceiptPage/>} />
+          <Route path={ROUTES.inStoreOverview} element={<InStorePage/>} />
+          <Route path={ROUTES.financeOverview} element={<FinancePage/>} />
+          <Route path={ROUTES.viewSalesReturns} element={<ViewSalesReturnsPage/>} />
+          <Route path={ROUTES.issueCreditNote} element={<IssueCreditNotePage/>} />       
+           <Route path={ROUTES.creditNote} element={<CreditNotePage/>} />
+           <Route path={ROUTES.creditNote2} element={<CreditNotePage2/>} />
+           <Route path={ROUTES.viewCreditNote} element={<ViewCreditNotePage/>} />
+           <Route path={ROUTES.viewCreditNote2} element={<ViewCreditNoteReceiptPage/>} />
         </Route>
       </Routes>
     </Router>
-  );
+       );
 }

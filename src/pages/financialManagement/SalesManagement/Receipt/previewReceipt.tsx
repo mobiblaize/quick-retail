@@ -43,7 +43,7 @@ const PreviewReceiptPage = () => {
       </div>
       <div className="flex flex-row gap-2 md:gap-4">
       <Link to={ROUTES.viewReceipt}>
-            <CustomDropdown
+            <CustomDropdowna
                     
                         options={[
                           "Create New",

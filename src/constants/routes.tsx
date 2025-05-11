@@ -91,4 +91,13 @@ export const ROUTES = {
  advancedPaidReceipt :"/dashboard/sales-management/receipt-allocation/advance-paid-receipt",
  filledPartiallyPaidReceipt :"/dashboard/sales-management/receipt-allocation/filled-partially-paid-receipt",
  filledAvancedPaidReceipt :"/dashboard/sales-management/receipt-allocation/filled-advance-paid-receipt",
+ orderReceipt :"/dashboard/sales-management/sales-return/order-receipt", 
+ inStoreOverview :"/dashboard/sales-management/sales-return/in-store", 
+ financeOverview :"/dashboard/sales-management/sales-return/finance", 
+ viewSalesReturns :"/dashboard/sales-management/sales-return/view-returns", 
+ issueCreditNote :"/dashboard/sales-management/credit-note/issue-credit-note", 
+ creditNote :"/dashboard/sales-management/credit-note/credit-note", 
+ creditNote2 :"/dashboard/sales-management/credit-note/credit-notes", 
+ viewCreditNote :"/dashboard/sales-management/sales-return/view-credit-note", 
+ viewCreditNote2 :"/dashboard/sales-management/sales-return/view-credit-notes", 
 };
