@@ -3,6 +3,7 @@
 export default function PaymentMethod() {
   return (
     <div className="bg-white p-[2em]">
+         <div className="overflow-x-auto w-full">
       <table className="w-full text-left border-separate border-spacing-y-4">
   <thead>
     <tr className="text-gray-500 text-sm bg-[#D0D5DD] shadow-sm rounded-lg">
@@ -93,7 +94,7 @@ export default function PaymentMethod() {
     </tr>
   </tbody>
 </table>
-
+</div>
     </div>
 
 

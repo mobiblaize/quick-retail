@@ -118,7 +118,8 @@ const AllocatedReceiptTable = () => {
           </div>
         }
       />
-      <Box className="font-sans "style={{ backgroundColor: '#FFEBD8', padding: '0.5rem', borderRadius: '8px' }}>
+      {/* desktop */}
+      <Box className="font-sans md:block hidden"style={{ backgroundColor: '#FFEBD8', padding: '0.5rem', borderRadius: '8px' }}>
         <Box mt="lg" px="md">
           <div className="flex justify-between bg-[#FFEBD8]">
             <div>
@@ -138,6 +139,38 @@ const AllocatedReceiptTable = () => {
               </Text>
             </div>
             <div>
+              <Text size="sm" color="dimmed">
+                Total Invoice Outstanding.
+              </Text>
+              <Text size="xl" color="red">
+                ₦ 0000
+              </Text>
+            </div>
+          </div>
+        </Box>
+      </Box>
+
+      {/* mobile */}
+      <Box  className="font-sans block lg:hidden" style={{ backgroundColor: '#FFEBD8', padding: '0.5rem', borderRadius: '8px' }}>
+        <Box mt="lg" px="md">
+          <div className="flex flex-col bg-[#FFEBD8]">
+            <div>
+              <Text size="sm" color="dimmed">
+                Total Invoice Amount.
+              </Text>
+              <Text size="md" color="black">
+                ₦ 600,000
+              </Text>
+            </div>
+            <div className="mt-2">
+              <Text size="sm" color="dimmed" >
+                Total Allocation (Invoice Value)
+              </Text>
+              <Text size="md" color="black">
+                ₦ 0000
+              </Text>
+            </div>
+            <div className="mt-2">
               <Text size="sm" color="dimmed">
                 Total Invoice Outstanding.
               </Text>

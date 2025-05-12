@@ -96,6 +96,7 @@ import CreditNotePage from "./pages/financialManagement/SalesManagement/CreditNo
 import CreditNotePage2 from "./pages/financialManagement/SalesManagement/CreditNote/creditNote2";
 import ViewCreditNotePage from "./pages/financialManagement/SalesManagement/CreditNote/view";
 import ViewCreditNoteReceiptPage from "./pages/financialManagement/SalesManagement/CreditNote/view2";
+import CreateMobileReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/mobileReceipt";
 
 
 export default function App() {
@@ -271,6 +272,7 @@ export default function App() {
           </Route>
           <Route path={ROUTES.viewOrders} element={<ViewOrder />} />
           <Route path={ROUTES.createReceipt} element={<CreateReceiptPage />} />
+          <Route path={ROUTES.createMobileReceipt} element={<CreateMobileReceiptPage />} />
           <Route path={ROUTES.confirmReceipt} element={<ConfirmReceiptPage />} />
           <Route path={ROUTES.invoiceOverview} element={<InvoiceOverview />} />
           <Route path={ROUTES.createInvoice} element={<CreateInvoicePage />} />

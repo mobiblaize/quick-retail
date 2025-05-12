@@ -3,6 +3,7 @@ import { Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import OrderReceipt from "../../../../components/finacialManagement/salesManagement/salesReturn/orderReceipt";
+import { ROUTES } from "../../../../constants/routes";
 
 const OrderReceiptPage = () => {
     const navigate = useNavigate();
@@ -10,7 +11,9 @@ const OrderReceiptPage = () => {
     const handleBack = () => {
       navigate(-1);
     };
-  
+    const handleClick = () => {
+      navigate(ROUTES.createMobileReceipt);
+    };
     const backButton = (
       <button
         onClick={handleBack}
@@ -31,11 +34,31 @@ const OrderReceiptPage = () => {
         <div key="1">
           <div className="flex flex-col items-left justify-start">
             <Text fw={500} size="xl" c="black">
-            Create a Receipt
+            Issue Sales Return
             </Text>
             <Text fw={300} size="md" className="text-[#667085]">
-            Issued a receipt for multiples sales invoices.
+            Record returns of sold items and/or services.
             </Text>
+            <div className="flex gap-[3em] cursor-pointer lg:hidden">
+            <Text
+              fw={300}
+              size="md"
+              c="#F56630"
+              className="text-[#667085] bg-[#F1672226] py-4 px-4"
+          
+            >
+      Receipt
+            </Text>
+            <Text
+              fw={300}
+              size="md"
+              c="#1D2939"
+              className="text-[#667085] cursor-pointer"
+              onClick={handleClick}
+            >
+            Preview
+            </Text>
+          </div>
           </div>
         </div>,
       ];

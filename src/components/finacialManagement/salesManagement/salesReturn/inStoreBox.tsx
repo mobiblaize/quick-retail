@@ -47,7 +47,7 @@ const InStoreBox = () => {
           />
         </Group>
       </header>
-      <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5 w-[50%]">
+      <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5 w-full lg:w-[70%]">
         {inStoreOverviewData.map((card, index) => (
           <ReturnsAnalyticsCard
             key={index}

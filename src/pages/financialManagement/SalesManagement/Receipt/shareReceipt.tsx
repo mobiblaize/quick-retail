@@ -14,6 +14,9 @@ const ShareReceiptPage = () => {
   const handleBack = () => {
     navigate(-1);
   };
+      const handleClick = () => {
+      navigate(ROUTES.createMobileReceipt);
+    };
   const [selectedType, setSelectedType] = useState("");
   const backButton = (
     <button
@@ -33,12 +36,12 @@ const ShareReceiptPage = () => {
       <div className="flex sm:hidden">{backButton}</div>
     </div>,
     <div key="1">
-      <div className="flex  items-left justify-between">
+      <div className="flex flex-col  items-left justify-between">
         <Text fw={500} size="xl" c="black">
           Receipt Preview (#112354)
         </Text>
-
-        <div className="flex gap-8">
+        
+        <div className="flex gap-8 mt-[1em]">
         <span className="mt-4"><SentBadge/></span>  
         <div className="h-[30px]">
           <Link to={ROUTES.viewReceipt}>
@@ -64,6 +67,26 @@ const ShareReceiptPage = () => {
           </Link>
           </div>
         </div>
+        <div className="flex gap-[3em] cursor-pointer lg:hidden mt-[2em]">
+            <Text
+              fw={300}
+              size="md"
+              c="#F56630"
+              className="text-[#667085] bg-[#F1672226] py-4 px-4"
+          
+            >
+      Receipt
+            </Text>
+            <Text
+              fw={300}
+              size="md"
+              c="#1D2939"
+              className="text-[#667085] cursor-pointer"
+              onClick={handleClick}
+            >
+            Preview
+            </Text>
+          </div>
       </div>
     </div>,
   ];

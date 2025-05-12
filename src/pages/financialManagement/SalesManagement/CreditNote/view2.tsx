@@ -43,7 +43,7 @@ const ViewCreditNoteReceiptPage = () => {
           </Text>
         </div>
         <div className="flex flex-row gap-2 md:gap-4">
-          <Link to={ROUTES.viewReceipt}>
+          {/* <Link to={ROUTES.viewReceipt}> */}
             <CustomDropdown
               options={[
                 "Preview Credit Note",
@@ -57,7 +57,7 @@ const ViewCreditNoteReceiptPage = () => {
               textColorClass="text-white"
               fieldColorClass="bg-[#F16722]"
             />
-          </Link>
+          {/* </Link> */}
         </div>
       </div>
     </div>,

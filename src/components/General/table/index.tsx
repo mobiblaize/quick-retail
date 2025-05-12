@@ -200,7 +200,23 @@ const TanTable: FC<TanTableProps> = ({
             </Text>
           </div>
 
-          <div className="flex md:flex-row flex-col md:gap-[2rem] md:w-[600px] w-full md:items-center">
+          <div className="lg:hidden flex md:flex-row  md:gap-[2rem] md:w-[600px] w-[300px] md:items-center gap-4 justify-between whitespace-nowrap">
+          {showSearch && (
+              <SearchComp
+                setSearchTerm={setSearchTerm}
+                setPageIndex={setPageIndex}
+                searchTerm={searchTerm}
+                handleFilterChange={handleFilterChange}
+                filterList={filterList}
+                placeholder={searchPlaceholder}
+                maxWidth={searchMaxWidth}
+              />
+            )}
+
+            {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+          </div>
+          <div className="hidden md:block ">
+          <div className="flex md:flex-row  md:gap-[2rem] md:w-[600px] w-full md:items-center">
             {showSearch && (
               <SearchComp
                 setSearchTerm={setSearchTerm}
@@ -214,6 +230,7 @@ const TanTable: FC<TanTableProps> = ({
             )}
 
             {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+            </div>
           </div>
         </div>
       </Box>

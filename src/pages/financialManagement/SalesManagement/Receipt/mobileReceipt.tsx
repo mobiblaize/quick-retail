@@ -1,20 +1,20 @@
+
 import PageContainer from "../../../../layout/pageContainer";
 import { Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import ConfirmReceipt from "../../../../components/finacialManagement/salesManagement/receipts/confirmReceipt";
 import { ROUTES } from "../../../../constants/routes";
+import ReceiptPreview from "../../../../components/finacialManagement/salesManagement/receipts/receiptPreview";
 
-const ConfirmReceiptPage = () => {
+const CreateMobileReceiptPage = () => {
     const navigate = useNavigate();
 
     const handleBack = () => {
       navigate(-1);
     };
     const handleClick = () => {
-      navigate(ROUTES.createMobileReceipt);
+      navigate(ROUTES.createReceipt);
     };
-  
   
     const backButton = (
       <button
@@ -45,18 +45,17 @@ const ConfirmReceiptPage = () => {
             <Text
               fw={300}
               size="md"
-              c="#F56630"
-              className="text-[#667085] bg-[#F1672226] py-4 px-4"
-          
+              c="#1D2939"
+              className="text-[#667085] cursor-pointer"
+              onClick={handleClick}
             >
       Receipt
             </Text>
             <Text
               fw={300}
               size="md"
-              c="#1D2939"
-              className="text-[#667085] cursor-pointer"
-              onClick={handleClick}
+              c="#F56630"
+              className="text-[#667085] bg-[#F1672226] py-2 px-2"
             >
             Preview
             </Text>
@@ -66,10 +65,10 @@ const ConfirmReceiptPage = () => {
       ];
       return (
         <PageContainer subHeaders={subHeaders}>
-          <ConfirmReceipt/>
+              <ReceiptPreview />
         </PageContainer>
       );
     };
     
 
-export default ConfirmReceiptPage;
+export default CreateMobileReceiptPage;

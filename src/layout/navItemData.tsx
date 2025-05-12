@@ -136,12 +136,13 @@ export const FinancialManagement: NavItem[] = [
       // { label: "Sales Reports", href: `${ROUTES.customer}` },
     ],
   },
-  // {
-  //   label: "Purchase",
-  //   href: ROUTES.financialDashboard,
-  //   inactiveIcon: InActivePurchaseOrderIcon,
-  //   activeIcon: ActiveProductIcon,
-  // },
+  {
+    label: "Purchase",
+    href: ROUTES.financialDashboard,
+    inactiveIcon: InActivePurchaseOrderIcon,
+    activeIcon: ActiveProductIcon,
+  },
+
 ];
 
 export const Procurement: NavItem[] = [

@@ -45,14 +45,24 @@ export default function FileUploader() {
                 {block.fileName}
               </span>
             </div>
-
+            {/* desktop */}
+<div className="md:block hidden">
             <button
               onClick={() => fileInputRef.current.click()}
               className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
             >
               Click to Upload
             </button>
-
+            </div>
+            {/* mobile */}
+            <div className="lg:hidden">
+            <button
+              onClick={() => fileInputRef.current.click()}
+              className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
+            >
+              Upload
+            </button>
+            </div>
             <input
               type="file"
               ref={fileInputRef}

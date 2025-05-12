@@ -13,6 +13,7 @@ interface CustomDropdownProps {
   fieldColorClass?: string;
   required?: boolean;
   inputSizeClass?: string;
+  IconComponent?: React.ReactNode;
 }
 
 const CustomDropdown = ({
@@ -25,7 +26,8 @@ const CustomDropdown = ({
   required,
   textColorClass,
   fieldColorClass,
-  inputSizeClass
+  inputSizeClass,
+  IconComponent,
 }: CustomDropdownProps) => {
   const [selected, setSelected] = useState(value || "");
 
@@ -46,17 +48,21 @@ const CustomDropdown = ({
 
       <Listbox value={selected} onChange={handleChange}>
         <div className="relative">
-        <Listbox.Button
-  className={`relative w-full cursor-pointer rounded-md border border-gray-300 ${inputSizeClass || 'py-[0.9em]'} pl-4 pr-10 text-left shadow-sm text-sm text-gray-700 ${fieldColorClass || 'bg-white'}`}
->
-
-  <span className={`${selected ? 'text-gray-700' : 'text-white'}`}>
-    {selected || placeholder}
-  </span>
-  <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-    <ChevronDown size={16} />
-  </span>
-</Listbox.Button>
+         
+          <Listbox.Button
+            className={`relative w-full cursor-pointer rounded-md border border-gray-300
+  ${inputSizeClass || "py-2 sm:py-[0.9em]"} 
+  pl-4 pr-10 text-left shadow-sm 
+  text-sm sm:text-sm text-gray-700 
+  ${fieldColorClass || "bg-white"}`}
+          >
+            <span className={`${selected ? "text-gray-700" : "text-white"}`}>
+              {selected || placeholder}
+            </span>
+            <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
+              {IconComponent || <ChevronDown size={16} />}
+            </span>
+          </Listbox.Button>
 
           <Listbox.Options className="absolute mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-sm shadow-lg ring-1 ring-black/5 focus:outline-none z-50">
             {options.map((option, index) => (
@@ -71,7 +77,11 @@ const CustomDropdown = ({
               >
                 {({ selected }) => (
                   <>
-                    <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>
+                    <span
+                      className={`block truncate ${
+                        selected ? "font-medium" : "font-normal"
+                      }`}
+                    >
                       {option}
                     </span>
                     {selected && (

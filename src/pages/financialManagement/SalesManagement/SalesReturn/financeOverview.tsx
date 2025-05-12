@@ -13,7 +13,7 @@ const FinancePage = () => {
   const handleBack = () => {
     navigate(-1);
   };  const handleClick = () => {
-    navigate(ROUTES.financeOverview);
+    navigate(ROUTES.inStoreOverview);
   };
 
   const backButton = (

@@ -1,7 +1,7 @@
 import PageContainer from "../../../../layout/pageContainer";
 import { Button, Text } from "@mantine/core";
 import { Link, useNavigate } from "react-router";
-import { ChevronLeft } from "lucide-react";
+import { ChevronDown, ChevronLeft } from "lucide-react";
 import { ROUTES } from "../../../../constants/routes";
 import Receipt from "../../../../components/finacialManagement/salesManagement/receipts/receipt";
 import CustomDropdown from "../../../../components/General/customDropdown";
@@ -41,9 +41,9 @@ const PreviewReceiptPage = () => {
           Preview Receipt Information and Details
         </Text>
       </div>
-      <div className="flex flex-row gap-2 md:gap-4">
+      <div className="flex flex-row gap-2 md:gap-4 cursor-pointer">
       <Link to={ROUTES.viewReceipt}>
-            <CustomDropdowna
+            <CustomDropdown
                     
                         options={[
                           "Create New",
@@ -61,6 +61,7 @@ const PreviewReceiptPage = () => {
                         placeholder="Quick Action"
                         textColorClass="text-white"
                         fieldColorClass="bg-[#F16722]"
+                        IconComponent={<ChevronDown size={16} color="white" />}
                       />
                        </Link>
       </div>
