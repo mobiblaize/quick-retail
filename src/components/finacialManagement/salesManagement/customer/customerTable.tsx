@@ -3,32 +3,44 @@ import { Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { allSalesCustomers, productTableData } from "../../../../utils/mockData";
-import { Link } from "react-router";
+import {
+  allSalesCustomers,
+  productTableData,
+} from "../../../../utils/mockData";
+import { Link, useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 
 const CustomerSalesTable = () => {
+  const navigate = useNavigate();
   const columns: ColumnDef<TableRowData>[] = [
     {
-        id: 'select',
-        header: ({ table }) => (
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => {
+        const isSelected = row.getIsSelected();
+        const toggleSelect = row.getToggleSelectedHandler();
+
+        return (
           <input
             type="checkbox"
-            checked={table.getIsAllRowsSelected()}
-            onChange={table.getToggleAllRowsSelectedHandler()}
+            checked={isSelected}
+            onChange={(e) => {
+              toggleSelect(e);
+              navigate(ROUTES.viewCustomer);
+            }}
           />
-        ),
-        cell: ({ row }) => (
-          <input
-            type="checkbox"
-            checked={row.getIsSelected()}
-            onChange={row.getToggleSelectedHandler()}
-          />
-        ),
-        enableSorting: false,
-        enableColumnFilter: false,
-        size: 10,
+        );
       },
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
     {
       header: "Customer name",
       accessorKey: "name",
@@ -67,7 +79,7 @@ const CustomerSalesTable = () => {
             {props.row.original.totalAmount}
           </Text>
           <Text fw={400} className="text-[#667185] text-sm">
-          Total Transactions:{""}
+            Total Transactions:{""}
             <span className="text-gray-500">
               {props.row.original.totalTransaction}
             </span>
@@ -104,16 +116,16 @@ const CustomerSalesTable = () => {
       },
     },
     {
-        header: "",
-        accessorKey: "action",
-        cell: () => (
-          <Link to={ROUTES.viewCustomer}>
-            <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-              View
-            </Text>
-          </Link>
-        ),
-      },
+      header: "",
+      accessorKey: "action",
+      cell: () => (
+        <Link to={ROUTES.viewCustomer}>
+          <Text fw={600} c="customPrimary.10" className="cursor-pointer">
+            View
+          </Text>
+        </Link>
+      ),
+    },
   ];
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">

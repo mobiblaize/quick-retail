@@ -4,8 +4,12 @@ import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
 import { partiallyPaid, productTableData } from "../../../../utils/mockData";
 import FormInput from "../../../General/formInput";
+import { useNavigate } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
 
 const AllocatedReceiptTable = () => {
+  const navigate = useNavigate();
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -82,6 +86,13 @@ const AllocatedReceiptTable = () => {
               paddingY={6}
               bgColor="#D0D5DD"
               className="w-[128px] rounded-lg"
+              onChange={(e: { target: { value: any } }) => {
+                const value = e.target.value;
+
+                if (value.trim()) {
+                  navigate(ROUTES.filledPartiallyPaidReceipt);
+                }
+              }}
             />
           </div>
         </div>
@@ -119,7 +130,14 @@ const AllocatedReceiptTable = () => {
         }
       />
       {/* desktop */}
-      <Box className="font-sans md:block hidden"style={{ backgroundColor: '#FFEBD8', padding: '0.5rem', borderRadius: '8px' }}>
+      <Box
+        className="font-sans md:block hidden"
+        style={{
+          backgroundColor: "#FFEBD8",
+          padding: "0.5rem",
+          borderRadius: "8px",
+        }}
+      >
         <Box mt="lg" px="md">
           <div className="flex justify-between bg-[#FFEBD8]">
             <div>
@@ -151,7 +169,14 @@ const AllocatedReceiptTable = () => {
       </Box>
 
       {/* mobile */}
-      <Box  className="font-sans block lg:hidden" style={{ backgroundColor: '#FFEBD8', padding: '0.5rem', borderRadius: '8px' }}>
+      <Box
+        className="font-sans block lg:hidden"
+        style={{
+          backgroundColor: "#FFEBD8",
+          padding: "0.5rem",
+          borderRadius: "8px",
+        }}
+      >
         <Box mt="lg" px="md">
           <div className="flex flex-col bg-[#FFEBD8]">
             <div>
@@ -163,7 +188,7 @@ const AllocatedReceiptTable = () => {
               </Text>
             </div>
             <div className="mt-2">
-              <Text size="sm" color="dimmed" >
+              <Text size="sm" color="dimmed">
                 Total Allocation (Invoice Value)
               </Text>
               <Text size="md" color="black">

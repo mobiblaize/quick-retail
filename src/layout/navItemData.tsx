@@ -142,7 +142,29 @@ export const FinancialManagement: NavItem[] = [
     inactiveIcon: InActivePurchaseOrderIcon,
     activeIcon: ActiveProductIcon,
   },
+  {
+    label: "Purchase",
+    href: ROUTES.financialDashboard,
+    inactiveIcon: InActivePurchaseOrderIcon,
+    activeIcon: ActiveProductIcon,
+  },
 
+  {
+    label: "Sales Management",
+    href: ROUTES.customer,
+    inactiveIcon: InActiveReturns,
+    activeIcon: ActiveReturns,
+    hasChildren: true,
+    children: [
+      { label: "Customer", href: `${ROUTES.customerPage}` },
+      { label: "Receipt", href: `${ROUTES.createReceipt}` },
+      { label: "Receipt Allocation", href: `${ROUTES.generateReport}` },
+      { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
+      { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
+      { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
+      // { label: "Sales Reports", href: `${ROUTES.customer}` },
+    ],
+  },
 ];
 
 export const Procurement: NavItem[] = [

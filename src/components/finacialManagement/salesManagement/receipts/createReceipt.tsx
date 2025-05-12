@@ -5,6 +5,7 @@ import FileUpload from "./fileUpload";
 import ReceiptPreview from "./receiptPreview";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
+import CustomDropdown from "../../../General/customDropdown";
 
 export default function CreateReceipt() {
   const [customer, setCustomer] = useState("");
@@ -16,7 +17,7 @@ export default function CreateReceipt() {
   const [profitCenter, setProfitCenter] = useState("");
   const [comments, setComments] = useState("");
   const navigate = useNavigate();
-
+  const [selectedType, setSelectedType] = useState("");
   const handleCancel = () => {
     setCustomer("");
     setInvoiceType("");
@@ -52,12 +53,27 @@ export default function CreateReceipt() {
                       options={[]}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                      <FormSelect
-                        type="text"
+                      <CustomDropdown
                         label="Invoice Type"
-                        paddingY="4"
-                        options={[]}
-                        placeholder="Select invoice type"
+                        options={[
+                          "Multiple Invoice",
+                          "Payment in advance",
+                          "Single Invoice",
+                        ]}
+                        placeholder="Enter Product ID"
+                        value={selectedType}
+                        onChange={(val) => {
+                          setSelectedType(val);
+
+                          // Navigate to a new route based on selection
+                          if (val === "Multiple Invoice") {
+                            navigate(ROUTES.confirmReceipt);
+                          } else if (val === "Payment in advance") {
+                            navigate(ROUTES.confirmReceipt);
+                          } else if (val === "Single Invoice") {
+                            navigate(ROUTES.confirmReceipt);
+                          }
+                        }}
                       />
 
                       <FormInput
@@ -108,12 +124,27 @@ export default function CreateReceipt() {
                       options={[]}
                     />
                     <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                      <FormSelect
-                        type="text"
+                    <CustomDropdown
                         label="Invoice Type"
-                        paddingY="4"
-                        options={[]}
-                        placeholder="Select invoice type"
+                        options={[
+                          "Multiple Invoice",
+                          "Payment in advance",
+                          "Single Invoice",
+                        ]}
+                        placeholder="Enter Product ID"
+                        value={selectedType}
+                        onChange={(val) => {
+                          setSelectedType(val);
+
+                          // Navigate to a new route based on selection
+                          if (val === "Multiple Invoice") {
+                            navigate(ROUTES.confirmReceipt);
+                          } else if (val === "Payment in advance") {
+                            navigate(ROUTES.confirmReceipt);
+                          } else if (val === "Single Invoice") {
+                            navigate(ROUTES.confirmReceipt);
+                          }
+                        }}
                       />
 
                       <FormInput
@@ -257,7 +288,6 @@ export default function CreateReceipt() {
                 </div>
               </div>
             </div>
-
           </div>
           <div className="sticky bottom-0 right-0 w-full bg-white py-8 border-t border-gray-200 mt-12">
             <div className="w-[100%] mx-auto flex justify-end gap-4 items-end pr-4 cursor-pointer ">

@@ -74,26 +74,7 @@ const PartiallyPaidReceiptPage= () => {
      
     </div>
     {/* desktop */}
-    {/* <div className=" text-sm flex justify-end text-right gap-6 pb-4 mt-[-2em] md:block hidden">
-    <div className="curor-pointer"  onClick={() => setShowAllocatedModal(true)}>
-          <Button
-             variant="filled"
-             style={{
-               backgroundColor: "#F16722",
-               color: "white",
-               borderRadius: "0.8rem",
-               height: "auto",
-               padding: "0.9rem 1.1rem",
-               fontWeight: 600,
-               fontSize: "16px",
-               width: "100%",
-             }}
-          >
-        Allocate Reciept
-          </Button>
-          
-        </div>
-    </div> */}
+  
      <div className="flex sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0  md:block hidden">
       <div className="flex flex-col">
         <Text fw={500} size="xl" c="black">

@@ -4,8 +4,11 @@ import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
 import { advancedPaid, productTableData } from "../../../../utils/mockData";
 import FormInput from "../../../General/formInput";
+import { ROUTES } from "../../../../constants/routes";
+import { useNavigate } from "react-router";
 
 const AdvancedPaidTable = () => {
+  const navigate = useNavigate();
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -70,6 +73,13 @@ const AdvancedPaidTable = () => {
               paddingY={6}
               bgColor="#D0D5DD"
               className="w-[128px] rounded-lg"
+              onChange={(e: { target: { value: any } }) => {
+                const value = e.target.value;
+
+                if (value.trim()) {
+                  navigate(ROUTES.filledAvancedPaidReceipt);
+                }
+              }}
             />
           </div>
         </div>
@@ -106,7 +116,14 @@ const AdvancedPaidTable = () => {
           </div>
         }
       />
-      <Box className="font-sans "style={{ backgroundColor: '#FFEBD8', padding: '0.5rem', borderRadius: '8px' }}>
+      <Box
+        className="font-sans "
+        style={{
+          backgroundColor: "#FFEBD8",
+          padding: "0.5rem",
+          borderRadius: "8px",
+        }}
+      >
         <Box mt="lg" px="md">
           <div className="flex justify-between bg-[#FFEBD8]">
             <div>

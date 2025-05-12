@@ -66,10 +66,10 @@ const FilledAdvancedPaidTable = () => {
           <div className="space-y-4 grid grid-cols-1">
             <FormInput
               label=""
-              placeholder="Enter Amount"
+              placeholder="3000"
               paddingY={6}
-              bgColor="#D0D5DD"
-              className="w-[128px] rounded-lg"
+              bgColor="#B5E3C4"
+              className="w-[128px] rounded-lg text-[#0F973D]"
             />
           </div>
         </div>

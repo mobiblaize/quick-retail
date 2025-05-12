@@ -12,9 +12,7 @@ export default function IssueNote() {
   const [selectedType, setSelectedType] = useState("");
   const navigate = useNavigate();
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
-  // const handleContinue = () => {
-  //   navigate(ROUTES.creditNote);
-  // };
+  
   return (
     <>
      {showAllocatedModal && (
