@@ -1,4 +1,4 @@
-import React from "react";
+
 import {
   InActiveDashboardIcon,
   ActiveDashboardIcon,
@@ -116,15 +116,54 @@ export const PointOfSale: NavItem[] = [
 export const FinancialManagement: NavItem[] = [
   {
     label: "Dashboard",
-    href: ROUTES.dashboard,
+    href: ROUTES.financialDashboard,
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Customer",
-    href: ROUTES.productManagement,
+    label: "Sales Management",
+    href: ROUTES.customer,
     inactiveIcon: InActiveReturns,
     activeIcon: ActiveReturns,
+    hasChildren: true,
+    children: [
+      { label: "Customer", href: `${ROUTES.customerPage}` },
+      { label: "Receipt", href: `${ROUTES.createReceipt}` },
+      { label: "Receipt Allocation", href: `${ROUTES.generateReport}` },
+      { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
+      { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
+      { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
+      // { label: "Sales Reports", href: `${ROUTES.customer}` },
+    ],
+  },
+  {
+    label: "Purchase",
+    href: ROUTES.financialDashboard,
+    inactiveIcon: InActivePurchaseOrderIcon,
+    activeIcon: ActiveProductIcon,
+  },
+  {
+    label: "Purchase",
+    href: ROUTES.financialDashboard,
+    inactiveIcon: InActivePurchaseOrderIcon,
+    activeIcon: ActiveProductIcon,
+  },
+
+  {
+    label: "Sales Management",
+    href: ROUTES.customer,
+    inactiveIcon: InActiveReturns,
+    activeIcon: ActiveReturns,
+    hasChildren: true,
+    children: [
+      { label: "Customer", href: `${ROUTES.customerPage}` },
+      { label: "Receipt", href: `${ROUTES.createReceipt}` },
+      { label: "Receipt Allocation", href: `${ROUTES.generateReport}` },
+      { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
+      { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
+      { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
+      // { label: "Sales Reports", href: `${ROUTES.customer}` },
+    ],
   },
 ];
 

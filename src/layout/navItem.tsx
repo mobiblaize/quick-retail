@@ -94,7 +94,7 @@ const NavItem = ({
         </div>
 
         {opened && (
-          <div className="pl-8">
+          <div className="pl-8 ">
             {children.map((child, index) => {
               const isChildItemActive = location.pathname === child.href;
               return (
@@ -106,9 +106,9 @@ const NavItem = ({
                   onClick={onNavigate}
                 >
                   <List.Item
-                    className={`py-3 px-4 ${
+                    className={`py-3 px-4 text-md ${
                       isChildItemActive ? "text-[#F16722]" : "text-[#787486]"
-                    }`}
+                    }`} 
                   >
                     {child.label}
                   </List.Item>
@@ -142,7 +142,7 @@ const NavItem = ({
                 ? "font-semibold text-[#F16722]"
                 : isLogOut
                 ? "text-red-500"
-                : "text-[#787486] font-[400]"
+                : "text-[#787486] font-[400] "
             }`}
           >
             {label}

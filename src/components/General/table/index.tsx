@@ -38,6 +38,8 @@ interface TanTableProps {
   sortOptions?: SortOption[];
   dateField?: string;
   tableTitle?: ReactNode;
+  showSeeAllToggle?: boolean;
+
 }
 
 const TanTable: FC<TanTableProps> = ({
@@ -54,16 +56,20 @@ const TanTable: FC<TanTableProps> = ({
   searchMaxWidth = "350px",
   showBorder = false,
   tableTitle = "Recent Orders",
+  showSeeAllToggle = false,
+  
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [filteredData, setFilteredData] = useState<TableRowData[]>(data);
+  const [showAll, setShowAll] = useState<boolean>(false);
 
   const tableData = useMemo(() => filteredData, [filteredData]);
   const columns = useMemo(() => columnData, [columnData]);
-  const pageSize = length;
+  // const pageSize = length;
+  const pageSize = showAll && showSeeAllToggle ? data.length : length;
 
   const pagination = useMemo<PaginationState>(
     () => ({
@@ -194,7 +200,23 @@ const TanTable: FC<TanTableProps> = ({
             </Text>
           </div>
 
-          <div className="flex md:flex-row flex-col md:gap-[2rem] md:w-[600px] w-full md:items-center">
+          <div className="lg:hidden flex md:flex-row  md:gap-[2rem] md:w-[600px] w-[300px] md:items-center gap-4 justify-between whitespace-nowrap">
+          {showSearch && (
+              <SearchComp
+                setSearchTerm={setSearchTerm}
+                setPageIndex={setPageIndex}
+                searchTerm={searchTerm}
+                handleFilterChange={handleFilterChange}
+                filterList={filterList}
+                placeholder={searchPlaceholder}
+                maxWidth={searchMaxWidth}
+              />
+            )}
+
+            {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+          </div>
+          <div className="hidden md:block ">
+          <div className="flex md:flex-row  md:gap-[2rem] md:w-[600px] w-full md:items-center">
             {showSearch && (
               <SearchComp
                 setSearchTerm={setSearchTerm}
@@ -208,6 +230,7 @@ const TanTable: FC<TanTableProps> = ({
             )}
 
             {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+            </div>
           </div>
         </div>
       </Box>
@@ -241,6 +264,21 @@ const TanTable: FC<TanTableProps> = ({
           />
         )}
       </Box>
+      {showSeeAllToggle && !showAll && data.length > length && (
+  <Box
+    style={{
+      textAlign: "center",
+      marginTop: "1rem",
+      cursor: "pointer",
+    }}
+    onClick={() => setShowAll(true)}
+  >
+    <Text color="red" fw={500}>
+      See all
+    </Text>
+  </Box>
+)}
+
 
       {!hidePaging && tableData.length > pageSize && (
         <Pagination
