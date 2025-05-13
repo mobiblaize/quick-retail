@@ -1,18 +1,12 @@
-// import {
-//     LineChart,
-//     Line,
-//     XAxis,
-//     Tooltip,
-//     ResponsiveContainer,
-//   } from 'recharts';
-
 import {
-  XAxis,
-  Tooltip,
-  LineChart,
-  Line,
-  ResponsiveContainer,
-} from 'recharts';
+    LineChart,
+    Line,
+    // XAxis,
+    Tooltip,
+    ResponsiveContainer,
+  } from 'recharts';
+
+
 
 
 import DateFilterMenu from '../../../General/filterMenu';
@@ -71,12 +65,12 @@ import { Group, } from "@mantine/core";
   
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <XAxis 
+            {/* <XAxis 
               dataKey="month" 
               axisLine={false} 
               tickLine={false} 
               tick={{ fill: '#888', fontSize: 12 }}
-            />
+            /> */}
             <Tooltip />
             <Line type="monotone" dataKey="import" stroke="#E62E05" strokeWidth={2.5} dot={false} />
             <Line type="monotone" dataKey="expense" stroke="#FF9C66" strokeWidth={2.5} dot={false} />

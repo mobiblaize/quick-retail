@@ -2,8 +2,8 @@
 import {
   ResponsiveContainer,
   Line,
-  XAxis,
-  YAxis,
+  // XAxis,
+  // YAxis,
   CartesianGrid,
   Tooltip,
   Legend,
@@ -107,8 +107,8 @@ const LineChart: React.FC<LineChartProps> = ({
   showGrid = true,
   showTooltip = true,
   showLegend = true,
-  xAxisDataKey = "month",
-  yAxisFormatter = (value) => `${value}M`,
+  // xAxisDataKey = "month",
+  // yAxisFormatter = (value) => `${value}M`,
   tooltipFormatter,
   highlightedPoint,
 }) => {
@@ -127,7 +127,7 @@ const LineChart: React.FC<LineChartProps> = ({
             />
           )}
 
-<XAxis
+{/* <XAxis
   dataKey={xAxisDataKey}
   axisLine={false}
   tickLine={false}
@@ -141,7 +141,7 @@ const LineChart: React.FC<LineChartProps> = ({
   tickMargin={10}
   tick={{ fontSize: 12, fill: "#666" }}
   tickFormatter={yAxisFormatter}
-/>
+/> */}
 
 
           {showTooltip && (
