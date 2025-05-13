@@ -4,7 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 
-
 const BudgetTable = () => {
   const columns: ColumnDef<TableRowData>[] = [
     {

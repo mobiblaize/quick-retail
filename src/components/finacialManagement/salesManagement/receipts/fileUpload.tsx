@@ -1,10 +1,12 @@
- //@ts-ignore
-import  { useRef, useState } from "react";
+//@ts-ignore
+import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
 import * as React from "react";
 
 export default function FileUploader() {
-  const [uploadBlocks, setUploadBlocks] = useState([{ id: Date.now(), fileName: "No upload / Attachment" }]);
+  const [uploadBlocks, setUploadBlocks] = useState([
+    { id: Date.now(), fileName: "No upload / Attachment" },
+  ]);
 
   //@ts-ignore
   const handleFileChange = (e, id) => {
@@ -50,7 +52,6 @@ export default function FileUploader() {
             {/* desktop */}
 <div className="md:block hidden">
             <button
-              // onClick={() => fileInputRef.current.click()}
               onClick={() => {
                 if (fileInputRef.current) {
                   fileInputRef.current.click();
@@ -65,7 +66,6 @@ export default function FileUploader() {
             {/* mobile */}
             <div className="lg:hidden">
             <button
-              // onClick={() => fileInputRef.current.click()}
               onClick={() => {
                 if (fileInputRef.current) {
                   fileInputRef.current.click();

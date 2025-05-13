@@ -1,3 +1,5 @@
+
+
 import { useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
@@ -108,125 +110,7 @@ export default function ViewExistingPurchaseInvoiceForm() {
                     </div>
                   </div>
 
-                  {/* <div className="p-4 bg-white rounded shadow mt-[2em]">
-                    <label className="font-semibold block mb-2">
-                      ACCOUNT <span className="text-red-500">*</span>
-                    </label>
-                    <div className="grid grid-cols-5 gap-4 items-center font-semibold bg-gray-100 p-2 rounded">
-                      <div>Account Type</div>
-                      <div>Account</div>
-                      <div>Description</div>
-                      <div>Invoice Amount</div>
-                      <div></div>
-                    </div>
-
-                    {rows.map((row, index) => (
-                      <div
-                        key={index}
-                        className="grid grid-cols-5 gap-4 items-center mt-2"
-                      >
-                        <select
-                          className="border border-gray-400 p-2 rounded"
-                          value={row.type}
-                          onChange={(e) => {
-                            const updated = [...rows];
-                            updated[index].type = e.target.value;
-                            setRows(updated);
-                          }}
-                        >
-                          <option value="Debit">Debit</option>
-                          <option value="Credit">Credit</option>
-                        </select>
-
-                        <select
-                          className="border  border-gray-400 p-2 rounded"
-                          value={row.account}
-                          onChange={(e) => {
-                            const updated = [...rows];
-                            updated[index].account = e.target.value;
-                            setRows(updated);
-                          }}
-                        >
-                          <option value="">Select Account</option>
-                          <option value="Acct 01">Acct 01</option>
-                          <option value="Acct 02">Acct 02</option>
-                        </select>
-
-                        <input
-                          className="border border-gray-400 p-2 rounded"
-                          placeholder="Description"
-                          value={row.description}
-                          onChange={(e) => {
-                            const updated = [...rows];
-                            updated[index].description = e.target.value;
-                            setRows(updated);
-                          }}
-                        />
-
-                        <input
-                          className="border p-2 border-gray-400 rounded"
-                          placeholder="Amount"
-                          type="text"
-                          value={`₦ ${parseInt(
-                            // @ts-ignore
-                            row.amount || 0
-                          ).toLocaleString()}`}
-                          onChange={(e) => {
-                            const updated = [...rows];
-                            updated[index].amount = e.target.value.replace(
-                              /[^0-9]/g,
-                              ""
-                            );
-                            setRows(updated);
-                          }}
-                        />
-
-                        <button
-                          onClick={addRow}
-                          className="text-orange-500 border border-orange-500 rounded-full w-8 h-8 flex items-center justify-center hover:bg-orange-100"
-                          type="button"
-                        >
-                          <PlusIcon />
-                        </button>
-                      </div>
-                    ))}
-                  </div> */}
-                  {/* <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[2em]">
-                    <h2 className="text-lg font-medium text-gray-800 mb-4 border-b border-gray-200 uppercase">
-                      PURCHASE INVOICE DETAILS{" "}
-                      <span className="text-[red]"> *</span>
-                    </h2>
-
-                    <div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                        <FormInput
-                          type="date"
-                          label="Purchase Invoice Issued Date"
-                          paddingY={"0.7rem"}
-                        />
-                        <FormInput
-                          type="date"
-                          label="Purchase Invoice Issued Date"
-                          paddingY={"0.7rem"}
-                        />
-                      </div>
-                      <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
-                        <FormSelect
-                          type="text"
-                          label="Sales Return ID"
-                          paddingY="4"
-                          options={[]}
-                          placeholder="Select invoice type"
-                        />
-
-                        <FormInput
-                          type="text"
-                          label="Invoice ID"
-                          paddingY={"0.7rem"}
-                        />
-                      </div>
-                    </div>
-                  </div> */}
+                 
                 </div>
 
                 {/* mobile */}

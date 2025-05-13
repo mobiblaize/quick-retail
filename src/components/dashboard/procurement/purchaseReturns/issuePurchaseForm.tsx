@@ -6,14 +6,6 @@ import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
 
 export default function IssuePurchaseForm() {
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
-
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     setSelectedFile(e.target.files[0]);
-  //   }
-  // };
-
   const navigate = useNavigate();
 
   return (
@@ -147,9 +139,7 @@ export default function IssuePurchaseForm() {
           Back
         </Button>
 
-        <Button variant="filled-primary">
-          Issue Purchase Return
-        </Button>
+        <Button variant="filled-primary">Issue Purchase Return</Button>
       </div>
     </div>
   );

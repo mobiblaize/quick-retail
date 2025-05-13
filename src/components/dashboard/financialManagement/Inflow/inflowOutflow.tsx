@@ -25,7 +25,6 @@ import { Group, } from "@mantine/core";
   ];
   
   export default function InflowOutflowChart() {
-
   
     return (
       <div style={{ background: '#fff', padding: '1rem', borderRadius: '12px' }}>
