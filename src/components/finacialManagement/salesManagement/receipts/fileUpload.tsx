@@ -1,6 +1,7 @@
  //@ts-ignore
-import React, { useRef, useState } from "react";
+import  { useRef, useState } from "react";
 import { FileText } from "lucide-react";
+import * as React from "react";
 
 export default function FileUploader() {
   const [uploadBlocks, setUploadBlocks] = useState([{ id: Date.now(), fileName: "No upload / Attachment" }]);

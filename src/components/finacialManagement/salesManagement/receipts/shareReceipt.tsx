@@ -1,7 +1,6 @@
-import { useState } from "react";
+
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import CustomDropdown from "../../../General/customDropdown";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
 import CustomerInvoice from "./customerInvoices";
@@ -13,7 +12,7 @@ export default function ShareReceipt() {
   const handleContinue = () => {
     navigate(ROUTES.attachReceipent);
   };
-  const [selectedType, setSelectedType] = useState("");
+ 
   return (
     <div className="">
       <div className="md:col-span-2 space-y-8">

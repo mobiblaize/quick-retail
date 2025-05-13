@@ -2,7 +2,6 @@ import PageContainer from "../../../../layout/pageContainer";
 import { Button, Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import AllocatedReceiptTable from "../../../../components/finacialManagement/salesManagement/receiptAllocation/partiallypaidInvoices";
 import { ROUTES } from "../../../../constants/routes";
 import { useState } from "react";
 import AllocatedModal from "../../../../components/finacialManagement/purchase.tsx/vendor/allocatedModal";

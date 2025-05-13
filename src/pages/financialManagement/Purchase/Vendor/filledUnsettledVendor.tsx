@@ -5,7 +5,6 @@ import { ChevronLeft } from "lucide-react";
 import { ROUTES } from "../../../../constants/routes";
 import { useState } from "react";
 import AllocatedModal from "../../../../components/finacialManagement/purchase.tsx/vendor/allocatedModal";
-import UnsettledVendorTable from "../../../../components/finacialManagement/purchase.tsx/vendor/unsettledVendors";
 import FilledUnsettledVendorTable from "../../../../components/finacialManagement/purchase.tsx/vendor/filledUnsettledVendor";
 
 

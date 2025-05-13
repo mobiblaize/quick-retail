@@ -73,7 +73,7 @@ const FilledAllocatedReceiptTable = () => {
     {
       header: "Amount Paid",
       accessorKey: "totalAmount",
-      cell: (props) => (
+      cell: () => (
         <div className="flex flex-col">
           <div className="space-y-4 grid grid-cols-1">
           <FormInput

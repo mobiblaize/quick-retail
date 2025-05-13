@@ -4,7 +4,6 @@ import { useState } from "react";
 import {  useNavigate } from "react-router";
 import NonInventoryOverview from "../../../../components/finacialManagement/purchase.tsx/nonInventory/overview";
 import AllPurchaseTable from "../../../../components/finacialManagement/purchase.tsx/purchaseInvoice/allPurchaseTable";
-import AllPurchaseOverview from "../../../../components/finacialManagement/purchase.tsx/purchaseInvoice/overview";
 import CustomDropdown from "../../../../components/General/customDropdown";
 import { ROUTES } from "../../../../constants/routes";
 import PageContainer from "../../../../layout/pageContainer";
@@ -18,7 +17,7 @@ const NonInventoryOverviewPage = () => {
   const handleClick = () => {
     navigate(ROUTES.allPurchaseInvoice);
   };
-  const [showAllocatedModal, setShowAllocatedModal] = useState(false);
+  const [, setShowAllocatedModal] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const backButton = (
     <button

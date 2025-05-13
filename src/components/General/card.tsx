@@ -1,4 +1,4 @@
-import React, { ReactNode } from "react";
+import  { ReactNode } from "react";
 import { Text, Group, Card, useMantineTheme } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
 

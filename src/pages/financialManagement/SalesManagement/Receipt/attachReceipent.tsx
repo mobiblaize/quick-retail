@@ -2,7 +2,6 @@ import { Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import PageContainer from "../../../../layout/pageContainer";
-import AttachInvoice from "../../../../components/finacialManagement/salesManagement/salesInvoice/attachInvoice";
 import AttachReceipt from "../../../../components/finacialManagement/salesManagement/receipts/attachReceipt";
 
 

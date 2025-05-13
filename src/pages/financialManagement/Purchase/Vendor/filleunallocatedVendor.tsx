@@ -5,7 +5,6 @@ import { ChevronLeft } from "lucide-react";
 import { ROUTES } from "../../../../constants/routes";
 import { useState } from "react";
 import AllocatedModal from "../../../../components/finacialManagement/purchase.tsx/vendor/allocatedModal";
-import UnallocatedPaymentTable from "../../../../components/finacialManagement/purchase.tsx/vendor/unallocatedPayment";
 import FilledUnallocatedPaymentTable from "../../../../components/finacialManagement/purchase.tsx/vendor/filledallocatedPayment";
 
 const FilledUnallocatedPaymentPage = () => {

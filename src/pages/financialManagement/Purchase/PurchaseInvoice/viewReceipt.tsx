@@ -2,9 +2,6 @@ import PageContainer from "../../../../layout/pageContainer";
 import { Button, Menu, Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ChevronDown, ChevronLeft, Plus } from "lucide-react";
-import OrderReceipt from "../../../../components/finacialManagement/salesManagement/salesReturn/orderReceipt";
-import IssueNote from "../../../../components/finacialManagement/salesManagement/creditNote/issueCreditNote";
-import Receipt from "../../../../components/finacialManagement/salesManagement/receipts/receipt";
 import PurchaseInvoiceReceipt from "../../../../components/finacialManagement/purchase.tsx/purchaseInvoice/purchaseInvoiceReceipt";
 
 const ViewReceiptPages = () => {

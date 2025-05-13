@@ -1,6 +1,4 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
 import CustomDropdown from "../../../General/customDropdown";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";

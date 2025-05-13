@@ -4,12 +4,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import PageContainer from "../../../../layout/pageContainer";
-import DeletePurchaseModal from "../../../../components/dashboard/procurement/purchaseOrder/modal/deletePurchaseModal";
 import ViewPurchaseInvoiceForm from "../../../../components/finacialManagement/purchase.tsx/purchaseInvoice/viewPurchaseInvoiceForm";
 
 export default function ViewPurchaseInvoicePage() {
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [, setModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);

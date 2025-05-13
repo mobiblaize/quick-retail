@@ -3,7 +3,7 @@ import { Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
 import {  PaidDot, UnpaidDot } from "../../../../assets/svg";
-import {  creditNoteData, instoreData, productTableData } from "../../../../utils/mockData";
+import {  creditNoteData, productTableData } from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 

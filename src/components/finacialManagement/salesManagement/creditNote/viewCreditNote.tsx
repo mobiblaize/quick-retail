@@ -2,18 +2,14 @@ import logo from "../../../../assets/images/logo.png";
 import sign from "../../../../assets/images/sign.png";
 
 const ViewCreditNoteReceipt = () => {
-  const invoices = [
-    { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
-    { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
-    { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
-    { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
-  ];
+  // const invoices = [
+  //   { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
+  //   { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
+  //   { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
+  //   { id: "#178181", date: "April 18, 2023", amount: 20000, paid: 10000 },
+  // ];
 
-  const totalPaid = invoices.reduce((sum, inv) => sum + inv.paid, 0);
-  const totalDue = invoices.reduce(
-    (sum, inv) => sum + (inv.amount - inv.paid),
-    0
-  );
+
 
 return (
     <div className="w-full mx-auto bg-white p-6 shadow-md text-sm font-sans text-[#1A1A1A]">

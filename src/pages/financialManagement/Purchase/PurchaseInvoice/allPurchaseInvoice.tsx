@@ -17,7 +17,7 @@ const AllPurchaseOverviewPage = () => {
   const handleClick = () => {
     navigate(ROUTES.nonInventory);
   };
-  const [showAllocatedModal, setShowAllocatedModal] = useState(false);
+  const [, setShowAllocatedModal] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const backButton = (
     <button

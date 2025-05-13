@@ -2,7 +2,6 @@ import PageContainer from "../../../../layout/pageContainer";
 import { Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import OrderReceipt from "../../../../components/finacialManagement/salesManagement/salesReturn/orderReceipt";
 import IssueNote from "../../../../components/finacialManagement/salesManagement/creditNote/issueCreditNote";
 
 const IssueCreditNotePage = () => {

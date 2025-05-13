@@ -1,14 +1,10 @@
 import { Text } from "@mantine/core";
 import PageContainer from "../../../../layout/pageContainer";
 import CustomerSalesTable from "../../../../components/finacialManagement/salesManagement/customer/customerTable";
-import CustomDropdown from "../../../../components/General/customDropdown";
-import { ROUTES } from "../../../../constants/routes";
-import { Link } from "react-router";
-import { useState } from "react";
-import { ChevronDown } from "lucide-react";
+
 
 const CustomerSalesPage = () => {
-  const [selectedType, setSelectedType] = useState("");
+
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">

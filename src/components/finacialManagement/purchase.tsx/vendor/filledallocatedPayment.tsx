@@ -2,13 +2,13 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Box, Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
-import { partiallyPaid, productTableData, unsettledVendor } from "../../../../utils/mockData";
+import { productTableData, unsettledVendor } from "../../../../utils/mockData";
 import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
+
 
 const FilledUnallocatedPaymentTable = () => {
-  const navigate = useNavigate();
+
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -67,7 +67,7 @@ const FilledUnallocatedPaymentTable = () => {
     {
       header: "Amount to Allocate",
       accessorKey: "totalAmount",
-      cell: (props) => (
+      cell: () => (
         <div className="flex flex-col">
           <div className="space-y-4 grid grid-cols-1">
           <FormInput

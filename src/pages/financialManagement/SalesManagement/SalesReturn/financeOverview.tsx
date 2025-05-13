@@ -1,6 +1,6 @@
 import PageContainer from "../../../../layout/pageContainer";
-import { Button, Text } from "@mantine/core";
-import { Link, useNavigate } from "react-router";
+import { Text } from "@mantine/core";
+import {  useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { ROUTES } from "../../../../constants/routes";
@@ -9,7 +9,6 @@ import InStoreOverview from "../../../../components/finacialManagement/salesMana
 
 const FinancePage = () => {
     const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState("");
   const handleBack = () => {
     navigate(-1);
   };  const handleClick = () => {

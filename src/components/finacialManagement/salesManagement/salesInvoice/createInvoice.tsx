@@ -11,14 +11,14 @@ import PaymentDetails from "./paymentdetails";
 import { PRODUCT_LIST } from "../../../../utils/mockData";
 
 export default function CreateInvoice() {
-  const [customer, setCustomer] = useState("");
-  const [invoiceType, setInvoiceType] = useState("");
-  const [issueDate, setIssueDate] = useState("");
-  const [baseCurrency, setBaseCurrency] = useState("");
-  const [transactionCurrency, setTransactionCurrency] = useState("");
-  const [account, setAccount] = useState("");
-  const [profitCenter, setProfitCenter] = useState("");
-  const [comments, setComments] = useState("");
+  const [,setCustomer] = useState("");
+  const [, setInvoiceType] = useState("");
+  const [, setIssueDate] = useState("");
+  const [, setBaseCurrency] = useState("");
+  const [, setTransactionCurrency] = useState("");
+  const [, setAccount] = useState("");
+  const [, setProfitCenter] = useState("");
+  const [, setComments] = useState("");
   const navigate = useNavigate();
 
   const handleCancel = () => {
@@ -178,7 +178,7 @@ export default function CreateInvoice() {
 
                     {showSelectedProducts && (
                       <div>
-                        {selectedProducts.map((product) => (
+                        {selectedProducts.map(() => (
                           <div className="p-4 border-b last:border-none">
                             <SelectedProduct />
                           </div>

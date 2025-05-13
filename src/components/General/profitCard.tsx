@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { Box, Text, Group, Card, useMantineTheme } from "@mantine/core";
+import { ReactNode } from "react";
+import { Text, Group, Card, useMantineTheme } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
 import { BlackNaira, RedNaira } from "../../assets/svg/index";
 
@@ -45,8 +45,8 @@ const ProfitCard: React.FC<AnalyticsCardProps> = ({
 
   const defaultBgColor = cardBgColor || theme.colors.customPrimary[6];
 
-  const toSentenceCase = (text: string) => 
-  text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : '';
+  // const toSentenceCase = (text: string) => 
+  // text ? text.charAt(0).toUpperCase() + text.slice(1).toLowerCase() : '';
 
   const cardStyle: React.CSSProperties = {
     display: "flex",

@@ -1,9 +1,7 @@
 import PageContainer from "../../../../layout/pageContainer";
-import { Button, Text } from "@mantine/core";
-import { Link, useNavigate } from "react-router";
+import {  Text } from "@mantine/core";
+import {  useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import { ROUTES } from "../../../../constants/routes";
-import Receipt from "../../../../components/finacialManagement/salesManagement/receipts/receipt";
 import CustomDropdown from "../../../../components/General/customDropdown";
 import { useState } from "react";
 import ViewCreditNoteReceipt from "../../../../components/finacialManagement/salesManagement/creditNote/viewCreditNote";

@@ -1,10 +1,7 @@
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
 import CustomDropdown from "../../../General/customDropdown";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
-import CustomerInvoice from "../receipts/customerInvoices";
 import FileUpload from "../receipts/fileUpload";
 import ReceiptPreview from "../receipts/receiptPreview";
 import SalesReturnModal from "./SalesReturnModal";

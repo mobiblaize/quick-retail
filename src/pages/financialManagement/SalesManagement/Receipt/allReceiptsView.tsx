@@ -1,14 +1,12 @@
 import PageContainer from "../../../../layout/pageContainer";
-import { Button, Text } from "@mantine/core";
-import { Link, useNavigate } from "react-router";
+import {  Text } from "@mantine/core";
+import {  useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import { useState } from "react";
 import AllReceiptTable from "../../../../components/finacialManagement/salesManagement/receipts/allReceipt";
 import ReceiptMetricsOverview from "../../../../components/finacialManagement/salesManagement/receipts/receiptOverview";
 
 const AllReceiptPage = () => {
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState("");
   const handleBack = () => {
     navigate(-1);
   };

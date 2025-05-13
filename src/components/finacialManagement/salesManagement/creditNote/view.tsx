@@ -14,9 +14,7 @@ export default function ViewCreditNote() {
   const [selectedType, setSelectedType] = useState("");
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
   const navigate = useNavigate();
-  const handleView = () => {
-    navigate(ROUTES.viewCreditNote2);
-  };
+
   return (
     <>
       {showAllocatedModal && (

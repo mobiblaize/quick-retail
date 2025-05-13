@@ -1,16 +1,15 @@
 import PageContainer from "../../../../layout/pageContainer";
-import { Button, Text } from "@mantine/core";
-import { Link, useNavigate } from "react-router";
+import {  Text } from "@mantine/core";
+import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
-import AllReceiptTable from "../../../../components/finacialManagement/salesManagement/receipts/allReceipt";
 import InStoreOverview from "../../../../components/finacialManagement/salesManagement/salesReturn/instoreOverview";
 import InStoreTable from "../../../../components/finacialManagement/salesManagement/salesReturn/inStoreTable";
 import { ROUTES } from "../../../../constants/routes";
 
 const InStorePage = () => {
   const navigate = useNavigate();
-  const [selectedType, setSelectedType] = useState("");
+
   const handleBack = () => {
     navigate(-1);
   };  const handleFinance = () => {

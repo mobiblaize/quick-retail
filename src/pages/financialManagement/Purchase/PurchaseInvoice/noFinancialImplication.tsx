@@ -8,7 +8,7 @@ import ViewExistingPurchaseInvoiceForm from "../../../../components/finacialMana
 
 export default function NoFinancialPurchaseInvoicePage() {
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = useState(false);
+  const [, setModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);

@@ -1,6 +1,6 @@
-import React, { ReactNode } from "react";
-import { Text, Group, Card, useMantineTheme } from "@mantine/core";
-import { ArrowIcon } from "../../assets/svg";
+import  { ReactNode } from "react";
+import { Text, Card, useMantineTheme } from "@mantine/core";
+
 
 interface AnalyticsCardProps {
   title: string;
@@ -24,11 +24,11 @@ const ReturnsAnalyticsCard: React.FC<AnalyticsCardProps> = ({
   icon,
   cardBgColor,
   textColor = "#667185",
-  percentageValue,
+  // percentageValue,
   width = "100%",
   height = "auto",
   borderColor,
-  lightColor,
+  // lightColor,
 }) => {
   const theme = useMantineTheme();
 
@@ -61,7 +61,7 @@ const ReturnsAnalyticsCard: React.FC<AnalyticsCardProps> = ({
           >
             {value}
           </Text>
-          <Text c={textColor} size="sm" fw={700} c="#667085">
+          <Text c={textColor} size="sm" fw={700} >
             {title}
           </Text>
         </div>
