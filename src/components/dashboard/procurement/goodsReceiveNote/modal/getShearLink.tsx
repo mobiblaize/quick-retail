@@ -7,12 +7,13 @@ import {
     ThemeIcon,
   } from '@mantine/core';
   import { useState } from 'react';
-  import { Check, X } from 'lucide-react';
+  import { Check } from 'lucide-react';
   
   interface ShareableLinkModalProps {
     opened: boolean;
     onClose: () => void;
   }
+  
   
   const ShareableLinkModal = ({ opened, onClose }: ShareableLinkModalProps) => {
     const [link] = useState('http://remittance-advice/2023');

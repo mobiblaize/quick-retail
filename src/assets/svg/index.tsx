@@ -1297,3 +1297,23 @@ export const RedQuestionMark = () => {
     </svg>
   );
 };
+
+export const plusIcon = () => {
+  return (
+    <svg
+      width="33"
+      height="30"
+      viewBox="0 0 33 30"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+    >
+      <path
+        d="M16.5 10V20M11.25 15H21.75M29.625 15C29.625 21.9036 23.7487 27.5 16.5 27.5C9.25126 27.5 3.375 21.9036 3.375 15C3.375 8.09644 9.25126 2.5 16.5 2.5C23.7487 2.5 29.625 8.09644 29.625 15Z"
+        stroke="#F16722"
+        stroke-width="1.5"
+        stroke-linecap="round"
+        stroke-linejoin="round"
+      />
+    </svg>
+  );
+};

@@ -7,7 +7,7 @@ import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
 
 export default function ViewPurchaseForm() {
-  const [items, setItems] = useState([
+  const [items,] = useState([
     {
       name: "Microwave",
       description: "This is short description",
@@ -35,12 +35,12 @@ export default function ViewPurchaseForm() {
     }
   };
 
-  const handleAddNewItem = () => {
-    setItems([
-      ...items,
-      { name: "", description: "", quantity: 1, unitPrice: 0 },
-    ]);
-  };
+  // const handleAddNewItem = () => {
+  //   setItems([
+  //     ...items,
+  //     { name: "", description: "", quantity: 1, unitPrice: 0 },
+  //   ]);
+  // };
 
   const grandTotal = items.reduce(
     (total, item) => total + item.unitPrice * item.quantity,

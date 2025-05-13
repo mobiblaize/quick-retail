@@ -1,6 +1,5 @@
 // SignatureUploadModal.tsx
 import { useRef } from "react";
-import { X } from "lucide-react"; // Or any close icon you prefer
 import { Button, Modal } from "@mantine/core";
 
 export default function SignatureUploadModal({

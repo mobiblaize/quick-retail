@@ -1,9 +1,12 @@
- //@ts-ignore
-import React, { useRef, useState } from "react";
+//@ts-ignore
+import { useRef, useState } from "react";
 import { FileText } from "lucide-react";
+import * as React from "react";
 
 export default function FileUploader() {
-  const [uploadBlocks, setUploadBlocks] = useState([{ id: Date.now(), fileName: "No upload / Attachment" }]);
+  const [uploadBlocks, setUploadBlocks] = useState([
+    { id: Date.now(), fileName: "No upload / Attachment" },
+  ]);
 
   //@ts-ignore
   const handleFileChange = (e, id) => {
@@ -31,7 +34,8 @@ export default function FileUploader() {
       </label>
 
       {uploadBlocks.map((block) => {
-        const fileInputRef = React.createRef();
+        const fileInputRef = React.createRef<HTMLInputElement>();
+
         return (
           <div
             key={block.id}
@@ -46,22 +50,22 @@ export default function FileUploader() {
               </span>
             </div>
             {/* desktop */}
-<div className="md:block hidden">
-            <button
-              onClick={() => fileInputRef.current.click()}
-              className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
-            >
-              Click to Upload
-            </button>
+            <div className="md:block hidden">
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
+              >
+                Click to Upload
+              </button>
             </div>
             {/* mobile */}
             <div className="lg:hidden">
-            <button
-              onClick={() => fileInputRef.current.click()}
-              className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
-            >
-              Upload
-            </button>
+              <button
+                onClick={() => fileInputRef.current?.click()}
+                className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
+              >
+                Upload
+              </button>
             </div>
             <input
               type="file"

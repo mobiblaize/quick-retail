@@ -1,7 +1,8 @@
-import React from 'react'
+
 import AccountBalance from './AccountBalance'
 import LatestExpense from './LatestExpense'
-import LatestIncome from './LatestIncome'
+import LatestIncome from './latestIncome'
+
 
 const BalanceModules = () => {
   return (

@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { Button, Menu, Text } from "@mantine/core";
 import { ChevronDown, ChevronLeft, Plus } from "lucide-react";
 import { Link, useNavigate } from "react-router-dom";

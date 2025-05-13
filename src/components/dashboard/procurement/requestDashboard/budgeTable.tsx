@@ -3,9 +3,6 @@ import { allRequest } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
-import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { Link } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
 
 const BudgetTable = () => {
   const columns: ColumnDef<TableRowData>[] = [
@@ -71,7 +68,7 @@ const BudgetTable = () => {
     {
         header: "",
         accessorKey: "action",
-        cell: ({ row }) => {
+        cell: ({}) => {
         //   const status = row.original.status;
       
           // Define the path based on status

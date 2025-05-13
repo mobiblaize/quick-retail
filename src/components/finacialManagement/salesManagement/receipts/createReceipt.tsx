@@ -8,14 +8,14 @@ import { ROUTES } from "../../../../constants/routes";
 import CustomDropdown from "../../../General/customDropdown";
 
 export default function CreateReceipt() {
-  const [customer, setCustomer] = useState("");
-  const [invoiceType, setInvoiceType] = useState("");
-  const [issueDate, setIssueDate] = useState("");
-  const [baseCurrency, setBaseCurrency] = useState("");
-  const [transactionCurrency, setTransactionCurrency] = useState("");
-  const [account, setAccount] = useState("");
-  const [profitCenter, setProfitCenter] = useState("");
-  const [comments, setComments] = useState("");
+  const [, setCustomer] = useState("");
+  const [, setInvoiceType] = useState("");
+  const [, setIssueDate] = useState("");
+  const [, setBaseCurrency] = useState("");
+  const [, setTransactionCurrency] = useState("");
+  const [, setAccount] = useState("");
+  const [, setProfitCenter] = useState("");
+  const [, setComments] = useState("");
   const navigate = useNavigate();
   const [selectedType, setSelectedType] = useState("");
   const handleCancel = () => {

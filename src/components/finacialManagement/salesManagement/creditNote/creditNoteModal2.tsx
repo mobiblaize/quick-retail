@@ -1,7 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
-import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router";
-import { DraftIcon, QuestionMark, RedQuestionMark } from "../../../../assets/svg";
+import { RedQuestionMark } from "../../../../assets/svg";
 import { ROUTES } from "../../../../constants/routes";
 
 interface ResolveProps {

@@ -133,38 +133,27 @@ export const FinancialManagement: NavItem[] = [
       { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
       { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
       { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
-      // { label: "Sales Reports", href: `${ROUTES.customer}` },
+  
     ],
   },
   {
     label: "Purchase",
-    href: ROUTES.financialDashboard,
+    href: ROUTES.selectVendor,
     inactiveIcon: InActivePurchaseOrderIcon,
     activeIcon: ActiveProductIcon,
-  },
-  {
-    label: "Purchase",
-    href: ROUTES.financialDashboard,
-    inactiveIcon: InActivePurchaseOrderIcon,
-    activeIcon: ActiveProductIcon,
-  },
-
-  {
-    label: "Sales Management",
-    href: ROUTES.customer,
-    inactiveIcon: InActiveReturns,
-    activeIcon: ActiveReturns,
     hasChildren: true,
     children: [
-      { label: "Customer", href: `${ROUTES.customerPage}` },
-      { label: "Receipt", href: `${ROUTES.createReceipt}` },
-      { label: "Receipt Allocation", href: `${ROUTES.generateReport}` },
-      { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
-      { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
-      { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
-      // { label: "Sales Reports", href: `${ROUTES.customer}` },
+      { label: "Vendor", href: `${ROUTES.selectVendor}` },
+      { label: "Purchase Order", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Purchase Invoice", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Non-inventory Purchase", href: `${ROUTES.nonInventory}` },
+      { label: "Remittance Advice", href: `${ROUTES.invoiceOverview}` },
+      { label: "Purchase Returns", href: `${ROUTES.orderReceipt}` },
+      { label: "Debit Note", href: `${ROUTES.issueCreditNote}` },
+      { label: "Add New Payment", href: `${ROUTES.orderReceipt}` },
     ],
   },
+  
 ];
 
 export const Procurement: NavItem[] = [

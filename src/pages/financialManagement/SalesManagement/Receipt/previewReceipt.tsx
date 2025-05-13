@@ -1,5 +1,5 @@
 import PageContainer from "../../../../layout/pageContainer";
-import { Button, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { Link, useNavigate } from "react-router";
 import { ChevronDown, ChevronLeft } from "lucide-react";
 import { ROUTES } from "../../../../constants/routes";

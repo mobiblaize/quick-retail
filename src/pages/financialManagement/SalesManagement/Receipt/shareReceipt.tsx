@@ -6,7 +6,7 @@ import ShareReceipt from "../../../../components/finacialManagement/salesManagem
 import CustomDropdown from "../../../../components/General/customDropdown";
 import { ROUTES } from "../../../../constants/routes";
 import { useState } from "react";
-import { PaidDot, SentBadge } from "../../../../assets/svg";
+import { SentBadge } from "../../../../assets/svg";
 
 const ShareReceiptPage = () => {
   const navigate = useNavigate();

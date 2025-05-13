@@ -1,5 +1,4 @@
 import { Avatar, Text } from "@mantine/core";
-import { PaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { paymentData } from "../../../../utils/mockData";
 import { CircleHelp } from "lucide-react";

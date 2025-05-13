@@ -1,4 +1,4 @@
-import React, { SetStateAction, useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 const CalendarDropdown = () => {
   const [selectedRange, setSelectedRange] = useState('This Month');

@@ -97,6 +97,18 @@ import CreditNotePage2 from "./pages/financialManagement/SalesManagement/CreditN
 import ViewCreditNotePage from "./pages/financialManagement/SalesManagement/CreditNote/view";
 import ViewCreditNoteReceiptPage from "./pages/financialManagement/SalesManagement/CreditNote/view2";
 import CreateMobileReceiptPage from "./pages/financialManagement/SalesManagement/Receipt/mobileReceipt";
+import SelectVendorPage from "./pages/financialManagement/Purchase/Vendor/selectVendor";
+import UnsettledVendorsPage from "./pages/financialManagement/Purchase/Vendor/unsettledVendors";
+import UnallocatedPaymentPage from "./pages/financialManagement/Purchase/Vendor/unallocatedPayment";
+import FilledUnallocatedPaymentPage from "./pages/financialManagement/Purchase/Vendor/filleunallocatedVendor";
+import FilledUnsettledVendorsPage from "./pages/financialManagement/Purchase/Vendor/filledUnsettledVendor";
+import AllPurchaseOverviewPage from "./pages/financialManagement/Purchase/PurchaseInvoice/allPurchaseInvoice";
+import NonInventoryOverviewPage from "./pages/financialManagement/Purchase/NonInventory/nonInventory";
+import ViewPurchaseInvoicePage from "./pages/financialManagement/Purchase/PurchaseInvoice/viewPurchaseInvoice";
+import PurchaseHistoryPage from "./pages/financialManagement/Purchase/PurchaseInvoice/versionHistory";
+import ConvertGrnToInvoicePage from "./pages/financialManagement/Purchase/PurchaseInvoice/convertInvoice";
+import NoFinancialPurchaseInvoicePage from "./pages/financialManagement/Purchase/PurchaseInvoice/noFinancialImplication";
+import ViewReceiptPages from "./pages/financialManagement/Purchase/PurchaseInvoice/viewReceipt";
 
 
 export default function App() {
@@ -298,6 +310,18 @@ export default function App() {
            <Route path={ROUTES.creditNote2} element={<CreditNotePage2/>} />
            <Route path={ROUTES.viewCreditNote} element={<ViewCreditNotePage/>} />
            <Route path={ROUTES.viewCreditNote2} element={<ViewCreditNoteReceiptPage/>} />
+           <Route path={ROUTES.selectVendor} element={<SelectVendorPage/>} />
+           <Route path={ROUTES.unsettledVendor} element={<UnsettledVendorsPage/>} />
+           <Route path={ROUTES.unallocatedPayment} element={<UnallocatedPaymentPage/>} />
+           <Route path={ROUTES.filledUnsettledVendor} element={<FilledUnsettledVendorsPage/>} />
+           <Route path={ROUTES.filledUnallocatedPayment} element={<FilledUnallocatedPaymentPage/>} />
+           <Route path={ROUTES.allPurchaseInvoice} element={<AllPurchaseOverviewPage/>} />
+           <Route path={ROUTES.nonInventory} element={<NonInventoryOverviewPage/>} />
+           <Route path={ROUTES.viewPurchaseInvoice} element={<ViewPurchaseInvoicePage/>} />
+           <Route path={ROUTES.viewHistory} element={<PurchaseHistoryPage/>} />
+           <Route path={ROUTES.viewConvertInvoice} element={<ConvertGrnToInvoicePage/>} />
+           <Route path={ROUTES.viewNoFinancialImplication} element={<NoFinancialPurchaseInvoicePage/>} />
+           <Route path={ROUTES.viewPurchaseReceipt} element={<ViewReceiptPages/>} />
         </Route>
       </Routes>
     </Router>

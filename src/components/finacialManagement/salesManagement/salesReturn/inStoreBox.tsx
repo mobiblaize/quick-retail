@@ -1,8 +1,7 @@
 import { Group, Text } from "@mantine/core";
-import {  inStoreOverviewData, receiptOverviewData, salesInvoiceOverviewData } from "../../../../utils/mockData";
+import {  inStoreOverviewData, } from "../../../../utils/mockData";
 import { useEffect, useState } from "react";
 import DateFilterMenu from "../../../General/filterMenu";
-import AnalyticsCard from "../../../General/card";
 import ReturnsAnalyticsCard from "../../../General/returnsCard";
 
 const InStoreBox = () => {
