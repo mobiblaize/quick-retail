@@ -101,5 +101,16 @@ export const ROUTES = {
  creditNote2 :"/dashboard/sales-management/credit-note/credit-notes", 
  viewCreditNote :"/dashboard/sales-management/sales-return/view-credit-note", 
  viewCreditNote2 :"/dashboard/sales-management/sales-return/view-credit-notes", 
-
+ selectVendor :"/dashboard/purchase/select-vendor", 
+ unsettledVendor :"/dashboard/purchase/receipt-allocation", 
+ unallocatedPayment :"/dashboard/purchase/unallocated-Payment",
+ filledUnsettledVendor :"/dashboard/purchase/filled-receipt-allocation",  
+ filledUnallocatedPayment :"/dashboard/purchase/filled-unallocated-Payment",
+allPurchaseInvoice:"/dashboard/purchase/purchase-invoice/all-purchase-invoice",
+nonInventory:"/dashboard/purchase/non-inventory-invoice/all-non-inventory-invoice",
+viewPurchaseInvoice:"/dashboard/purchase/purchase-invoice/view-purchase-invoice",
+viewHistory:"/dashboard/purchase/purchase-invoice/view-history",
+viewConvertInvoice:"/dashboard/purchase/purchase-invoice/convert-invoice",
+viewNoFinancialImplication:"/dashboard/purchase/purchase-invoice/view-existing-purchase-invoice",
+viewPurchaseReceipt:"/dashboard/purchase/purchase-invoice/view-purchase-receipt",
 };
