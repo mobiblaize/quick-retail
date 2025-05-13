@@ -32,7 +32,8 @@ export default function FileUploader() {
       </label>
 
       {uploadBlocks.map((block) => {
-        const fileInputRef = React.createRef();
+     const fileInputRef = React.createRef<HTMLInputElement>();
+
         return (
           <div
             key={block.id}
@@ -49,7 +50,13 @@ export default function FileUploader() {
             {/* desktop */}
 <div className="md:block hidden">
             <button
-              onClick={() => fileInputRef.current.click()}
+              // onClick={() => fileInputRef.current.click()}
+              onClick={() => {
+                if (fileInputRef.current) {
+                  fileInputRef.current.click();
+                }
+              }}
+              
               className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
             >
               Click to Upload
@@ -58,7 +65,13 @@ export default function FileUploader() {
             {/* mobile */}
             <div className="lg:hidden">
             <button
-              onClick={() => fileInputRef.current.click()}
+              // onClick={() => fileInputRef.current.click()}
+              onClick={() => {
+                if (fileInputRef.current) {
+                  fileInputRef.current.click();
+                }
+              }}
+              
               className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
             >
               Upload

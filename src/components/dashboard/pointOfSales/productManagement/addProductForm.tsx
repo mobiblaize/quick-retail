@@ -3,6 +3,10 @@ import { Plus, Upload, UploadCloud, X } from "lucide-react";
 import { useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
+interface Variation {
+  name: string;
+  values: string[];
+}
 
 const AddProductForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);

@@ -43,6 +43,7 @@ interface iInputField extends iFormProps {
   rightIcon?: ReactNode;
   leftIconClick?: () => void;
   rightIconClick?: () => void;
+  label?:ReactNode;
 }
 
 interface iCheckForm extends iFormProps {

@@ -1,11 +1,10 @@
 import {
     LineChart,
     Line,
-    XAxis,
+    // XAxis,
     Tooltip,
     ResponsiveContainer,
   } from 'recharts';
-  import { useState } from 'react';
 import DateFilterMenu from '../../../General/filterMenu';
 import { Group, } from "@mantine/core";
 
@@ -26,7 +25,7 @@ import { Group, } from "@mantine/core";
   ];
   
   export default function InflowOutflowChart() {
-    const [selectedRange, setSelectedRange] = useState('This Month');
+
   
     return (
       <div style={{ background: '#fff', padding: '1rem', borderRadius: '12px' }}>
@@ -62,12 +61,12 @@ import { Group, } from "@mantine/core";
   
         <ResponsiveContainer width="100%" height={300}>
           <LineChart data={data}>
-            <XAxis 
+            {/* <XAxis 
               dataKey="month" 
               axisLine={false} 
               tickLine={false} 
               tick={{ fill: '#888', fontSize: 12 }}
-            />
+            /> */}
             <Tooltip />
             <Line type="monotone" dataKey="import" stroke="#E62E05" strokeWidth={2.5} dot={false} />
             <Line type="monotone" dataKey="expense" stroke="#FF9C66" strokeWidth={2.5} dot={false} />

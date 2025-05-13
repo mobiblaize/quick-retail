@@ -1,8 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useNavigate } from "react-router";
-import {  RedQuestionMark } from "../../../../assets/svg";
-import { ROUTES } from "../../../../constants/routes";
+import { RedQuestionMark } from "../../../../assets/svg";
 
 interface ResolveProps {
   opened: boolean;
@@ -11,18 +9,17 @@ interface ResolveProps {
 
 const SaveModal = ({ opened, onClose }: ResolveProps) => {
   const handlePreview = () => {};
-  const navigate = useNavigate();
 
-   const handleToast = () => {
+  const handleToast = () => {
     notifications.show({
-        title: "Success",
-        message: "New Changes saved and updated",
-        color: "green",
-        autoClose: 3000,
-      });
-  
-      onClose();
-    };
+      title: "Success",
+      message: "New Changes saved and updated",
+      color: "green",
+      autoClose: 3000,
+    });
+
+    onClose();
+  };
 
   return (
     <>
@@ -41,7 +38,7 @@ const SaveModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-       Save and Update Changes? 
+              Save and Update Changes?
             </Text>
             <Text
               mt="5"
@@ -49,8 +46,8 @@ const SaveModal = ({ opened, onClose }: ResolveProps) => {
                 fontSize: "clamp(0.875rem, 2vw, 1rem)",
               }}
             >
-            Are you sure you want to save and update new changes to this purchase Invoice  #181901? 
-
+              Are you sure you want to save and update new changes to this
+              purchase Invoice #181901?
             </Text>
             <div className="mt-[1em]">
               <Text
@@ -59,7 +56,9 @@ const SaveModal = ({ opened, onClose }: ResolveProps) => {
                   fontSize: "clamp(0.875rem, 2vw, 1rem)",
                 }}
               >
-   Note that this action would override the current purchase invoice data, while the former saves in the purchase invoice version history
+                Note that this action would override the current purchase
+                invoice data, while the former saves in the purchase invoice
+                version history
               </Text>
             </div>
           </div>
@@ -85,7 +84,7 @@ const SaveModal = ({ opened, onClose }: ResolveProps) => {
                 border: "1px solid #475367",
               }}
             >
-         No, Cancel
+              No, Cancel
             </Button>
           </div>
           <div className="" onClick={handleToast}>
@@ -102,7 +101,7 @@ const SaveModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-  Yes, Save and Update
+              Yes, Save and Update
             </Button>
           </div>
         </div>
