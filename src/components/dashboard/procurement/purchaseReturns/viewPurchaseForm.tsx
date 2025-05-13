@@ -35,12 +35,12 @@ export default function ViewPurchaseForm() {
     }
   };
 
-  const handleAddNewItem = () => {
-    setItems([
-      ...items,
-      { name: "", description: "", quantity: 1, unitPrice: 0 },
-    ]);
-  };
+  // const handleAddNewItem = () => {
+  //   setItems([
+  //     ...items,
+  //     { name: "", description: "", quantity: 1, unitPrice: 0 },
+  //   ]);
+  // };
 
   const grandTotal = items.reduce(
     (total, item) => total + item.unitPrice * item.quantity,

@@ -2,7 +2,7 @@ import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router";
 import {  RedQuestionMark } from "../../../../assets/svg";
-import { ROUTES } from "../../../../constants/routes";
+
 
 interface ResolveProps {
   opened: boolean;
@@ -11,7 +11,7 @@ interface ResolveProps {
 
 const SaveModal = ({ opened, onClose }: ResolveProps) => {
   const handlePreview = () => {};
-  const navigate = useNavigate();
+
 
    const handleToast = () => {
     notifications.show({

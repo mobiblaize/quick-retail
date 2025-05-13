@@ -2,8 +2,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
-import { GreyDot, PaidDot, UnpaidDot } from "../../../../assets/svg";
-import {  allPurchaseInvoice, allPurchaseInvoiceHistory, productTableData, salesInvoice } from "../../../../utils/mockData";
+import {  PaidDot, UnpaidDot } from "../../../../assets/svg";
+import {   allPurchaseInvoiceHistory, productTableData} from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 

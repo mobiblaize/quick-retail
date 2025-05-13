@@ -61,7 +61,7 @@ const FilledAdvancedPaidTable = () => {
     {
       header: "Amount to Allocate",
       accessorKey: "totalAmount",
-      cell: (props) => (
+      cell: () => (
         <div className="flex flex-col">
           <div className="space-y-4 grid grid-cols-1">
             <FormInput

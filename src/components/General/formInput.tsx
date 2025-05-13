@@ -7,6 +7,7 @@ interface FlexibleInputField
   paddingY?: number | string;
   borderWidth?: number | string;
   leftPrefix?: string; 
+  
 }
 
 const FormInput = ({

@@ -28,7 +28,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   width = "100%",
   height = "auto",
   borderColor,
-  lightColor,
+ 
 }) => {
   const theme = useMantineTheme();
 

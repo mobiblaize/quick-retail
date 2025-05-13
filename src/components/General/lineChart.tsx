@@ -127,21 +127,22 @@ const LineChart: React.FC<LineChartProps> = ({
             />
           )}
 
-          <XAxis
-            dataKey={xAxisDataKey}
-            axisLine={false}
-            tickLine={false}
-            tickMargin={10}
-            tick={{ fontSize: 12, fill: "#666" }}
-          />
+<XAxis
+  dataKey={xAxisDataKey}
+  axisLine={false}
+  tickLine={false}
+  tickMargin={10}
+  tick={{ fontSize: 12, fill: "#666" }}
+/>
 
-          <YAxis
-            axisLine={false}
-            tickLine={false}
-            tickMargin={10}
-            tick={{ fontSize: 12, fill: "#666" }}
-            tickFormatter={yAxisFormatter}
-          />
+<YAxis
+  axisLine={false}
+  tickLine={false}
+  tickMargin={10}
+  tick={{ fontSize: 12, fill: "#666" }}
+  tickFormatter={yAxisFormatter}
+/>
+
 
           {showTooltip && (
             <Tooltip content={<CustomTooltip />} formatter={tooltipFormatter} />

@@ -1,11 +1,8 @@
 
 import {PlusIcon } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
-import CreditNoteModal2 from "../../salesManagement/creditNote/creditNoteModal2";
 import FileUpload from "../../salesManagement/receipts/fileUpload";
 import GenerateInvoiceModal from "./generateInvoiceModal";
 import PurchaseInvoice from "./purchaseInvoice";
@@ -13,13 +10,9 @@ import PurchaseInvoice from "./purchaseInvoice";
 
 
 export default function ConvertInvoiceForm() {
-  const [selectedType, setSelectedType] = useState("");
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
-  const navigate = useNavigate();
+
   
-  const handleView = () => {
-    navigate(ROUTES.viewCreditNote2);
-  };
   const [rows, setRows] = useState([
     { type: "Debit", account: "Acct 01", description: "", amount: "600000" },
     { type: "Credit", account: "Acct 02", description: "", amount: "150000" },

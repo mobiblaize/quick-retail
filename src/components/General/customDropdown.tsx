@@ -24,7 +24,6 @@ const CustomDropdown = ({
   placeholder = "Select an option",
   optional,
   required,
-  textColorClass,
   fieldColorClass,
   inputSizeClass,
   IconComponent,
