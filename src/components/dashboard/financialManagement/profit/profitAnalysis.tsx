@@ -1,8 +1,7 @@
 import { Group, Text } from "@mantine/core";
-import { financialMetricsOverviewData, financialMetricsOverviewData2, ProfitAnalysisOverviewData } from "../../../../utils/mockData";
+import { ProfitAnalysisOverviewData } from "../../../../utils/mockData";
 import { useEffect, useState } from "react";
 import DateFilterMenu from "../../../General/filterMenu";
-import AnalyticsCard from "../../../General/card";
 import ProfitCard from "../../../General/profitCard";
 
 const ProfitAnalysisBox = () => {

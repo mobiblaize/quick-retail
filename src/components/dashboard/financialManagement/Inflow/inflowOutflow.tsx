@@ -5,7 +5,7 @@ import {
     Tooltip,
     ResponsiveContainer,
   } from 'recharts';
-  import { useState } from 'react';
+
 import DateFilterMenu from '../../../General/filterMenu';
 import { Group, } from "@mantine/core";
 
@@ -26,7 +26,7 @@ import { Group, } from "@mantine/core";
   ];
   
   export default function InflowOutflowChart() {
-    const [selectedRange, setSelectedRange] = useState('This Month');
+   
   
     return (
       <div style={{ background: '#fff', padding: '1rem', borderRadius: '12px' }}>

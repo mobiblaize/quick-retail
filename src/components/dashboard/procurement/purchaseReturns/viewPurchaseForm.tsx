@@ -7,7 +7,7 @@ import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
 
 export default function ViewPurchaseForm() {
-  const [items, setItems] = useState([
+  const [items,] = useState([
     {
       name: "Microwave",
       description: "This is short description",

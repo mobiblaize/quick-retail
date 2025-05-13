@@ -1,6 +1,5 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useNavigate } from "react-router";
 import {  RedQuestionMark } from "../../../../assets/svg";
 
 

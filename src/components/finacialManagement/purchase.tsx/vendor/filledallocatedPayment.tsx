@@ -4,7 +4,6 @@ import TanTable from "../../../General/table";
 import { TableRowData } from "../../../../types";
 import { productTableData, unsettledVendor } from "../../../../utils/mockData";
 import FormInput from "../../../General/formInput";
-import { useNavigate } from "react-router";
 
 
 const FilledUnallocatedPaymentTable = () => {
