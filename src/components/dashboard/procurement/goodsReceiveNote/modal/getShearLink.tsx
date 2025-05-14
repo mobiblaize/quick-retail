@@ -14,6 +14,7 @@ import {
     onClose: () => void;
   }
   
+  
   const ShareableLinkModal = ({ opened, onClose }: ShareableLinkModalProps) => {
     const [link] = useState('http://remittance-advice/2023');
   

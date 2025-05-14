@@ -116,16 +116,44 @@ export const PointOfSale: NavItem[] = [
 export const FinancialManagement: NavItem[] = [
   {
     label: "Dashboard",
-    href: ROUTES.dashboard,
+    href: ROUTES.financialDashboard,
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Customer",
-    href: ROUTES.productManagement,
+    label: "Sales Management",
+    href: ROUTES.customer,
     inactiveIcon: InActiveReturns,
     activeIcon: ActiveReturns,
+    hasChildren: true,
+    children: [
+      { label: "Customer", href: `${ROUTES.customerPage}` },
+      { label: "Receipt", href: `${ROUTES.createReceipt}` },
+      { label: "Receipt Allocation", href: `${ROUTES.generateReport}` },
+      { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
+      { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
+      { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
+  
+    ],
   },
+  {
+    label: "Purchase",
+    href: ROUTES.selectVendor,
+    inactiveIcon: InActivePurchaseOrderIcon,
+    activeIcon: ActiveProductIcon,
+    hasChildren: true,
+    children: [
+      { label: "Vendor", href: `${ROUTES.selectVendor}` },
+      { label: "Purchase Order", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Purchase Invoice", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Non-inventory Purchase", href: `${ROUTES.nonInventory}` },
+      { label: "Remittance Advice", href: `${ROUTES.invoiceOverview}` },
+      { label: "Purchase Returns", href: `${ROUTES.orderReceipt}` },
+      { label: "Debit Note", href: `${ROUTES.issueCreditNote}` },
+      { label: "Add New Payment", href: `${ROUTES.orderReceipt}` },
+    ],
+  },
+  
 ];
 
 export const Procurement: NavItem[] = [

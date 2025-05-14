@@ -4,6 +4,12 @@ import FormInput from "../../components/General/formInput";
 import FormSelect from "../../components/General/select";
 import { useState } from "react";
 
+// type Variation = {
+//   name: string;
+//   values: string[];
+// };
+
+
 const AddProductForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);

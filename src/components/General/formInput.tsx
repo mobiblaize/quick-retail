@@ -6,6 +6,8 @@ interface FlexibleInputField
   paddingX?: number | string;
   paddingY?: number | string;
   borderWidth?: number | string;
+  leftPrefix?: string; 
+  
 }
 
 const FormInput = ({
@@ -32,6 +34,7 @@ const FormInput = ({
   paddingY = "5px",
   className,
   id,
+  leftPrefix,
   requiredColor = "text-red-600",
   ...rest
 }: FlexibleInputField) => {
@@ -67,12 +70,20 @@ const FormInput = ({
       readOnly={readOnly}
       error={error}
       leftSection={
-        leftIcon && (
+        leftIcon ? (
           <div onClick={leftIconClick} className="cursor-pointer">
             {leftIcon}
           </div>
-        )
+        ) : leftPrefix ? (
+          <div
+            className="text-gray-700 text-sm pl-1 pr-3 pt-5 pb-4 ml-3 rounded-l-md border-r border-gray-200"
+            style={{ backgroundColor: "#F9FAFB" }}
+          >
+            {leftPrefix}
+          </div>
+        ) : undefined
       }
+      
       rightSection={
         rightIcon && (
           <div onClick={rightIconClick} className="cursor-pointer">

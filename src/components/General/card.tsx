@@ -1,5 +1,5 @@
-import React, { ReactNode } from "react";
-import { Box, Text, Group, Card, useMantineTheme } from "@mantine/core";
+import  { ReactNode } from "react";
+import { Text, Group, Card, useMantineTheme } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
 
 interface AnalyticsCardProps {
@@ -15,6 +15,7 @@ interface AnalyticsCardProps {
   width?: string | number;
   height?: string | number;
   borderColor?: string;
+  lightColor?: string;
 }
 
 const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
@@ -27,6 +28,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   width = "100%",
   height = "auto",
   borderColor,
+  // lightColor,
 }) => {
   const theme = useMantineTheme();
 
@@ -38,7 +40,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     gap: "3px",
     width,
     height,
-    boxShadow: borderColor ? `0 0 0 0.5px ${borderColor}` : "none",
+    border: borderColor ? `1px solid ${borderColor}` : undefined,
   };
 
   if (defaultBgColor.includes("gradient")) {
@@ -55,28 +57,26 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
         {title}
       </Text>
 
-      <Text c={textColor} fz="24px" fw="600">
-        {value}
+      <Text c={textColor} fz="24px" fw="600" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
+  {value}
+  {percentageValue !== undefined && (
+    <Group
+      gap="xs"
+      style={{
+        borderRadius: "0.8rem",
+        padding: "4px 8px",
+        display: "inline-flex",
+        backgroundColor: "#E7F6EC",
+      }}
+    >
+      <Text c="#036B26" size="sm" fw={500}>
+        {percentageValue}
       </Text>
-      {percentageValue !== undefined && (
-        <Box>
-          <Group
-            justify="center"
-            gap="xs"
-            style={{
-              borderRadius: "1rem",
-              padding: "4px 12px",
-              display: "inline-flex",
-              backgroundColor: "#E7F6EC",
-            }}
-          >
-            <Text c="#036B26" size="sm" fw={500}>
-              {percentageValue}
-            </Text>
-            <ArrowIcon />
-          </Group>
-        </Box>
-      )}
+      <ArrowIcon />
+    </Group>
+  )}
+</Text>
+
     </Card>
   );
 };

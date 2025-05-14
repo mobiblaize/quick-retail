@@ -5,7 +5,6 @@ import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
 
 export default function IssuePurchaseForm() {
-
   const navigate = useNavigate();
 
   return (
@@ -139,9 +138,7 @@ export default function IssuePurchaseForm() {
           Back
         </Button>
 
-        <Button variant="filled-primary">
-          Issue Purchase Return
-        </Button>
+        <Button variant="filled-primary">Issue Purchase Return</Button>
       </div>
     </div>
   );

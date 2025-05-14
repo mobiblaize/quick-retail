@@ -1,4 +1,4 @@
-import React from "react";
+
 import { Button, Menu, Text } from "@mantine/core";
 import { ChevronDown, ChevronLeft, Plus } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -7,12 +7,13 @@ import PendingNoteForm from "../../../components/dashboard/procurement/goodsRece
 import ApproveGrn from "../../../components/dashboard/procurement/goodsReceiveNote/modal/approveGrn";
 import RejectGrn from "../../../components/dashboard/procurement/goodsReceiveNote/modal/rejectGrn";
 import ShareableLinkModal from "../../../components/dashboard/procurement/goodsReceiveNote/modal/getShearLink";
+import { useState } from "react";
 
 const PendingNoteDetails: React.FC = () => {
   const navigate = useNavigate();
-  const [modalOpen, setModalOpen] = React.useState(false);
-  const [rejectModalOpen, setRejectModalOpen] = React.useState(false);
-  const [linkModalOpen, setLinkModalOpen] = React.useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [rejectModalOpen, setRejectModalOpen] = useState(false);
+  const [linkModalOpen, setLinkModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);
