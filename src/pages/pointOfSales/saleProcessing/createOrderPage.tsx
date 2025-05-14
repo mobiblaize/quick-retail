@@ -1,6 +1,6 @@
-import React from "react";
-import CreateOrderPageContent from "./createOrderPageContent";
+
 import { OrderCreationProvider } from "../../../components/General/orderContext/orderCreationContext";
+import CreateOrderPageContent from "./createOrderPageContent";
 
 const CreateOrderPage: React.FC = () => {
   return (

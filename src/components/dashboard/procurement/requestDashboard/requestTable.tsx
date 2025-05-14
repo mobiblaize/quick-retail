@@ -3,9 +3,6 @@ import { allRequest } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
-import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { Link } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
 
 const RequestTable = () => {
   const columns: ColumnDef<TableRowData>[] = [
@@ -69,33 +66,16 @@ const RequestTable = () => {
     },
     
     {
-        header: "",
-        accessorKey: "action",
-        cell: ({ row }) => {
-        //   const status = row.original.status;
-      
-          // Define the path based on status
-        //   let path = "";
-      
-        //   if (status === "Pending") {
-        //     path = ROUTES. viewPendingRequest;
-        //   } else if (status === "Success") {
-        //     path = ROUTES.viewApproveRequest;
-        //   } else if (status === "Cancelled") {
-        //     path = ROUTES. viewCancelledRequest;
-        //   } else {
-        //     path = ROUTES.newRequest; 
-        //   }
-      
-          return (
-            // <Link to={}>
-              <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-                View
-              </Text>
-            // </Link>
-          );
-        },
-      }      
+      header: "",
+      accessorKey: "action",
+      cell: () => (
+        // <Link to={ROUTES.summaryPage}>
+          <Text fw={700} c="customPrimary.10" className="cursor-pointer">
+            View
+          </Text>
+        // </Link>
+      ),
+    },      
   ];
 
   return (

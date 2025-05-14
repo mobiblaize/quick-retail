@@ -4,8 +4,6 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { Link } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
 
 const AllPurchaseOrdersTable = () => {
   const columns: ColumnDef<TableRowData>[] = [

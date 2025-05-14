@@ -7,7 +7,7 @@ import { useState } from "react";
 const AddProductForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [variations, setVariations] = useState<Variation[]>([
+  const [variations, setVariations] = useState([
     { name: "Size", values: ["Small", "Medium", "Large"] },
     { name: "Colour", values: ["White", "Pink", "Black"] },
   ]);
@@ -45,14 +45,7 @@ const AddProductForm = () => {
 
           <FormInput
             type="text"
-            label={
-              <span>
-                Barcode –{" "}
-                <a href="#" className="text-blue-500">
-                  Scan barcode
-                </a>
-              </span>
-            }
+            label="Barcode Scan barcode"
             placeholder="Enter barcode"
             paddingY={"0.7rem"}
           />

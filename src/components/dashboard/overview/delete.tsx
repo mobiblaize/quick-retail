@@ -1,5 +1,5 @@
 const Delete = () => {
-  return <div></div>;
+  return <div>delete</div>;
 };
 
 export default Delete;

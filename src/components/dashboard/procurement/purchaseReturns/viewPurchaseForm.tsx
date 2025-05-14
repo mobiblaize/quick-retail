@@ -226,13 +226,13 @@ export default function ViewPurchaseForm() {
               </div>
             </div>
 
-            {/* <button
+            <button
               className="flex items-center justify-center gap-2 border-2 border-dashed border-orange-500 text-orange-500 rounded-md px-6 py-4 hover:bg-orange-50"
               onClick={handleAddNewItem}
             >
               <span className="text-lg mr-2">+</span>
               <span className="font-medium">Add new items row</span>
-            </button> */}
+            </button>
           </div>
         </div>
 

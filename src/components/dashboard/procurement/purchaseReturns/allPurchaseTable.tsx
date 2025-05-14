@@ -1,6 +1,6 @@
 import { useState } from "react";
 import NonInventoryTable from "./nonInventoryTable";
-import InventoryTable from "./InventoryTable";
+import InventoryTable from "./inventoryTable";
 
 const AllPurchaseTable = () => {
   const [activeTab, setActiveTab] = useState<"noninventory" | "inventory">("noninventory");

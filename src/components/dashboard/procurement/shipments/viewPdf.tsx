@@ -1,4 +1,3 @@
-import React from "react";
 
 const ViewPDF = () => {
   // Replace this with your actual PDF URL

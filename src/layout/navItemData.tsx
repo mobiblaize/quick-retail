@@ -1,4 +1,3 @@
-import React from "react";
 import {
   InActiveDashboardIcon,
   ActiveDashboardIcon,
@@ -28,6 +27,7 @@ import {
   InActivePurchaseOrderIcon,
   InActiveVendorManagementIcon,
   InActiveShipmentIcon,
+  procurementInActiveIcon,
 } from "../assets/svg";
 import { ROUTES } from "../constants/routes";
 
@@ -176,15 +176,45 @@ export const Procurement: NavItem[] = [
 export const AssetManagement: NavItem[] = [
   {
     label: "Dashboard",
-    href: ROUTES.dashboard,
+    href: ROUTES.assetDashboard,
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Customer",
-    href: ROUTES.productManagement,
-    inactiveIcon: InActiveReturns,
-    activeIcon: ActiveReturns,
+    label: "Asset Request",
+    href: ROUTES.assetRequestPage,
+    inactiveIcon: InActiveProductIcon,
+    activeIcon: ActiveProductIcon,
+  },
+  {
+    label: "Asset Register",
+    href: ROUTES.assetRegisterPage,
+    inactiveIcon: InActiveVendorManagementIcon,
+    activeIcon: InActiveVendorManagementIcon,
+  },
+  {
+    label: "Depreciation",
+    href: ROUTES.depreciationPage,
+    inactiveIcon: InActiveInventory,
+    activeIcon: ActiveInventory,
+  },
+  {
+    label: "Procurement",
+    href: ROUTES.procurementPage,
+    inactiveIcon: procurementInActiveIcon,
+    activeIcon: procurementInActiveIcon,
+  },
+  {
+    label: "Report",
+    href: ROUTES.reportPage,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+  },
+  {
+    label: "Setting",
+    href: ROUTES.settingPage,
+    inactiveIcon: Settings,
+    activeIcon: Settings,
   },
 ];
 

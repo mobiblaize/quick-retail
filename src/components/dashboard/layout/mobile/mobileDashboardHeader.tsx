@@ -32,7 +32,7 @@ const MobileDashboardHeader = () => {
     },
     {
       label: "Asset Management" as DashboardSection,
-      to: ROUTES.test,
+      to: ROUTES.assetDashboard,
       active: activeSection === "Asset Management",
     },
     {
