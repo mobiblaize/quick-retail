@@ -5,10 +5,6 @@ import {
     Tooltip,
     ResponsiveContainer,
   } from 'recharts';
-
-
-
-
 import DateFilterMenu from '../../../General/filterMenu';
 import { Group, } from "@mantine/core";
 
@@ -29,7 +25,6 @@ import { Group, } from "@mantine/core";
   ];
   
   export default function InflowOutflowChart() {
-   
   
     return (
       <div style={{ background: '#fff', padding: '1rem', borderRadius: '12px' }}>

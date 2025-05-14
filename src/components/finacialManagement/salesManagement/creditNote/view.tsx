@@ -12,7 +12,6 @@ export default function ViewCreditNote() {
   const [selectedType, setSelectedType] = useState("");
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
 
-
   return (
     <>
       {showAllocatedModal && (

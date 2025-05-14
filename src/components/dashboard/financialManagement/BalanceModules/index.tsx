@@ -3,7 +3,6 @@ import AccountBalance from './AccountBalance'
 import LatestExpense from './LatestExpense'
 import LatestIncome from './latestIncome'
 
-
 const BalanceModules = () => {
   return (
     <div className="bg-white  px-4 py-6 rounded-md">

@@ -1,17 +1,11 @@
+
 import { Button, FileButton, Text } from "@mantine/core";
 import { UploadCloud } from "lucide-react";
-
 import FormSelect from "../../../General/select";
 import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
 
 export default function IssuePurchaseForm() {
-  // const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   if (e.target.files) {
-  //     setSelectedFile(e.target.files[0]);
-  //   }
-  // };
-
   const navigate = useNavigate();
 
   return (

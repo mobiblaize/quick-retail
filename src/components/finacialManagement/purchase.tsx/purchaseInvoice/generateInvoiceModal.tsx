@@ -4,7 +4,6 @@ import {
   RedQuestionMark,
 } from "../../../../assets/svg";
 
-
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;

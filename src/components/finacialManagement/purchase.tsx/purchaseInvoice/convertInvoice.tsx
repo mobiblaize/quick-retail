@@ -1,5 +1,4 @@
-
-import {PlusIcon } from "lucide-react";
+import { PlusIcon } from "lucide-react";
 import { useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
@@ -7,12 +6,10 @@ import FileUpload from "../../salesManagement/receipts/fileUpload";
 import GenerateInvoiceModal from "./generateInvoiceModal";
 import PurchaseInvoice from "./purchaseInvoice";
 
-
-
 export default function ConvertInvoiceForm() {
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
+ 
 
-  
   const [rows, setRows] = useState([
     { type: "Debit", account: "Acct 01", description: "", amount: "600000" },
     { type: "Credit", account: "Acct 02", description: "", amount: "150000" },
@@ -420,7 +417,7 @@ export default function ConvertInvoiceForm() {
                 </div>
 
                 <div className="w-[30%] h-[40vh] md:block hidden">
-                       <PurchaseInvoice/>
+                  <PurchaseInvoice />
                 </div>
               </div>
               {/* desktop */}
@@ -477,7 +474,7 @@ export default function ConvertInvoiceForm() {
                   // onClick={handleView}
                   onClick={() => setShowAllocatedModal(true)}
                 >
-               Create Invoice
+                  Create Invoice
                 </button>
               </div>
             </div>

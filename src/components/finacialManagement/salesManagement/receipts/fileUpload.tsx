@@ -34,7 +34,7 @@ export default function FileUploader() {
       </label>
 
       {uploadBlocks.map((block) => {
-        const fileInputRef = React.createRef<HTMLInputElement>();
+     const fileInputRef = React.createRef<HTMLInputElement>();
 
         return (
           <div
@@ -50,22 +50,32 @@ export default function FileUploader() {
               </span>
             </div>
             {/* desktop */}
-            <div className="md:block hidden">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
-              >
-                Click to Upload
-              </button>
+<div className="md:block hidden">
+            <button
+              onClick={() => {
+                if (fileInputRef.current) {
+                  fileInputRef.current.click();
+                }
+              }}
+              
+              className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
+            >
+              Click to Upload
+            </button>
             </div>
             {/* mobile */}
             <div className="lg:hidden">
-              <button
-                onClick={() => fileInputRef.current?.click()}
-                className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
-              >
-                Upload
-              </button>
+            <button
+              onClick={() => {
+                if (fileInputRef.current) {
+                  fileInputRef.current.click();
+                }
+              }}
+              
+              className="px-4 py-1.5 text-sm font-medium text-orange-500 border border-orange-500 rounded-md hover:bg-orange-50"
+            >
+              Upload
+            </button>
             </div>
             <input
               type="file"

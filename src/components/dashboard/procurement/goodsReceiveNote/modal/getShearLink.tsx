@@ -7,7 +7,7 @@ import {
     ThemeIcon,
   } from '@mantine/core';
   import { useState } from 'react';
-  import { Check } from 'lucide-react';
+  import { Check} from 'lucide-react';
   
   interface ShareableLinkModalProps {
     opened: boolean;

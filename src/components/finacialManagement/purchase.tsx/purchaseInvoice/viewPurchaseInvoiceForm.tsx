@@ -11,9 +11,7 @@ import SaveModal from "./saveModal";
 
 export default function ViewPurchaseInvoiceForm() {
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
-
   
-
   const [rows, setRows] = useState([
     { type: "Debit", account: "Acct 01", description: "", amount: "600000" },
     { type: "Credit", account: "Acct 02", description: "", amount: "150000" },
