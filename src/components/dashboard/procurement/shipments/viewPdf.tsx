@@ -1,5 +1,4 @@
 
-
 const ViewPDF = () => {
   // Replace this with your actual PDF URL
   const fileUrl = "/files/ProductDetails.pdf";

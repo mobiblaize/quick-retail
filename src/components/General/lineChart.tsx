@@ -1,4 +1,3 @@
-
 import {
   ResponsiveContainer,
   Line,
@@ -140,6 +139,20 @@ const LineChart: React.FC<LineChartProps> = ({
             tickLine={false}
             tickMargin={10}
             tick={{ fontSize: 12, fill: "#666" }}
+            tickFormatter={yAxisFormatter}
+          /> */}
+
+          {/* <XAxis
+            dataKey={xAxisDataKey}
+            axisLine={false}
+            tickLine={false}
+            tickMargin={10}
+          />
+
+          <YAxis
+            axisLine={false}
+            tickLine={false}
+            tickMargin={10}
             tickFormatter={yAxisFormatter}
           /> */}
 

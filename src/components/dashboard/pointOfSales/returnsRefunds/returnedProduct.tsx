@@ -1,4 +1,3 @@
-
 import CustomerDetails from "./customerDetails";
 import OrderDetails from "./orderDetails";
 import OrderSummary from "./orderSummary";

@@ -5,7 +5,6 @@ import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 
-
 const AllPurchaseOrdersTable = () => {
   const columns: ColumnDef<TableRowData>[] = [
     {

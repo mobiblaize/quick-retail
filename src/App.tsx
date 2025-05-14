@@ -61,6 +61,21 @@ import CreateTierOne from "./pages/procurement/vendorManagement/createTierOne";
 import CreateTierTwo from "./pages/procurement/vendorManagement/createTierTwo";
 import EditVendor from "./pages/procurement/vendorManagement/editVendor";
 import TierOneVendorDetails from "./pages/procurement/vendorManagement/tierOneVendorDetails";
+import AssetDashboard from "./pages/assetManagement/assetDashboard/assetDashboard";
+import SummaryPage from "./pages/assetManagement/assetDashboard/summaryPage";
+import AssetRequestPage from "./pages/assetManagement/assetRequest/assetRequestPage";
+import AssetRegisterPage from "./pages/assetManagement/assetRegister/assetRegisterPage";
+import DepreciationPage from "./pages/assetManagement/depreciation/depreciationPage";
+import ProcurementPage from "./pages/assetManagement/procurement/procurementPage";
+import ReportPage from "./pages/assetManagement/report/reportPage";
+import SettingPage from "./pages/assetManagement/settingPage/settingPage";
+import AddNewAsset from "./pages/assetManagement/assetRegister/addNewAsset";
+import ViewAssetState from "./pages/assetManagement/assetRegister/viewAssetState";
+import ViewDepreciationState from "./pages/assetManagement/depreciation/viewDepreciationState";
+import AddNewDepreciation from "./pages/assetManagement/depreciation/addNewDepreciation";
+import ViewProcurementState from "./pages/assetManagement/procurement/viewProcurementState";
+import CreateProcurementRequest from "./pages/assetManagement/procurement/createProcurementRequest";
+import AssetRequestDetails from "./pages/assetManagement/assetRequest/assetRequestDetails";
 import FinancialDashboard from "./pages/financialManagement/financialDashboard/dashboardPage";
 import SalesManagement from "./pages/financialManagement/financialDashboard/salesManagement";
 import CustomerSalesPage from "./pages/financialManagement/SalesManagement/customer/customerPage";
@@ -181,7 +196,54 @@ export default function App() {
 
           {/* PROCUREMENT ROUTES */}
 
-          <Route
+            <Route path={ROUTES.procurementDashboard} element={<ProcurementDashboard />} />
+            <Route path={ROUTES.newRequest} element={<NewRequestPage />} />
+            <Route path={ROUTES.createdRequest} element={<CreatedRequestPage />} />
+            <Route path={ROUTES.viewApproveRequest} element={<ViewApproveRequestPage />} />
+            <Route path={ROUTES.viewPendingRequest} element={<ViewPendingRequestPage />} />
+            <Route path={ROUTES.viewCancelledRequest} element={<ViewCancelledRequestPage />} />
+            <Route path={ROUTES.purchaseOrder} element={<PurchaseOrderPage />} />
+            <Route path={ROUTES.createPurchaseOrder} element={<CreatePurchaseOrderPage />} />
+            <Route path={ROUTES.purchaseInvoicePage} element={<PurchaseInvoicePage />} />
+            <Route path={ROUTES.viewPurchaseOrderInvoicePage} element={<ViewPurchaseOrderInvoicePage />} />
+            <Route path={ROUTES.vendorManagement} element={<VendorManagement />} />
+            <Route path={ROUTES.tierOneVendors} element={<TierOneVendorDetails/>} />
+            <Route path={ROUTES.tierTwoVendors} element={<TierTwoVendorDetails/>} />
+            <Route path={ROUTES.createTierOne} element={<CreateTierOne/>} />
+            <Route path={ROUTES.createTierTwo} element={<CreateTierTwo/>} />
+            <Route path={ROUTES.editVendor} element={<EditVendor/>} />
+            <Route path={ROUTES.requestDashboard} element={<RequestDashboard />} />
+            <Route path={ROUTES.requestSummaryPage} element={<RequestSummaryPage />} />
+            <Route path={ROUTES.viewBudgetPage} element={<ViewBudgetPage />} />
+            <Route path={ROUTES.shipments} element={<ShipmentsDashboard />} />
+            <Route path={ROUTES.shipmentsSummary} element={<ShipmentSummaryPage/>} />
+            <Route path={ROUTES.createShipment} element={<CreateShipment/>} />
+            <Route path={ROUTES.purchaseReturns} element={<PurchaseReturns />} />
+            <Route path={ROUTES.approveReturns} element={<ApproveReturnPurchase />} />
+            <Route path={ROUTES.issuePurchase} element={<IssuePurchasePage />} />
+            <Route path={ROUTES.goodsReceived} element={<GoodsReceiveNote />} />
+            <Route path={ROUTES.pendingNoteDetails} element={<PendingNoteDetails />} />
+            <Route path={ROUTES.rejectedNoteDetails} element={<RejectedNoteDetails />} />
+            <Route path={ROUTES.approvedNoteDetails} element={<ApprovedNoteDetails />} />
+
+            {/* ASSET MANAGEMENT ROUTES */}
+
+            <Route path={ROUTES.assetDashboard} element={<AssetDashboard />} />
+            <Route path={ROUTES.summaryPage} element={<SummaryPage />} />
+            <Route path={ROUTES.assetRequestPage} element={<AssetRequestPage />} />
+            <Route path={ROUTES.assetRequestDetails} element={<AssetRequestDetails />} />
+            <Route path={ROUTES.assetRegisterPage} element={<AssetRegisterPage />} />
+            <Route path={ROUTES.addNewAsset} element={<AddNewAsset />} />
+            <Route path={ROUTES.viewAssetState} element={<ViewAssetState />} />
+            <Route path={ROUTES.depreciationPage} element={<DepreciationPage />} />
+            <Route path={ROUTES.viewdepreciationState} element={<ViewDepreciationState />} />
+            <Route path={ROUTES.addNewDepreciation} element={<AddNewDepreciation />} />
+            <Route path={ROUTES.procurementPage} element={<ProcurementPage />} />
+            <Route path={ROUTES.viewProcurementState} element={<ViewProcurementState />} />
+            <Route path={ROUTES.createProcurementrequest} element={<CreateProcurementRequest />} />
+            <Route path={ROUTES.reportPage} element={<ReportPage />} />
+            <Route path={ROUTES.settingPage} element={<SettingPage />} />
+          {/* <Route
             path={ROUTES.procurementDashboard}
             element={<ProcurementDashboard />}
           />
@@ -263,7 +325,7 @@ export default function App() {
           <Route
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
-          />
+          /> */}
 
           {/* FINANCIAL-MANAGEMENT ROUTES */}
           <Route

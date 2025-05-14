@@ -65,6 +65,23 @@ export const ROUTES = {
   rejectedNoteDetails: "/dashboard/goods-received/rejected-note-details",
   approvedNoteDetails: "/dashboard/goods-received/approved-note-details",
 
+  // ASSET MANAGEMENT SECTION
+
+  assetDashboard: "/dashboard/asset-management",
+  summaryPage: "/dashboard/asset-management/summary-page",
+  assetRequestPage: "/dashboard/asset-request-page",
+  assetRequestDetails:"/dashboard/asset-request-page/asset-request-details",
+  assetRegisterPage: "/dashboard/asset-register-page",
+  addNewAsset: "/dashboard/asset-register-page/add-new-asset",
+  viewAssetState: "/dashboard/asset-register-page/view-asset-state",
+  depreciationPage: "/dashboard/depreciation-page",
+  viewdepreciationState: "/dashboard/depreciation-page/view-depreciation-state",
+  addNewDepreciation: "/dashboard/depreciation-page/add-new-depreciation",
+  procurementPage: "/dashboard/procurement-page",
+  viewProcurementState: "/dashboard/procurement-page/view-procurement-state",
+  createProcurementrequest: "/dashboard/procurement-page/create-procurement-request",
+  reportPage: "/dashboard/report-page",
+  settingPage: "/dashboard/setting-page",
   // FINANCIAL-MANAGEMENT SECTION
   financialDashboard: "/dashboard/financial-management",
   salesManagement: "/dashboard/sales-management",
