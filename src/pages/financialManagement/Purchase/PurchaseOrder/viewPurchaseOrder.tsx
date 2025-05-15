@@ -1,15 +1,12 @@
 import { Button, Menu, Text } from "@mantine/core";
 import { ChevronDown, ChevronLeft, Plus } from "lucide-react";
-import { useState } from "react";
 import { useNavigate } from "react-router";
 import ViewPurchaseOrderForm from "../../../../components/finacialManagement/purchase.tsx/purchaseOrder/viewPurchaseOrder";
 import { ROUTES } from "../../../../constants/routes";
 import PageContainer from "../../../../layout/pageContainer";
 
-
 export default function ViewPurchaseOrderPage() {
   const navigate = useNavigate();
-//   const [, setModalOpen] = useState(false);
 
   const handleBack = () => {
     navigate(-1);
@@ -25,9 +22,6 @@ export default function ViewPurchaseOrderPage() {
   const handleVendorDetails = () => {
     navigate(ROUTES.vendorDetails);
   };
-//   const handleRemitanceAdvice = () => {
-//     navigate(ROUTES.createRemittance);
-//   };
 
   const getSubHeaders = () => {
     const backButton = (
@@ -98,7 +92,7 @@ export default function ViewPurchaseOrderPage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                    onClick={handleHistory }
+                  onClick={handleHistory}
                 >
                   Purchase Order Version History
                 </Menu.Item>
@@ -130,7 +124,8 @@ export default function ViewPurchaseOrderPage() {
                   }}
                   // onClick={handleAddBulkProducts}
                 >
-                Convert Purchase Order and G.R.N <br/>to a Purchase Invoice / Bill?
+                  Convert Purchase Order and G.R.N <br />
+                  to a Purchase Invoice / Bill?
                 </Menu.Item>
                 <Menu.Item
                   style={{
@@ -138,7 +133,7 @@ export default function ViewPurchaseOrderPage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  onClick={handleVendor }
+                  onClick={handleVendor}
                 >
                   View All Vendor
                 </Menu.Item>
@@ -148,12 +143,11 @@ export default function ViewPurchaseOrderPage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                //   onClick={() => setModalOpen(true)}
-                onClick={handleVendorDetails}
+                  //   onClick={() => setModalOpen(true)}
+                  onClick={handleVendorDetails}
                 >
                   Vendor Details
                 </Menu.Item>
-               
               </Menu.Dropdown>
             </Menu>
           </div>
@@ -232,7 +226,8 @@ export default function ViewPurchaseOrderPage() {
                   }}
                   // onClick={handleAddBulkProducts}
                 >
-                Convert Purchase Order and G.R.N <br/>to a Purchase Invoice / Bill?
+                  Convert Purchase Order and G.R.N <br />
+                  to a Purchase Invoice / Bill?
                 </Menu.Item>
                 <Menu.Item
                   style={{
@@ -240,7 +235,7 @@ export default function ViewPurchaseOrderPage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  onClick={handleVendor }
+                  onClick={handleVendor}
                 >
                   View All Vendor
                 </Menu.Item>
@@ -266,7 +261,7 @@ export default function ViewPurchaseOrderPage() {
 
   return (
     <PageContainer subHeaders={getSubHeaders()}>
-      <ViewPurchaseOrderForm/>
+      <ViewPurchaseOrderForm />
     </PageContainer>
   );
 }

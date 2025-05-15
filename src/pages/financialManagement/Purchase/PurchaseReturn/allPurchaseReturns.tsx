@@ -1,22 +1,12 @@
 import { Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router";
 import AllPurchaseReturnTable from "../../../../components/finacialManagement/purchase.tsx/purchaseReturns/allPurchaseReturnTable";
 import AllPurchaseReturnsOverview from "../../../../components/finacialManagement/purchase.tsx/purchaseReturns/overview";
 import CustomDropdown from "../../../../components/General/customDropdown";
-import { ROUTES } from "../../../../constants/routes";
 import PageContainer from "../../../../layout/pageContainer";
 
 const AllPurchaseReturnsOverviewPage = () => {
-  const navigate = useNavigate();
-  const handleBack = () => {
-    navigate(-1);
-  };
-
-  const handleClick = () => {
-    navigate(ROUTES.nonInventory);
-  };
   const [, setShowAllocatedModal] = useState(false);
   const [selectedType, setSelectedType] = useState("");
 

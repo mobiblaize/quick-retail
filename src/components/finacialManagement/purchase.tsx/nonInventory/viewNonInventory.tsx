@@ -1,9 +1,7 @@
 import { useState } from "react";
-import AccountTable from "./allVendorPurchase";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
 import CreditNoteModal2 from "../../salesManagement/creditNote/creditNoteModal2";
-import PurchaseInvoice from "../purchaseInvoice/purchaseInvoice";
 import SupportingDoc from "./supportingDoc";
 import VendorPurchaseInvoices from "./allVendorPurchase";
 

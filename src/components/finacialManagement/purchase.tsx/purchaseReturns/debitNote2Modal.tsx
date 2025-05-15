@@ -1,7 +1,5 @@
 import { Button, Modal, Text } from "@mantine/core";
-import { useState } from "react";
 import { RedQuestionMark } from "../../../../assets/svg";
-import DebitIssueModal from "./debitModalIssue";
 
 interface ResolveProps {
   opened: boolean;
@@ -15,7 +13,6 @@ const DebitModal2 = ({ opened, onClose }: ResolveProps) => {
 
   return (
     <>
-      
       <Modal
         opened={opened}
         onClose={onClose}

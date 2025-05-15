@@ -1,10 +1,8 @@
 import { Text } from "@mantine/core";
 import PageContainer from "../../../../layout/pageContainer";
 import CustomDropdown from "../../../../components/General/customDropdown";
-
 import { useState } from "react";
 import { ChevronDown } from "lucide-react";
-import AllHistoryTable from "../../../../components/finacialManagement/purchase.tsx/purchaseInvoice/historyTable";
 import OrderHistoryTable from "../../../../components/finacialManagement/purchase.tsx/purchaseOrder/historyTable";
 
 const PurchaseOrderHistoryPage = () => {
@@ -13,7 +11,7 @@ const PurchaseOrderHistoryPage = () => {
     <div key="1">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-        Purchase Order Version History
+          Purchase Order Version History
         </Text>
         <div className="flex flex-row gap-2 md:gap-4 cursor-pointer">
           <CustomDropdown

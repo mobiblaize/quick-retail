@@ -3,14 +3,10 @@ import { ChevronDown } from "lucide-react";
 import { useState } from "react";
 import AllDebitNoteOverview from "../../../../components/finacialManagement/purchase.tsx/debitNote/overview";
 import AllDebitNoteTable from "../../../../components/finacialManagement/purchase.tsx/debitNote/table";
-import AllPurchaseReturnTable from "../../../../components/finacialManagement/purchase.tsx/purchaseReturns/allPurchaseReturnTable";
 import CustomDropdown from "../../../../components/General/customDropdown";
 import PageContainer from "../../../../layout/pageContainer";
 
 const AllDebitNoteOverviewPage = () => {
-
- 
-
   const [, setShowAllocatedModal] = useState(false);
   const [selectedType, setSelectedType] = useState("");
   const subHeaders = [
@@ -73,8 +69,8 @@ const AllDebitNoteOverviewPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-     <AllDebitNoteOverview/>
-      <AllDebitNoteTable  />
+      <AllDebitNoteOverview />
+      <AllDebitNoteTable />
     </PageContainer>
   );
 };

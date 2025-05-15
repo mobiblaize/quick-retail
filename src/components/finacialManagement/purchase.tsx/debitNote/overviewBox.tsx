@@ -1,5 +1,5 @@
 import { Group, Text } from "@mantine/core";
-import {  allDebitNoteOverviewData, allPurchaseReturnOverviewData} from "../../../../utils/mockData";
+import {  allDebitNoteOverviewData} from "../../../../utils/mockData";
 import { useEffect, useState } from "react";
 import DateFilterMenu from "../../../General/filterMenu";
 import AnalyticsCard from "../../../General/card";

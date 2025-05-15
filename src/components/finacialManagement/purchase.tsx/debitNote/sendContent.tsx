@@ -106,7 +106,7 @@ export default function InboxView() {
     },
   ];
 
-  const grnValue = 60000;
+
   return (
     <div className="flex h-screen font-sans">
       {/* Sidebar */}
