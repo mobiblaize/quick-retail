@@ -2,8 +2,8 @@ import { Text } from "@mantine/core";
 import { ChevronDown, ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import {  useNavigate } from "react-router";
+import AllNonInventoryTable from "../../../../components/finacialManagement/purchase.tsx/nonInventory/allNonInventoryTable";
 import NonInventoryOverview from "../../../../components/finacialManagement/purchase.tsx/nonInventory/overview";
-import AllPurchaseTable from "../../../../components/finacialManagement/purchase.tsx/purchaseInvoice/allPurchaseTable";
 import CustomDropdown from "../../../../components/General/customDropdown";
 import { ROUTES } from "../../../../constants/routes";
 import PageContainer from "../../../../layout/pageContainer";
@@ -133,7 +133,7 @@ const NonInventoryOverviewPage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       <NonInventoryOverview />
-      <AllPurchaseTable />
+      <AllNonInventoryTable />
     </PageContainer>
   );
 };

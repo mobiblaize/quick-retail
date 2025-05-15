@@ -144,13 +144,13 @@ export const FinancialManagement: NavItem[] = [
     hasChildren: true,
     children: [
       { label: "Vendor", href: `${ROUTES.selectVendor}` },
-      { label: "Purchase Order", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Purchase Order", href: `${ROUTES.allPurchaseOrder}` },
       { label: "Purchase Invoice", href: `${ROUTES.allPurchaseInvoice}` },
       { label: "Non-inventory Purchase", href: `${ROUTES.nonInventory}` },
-      { label: "Remittance Advice", href: `${ROUTES.invoiceOverview}` },
-      { label: "Purchase Returns", href: `${ROUTES.orderReceipt}` },
-      { label: "Debit Note", href: `${ROUTES.issueCreditNote}` },
-      { label: "Add New Payment", href: `${ROUTES.orderReceipt}` },
+      { label: "Remittance Advice", href: `${ROUTES.createRemittance}` },
+      { label: "Purchase Returns", href: `${ROUTES.allPurchaseReturns}` },
+      { label: "Debit Note", href: `${ROUTES.allDebitNote}` },
+      { label: "Add New Payment", href: `${ROUTES.addPayment}` },
     ],
   },
   

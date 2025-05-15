@@ -90,7 +90,7 @@ const AllocatedReceiptTable = () => {
                 const value = e.target.value;
 
                 if (value.trim()) {
-                  navigate(ROUTES.filledPartiallyPaidReceipt);
+                  navigate(ROUTES.filledUnallocatedRemittance);
                 }
               }}
             />
