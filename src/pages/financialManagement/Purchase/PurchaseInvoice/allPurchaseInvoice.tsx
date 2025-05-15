@@ -42,7 +42,7 @@ const AllPurchaseOverviewPage = () => {
       <div className="flex sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 lg:hidden">
         <div className="flex flex-col">
           <Text fw={500} size="xl" c="black">
-            Purchase Invoice
+          Non-Inventory Purchase
           </Text>
           <div className=" text-sm flex justify-end text-right gap-6 pb-4 mt-[-2em] lg:hidden">
             <div

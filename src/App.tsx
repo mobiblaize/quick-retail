@@ -124,6 +124,39 @@ import PurchaseHistoryPage from "./pages/financialManagement/Purchase/PurchaseIn
 import ConvertGrnToInvoicePage from "./pages/financialManagement/Purchase/PurchaseInvoice/convertInvoice";
 import NoFinancialPurchaseInvoicePage from "./pages/financialManagement/Purchase/PurchaseInvoice/noFinancialImplication";
 import ViewReceiptPages from "./pages/financialManagement/Purchase/PurchaseInvoice/viewReceipt";
+import AllNonInventoryPage from "./pages/financialManagement/Purchase/NonInventory/allNonInventoryInvoice";
+import ViewNonInventoryPage from "./pages/financialManagement/Purchase/NonInventory/viewNonInventory";
+import ViewNonInventoryPage2 from "./pages/financialManagement/Purchase/NonInventory/viewNonInventory2";
+import AllPurchaseReturnsOverviewPage from "./pages/financialManagement/Purchase/PurchaseReturn/allPurchaseReturns";
+import ViewPurchaseReturnPage from "./pages/financialManagement/Purchase/PurchaseReturn/viewPurchaseReturn";
+import AllDebitNoteOverviewPage from "./pages/financialManagement/Purchase/DebitNote/allDebitNote";
+import ViewDebitNotePage from "./pages/financialManagement/Purchase/DebitNote/viewDebitNote";
+import PreviewDebitPage from "./pages/financialManagement/Purchase/DebitNote/previewDebitPage";
+import SendDebitPage from "./pages/financialManagement/Purchase/DebitNote/sendBebitNote";
+import CreateRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/createRemittance";
+import SingleRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/singleInvoice";
+import AttachRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/attachReceipt";
+import PreviewRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/previewRemittance";
+import EditRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/editRemittance";
+import AllRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/allRemittances";
+import ViewRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/viewRemttance";
+import AllocateRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/AllocateRemittance/vendorSearch";
+import MatchRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/AllocateRemittance/allocateRemittance";
+import PartiallyPaidPage from "./pages/financialManagement/Purchase/RemittanceAdvice/AllocateRemittance/partiallyPaid";
+import AdvancedPaymentPage from "./pages/financialManagement/Purchase/RemittanceAdvice/AllocateRemittance/advancedAllocation";
+import FilledPartiallyPaidPage from "./pages/financialManagement/Purchase/RemittanceAdvice/AllocateRemittance/filledPartialyPaid";
+import FilledAdvancedRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/AllocateRemittance/filledAdvancedPayment";
+import MultipleRemittancePage from "./pages/financialManagement/Purchase/RemittanceAdvice/multipleInvoice";
+import AllPurchaseOrderOverviewPage from "./pages/financialManagement/Purchase/PurchaseOrder/allPurchaseOrder";
+import ViewPurchaseOrderPage from "./pages/financialManagement/Purchase/PurchaseOrder/viewPurchaseOrder";
+import PreviewPurchaseOrderPage from "./pages/financialManagement/Purchase/PurchaseOrder/previewPurchaseOrder";
+import PurchaseOrderHistoryPage from "./pages/financialManagement/Purchase/PurchaseOrder/versionOrderHistory";
+import AllVendorPage from "./pages/financialManagement/Purchase/Vendor/allVendors";
+import VendorOverviewPage from "./pages/financialManagement/Purchase/Vendor/vendorDetails";
+import AddPaymentPage from "./pages/financialManagement/Purchase/AddPayment/AddPayment";
+import SelectVendorPaymentPage from "./pages/financialManagement/Purchase/AddPayment/addPayment2";
+import SettleVendorPage from "./pages/financialManagement/Purchase/AddPayment/settleVendor";
+
 
 
 export default function App() {
@@ -384,6 +417,39 @@ export default function App() {
            <Route path={ROUTES.viewConvertInvoice} element={<ConvertGrnToInvoicePage/>} />
            <Route path={ROUTES.viewNoFinancialImplication} element={<NoFinancialPurchaseInvoicePage/>} />
            <Route path={ROUTES.viewPurchaseReceipt} element={<ViewReceiptPages/>} />
+           <Route path={ROUTES.allNonInventory} element={<AllNonInventoryPage/>} />
+           <Route path={ROUTES.viewNonInventory} element={<ViewNonInventoryPage/>} />
+           <Route path={ROUTES.viewNonInventory2} element={<ViewNonInventoryPage2/>} />
+           <Route path={ROUTES.viewNonInventory2} element={<ViewNonInventoryPage2/>} />
+           <Route path={ROUTES.allPurchaseReturns} element={<AllPurchaseReturnsOverviewPage/>} />
+           <Route path={ROUTES.viewPurchaseReturns} element={<ViewPurchaseReturnPage/>} />
+           <Route path={ROUTES.allDebitNote} element={<AllDebitNoteOverviewPage/>} />
+           <Route path={ROUTES.viewDebitNote} element={<ViewDebitNotePage/>} />
+           <Route path={ROUTES.previewDebitNote} element={<PreviewDebitPage/>} />
+           <Route path={ROUTES.sendDebitNote} element={<SendDebitPage/>} />
+           <Route path={ROUTES.createRemittance} element={<CreateRemittancePage/>} />
+           <Route path={ROUTES.singleInvoice} element={<SingleRemittancePage/>} />
+           <Route path={ROUTES.multipleInvoice} element={<MultipleRemittancePage/>} />
+           <Route path={ROUTES.attachRemittance} element={<AttachRemittancePage/>} />
+           <Route path={ROUTES.previewRemittance} element={<PreviewRemittancePage/>} />
+           <Route path={ROUTES.editRemittance} element={<EditRemittancePage/>} />
+           <Route path={ROUTES.allRemittance} element={<AllRemittancePage/>} />
+           <Route path={ROUTES.viewRemittance} element={<ViewRemittancePage/>} />
+           <Route path={ROUTES.allocateRemittance} element={<AllocateRemittancePage/>} />
+           <Route path={ROUTES.matchRemittance} element={<MatchRemittancePage/>} />
+           <Route path={ROUTES.unallocatedRemittance} element={<PartiallyPaidPage/>} />
+           <Route path={ROUTES.advancedPaymentRemittance} element={<AdvancedPaymentPage/>} />
+           <Route path={ROUTES.filledUnallocatedRemittance} element={<FilledPartiallyPaidPage/>} />
+           <Route path={ROUTES.filledAdvancedPaymentRemittance} element={<FilledAdvancedRemittancePage/>} />
+           <Route path={ROUTES.allPurchaseOrder} element={<AllPurchaseOrderOverviewPage/>} />
+           <Route path={ROUTES.viewPurchaseOrder} element={<ViewPurchaseOrderPage/>} />
+           <Route path={ROUTES.previewPurchaseOrder} element={< PreviewPurchaseOrderPage/>} />
+           <Route path={ROUTES.purchaseOrderHistory} element={<PurchaseOrderHistoryPage/>} />
+           <Route path={ROUTES.vendorHistory} element={<AllVendorPage/>} />
+           <Route path={ROUTES.vendorDetails} element={<VendorOverviewPage/>} />
+           <Route path={ROUTES.addPayment} element={<AddPaymentPage/>} />
+           <Route path={ROUTES.addPayment2} element={<SelectVendorPaymentPage/>} />
+           <Route path={ROUTES.settlePayment} element={<SettleVendorPage/>} />
         </Route>
       </Routes>
     </Router>
