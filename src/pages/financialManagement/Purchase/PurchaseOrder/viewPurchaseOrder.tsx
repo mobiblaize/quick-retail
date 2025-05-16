@@ -40,15 +40,7 @@ export default function ViewPurchaseOrderPage() {
       <div key="1" className="py-2.5">
         <div className="hidden sm:flex gap-8 items-center">
           {backButton}
-          {/* <div className="flex items-center">
-          <Text>Purchase</Text>
-          <>
-            <span className="mx-2">/</span>
-            <Text c="black" fw={500}>
-               Purchase Invoice
-            </Text>
-          </>
-        </div> */}
+         
         </div>
 
         <div className="flex sm:hidden gap-2 items-center">{backButton}</div>

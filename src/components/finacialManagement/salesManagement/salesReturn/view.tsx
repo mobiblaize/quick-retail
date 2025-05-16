@@ -67,7 +67,7 @@ export default function ViewReturns() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                
+                        textColorClass="text-white"
                       />
 
                       <CustomDropdown
@@ -76,7 +76,7 @@ export default function ViewReturns() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                
+                        textColorClass="text-white"
                       />
                       <CustomDropdown
                         label="Item Name"
@@ -84,7 +84,7 @@ export default function ViewReturns() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                  
+                        textColorClass="text-white"
                       />
                       <CustomDropdown
                         label="Item Name"
@@ -92,7 +92,7 @@ export default function ViewReturns() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                  
+                        textColorClass="text-white"
                       />
                     </div>
                   </div>

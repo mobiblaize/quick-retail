@@ -54,6 +54,7 @@ const ViewCreditNoteReceiptPage = () => {
               placeholder="Quick Action"
               textColorClass="text-white"
               fieldColorClass="bg-[#F16722]"
+             
             />
           {/* </Link> */}
         </div>

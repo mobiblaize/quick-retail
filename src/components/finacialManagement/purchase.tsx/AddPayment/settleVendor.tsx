@@ -115,6 +115,7 @@ export default function VendorInvoiceSettleTable() {
                     inputSizeClass="py-1"
                     fieldColorClass="bg-white"
                     required={false}
+                    textColorClass="text-gray-400"
                   />
                 </td>
                 <td className="p-3">
@@ -126,6 +127,7 @@ export default function VendorInvoiceSettleTable() {
                     inputSizeClass="py-1"
                     fieldColorClass="bg-white"
                     required={false}
+                    textColorClass="text-gray-400"
                   />
                 </td>
                 <td className="p-3">

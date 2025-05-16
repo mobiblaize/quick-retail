@@ -116,6 +116,7 @@ export default function CreateInvoice() {
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
                           optional
+                          textColorClass="text-white"
                         />
                         <FormInput
                           type="date"

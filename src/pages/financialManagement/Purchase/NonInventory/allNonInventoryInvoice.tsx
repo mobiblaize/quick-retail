@@ -51,7 +51,7 @@ const AllNonInventoryPage = () => {
                 value={selectedType}
                 onChange={(val) => setSelectedType(val)}
                 IconComponent={<ChevronDown size={16} color="white" />}
-                textColorClass=""
+                textColorClass="text-white"
               />
             </div>
           </div>

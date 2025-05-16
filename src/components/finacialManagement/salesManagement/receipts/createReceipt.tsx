@@ -60,6 +60,7 @@ export default function CreateReceipt() {
                           "Payment in advance",
                           "Single Invoice",
                         ]}
+                        textColorClass="text-white"
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => {
@@ -131,6 +132,7 @@ export default function CreateReceipt() {
                           "Payment in advance",
                           "Single Invoice",
                         ]}
+                        textColorClass="text-white"
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => {

@@ -162,5 +162,11 @@ vendorDetails:"/dashboard/purchase/purchase-order/vendors-details",
 addPayment:"/dashboard/purchase/add-payment",
 addPayment2:"/dashboard/purchase/add-vendor-payment",
 settlePayment:"/dashboard/purchase/settle-vendor-payment",
+inventoryWarehouse:"/dashboard/inventory/warehouse",
+inventoryWarehouseDetails:"/dashboard/inventory/warehouse-details",
+inventoryStores:"/dashboard/inventory/warehouse-store",
+singularInventory:"/dashboard/inventory/warehouse-inventory",
+inventoryStores2:"/dashboard/inventory/warehouse-stores",
+storeView:"/dashboard/inventory/store-view",
 };
 
