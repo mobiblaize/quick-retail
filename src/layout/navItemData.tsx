@@ -122,7 +122,7 @@ export const FinancialManagement: NavItem[] = [
   },
   {
     label: "Sales Management",
-    href: ROUTES.customer,
+    href: ROUTES.customerPage,
     inactiveIcon: InActiveReturns,
     activeIcon: ActiveReturns,
     hasChildren: true,
@@ -153,7 +153,12 @@ export const FinancialManagement: NavItem[] = [
       { label: "Add New Payment", href: `${ROUTES.addPayment}` },
     ],
   },
-  
+  {
+    label: "Inventory",
+    href: ROUTES.inventoryWarehouse,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+  },
 ];
 
 export const Procurement: NavItem[] = [

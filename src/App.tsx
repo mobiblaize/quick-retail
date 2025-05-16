@@ -156,6 +156,12 @@ import VendorOverviewPage from "./pages/financialManagement/Purchase/Vendor/vend
 import AddPaymentPage from "./pages/financialManagement/Purchase/AddPayment/AddPayment";
 import SelectVendorPaymentPage from "./pages/financialManagement/Purchase/AddPayment/addPayment2";
 import SettleVendorPage from "./pages/financialManagement/Purchase/AddPayment/settleVendor";
+import InventoryWarehousePage from "./pages/financialManagement/Inventory/allWarehouse";
+import InventoryWarehouseDetailsPage from "./pages/financialManagement/Inventory/warehouseDetails";
+import InventoryStoresPage from "./pages/financialManagement/Inventory/stores";
+import InventoryPage from "./pages/financialManagement/Inventory/inventory";
+import InventoryStoresPage2 from "./pages/financialManagement/Inventory/stores2";
+import ViewStore from "./pages/financialManagement/Inventory/store3view";
 
 
 
@@ -450,6 +456,12 @@ export default function App() {
            <Route path={ROUTES.addPayment} element={<AddPaymentPage/>} />
            <Route path={ROUTES.addPayment2} element={<SelectVendorPaymentPage/>} />
            <Route path={ROUTES.settlePayment} element={<SettleVendorPage/>} />
+           <Route path={ROUTES.inventoryWarehouse} element={<InventoryWarehousePage/>} />
+           <Route path={ROUTES.inventoryWarehouseDetails} element={<InventoryWarehouseDetailsPage/>} />
+           <Route path={ROUTES.inventoryStores} element={<InventoryStoresPage/>} />
+           <Route path={ROUTES.singularInventory} element={<InventoryPage />} />
+           <Route path={ROUTES.inventoryStores2} element={<InventoryStoresPage2/>} />
+           <Route path={ROUTES.storeView} element={<ViewStore/>} />
         </Route>
       </Routes>
     </Router>

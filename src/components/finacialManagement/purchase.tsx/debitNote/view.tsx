@@ -68,6 +68,7 @@ export default function ViewDebitNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
 
                         <CustomDropdown
@@ -76,6 +77,7 @@ export default function ViewDebitNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                           <FormInput
@@ -229,6 +231,7 @@ export default function ViewDebitNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
 
                         <CustomDropdown
@@ -237,6 +240,7 @@ export default function ViewDebitNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                         <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-6">
                           <FormInput

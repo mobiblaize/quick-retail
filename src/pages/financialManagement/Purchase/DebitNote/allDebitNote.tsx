@@ -31,7 +31,7 @@ const AllDebitNoteOverviewPage = () => {
                 value={selectedType}
                 onChange={(val) => setSelectedType(val)}
                 IconComponent={<ChevronDown size={16} color="white" />}
-                textColorClass=""
+                textColorClass="text-white"
               />
             </div>
           </div>
@@ -58,7 +58,7 @@ const AllDebitNoteOverviewPage = () => {
                 onChange={(val) => setSelectedType(val)}
                 fieldColorClass="bg-[#F16722]"
                 IconComponent={<ChevronDown size={16} color="white" />}
-                textColorClass="#F16722"
+                textColorClass="text-white"
               />
             </div>
           </div>

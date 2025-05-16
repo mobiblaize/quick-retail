@@ -1,12 +1,12 @@
 import { Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
 import { useState } from "react"
-import AllPurchaseOrderTable from "../../../../components/finacialManagement/purchase.tsx/purchaseOrder/allPurchaseTable";
+import WarehouseTable from "../../../components/finacialManagement/inventory/warehouse";
+import CustomDropdown from "../../../components/General/customDropdown";
+import PageContainer from "../../../layout/pageContainer";
 
-import CustomDropdown from "../../../../components/General/customDropdown";
-import PageContainer from "../../../../layout/pageContainer";
 
-const AllPurchaseOrderOverviewPage = () => {
+const InventoryWarehousePage = () => {
 
 
 
@@ -26,7 +26,7 @@ const AllPurchaseOrderOverviewPage = () => {
       <div className="flex sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0 lg:hidden">
         <div className="flex flex-col">
           <Text fw={500} size="xl" c="black">
-          Purchase Order
+          Warehouse
           </Text>
           <div className=" text-sm flex justify-end text-right gap-6 pb-4 mt-[-2em] lg:hidden">
             <div
@@ -53,7 +53,7 @@ const AllPurchaseOrderOverviewPage = () => {
       <div className="flex sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0  md:block hidden">
         <div className="flex flex-col">
           <Text fw={500} size="xl" c="black">
-            Purchase Order
+        Warehouse
           </Text>
           <div className=" text-sm flex justify-end text-right gap-6 pb-4 mt-[-2em] ">
             <div
@@ -68,7 +68,7 @@ const AllPurchaseOrderOverviewPage = () => {
                 onChange={(val) => setSelectedType(val)}
                 fieldColorClass="bg-[#F16722]"
                 IconComponent={<ChevronDown size={16} color="white" />}
-                textColorClass="#F16722"
+                textColorClass="text-white"
               />
             </div>
           </div>
@@ -80,9 +80,9 @@ const AllPurchaseOrderOverviewPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <AllPurchaseOrderTable />
+      <WarehouseTable/>
     </PageContainer>
   );
 };
 
-export default AllPurchaseOrderOverviewPage;
+export default InventoryWarehousePage;

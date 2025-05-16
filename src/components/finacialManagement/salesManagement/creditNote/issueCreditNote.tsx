@@ -74,6 +74,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
 
                         <CustomDropdown
@@ -82,6 +83,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                         <CustomDropdown
                           label="Item Name"
@@ -89,6 +91,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                         <CustomDropdown
                           label="Item Name"
@@ -96,6 +99,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                       </div>
                     </div>
@@ -202,6 +206,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
 
                         <CustomDropdown
@@ -210,6 +215,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                         <CustomDropdown
                           label="Item Name"
@@ -217,6 +223,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                         <CustomDropdown
                           label="Item Name"
@@ -224,6 +231,7 @@ export default function IssueNote() {
                           placeholder="Enter Product ID"
                           value={selectedType}
                           onChange={(val) => setSelectedType(val)}
+                          textColorClass="text-white"
                         />
                       </div>
                     </div>
