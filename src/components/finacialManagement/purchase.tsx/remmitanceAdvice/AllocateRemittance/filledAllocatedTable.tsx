@@ -1,15 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Box, Text } from "@mantine/core";
-import TanTable from "../../../General/table";
-import { TableRowData } from "../../../../types";
-import { partiallyPaid, productTableData } from "../../../../utils/mockData";
-import FormInput from "../../../General/formInput";
 import { useNavigate } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
+import { TableRowData } from "../../../../../types";
+import FormInput from "../../../../General/formInput";
+import { ROUTES } from "../../../../../constants/routes";
+import TanTable from "../../../../General/table";
+import { advancedPaid, productTableData } from "../../../../../utils/mockData";
 
-const AllocatedReceiptTable = () => {
+const FiledRemittanceTable = () => {
   const navigate = useNavigate();
-
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -52,7 +51,7 @@ const AllocatedReceiptTable = () => {
       ),
     },
     {
-      header: "Invoice Amount",
+      header: "Receipt Values",
       accessorKey: "totalAmount",
       cell: (props) => (
         <div className="flex flex-col">
@@ -63,19 +62,7 @@ const AllocatedReceiptTable = () => {
       ),
     },
     {
-      header: "Amount Due",
-      accessorKey: "totalAmount",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="red">
-            {props.row.original.amount}
-          </Text>
-        </div>
-      ),
-    },
-
-    {
-      header: "Amount Paid",
+      header: "Amount to Allocate",
       accessorKey: "totalAmount",
       cell: () => (
         <div className="flex flex-col">
@@ -90,7 +77,7 @@ const AllocatedReceiptTable = () => {
                 const value = e.target.value;
 
                 if (value.trim()) {
-                  navigate(ROUTES.filledPartiallyPaidReceipt);
+                  navigate(ROUTES.filledAdvancedPaymentRemittance);
                 }
               }}
             />
@@ -104,7 +91,7 @@ const AllocatedReceiptTable = () => {
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={partiallyPaid}
+        data={advancedPaid}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -129,9 +116,8 @@ const AllocatedReceiptTable = () => {
           </div>
         }
       />
-      {/* desktop */}
       <Box
-        className="font-sans md:block hidden"
+        className="font-sans "
         style={{
           backgroundColor: "#FFEBD8",
           padding: "0.5rem",
@@ -167,47 +153,8 @@ const AllocatedReceiptTable = () => {
           </div>
         </Box>
       </Box>
-
-      {/* mobile */}
-      <Box
-        className="font-sans block lg:hidden"
-        style={{
-          backgroundColor: "#FFEBD8",
-          padding: "0.5rem",
-          borderRadius: "8px",
-        }}
-      >
-        <Box mt="lg" px="md">
-          <div className="flex flex-col bg-[#FFEBD8]">
-            <div>
-              <Text size="sm" color="dimmed">
-                Total Invoice Amount.
-              </Text>
-              <Text size="md" color="black">
-                ₦ 600,000
-              </Text>
-            </div>
-            <div className="mt-2">
-              <Text size="sm" color="dimmed">
-                Total Allocation (Invoice Value)
-              </Text>
-              <Text size="md" color="black">
-                ₦ 0000
-              </Text>
-            </div>
-            <div className="mt-2">
-              <Text size="sm" color="dimmed">
-                Total Invoice Outstanding.
-              </Text>
-              <Text size="xl" color="red">
-                ₦ 0000
-              </Text>
-            </div>
-          </div>
-        </Box>
-      </Box>
     </main>
   );
 };
 
-export default AllocatedReceiptTable;
+export default FiledRemittanceTable;

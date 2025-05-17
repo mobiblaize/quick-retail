@@ -159,6 +159,12 @@ export const FinancialManagement: NavItem[] = [
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },
+  {
+    label: "Payment",
+    href: ROUTES.initiatePayment,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+  },
 ];
 
 export const Procurement: NavItem[] = [

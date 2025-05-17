@@ -82,6 +82,8 @@ export const ROUTES = {
   createProcurementrequest: "/dashboard/procurement-page/create-procurement-request",
   reportPage: "/dashboard/report-page",
   settingPage: "/dashboard/setting-page",
+
+
   // FINANCIAL-MANAGEMENT SECTION
   financialDashboard: "/dashboard/financial-management",
   salesManagement: "/dashboard/sales-management",
@@ -168,5 +170,12 @@ inventoryStores:"/dashboard/inventory/warehouse-store",
 singularInventory:"/dashboard/inventory/warehouse-inventory",
 inventoryStores2:"/dashboard/inventory/warehouse-stores",
 storeView:"/dashboard/inventory/store-view",
+initiatePayment:"/dashboard/payment/initiate-payment",
+selectProceesor:"/dashboard/payment/initiate-payment/processor",
+selectProceesor2:"/dashboard/payment/initiate-payment/processors",
+makePayment:"/dashboard/payment/initiate-payment/make-payment",
+paymentReceipt:"/dashboard/payment/initiate-payment/payment-receipt",
+allPayment:"/dashboard/payment/initiate-payment/all-payment",
+viewAllPayment:"/dashboard/payment/initiate-payment/all-payment-view",
 };
 

@@ -4,8 +4,8 @@ import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import PageContainer from "../../../../../layout/pageContainer";
 import { ROUTES } from "../../../../../constants/routes";
-import AllocatedReceiptTable from "../../../../../components/finacialManagement/salesManagement/receiptAllocation/partiallypaidInvoices";
 import MatchRemittanceModal from "../../../../../components/finacialManagement/purchase.tsx/remmitanceAdvice/AllocateRemittance/matchModal";
+import PartiallyAdvancedRemittanceTable from "../../../../../components/finacialManagement/purchase.tsx/remmitanceAdvice/AllocateRemittance/partiallyallocatedTable";
 
 const PartiallyPaidPage= () => {
   const navigate = useNavigate();
@@ -122,7 +122,7 @@ const PartiallyPaidPage= () => {
       )}
 
     <PageContainer subHeaders={subHeaders}>
-       <AllocatedReceiptTable/>
+       <PartiallyAdvancedRemittanceTable/>
     </PageContainer>
     </>
   );
