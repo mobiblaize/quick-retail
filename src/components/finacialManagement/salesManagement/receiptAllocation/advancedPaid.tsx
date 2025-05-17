@@ -77,7 +77,7 @@ const AdvancedPaidTable = () => {
                 const value = e.target.value;
 
                 if (value.trim()) {
-                  navigate(ROUTES.filledAdvancedPaymentRemittance);
+                  navigate(ROUTES.filledAvancedPaidReceipt);
                 }
               }}
             />

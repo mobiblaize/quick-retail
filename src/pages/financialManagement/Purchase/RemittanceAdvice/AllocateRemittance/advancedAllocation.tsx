@@ -4,8 +4,8 @@ import { ChevronLeft } from "lucide-react";
 import { useState } from "react";
 import { ROUTES } from "../../../../../constants/routes";
 import PageContainer from "../../../../../layout/pageContainer";
-import AdvancedPaidTable from "../../../../../components/finacialManagement/salesManagement/receiptAllocation/advancedPaid";
 import MatchRemittanceModal from "../../../../../components/finacialManagement/purchase.tsx/remmitanceAdvice/AllocateRemittance/matchModal";
+import FiledRemittanceTable from "../../../../../components/finacialManagement/purchase.tsx/remmitanceAdvice/AllocateRemittance/filledAllocatedTable";
 
 const AdvancedPaymentPage = () => {
   const navigate = useNavigate();
@@ -96,7 +96,7 @@ List of Unallocated / Unpaid / Advanced Payment <br/> Remittance Advice(s)
         />
       )}
       <PageContainer subHeaders={subHeaders}>
-        <AdvancedPaidTable />
+        <FiledRemittanceTable />
       </PageContainer>
     </>
   );

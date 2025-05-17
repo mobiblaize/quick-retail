@@ -162,6 +162,14 @@ import InventoryStoresPage from "./pages/financialManagement/Inventory/stores";
 import InventoryPage from "./pages/financialManagement/Inventory/inventory";
 import InventoryStoresPage2 from "./pages/financialManagement/Inventory/stores2";
 import ViewStore from "./pages/financialManagement/Inventory/store3view";
+import PaymentViewLayout from "./components/finacialManagement/payment/PaymentViewLayout";
+import Payment from "./components/finacialManagement/payment/initiatePayment";
+import SelectProcessorPage from "./pages/financialManagement/Payment/selectProcessor";
+import SelectProcessorPage2 from "./pages/financialManagement/Payment/selectProcessor2";
+import MakePaymentPage from "./pages/financialManagement/Payment/makePayment";
+import PaymentReceiptPage from "./pages/financialManagement/Payment/paymentReceipt";
+import AllPaymentOverviewPage from "./pages/financialManagement/Payment/allPayments";
+import ViewPaymentPage from "./pages/financialManagement/Payment/viewAllPayment";
 
 
 
@@ -462,6 +470,19 @@ export default function App() {
            <Route path={ROUTES.singularInventory} element={<InventoryPage />} />
            <Route path={ROUTES.inventoryStores2} element={<InventoryStoresPage2/>} />
            <Route path={ROUTES.storeView} element={<ViewStore/>} />
+           <Route path={ROUTES.storeView} element={<ViewStore/>} />
+           <Route
+            path="/dashboard/payment/initiate-payment"
+            element={<PaymentViewLayout />}
+          >
+            <Route index element={<Payment />} />
+            <Route path="processor" element={<SelectProcessorPage />} />
+            <Route path="processors" element={<SelectProcessorPage2 />} />
+            <Route path="make-payment" element={<MakePaymentPage/>} />
+            <Route path="payment-receipt" element={<PaymentReceiptPage/>} />
+          </Route>
+          <Route path={ROUTES.allPayment} element={<AllPaymentOverviewPage/>} />
+          <Route path={ROUTES.viewAllPayment} element={< ViewPaymentPage/>} />
         </Route>
       </Routes>
     </Router>
