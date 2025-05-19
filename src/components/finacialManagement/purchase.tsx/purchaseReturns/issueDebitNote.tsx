@@ -9,15 +9,15 @@ interface ResolveProps {
 }
 
 const IssueModal = ({ opened, onClose }: ResolveProps) => {
-    const handlePreview = () => {
-        setShowAllocatedModal(true);
-        // onClose();
-      };
-      
+  const handlePreview = () => {
+    setShowAllocatedModal(true);
+    // onClose();
+  };
+
   const [showAllocatedModal, setShowAllocatedModal] = useState(false);
   return (
     <>
-     {showAllocatedModal && (
+      {showAllocatedModal && (
         <DebitIssueModal
           opened={showAllocatedModal}
           onClose={() => setShowAllocatedModal(false)}
@@ -38,27 +38,8 @@ const IssueModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-     Issue a Debit note?
+              Issue a Debit note?
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-          Are you sure you issue a debit note? 
-
-            </Text>
-            <div className="mt-[1em]">
-              <Text
-                mt="5"
-                style={{
-                  fontSize: "clamp(0.875rem, 2vw, 1rem)",
-                }}
-              >
-          Kindly note that by issuing a debit note. the book balance would be affected. 
-              </Text>
-            </div>
           </div>
         }
         centered
@@ -67,6 +48,25 @@ const IssueModal = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Are you sure you issue a debit note?
+        </Text>
+        <div className="mt-[1em]">
+          <Text
+            mt="5"
+            style={{
+              fontSize: "clamp(0.875rem, 2vw, 1rem)",
+            }}
+          >
+            Kindly note that by issuing a debit note. the book balance would be
+            affected.
+          </Text>
+        </div>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
             <Button

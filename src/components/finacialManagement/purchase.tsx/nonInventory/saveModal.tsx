@@ -39,15 +39,7 @@ const GenerateInvoiceModal = ({ opened, onClose }: ResolveProps) => {
             >
               Save New Changes
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-              Are you sure you want to save new changes and update this
-              Non-inventory Purchase Invoice
-            </Text>
+
             <div className="mt-[1em]"></div>
           </div>
         }
@@ -57,6 +49,15 @@ const GenerateInvoiceModal = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Are you sure you want to save new changes and update this
+          Non-inventory Purchase Invoice
+        </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
             <Button

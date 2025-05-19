@@ -9,12 +9,10 @@ interface ResolveProps {
 }
 
 const DebitIssueModal = ({ opened, onClose }: ResolveProps) => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   const handlePreview = () => {
-    navigate(ROUTES.allDebitNote)
+    navigate(ROUTES.allDebitNote);
   };
-
-  
 
   return (
     <>
@@ -33,17 +31,8 @@ const DebitIssueModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-           Debit Note Issued.
+              Debit Note Issued.
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-       Congratulations you have issued a debit note successfully.
-            </Text>
-            
           </div>
         }
         centered
@@ -52,6 +41,14 @@ const DebitIssueModal = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Congratulations you have issued a debit note successfully.
+        </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
             <Button
@@ -67,10 +64,10 @@ const DebitIssueModal = ({ opened, onClose }: ResolveProps) => {
                 border: "1px solid #475367",
               }}
             >
-            Close
+              Close
             </Button>
           </div>
-          <div className=""  onClick={handlePreview}>
+          <div className="" onClick={handlePreview}>
             <Button
               variant="filled"
               style={{
@@ -84,7 +81,7 @@ const DebitIssueModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-       View all debit Note
+              View all debit Note
             </Button>
           </div>
         </div>
