@@ -170,6 +170,18 @@ import MakePaymentPage from "./pages/financialManagement/Payment/makePayment";
 import PaymentReceiptPage from "./pages/financialManagement/Payment/paymentReceipt";
 import AllPaymentOverviewPage from "./pages/financialManagement/Payment/allPayments";
 import ViewPaymentPage from "./pages/financialManagement/Payment/viewAllPayment";
+import AccountChartPage from "./pages/financialManagement/Accounting/accountChart";
+import ViewAccountPage from "./pages/financialManagement/Accounting/viewAccount";
+import ViewAccountChartPage from "./pages/financialManagement/Accounting/viewAccount";
+import CreateAccountChartPage from "./pages/financialManagement/Accounting/createAccount";
+import ImportAccountChartTable from "./pages/financialManagement/Accounting/importChartTable";
+import ImportAccountChartPage from "./pages/financialManagement/Accounting/importChart";
+import EditAccountChartPage from "./pages/financialManagement/Accounting/editAccount";
+import AllJournalPage from "./pages/financialManagement/Accounting/allJournal";
+import CreateJournalPage from "./pages/financialManagement/Accounting/createJournal1";
+import ViewJournalPage from "./pages/financialManagement/Accounting/viewJournal";
+import ImportJournalTablePage from "./pages/financialManagement/Accounting/importJournal";
+import ReviewJournalPage from "./pages/financialManagement/Accounting/reviewJournal";
 
 
 
@@ -483,6 +495,17 @@ export default function App() {
           </Route>
           <Route path={ROUTES.allPayment} element={<AllPaymentOverviewPage/>} />
           <Route path={ROUTES.viewAllPayment} element={< ViewPaymentPage/>} />
+          <Route path={ROUTES.accountChart} element={< AccountChartPage/>} />
+          <Route path={ROUTES.viewAccountChart} element={< ViewAccountChartPage/>} />
+          <Route path={ROUTES.createAccountChart} element={< CreateAccountChartPage/>} />
+          <Route path={ROUTES.importAccountChart} element={< ImportAccountChartTable/>} />
+          <Route path={ROUTES.importChart} element={< ImportAccountChartPage/>} />
+          <Route path={ROUTES.editAccountChart} element={< EditAccountChartPage/>} />
+          <Route path={ROUTES.allJournal} element={< AllJournalPage/>} />
+          <Route path={ROUTES.createJournal} element={< CreateJournalPage/>} />
+          <Route path={ROUTES.viewJournal} element={< ViewJournalPage/>} />
+          <Route path={ROUTES.importJournal} element={< ImportJournalTablePage/>} />
+          <Route path={ROUTES.reviewJournal} element={< ReviewJournalPage/>} />
         </Route>
       </Routes>
     </Router>

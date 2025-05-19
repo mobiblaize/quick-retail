@@ -6235,3 +6235,208 @@ export const allPaymentOverviewData = [
     borderColor: "#98A2B3",
   },
 ];
+
+export const allAccountChart = [
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+  },
+]
+export const allImportAccountChart = [
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+  },
+]
+export const allJournal = [
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+  {
+    name: "Quick Retail",
+    id: "#123232",
+    timeStamp: "Account Payable",
+    balancePY:"₦51,000.00",
+    balanceCY:"₦51,000.00",
+    date: "13 Jun, 2024 4:20",
+    description: "write description here",
+    status: "Successful"
+  },
+]

@@ -160,6 +160,17 @@ export const FinancialManagement: NavItem[] = [
     activeIcon: ActiveDashboardIcon,
   },
   {
+    label: "Accounting",
+    href: ROUTES.accountChart,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+    hasChildren: true,
+    children: [
+      { label: "Chart of Account", href: `${ROUTES.accountChart}` },
+      { label: "Journal Entry", href: `${ROUTES.allJournal}` },
+    ],
+  },
+  {
     label: "Payment",
     href: ROUTES.initiatePayment,
     inactiveIcon: InActiveDashboardIcon,
