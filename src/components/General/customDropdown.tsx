@@ -24,7 +24,7 @@ const CustomDropdown = ({
   placeholder = "Select an option",
   optional,
   required,
-  // textColorClass,
+   textColorClass,
   fieldColorClass,
   inputSizeClass,
   IconComponent,
@@ -48,7 +48,6 @@ const CustomDropdown = ({
 
       <Listbox value={selected} onChange={handleChange}>
         <div className="relative">
-         
           <Listbox.Button
             className={`relative w-full cursor-pointer rounded-md border border-gray-300
   ${inputSizeClass || "py-2 sm:py-[0.9em]"} 
@@ -56,9 +55,13 @@ const CustomDropdown = ({
   text-sm sm:text-sm text-gray-700 
   ${fieldColorClass || "bg-white"}`}
           >
-            <span className={`${selected ? "text-gray-700" : "text-white"}`}>
+            {/* <span className={`${selected ? "text-gray-700" : "text-gray-400"}`}>
               {selected || placeholder}
-            </span>
+            </span> */}
+            <span className={textColorClass || (selected ? "text-gray-700" : "text-gray-400")}>
+  {selected || placeholder}
+</span>
+
             <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
               {IconComponent || <ChevronDown size={16} />}
             </span>

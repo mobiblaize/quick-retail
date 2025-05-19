@@ -21,6 +21,13 @@ export default function ViewPurchaseInvoicePage() {
     navigate(ROUTES.viewPurchaseReceipt);
   };
 
+  const handleReturn = () => {
+    navigate(ROUTES.viewPurchaseReturns);
+  };
+  const handleRemitanceAdvice = () => {
+    navigate(ROUTES.createRemittance);
+  };
+
 
   const getSubHeaders = () => {
     const backButton = (
@@ -131,7 +138,7 @@ export default function ViewPurchaseInvoicePage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  onClick={() => setModalOpen(true)}
+                  onClick={handleReturn}
                 >
                   View Purchase Return
                 </Menu.Item>
@@ -141,7 +148,7 @@ export default function ViewPurchaseInvoicePage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  onClick={() => setModalOpen(true)}
+                  onClick={handleRemitanceAdvice}
                 >
                   Issue a Remittances Advice
                 </Menu.Item>
@@ -251,7 +258,7 @@ export default function ViewPurchaseInvoicePage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  // onClick={handleAddProduct}
+                  onClick={handleReturn}
                 >
                   View Purchase Return
                 </Menu.Item>
@@ -262,7 +269,7 @@ export default function ViewPurchaseInvoicePage() {
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  // onClick={handleAddProduct}
+                  onClick={handleRemitanceAdvice}
                 >
                   Issue a Remittances Advice
                 </Menu.Item>

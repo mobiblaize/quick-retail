@@ -122,7 +122,7 @@ export const FinancialManagement: NavItem[] = [
   },
   {
     label: "Sales Management",
-    href: ROUTES.customer,
+    href: ROUTES.customerPage,
     inactiveIcon: InActiveReturns,
     activeIcon: ActiveReturns,
     hasChildren: true,
@@ -133,7 +133,6 @@ export const FinancialManagement: NavItem[] = [
       { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
       { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
       { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
-  
     ],
   },
   {
@@ -144,16 +143,38 @@ export const FinancialManagement: NavItem[] = [
     hasChildren: true,
     children: [
       { label: "Vendor", href: `${ROUTES.selectVendor}` },
-      { label: "Purchase Order", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Purchase Order", href: `${ROUTES.allPurchaseOrder}` },
       { label: "Purchase Invoice", href: `${ROUTES.allPurchaseInvoice}` },
       { label: "Non-inventory Purchase", href: `${ROUTES.nonInventory}` },
-      { label: "Remittance Advice", href: `${ROUTES.invoiceOverview}` },
-      { label: "Purchase Returns", href: `${ROUTES.orderReceipt}` },
-      { label: "Debit Note", href: `${ROUTES.issueCreditNote}` },
-      { label: "Add New Payment", href: `${ROUTES.orderReceipt}` },
+      { label: "Remittance Advice", href: `${ROUTES.createRemittance}` },
+      { label: "Purchase Returns", href: `${ROUTES.allPurchaseReturns}` },
+      { label: "Debit Note", href: `${ROUTES.allDebitNote}` },
+      { label: "Add New Payment", href: `${ROUTES.addPayment}` },
     ],
   },
-  
+  {
+    label: "Inventory",
+    href: ROUTES.inventoryWarehouse,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+  },
+  {
+    label: "Accounting",
+    href: ROUTES.accountChart,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+    hasChildren: true,
+    children: [
+      { label: "Chart of Account", href: `${ROUTES.accountChart}` },
+      { label: "Journal Entry", href: `${ROUTES.allJournal}` },
+    ],
+  },
+  {
+    label: "Payment",
+    href: ROUTES.initiatePayment,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+  },
 ];
 
 export const Procurement: NavItem[] = [

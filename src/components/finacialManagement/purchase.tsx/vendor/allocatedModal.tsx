@@ -11,7 +11,7 @@ const VendorAllocatedModal = ({ opened, onClose }: ResolveProps) => {
   const handlePreview = () => {};
 
   const handleToast = () => {
-    console.log("🔥 TOAST HANDLER FIRED");
+
 
     notifications.show({
       title: "Success",

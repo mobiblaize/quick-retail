@@ -442,7 +442,7 @@ export default function ViewPurchaseInvoiceForm() {
                     {financeButtons.map((label, i) => (
                       <button
                         key={i}
-                        className="w-full bg-orange-300 border border-orange-800 text-black py-2 px-8 rounded-md text-sm font-medium text-left"
+                        className="w-full bg-orange-300 border border-orange-800 text-black py-2 pl-2 pr-14 rounded-md text-sm font-medium text-left"
                       >
                         {label}
                       </button>

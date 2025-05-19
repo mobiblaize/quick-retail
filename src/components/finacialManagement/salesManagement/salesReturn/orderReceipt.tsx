@@ -74,7 +74,7 @@ export default function OrderReceipt() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                
+                        textColorClass="text-white"
                       />
 
                       <CustomDropdown
@@ -83,7 +83,7 @@ export default function OrderReceipt() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                
+                        textColorClass="text-white"
                       />
                       <CustomDropdown
                         label="Item Name"
@@ -91,7 +91,7 @@ export default function OrderReceipt() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                  
+                        textColorClass="text-white"
                       />
                       <CustomDropdown
                         label="Item Name"
@@ -99,7 +99,7 @@ export default function OrderReceipt() {
                         placeholder="Enter Product ID"
                         value={selectedType}
                         onChange={(val) => setSelectedType(val)}
-                  
+                        textColorClass="text-white"
                       />
                     </div>
                   </div>
