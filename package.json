@@ -24,13 +24,16 @@
     "@mantine/spotlight": "^7.17.2",
     "@mantine/tiptap": "^7.17.2",
     "@tabler/icons-react": "^3.31.0",
+    "@tanstack/react-query": "^5.76.1",
     "@tanstack/react-table": "^8.21.2",
     "@tiptap/extension-link": "^2.11.5",
     "@tiptap/pm": "^2.11.5",
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
+    "axios": "^1.9.0",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.5.0",
+    "jotai": "^2.12.4",
     "lucide-react": "^0.483.0",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -38,7 +41,8 @@
     "react-router-dom": "^7.3.0",
     "react-zxing": "^2.1.0",
     "recharts": "^2.15.3",
-    "victory": "^37.3.6"
+    "victory": "^37.3.6",
+    "zod": "^3.24.4"
   },
   "devDependencies": {
     "@eslint/js": "^9.21.0",

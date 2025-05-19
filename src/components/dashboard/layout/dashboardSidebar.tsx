@@ -6,12 +6,12 @@ import {
   FinancialManagement,
   Reports,
   Admin,
-  otherMenu,
   Procurement,
   AssetManagement,
 } from "../../../layout/navItemData";
 import { useDashboard } from "../../../layout/dashboardContext";
 import { X } from "lucide-react";
+import LogoutModal from "../../LogoutModal";
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
@@ -73,15 +73,7 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             <Divider my="lg" />
           </div>
           <List className=" gap-4 mt-6">
-            {otherMenu.map((item, index) => (
-              <NavItem
-                href={item.href}
-                activeIcon={item.icon}
-                inactiveIcon={item.icon}
-                label={item.label}
-                key={index}
-              />
-            ))}
+            <LogoutModal />
           </List>
         </div>
       </div>
