@@ -4369,6 +4369,29 @@ export const allPurchaseOverviewData = [
   },
 ];
 
+export const assetsMonthlyData = [
+  { month: 'Jan', inUse: 400, notInUse: 200, retired: 150, disposed: 10 },
+  { month: 'Feb', inUse: 500, notInUse: 250, retired: 200, disposed: 15 },
+  { month: 'Mar', inUse: 300, notInUse: 200, retired: 180, disposed: 12 },
+  { month: 'Apr', inUse: 350, notInUse: 220, retired: 160, disposed: 11 },
+  { month: 'May', inUse: 370, notInUse: 240, retired: 170, disposed: 14 },
+  { month: 'Jun', inUse: 900, notInUse: 300, retired: 600, disposed: 20 },
+  { month: 'Jul', inUse: 450, notInUse: 250, retired: 200, disposed: 10 },
+  { month: 'Aug', inUse: 870, notInUse: 320, retired: 550, disposed: 18 },
+  { month: 'Sep', inUse: 400, notInUse: 260, retired: 300, disposed: 13 },
+  { month: 'Oct', inUse: 390, notInUse: 240, retired: 220, disposed: 9 },
+  { month: 'Nov', inUse: 410, notInUse: 210, retired: 190, disposed: 8 },
+  { month: 'Dec', inUse: 430, notInUse: 230, retired: 210, disposed: 10 }
+];
+
+export const assetCategoryData = [
+  { category: "Office Materials", value: 1100 },
+  { category: "Computing", value: 700 },
+  { category: "Vehicles", value: 600 },
+  { category: "Manufacturing Machines", value: 300 },
+  { category: "Equipment's", value: 200 }
+];
+
 export const allPurchaseInvoice = [
   {
     name: "Grateful Erhis",

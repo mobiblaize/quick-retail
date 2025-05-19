@@ -2,6 +2,8 @@ import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import AssetAnalyticsOverview from "../../../components/dashboard/assetManagement/assetDashboard/assetAnalyticsOverview";
 import AssetTable from "../../../components/dashboard/assetManagement/assetDashboard/assetTable";
+import { AssetsChart } from "../../../components/dashboard/assetManagement/assetDashboard/assetsChart";
+import { AssetCategoryBreakdown } from "../../../components/dashboard/assetManagement/assetDashboard/assetCategoryBreakdown";
 
 const AssetDashboard = () => {
   const subHeaders = [
@@ -22,6 +24,8 @@ const AssetDashboard = () => {
     <PageContainer subHeaders={subHeaders}>
       <AssetAnalyticsOverview />
       <AssetTable />
+      <AssetsChart />
+      <AssetCategoryBreakdown />
     </PageContainer>
   );
 };
