@@ -32,26 +32,8 @@ const CreditNoteModal2 = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-            Credit Note Issued.
+              Credit Note Issued.
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-              Sales returns as been recorded for invoice.
-            </Text>
-            <div className="mt-[1em]">
-              <Text
-                mt="5"
-                style={{
-                  fontSize: "clamp(0.875rem, 2vw, 1rem)",
-                }}
-              >
-               Congratulations you have issued a credit note successfully.
-              </Text>
-            </div>
           </div>
         }
         centered
@@ -60,6 +42,24 @@ const CreditNoteModal2 = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Sales returns as been recorded for invoice.
+        </Text>
+        <div className="mt-[1em]">
+          <Text
+            mt="5"
+            style={{
+              fontSize: "clamp(0.875rem, 2vw, 1rem)",
+            }}
+          >
+            Congratulations you have issued a credit note successfully.
+          </Text>
+        </div>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="" onClick={handlePreview}>
             <Button
@@ -92,7 +92,7 @@ const CreditNoteModal2 = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-      View all Credit Note
+              View all Credit Note
             </Button>
           </div>
         </div>

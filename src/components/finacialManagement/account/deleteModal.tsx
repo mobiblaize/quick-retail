@@ -1,17 +1,21 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { RedQuestionMark } from "../../../../assets/svg";
+import { useNavigate } from "react-router";
+import { RedQuestionMark } from "../../../assets/svg";
+import { ROUTES } from "../../../constants/routes";
 
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
 }
 
-const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
+const DeleteModal = ({ opened, onClose }: ResolveProps) => {
+  const navigate = useNavigate();
   const handleToast = () => {
+    navigate(ROUTES.importJournal);
     notifications.show({
       title: "Success",
-      message: "Payment has been successfully recorded ",
+      message: "Journal Entry has been successfully saved as draft",
       color: "green",
       autoClose: 3000,
     });
@@ -36,7 +40,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-              Add Single Payment for vendor?
+              Delete Journal Entry?
             </Text>
 
             <div className="mt-[1em]"></div>
@@ -54,17 +58,8 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
             fontSize: "clamp(0.875rem, 2vw, 1rem)",
           }}
         >
-          Are you sure you want to Add new Payments for this Vendor?
-        </Text>
-        <Text
-          mt="5"
-          style={{
-            fontSize: "clamp(0.875rem, 2vw, 1rem)",
-          }}
-        >
-          Kindly note that by adding new payments the book balance would be
-          affected, as they payment recorded would be deduced from the invoice
-          amount.
+          After careful review of entries, are you sure you want to delete
+          Journal 39235 with 6 journal of entries?
         </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
@@ -88,7 +83,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
             <Button
               variant="filled"
               style={{
-                backgroundColor: "#D42620",
+                backgroundColor: "#F16722",
                 color: "white",
                 borderRadius: "0.4rem",
                 height: "auto",
@@ -98,7 +93,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-              Yes, Add Payment
+              Yes, Delete
             </Button>
           </div>
         </div>
@@ -107,4 +102,4 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
   );
 };
 
-export default AddPaymentModal;
+export default DeleteModal;

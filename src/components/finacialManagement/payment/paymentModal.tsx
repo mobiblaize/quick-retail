@@ -2,7 +2,6 @@ import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { RedQuestionMark } from "../../../assets/svg";
 
-
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
@@ -37,26 +36,9 @@ const PaymentModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-             Pay ₦ 25,000
+              Pay ₦ 25,000
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-Are you sure you want to pay ₦ 25,000 to the Vendor #15161. 
-            </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-              Kindly note that by adding new payments the book balance would be
-              affected, as they payment recorded would be deduced from the
-              invoice amount.
-            </Text>
+
             <div className="mt-[1em]"></div>
           </div>
         }
@@ -66,6 +48,24 @@ Are you sure you want to pay ₦ 25,000 to the Vendor #15161.
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Are you sure you want to pay ₦ 25,000 to the Vendor #15161.
+        </Text>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Kindly note that by adding new payments the book balance would be
+          affected, as they payment recorded would be deduced from the invoice
+          amount.
+        </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
             <Button

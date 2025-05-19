@@ -30,26 +30,6 @@ const DebitModal2 = ({ opened, onClose }: ResolveProps) => {
             >
               Issue a Debit Note?
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-              Purchase returns as been recorded for purchase invoice.
-            </Text>
-            <div className="mt-[1em]">
-              <Text
-                mt="5"
-                style={{
-                  fontSize: "clamp(0.875rem, 2vw, 1rem)",
-                }}
-              >
-                Would you like to proceed an issue the vendor a Debit note? As
-                it is when a debit note is issued that the “Purchase Invoice
-                value” can be impact in your financial system. ?
-              </Text>
-            </div>
           </div>
         }
         centered
@@ -58,6 +38,26 @@ const DebitModal2 = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Purchase returns as been recorded for purchase invoice.
+        </Text>
+        <div className="mt-[1em]">
+          <Text
+            mt="5"
+            style={{
+              fontSize: "clamp(0.875rem, 2vw, 1rem)",
+            }}
+          >
+            Would you like to proceed an issue the vendor a Debit note? As it is
+            when a debit note is issued that the “Purchase Invoice value” can be
+            impact in your financial system. ?
+          </Text>
+        </div>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="" onClick={handlePreview}>
             <Button

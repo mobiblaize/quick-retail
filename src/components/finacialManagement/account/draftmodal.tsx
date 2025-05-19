@@ -1,17 +1,17 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { RedQuestionMark } from "../../../../assets/svg";
+import { RedQuestionMark } from "../../../assets/svg";
 
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
 }
 
-const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
+const DraftModal = ({ opened, onClose }: ResolveProps) => {
   const handleToast = () => {
     notifications.show({
       title: "Success",
-      message: "Payment has been successfully recorded ",
+      message: "Journal Entry has been successfully saved as draft",
       color: "green",
       autoClose: 3000,
     });
@@ -36,7 +36,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-              Add Single Payment for vendor?
+              Save Journal as a Draft
             </Text>
 
             <div className="mt-[1em]"></div>
@@ -54,7 +54,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
             fontSize: "clamp(0.875rem, 2vw, 1rem)",
           }}
         >
-          Are you sure you want to Add new Payments for this Vendor?
+          Are you sure you want to save this journal as a draft?
         </Text>
         <Text
           mt="5"
@@ -62,9 +62,8 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
             fontSize: "clamp(0.875rem, 2vw, 1rem)",
           }}
         >
-          Kindly note that by adding new payments the book balance would be
-          affected, as they payment recorded would be deduced from the invoice
-          amount.
+          By saving as a draft you can simply review journal content before full
+          publishing
         </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
@@ -88,7 +87,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
             <Button
               variant="filled"
               style={{
-                backgroundColor: "#D42620",
+                backgroundColor: "#F16722",
                 color: "white",
                 borderRadius: "0.4rem",
                 height: "auto",
@@ -98,7 +97,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-              Yes, Add Payment
+              Yes, Save as Draft
             </Button>
           </div>
         </div>
@@ -107,4 +106,4 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
   );
 };
 
-export default AddPaymentModal;
+export default DraftModal;

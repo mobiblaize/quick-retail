@@ -9,14 +9,13 @@ interface ResolveProps {
 }
 
 const SentRemittanceModal = ({ opened, onClose }: ResolveProps) => {
-    const navigate = useNavigate();
-    const handleView = () => {
-        navigate(ROUTES.allRemittance)
-          };
-          const handlePreview = () => {
-            navigate(ROUTES.previewRemittance)
-              };
-    
+  const navigate = useNavigate();
+  const handleView = () => {
+    navigate(ROUTES.allRemittance);
+  };
+  const handlePreview = () => {
+    navigate(ROUTES.previewRemittance);
+  };
 
   return (
     <>
@@ -35,16 +34,9 @@ const SentRemittanceModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-     Remittance Advice Sent
+              Remittance Advice Sent
             </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-            Congratulations, receipt has been successfully sent to customer
-            </Text>
+
             <div className="mt-[1em]"></div>
           </div>
         }
@@ -54,6 +46,14 @@ const SentRemittanceModal = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1"></div>
+        <Text
+          mt="5"
+          style={{
+            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+          }}
+        >
+          Congratulations, receipt has been successfully sent to customer
+        </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="" onClick={handlePreview}>
             <Button

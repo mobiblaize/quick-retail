@@ -1,17 +1,17 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { RedQuestionMark } from "../../../../assets/svg";
+import { RedQuestionMark } from "../../../assets/svg";
 
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
 }
 
-const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
+const CreateAccountModal = ({ opened, onClose }: ResolveProps) => {
   const handleToast = () => {
     notifications.show({
       title: "Success",
-      message: "Payment has been successfully recorded ",
+      message: "Account has been successfully created",
       color: "green",
       autoClose: 3000,
     });
@@ -36,7 +36,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-              Add Single Payment for vendor?
+              Create new Account
             </Text>
 
             <div className="mt-[1em]"></div>
@@ -56,16 +56,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
         >
           Are you sure you want to Add new Payments for this Vendor?
         </Text>
-        <Text
-          mt="5"
-          style={{
-            fontSize: "clamp(0.875rem, 2vw, 1rem)",
-          }}
-        >
-          Kindly note that by adding new payments the book balance would be
-          affected, as they payment recorded would be deduced from the invoice
-          amount.
-        </Text>
+
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
             <Button
@@ -88,7 +79,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
             <Button
               variant="filled"
               style={{
-                backgroundColor: "#D42620",
+                backgroundColor: "#F16722",
                 color: "white",
                 borderRadius: "0.4rem",
                 height: "auto",
@@ -98,7 +89,7 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-              Yes, Add Payment
+              Yes, Create
             </Button>
           </div>
         </div>
@@ -107,4 +98,4 @@ const AddPaymentModal = ({ opened, onClose }: ResolveProps) => {
   );
 };
 
-export default AddPaymentModal;
+export default CreateAccountModal;
