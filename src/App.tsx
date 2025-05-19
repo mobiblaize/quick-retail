@@ -1,4 +1,9 @@
-import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Route,
+  Routes,
+  Navigate,
+} from "react-router-dom";
 import DashboardLayout from "./layout/layout";
 import ProductManagementPage from "./pages/pointOfSales/productManagement/productManagementPage";
 import SalesProcessingPage from "./pages/pointOfSales/saleProcessing/salesProcessingPage";
@@ -170,16 +175,24 @@ import MakePaymentPage from "./pages/financialManagement/Payment/makePayment";
 import PaymentReceiptPage from "./pages/financialManagement/Payment/paymentReceipt";
 import AllPaymentOverviewPage from "./pages/financialManagement/Payment/allPayments";
 import ViewPaymentPage from "./pages/financialManagement/Payment/viewAllPayment";
-
-
+import Login from "./pages/auth/Login";
+import IsAuthenticated from "./layout/hoc/IsAuthenticated";
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path="/" element={<LandingPage />} />
+        <Route path="/login" element={<Login />} />
+        <Route path="/" element={<Navigate to="/dashboard" replace />} />
 
-        <Route path="/dashboard" element={<DashboardLayout />}>
+        <Route
+          path="/dashboard"
+          element={
+            <IsAuthenticated>
+              <DashboardLayout />
+            </IsAuthenticated>
+          }
+        >
           {/* POINT OF SALES ROUTES */}
 
           <Route index element={<DashboardPage />} />
@@ -243,53 +256,131 @@ export default function App() {
 
           {/* PROCUREMENT ROUTES */}
 
-            <Route path={ROUTES.procurementDashboard} element={<ProcurementDashboard />} />
-            <Route path={ROUTES.newRequest} element={<NewRequestPage />} />
-            <Route path={ROUTES.createdRequest} element={<CreatedRequestPage />} />
-            <Route path={ROUTES.viewApproveRequest} element={<ViewApproveRequestPage />} />
-            <Route path={ROUTES.viewPendingRequest} element={<ViewPendingRequestPage />} />
-            <Route path={ROUTES.viewCancelledRequest} element={<ViewCancelledRequestPage />} />
-            <Route path={ROUTES.purchaseOrder} element={<PurchaseOrderPage />} />
-            <Route path={ROUTES.createPurchaseOrder} element={<CreatePurchaseOrderPage />} />
-            <Route path={ROUTES.purchaseInvoicePage} element={<PurchaseInvoicePage />} />
-            <Route path={ROUTES.viewPurchaseOrderInvoicePage} element={<ViewPurchaseOrderInvoicePage />} />
-            <Route path={ROUTES.vendorManagement} element={<VendorManagement />} />
-            <Route path={ROUTES.tierOneVendors} element={<TierOneVendorDetails/>} />
-            <Route path={ROUTES.tierTwoVendors} element={<TierTwoVendorDetails/>} />
-            <Route path={ROUTES.createTierOne} element={<CreateTierOne/>} />
-            <Route path={ROUTES.createTierTwo} element={<CreateTierTwo/>} />
-            <Route path={ROUTES.editVendor} element={<EditVendor/>} />
-            <Route path={ROUTES.requestDashboard} element={<RequestDashboard />} />
-            <Route path={ROUTES.requestSummaryPage} element={<RequestSummaryPage />} />
-            <Route path={ROUTES.viewBudgetPage} element={<ViewBudgetPage />} />
-            <Route path={ROUTES.shipments} element={<ShipmentsDashboard />} />
-            <Route path={ROUTES.shipmentsSummary} element={<ShipmentSummaryPage/>} />
-            <Route path={ROUTES.createShipment} element={<CreateShipment/>} />
-            <Route path={ROUTES.purchaseReturns} element={<PurchaseReturns />} />
-            <Route path={ROUTES.approveReturns} element={<ApproveReturnPurchase />} />
-            <Route path={ROUTES.issuePurchase} element={<IssuePurchasePage />} />
-            <Route path={ROUTES.goodsReceived} element={<GoodsReceiveNote />} />
-            <Route path={ROUTES.pendingNoteDetails} element={<PendingNoteDetails />} />
-            <Route path={ROUTES.rejectedNoteDetails} element={<RejectedNoteDetails />} />
-            <Route path={ROUTES.approvedNoteDetails} element={<ApprovedNoteDetails />} />
+          <Route
+            path={ROUTES.procurementDashboard}
+            element={<ProcurementDashboard />}
+          />
+          <Route path={ROUTES.newRequest} element={<NewRequestPage />} />
+          <Route
+            path={ROUTES.createdRequest}
+            element={<CreatedRequestPage />}
+          />
+          <Route
+            path={ROUTES.viewApproveRequest}
+            element={<ViewApproveRequestPage />}
+          />
+          <Route
+            path={ROUTES.viewPendingRequest}
+            element={<ViewPendingRequestPage />}
+          />
+          <Route
+            path={ROUTES.viewCancelledRequest}
+            element={<ViewCancelledRequestPage />}
+          />
+          <Route path={ROUTES.purchaseOrder} element={<PurchaseOrderPage />} />
+          <Route
+            path={ROUTES.createPurchaseOrder}
+            element={<CreatePurchaseOrderPage />}
+          />
+          <Route
+            path={ROUTES.purchaseInvoicePage}
+            element={<PurchaseInvoicePage />}
+          />
+          <Route
+            path={ROUTES.viewPurchaseOrderInvoicePage}
+            element={<ViewPurchaseOrderInvoicePage />}
+          />
+          <Route
+            path={ROUTES.vendorManagement}
+            element={<VendorManagement />}
+          />
+          <Route
+            path={ROUTES.tierOneVendors}
+            element={<TierOneVendorDetails />}
+          />
+          <Route
+            path={ROUTES.tierTwoVendors}
+            element={<TierTwoVendorDetails />}
+          />
+          <Route path={ROUTES.createTierOne} element={<CreateTierOne />} />
+          <Route path={ROUTES.createTierTwo} element={<CreateTierTwo />} />
+          <Route path={ROUTES.editVendor} element={<EditVendor />} />
+          <Route
+            path={ROUTES.requestDashboard}
+            element={<RequestDashboard />}
+          />
+          <Route
+            path={ROUTES.requestSummaryPage}
+            element={<RequestSummaryPage />}
+          />
+          <Route path={ROUTES.viewBudgetPage} element={<ViewBudgetPage />} />
+          <Route path={ROUTES.shipments} element={<ShipmentsDashboard />} />
+          <Route
+            path={ROUTES.shipmentsSummary}
+            element={<ShipmentSummaryPage />}
+          />
+          <Route path={ROUTES.createShipment} element={<CreateShipment />} />
+          <Route path={ROUTES.purchaseReturns} element={<PurchaseReturns />} />
+          <Route
+            path={ROUTES.approveReturns}
+            element={<ApproveReturnPurchase />}
+          />
+          <Route path={ROUTES.issuePurchase} element={<IssuePurchasePage />} />
+          <Route path={ROUTES.goodsReceived} element={<GoodsReceiveNote />} />
+          <Route
+            path={ROUTES.pendingNoteDetails}
+            element={<PendingNoteDetails />}
+          />
+          <Route
+            path={ROUTES.rejectedNoteDetails}
+            element={<RejectedNoteDetails />}
+          />
+          <Route
+            path={ROUTES.approvedNoteDetails}
+            element={<ApprovedNoteDetails />}
+          />
 
-            {/* ASSET MANAGEMENT ROUTES */}
+          {/* ASSET MANAGEMENT ROUTES */}
 
-            <Route path={ROUTES.assetDashboard} element={<AssetDashboard />} />
-            <Route path={ROUTES.summaryPage} element={<SummaryPage />} />
-            <Route path={ROUTES.assetRequestPage} element={<AssetRequestPage />} />
-            <Route path={ROUTES.assetRequestDetails} element={<AssetRequestDetails />} />
-            <Route path={ROUTES.assetRegisterPage} element={<AssetRegisterPage />} />
-            <Route path={ROUTES.addNewAsset} element={<AddNewAsset />} />
-            <Route path={ROUTES.viewAssetState} element={<ViewAssetState />} />
-            <Route path={ROUTES.depreciationPage} element={<DepreciationPage />} />
-            <Route path={ROUTES.viewdepreciationState} element={<ViewDepreciationState />} />
-            <Route path={ROUTES.addNewDepreciation} element={<AddNewDepreciation />} />
-            <Route path={ROUTES.procurementPage} element={<ProcurementPage />} />
-            <Route path={ROUTES.viewProcurementState} element={<ViewProcurementState />} />
-            <Route path={ROUTES.createProcurementrequest} element={<CreateProcurementRequest />} />
-            <Route path={ROUTES.reportPage} element={<ReportPage />} />
-            <Route path={ROUTES.settingPage} element={<SettingPage />} />
+          <Route path={ROUTES.assetDashboard} element={<AssetDashboard />} />
+          <Route path={ROUTES.summaryPage} element={<SummaryPage />} />
+          <Route
+            path={ROUTES.assetRequestPage}
+            element={<AssetRequestPage />}
+          />
+          <Route
+            path={ROUTES.assetRequestDetails}
+            element={<AssetRequestDetails />}
+          />
+          <Route
+            path={ROUTES.assetRegisterPage}
+            element={<AssetRegisterPage />}
+          />
+          <Route path={ROUTES.addNewAsset} element={<AddNewAsset />} />
+          <Route path={ROUTES.viewAssetState} element={<ViewAssetState />} />
+          <Route
+            path={ROUTES.depreciationPage}
+            element={<DepreciationPage />}
+          />
+          <Route
+            path={ROUTES.viewdepreciationState}
+            element={<ViewDepreciationState />}
+          />
+          <Route
+            path={ROUTES.addNewDepreciation}
+            element={<AddNewDepreciation />}
+          />
+          <Route path={ROUTES.procurementPage} element={<ProcurementPage />} />
+          <Route
+            path={ROUTES.viewProcurementState}
+            element={<ViewProcurementState />}
+          />
+          <Route
+            path={ROUTES.createProcurementrequest}
+            element={<CreateProcurementRequest />}
+          />
+          <Route path={ROUTES.reportPage} element={<ReportPage />} />
+          <Route path={ROUTES.settingPage} element={<SettingPage />} />
           {/* <Route
             path={ROUTES.procurementDashboard}
             element={<ProcurementDashboard />}
@@ -388,103 +479,274 @@ export default function App() {
           >
             <Route index element={<ViewCustomer />} />
             <Route path="order" element={<CustomerOrderPage />} />
-            <Route path="returns" element={<ReturnedItemPage/>} />
-            <Route path="payment-method" element={<PaymentMethodPage/>} />
+            <Route path="returns" element={<ReturnedItemPage />} />
+            <Route path="payment-method" element={<PaymentMethodPage />} />
           </Route>
           <Route path={ROUTES.viewOrders} element={<ViewOrder />} />
           <Route path={ROUTES.createReceipt} element={<CreateReceiptPage />} />
-          <Route path={ROUTES.createMobileReceipt} element={<CreateMobileReceiptPage />} />
-          <Route path={ROUTES.confirmReceipt} element={<ConfirmReceiptPage />} />
+          <Route
+            path={ROUTES.createMobileReceipt}
+            element={<CreateMobileReceiptPage />}
+          />
+          <Route
+            path={ROUTES.confirmReceipt}
+            element={<ConfirmReceiptPage />}
+          />
           <Route path={ROUTES.invoiceOverview} element={<InvoiceOverview />} />
           <Route path={ROUTES.createInvoice} element={<CreateInvoicePage />} />
-          <Route path={ROUTES.previewInvoice} element={<PreviewInvoicePage />} />
+          <Route
+            path={ROUTES.previewInvoice}
+            element={<PreviewInvoicePage />}
+          />
           <Route path={ROUTES.attachInvoice} element={<AttachInvoicePage />} />
-          <Route path={ROUTES.attachReceipent} element={<AttachReceiptPage />} />
-          <Route path={ROUTES.previewReceipt} element={<PreviewReceiptPage />} />
-          <Route path={ROUTES.allReceiptView} element={<AllReceiptPage/>} />
-          <Route path={ROUTES.shareReceiptView} element={<ShareReceiptPage/>} />
-          <Route path={ROUTES.viewReceipt} element={<ViewReceiptPage/>} />
-          <Route path={ROUTES.generateReport} element={<GenerateReportPage/>} />
-          <Route path={ROUTES.allocateReceipt} element={<AllocateReceiptPage/>} />
-          <Route path={ROUTES.partiallyPaidReceipt} element={<PartiallyPaidReceiptPage/>} />
-          <Route path={ROUTES.advancedPaidReceipt} element={<AdvancedPaidPage/>} />
-          <Route path={ROUTES.filledPartiallyPaidReceipt} element={<FilledPartiallyPaidReceiptPage/>} />
-          <Route path={ROUTES.filledAvancedPaidReceipt} element={<FilledAdvancedPaidPage/>} />
-          <Route path={ROUTES.orderReceipt} element={<OrderReceiptPage/>} />
-          <Route path={ROUTES.inStoreOverview} element={<InStorePage/>} />
-          <Route path={ROUTES.financeOverview} element={<FinancePage/>} />
-          <Route path={ROUTES.viewSalesReturns} element={<ViewSalesReturnsPage/>} />
-          <Route path={ROUTES.issueCreditNote} element={<IssueCreditNotePage/>} />       
-           <Route path={ROUTES.creditNote} element={<CreditNotePage/>} />
-           <Route path={ROUTES.creditNote2} element={<CreditNotePage2/>} />
-           <Route path={ROUTES.viewCreditNote} element={<ViewCreditNotePage/>} />
-           <Route path={ROUTES.viewCreditNote2} element={<ViewCreditNoteReceiptPage/>} />
-           <Route path={ROUTES.selectVendor} element={<SelectVendorPage/>} />
-           <Route path={ROUTES.unsettledVendor} element={<UnsettledVendorsPage/>} />
-           <Route path={ROUTES.unallocatedPayment} element={<UnallocatedPaymentPage/>} />
-           <Route path={ROUTES.filledUnsettledVendor} element={<FilledUnsettledVendorsPage/>} />
-           <Route path={ROUTES.filledUnallocatedPayment} element={<FilledUnallocatedPaymentPage/>} />
-           <Route path={ROUTES.allPurchaseInvoice} element={<AllPurchaseOverviewPage/>} />
-           <Route path={ROUTES.nonInventory} element={<NonInventoryOverviewPage/>} />
-           <Route path={ROUTES.viewPurchaseInvoice} element={<ViewPurchaseInvoicePage/>} />
-           <Route path={ROUTES.viewHistory} element={<PurchaseHistoryPage/>} />
-           <Route path={ROUTES.viewConvertInvoice} element={<ConvertGrnToInvoicePage/>} />
-           <Route path={ROUTES.viewNoFinancialImplication} element={<NoFinancialPurchaseInvoicePage/>} />
-           <Route path={ROUTES.viewPurchaseReceipt} element={<ViewReceiptPages/>} />
-           <Route path={ROUTES.allNonInventory} element={<AllNonInventoryPage/>} />
-           <Route path={ROUTES.viewNonInventory} element={<ViewNonInventoryPage/>} />
-           <Route path={ROUTES.viewNonInventory2} element={<ViewNonInventoryPage2/>} />
-           <Route path={ROUTES.viewNonInventory2} element={<ViewNonInventoryPage2/>} />
-           <Route path={ROUTES.allPurchaseReturns} element={<AllPurchaseReturnsOverviewPage/>} />
-           <Route path={ROUTES.viewPurchaseReturns} element={<ViewPurchaseReturnPage/>} />
-           <Route path={ROUTES.allDebitNote} element={<AllDebitNoteOverviewPage/>} />
-           <Route path={ROUTES.viewDebitNote} element={<ViewDebitNotePage/>} />
-           <Route path={ROUTES.previewDebitNote} element={<PreviewDebitPage/>} />
-           <Route path={ROUTES.sendDebitNote} element={<SendDebitPage/>} />
-           <Route path={ROUTES.createRemittance} element={<CreateRemittancePage/>} />
-           <Route path={ROUTES.singleInvoice} element={<SingleRemittancePage/>} />
-           <Route path={ROUTES.multipleInvoice} element={<MultipleRemittancePage/>} />
-           <Route path={ROUTES.attachRemittance} element={<AttachRemittancePage/>} />
-           <Route path={ROUTES.previewRemittance} element={<PreviewRemittancePage/>} />
-           <Route path={ROUTES.editRemittance} element={<EditRemittancePage/>} />
-           <Route path={ROUTES.allRemittance} element={<AllRemittancePage/>} />
-           <Route path={ROUTES.viewRemittance} element={<ViewRemittancePage/>} />
-           <Route path={ROUTES.allocateRemittance} element={<AllocateRemittancePage/>} />
-           <Route path={ROUTES.matchRemittance} element={<MatchRemittancePage/>} />
-           <Route path={ROUTES.unallocatedRemittance} element={<PartiallyPaidPage/>} />
-           <Route path={ROUTES.advancedPaymentRemittance} element={<AdvancedPaymentPage/>} />
-           <Route path={ROUTES.filledUnallocatedRemittance} element={<FilledPartiallyPaidPage/>} />
-           <Route path={ROUTES.filledAdvancedPaymentRemittance} element={<FilledAdvancedRemittancePage/>} />
-           <Route path={ROUTES.allPurchaseOrder} element={<AllPurchaseOrderOverviewPage/>} />
-           <Route path={ROUTES.viewPurchaseOrder} element={<ViewPurchaseOrderPage/>} />
-           <Route path={ROUTES.previewPurchaseOrder} element={< PreviewPurchaseOrderPage/>} />
-           <Route path={ROUTES.purchaseOrderHistory} element={<PurchaseOrderHistoryPage/>} />
-           <Route path={ROUTES.vendorHistory} element={<AllVendorPage/>} />
-           <Route path={ROUTES.vendorDetails} element={<VendorOverviewPage/>} />
-           <Route path={ROUTES.addPayment} element={<AddPaymentPage/>} />
-           <Route path={ROUTES.addPayment2} element={<SelectVendorPaymentPage/>} />
-           <Route path={ROUTES.settlePayment} element={<SettleVendorPage/>} />
-           <Route path={ROUTES.inventoryWarehouse} element={<InventoryWarehousePage/>} />
-           <Route path={ROUTES.inventoryWarehouseDetails} element={<InventoryWarehouseDetailsPage/>} />
-           <Route path={ROUTES.inventoryStores} element={<InventoryStoresPage/>} />
-           <Route path={ROUTES.singularInventory} element={<InventoryPage />} />
-           <Route path={ROUTES.inventoryStores2} element={<InventoryStoresPage2/>} />
-           <Route path={ROUTES.storeView} element={<ViewStore/>} />
-           <Route path={ROUTES.storeView} element={<ViewStore/>} />
-           <Route
+          <Route
+            path={ROUTES.attachReceipent}
+            element={<AttachReceiptPage />}
+          />
+          <Route
+            path={ROUTES.previewReceipt}
+            element={<PreviewReceiptPage />}
+          />
+          <Route path={ROUTES.allReceiptView} element={<AllReceiptPage />} />
+          <Route
+            path={ROUTES.shareReceiptView}
+            element={<ShareReceiptPage />}
+          />
+          <Route path={ROUTES.viewReceipt} element={<ViewReceiptPage />} />
+          <Route
+            path={ROUTES.generateReport}
+            element={<GenerateReportPage />}
+          />
+          <Route
+            path={ROUTES.allocateReceipt}
+            element={<AllocateReceiptPage />}
+          />
+          <Route
+            path={ROUTES.partiallyPaidReceipt}
+            element={<PartiallyPaidReceiptPage />}
+          />
+          <Route
+            path={ROUTES.advancedPaidReceipt}
+            element={<AdvancedPaidPage />}
+          />
+          <Route
+            path={ROUTES.filledPartiallyPaidReceipt}
+            element={<FilledPartiallyPaidReceiptPage />}
+          />
+          <Route
+            path={ROUTES.filledAvancedPaidReceipt}
+            element={<FilledAdvancedPaidPage />}
+          />
+          <Route path={ROUTES.orderReceipt} element={<OrderReceiptPage />} />
+          <Route path={ROUTES.inStoreOverview} element={<InStorePage />} />
+          <Route path={ROUTES.financeOverview} element={<FinancePage />} />
+          <Route
+            path={ROUTES.viewSalesReturns}
+            element={<ViewSalesReturnsPage />}
+          />
+          <Route
+            path={ROUTES.issueCreditNote}
+            element={<IssueCreditNotePage />}
+          />
+          <Route path={ROUTES.creditNote} element={<CreditNotePage />} />
+          <Route path={ROUTES.creditNote2} element={<CreditNotePage2 />} />
+          <Route
+            path={ROUTES.viewCreditNote}
+            element={<ViewCreditNotePage />}
+          />
+          <Route
+            path={ROUTES.viewCreditNote2}
+            element={<ViewCreditNoteReceiptPage />}
+          />
+          <Route path={ROUTES.selectVendor} element={<SelectVendorPage />} />
+          <Route
+            path={ROUTES.unsettledVendor}
+            element={<UnsettledVendorsPage />}
+          />
+          <Route
+            path={ROUTES.unallocatedPayment}
+            element={<UnallocatedPaymentPage />}
+          />
+          <Route
+            path={ROUTES.filledUnsettledVendor}
+            element={<FilledUnsettledVendorsPage />}
+          />
+          <Route
+            path={ROUTES.filledUnallocatedPayment}
+            element={<FilledUnallocatedPaymentPage />}
+          />
+          <Route
+            path={ROUTES.allPurchaseInvoice}
+            element={<AllPurchaseOverviewPage />}
+          />
+          <Route
+            path={ROUTES.nonInventory}
+            element={<NonInventoryOverviewPage />}
+          />
+          <Route
+            path={ROUTES.viewPurchaseInvoice}
+            element={<ViewPurchaseInvoicePage />}
+          />
+          <Route path={ROUTES.viewHistory} element={<PurchaseHistoryPage />} />
+          <Route
+            path={ROUTES.viewConvertInvoice}
+            element={<ConvertGrnToInvoicePage />}
+          />
+          <Route
+            path={ROUTES.viewNoFinancialImplication}
+            element={<NoFinancialPurchaseInvoicePage />}
+          />
+          <Route
+            path={ROUTES.viewPurchaseReceipt}
+            element={<ViewReceiptPages />}
+          />
+          <Route
+            path={ROUTES.allNonInventory}
+            element={<AllNonInventoryPage />}
+          />
+          <Route
+            path={ROUTES.viewNonInventory}
+            element={<ViewNonInventoryPage />}
+          />
+          <Route
+            path={ROUTES.viewNonInventory2}
+            element={<ViewNonInventoryPage2 />}
+          />
+          <Route
+            path={ROUTES.viewNonInventory2}
+            element={<ViewNonInventoryPage2 />}
+          />
+          <Route
+            path={ROUTES.allPurchaseReturns}
+            element={<AllPurchaseReturnsOverviewPage />}
+          />
+          <Route
+            path={ROUTES.viewPurchaseReturns}
+            element={<ViewPurchaseReturnPage />}
+          />
+          <Route
+            path={ROUTES.allDebitNote}
+            element={<AllDebitNoteOverviewPage />}
+          />
+          <Route path={ROUTES.viewDebitNote} element={<ViewDebitNotePage />} />
+          <Route
+            path={ROUTES.previewDebitNote}
+            element={<PreviewDebitPage />}
+          />
+          <Route path={ROUTES.sendDebitNote} element={<SendDebitPage />} />
+          <Route
+            path={ROUTES.createRemittance}
+            element={<CreateRemittancePage />}
+          />
+          <Route
+            path={ROUTES.singleInvoice}
+            element={<SingleRemittancePage />}
+          />
+          <Route
+            path={ROUTES.multipleInvoice}
+            element={<MultipleRemittancePage />}
+          />
+          <Route
+            path={ROUTES.attachRemittance}
+            element={<AttachRemittancePage />}
+          />
+          <Route
+            path={ROUTES.previewRemittance}
+            element={<PreviewRemittancePage />}
+          />
+          <Route
+            path={ROUTES.editRemittance}
+            element={<EditRemittancePage />}
+          />
+          <Route path={ROUTES.allRemittance} element={<AllRemittancePage />} />
+          <Route
+            path={ROUTES.viewRemittance}
+            element={<ViewRemittancePage />}
+          />
+          <Route
+            path={ROUTES.allocateRemittance}
+            element={<AllocateRemittancePage />}
+          />
+          <Route
+            path={ROUTES.matchRemittance}
+            element={<MatchRemittancePage />}
+          />
+          <Route
+            path={ROUTES.unallocatedRemittance}
+            element={<PartiallyPaidPage />}
+          />
+          <Route
+            path={ROUTES.advancedPaymentRemittance}
+            element={<AdvancedPaymentPage />}
+          />
+          <Route
+            path={ROUTES.filledUnallocatedRemittance}
+            element={<FilledPartiallyPaidPage />}
+          />
+          <Route
+            path={ROUTES.filledAdvancedPaymentRemittance}
+            element={<FilledAdvancedRemittancePage />}
+          />
+          <Route
+            path={ROUTES.allPurchaseOrder}
+            element={<AllPurchaseOrderOverviewPage />}
+          />
+          <Route
+            path={ROUTES.viewPurchaseOrder}
+            element={<ViewPurchaseOrderPage />}
+          />
+          <Route
+            path={ROUTES.previewPurchaseOrder}
+            element={<PreviewPurchaseOrderPage />}
+          />
+          <Route
+            path={ROUTES.purchaseOrderHistory}
+            element={<PurchaseOrderHistoryPage />}
+          />
+          <Route path={ROUTES.vendorHistory} element={<AllVendorPage />} />
+          <Route path={ROUTES.vendorDetails} element={<VendorOverviewPage />} />
+          <Route path={ROUTES.addPayment} element={<AddPaymentPage />} />
+          <Route
+            path={ROUTES.addPayment2}
+            element={<SelectVendorPaymentPage />}
+          />
+          <Route path={ROUTES.settlePayment} element={<SettleVendorPage />} />
+          <Route
+            path={ROUTES.inventoryWarehouse}
+            element={<InventoryWarehousePage />}
+          />
+          <Route
+            path={ROUTES.inventoryWarehouseDetails}
+            element={<InventoryWarehouseDetailsPage />}
+          />
+          <Route
+            path={ROUTES.inventoryStores}
+            element={<InventoryStoresPage />}
+          />
+          <Route path={ROUTES.singularInventory} element={<InventoryPage />} />
+          <Route
+            path={ROUTES.inventoryStores2}
+            element={<InventoryStoresPage2 />}
+          />
+          <Route path={ROUTES.storeView} element={<ViewStore />} />
+          <Route path={ROUTES.storeView} element={<ViewStore />} />
+          <Route
             path="/dashboard/payment/initiate-payment"
             element={<PaymentViewLayout />}
           >
             <Route index element={<Payment />} />
             <Route path="processor" element={<SelectProcessorPage />} />
             <Route path="processors" element={<SelectProcessorPage2 />} />
-            <Route path="make-payment" element={<MakePaymentPage/>} />
-            <Route path="payment-receipt" element={<PaymentReceiptPage/>} />
+            <Route path="make-payment" element={<MakePaymentPage />} />
+            <Route path="payment-receipt" element={<PaymentReceiptPage />} />
           </Route>
-          <Route path={ROUTES.allPayment} element={<AllPaymentOverviewPage/>} />
-          <Route path={ROUTES.viewAllPayment} element={< ViewPaymentPage/>} />
+          <Route
+            path={ROUTES.allPayment}
+            element={<AllPaymentOverviewPage />}
+          />
+          <Route path={ROUTES.viewAllPayment} element={<ViewPaymentPage />} />
         </Route>
       </Routes>
     </Router>
-       );
+  );
 }

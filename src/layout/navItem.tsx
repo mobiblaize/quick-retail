@@ -108,7 +108,7 @@ const NavItem = ({
                   <List.Item
                     className={`py-3 px-4 text-md ${
                       isChildItemActive ? "text-[#F16722]" : "text-[#787486]"
-                    }`} 
+                    }`}
                   >
                     {child.label}
                   </List.Item>

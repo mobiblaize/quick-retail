@@ -133,7 +133,6 @@ export const FinancialManagement: NavItem[] = [
       { label: "Sales Invoice", href: `${ROUTES.invoiceOverview}` },
       { label: "Sales Returns", href: `${ROUTES.orderReceipt}` },
       { label: "Credit Note", href: `${ROUTES.issueCreditNote}` },
-  
     ],
   },
   {
