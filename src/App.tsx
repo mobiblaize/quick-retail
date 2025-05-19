@@ -34,7 +34,7 @@ import ViewCollection from "./pages/pointOfSales/categories/viewCollection";
 import BillingInformation from "./pages/pointOfSales/stores/billingInformation";
 import AboutProduct from "./pages/pointOfSales/stores/aboutProduct";
 import ViewOrderPage from "./pages/pointOfSales/saleProcessing/viewOrderPage";
-import LandingPage from "./pages/landingPage";
+
 import DashboardPage from "./pages/pointOfSales/dashboard/dashboardPage";
 import ProductReportPage from "./pages/pointOfSales/report/productReportPage";
 import ProcurementDashboard from "./pages/procurement/procurementDashboard/procurementDashboard";

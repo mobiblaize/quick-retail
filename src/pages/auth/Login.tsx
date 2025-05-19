@@ -4,7 +4,7 @@ import { z } from "zod";
 import { LogoSvg } from "../../assets/svg/logoSvg";
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
-import { Link, useNavigate } from "react-router-dom";
+import { Link } from "react-router-dom";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -17,7 +17,6 @@ const schema = z.object({
 });
 
 const Login = () => {
-  const navigate = useNavigate();
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
 
   const form = useForm({

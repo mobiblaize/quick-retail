@@ -6,7 +6,6 @@ import {
   FinancialManagement,
   Reports,
   Admin,
-  otherMenu,
   Procurement,
   AssetManagement,
 } from "../../../layout/navItemData";
