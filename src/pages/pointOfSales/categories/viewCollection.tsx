@@ -1,10 +1,12 @@
 import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import UnitDetails from "../../../components/dashboard/pointOfSales/categories/unitDetails";
-import BusinessUnitTable from "../../../components/dashboard/pointOfSales/categories/businessUnitTable";
+// import UnitDetails from "../../../components/dashboard/pointOfSales/categories/unitDetails";
+// import BusinessUnitTable from "../../../components/dashboard/pointOfSales/categories/businessUnitTable";
 import { useState } from "react";
-import CreateNewCategory from "../../../components/dashboard/pointOfSales/categories/modals/createNewCategory";
 import { useNavigate } from "react-router";
+import CategoryProductDetails from "../../../components/dashboard/pointOfSales/categories/categoryProductDetails";
+import CategoriesProductTable from "../../../components/dashboard/pointOfSales/categories/categoriesProductTable";
+import EditCategory from "../../../components/dashboard/pointOfSales/categories/modals/editCategory";
 
 const ViewCollection = () => {
   const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
@@ -40,9 +42,11 @@ const ViewCollection = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <UnitDetails />
-      <BusinessUnitTable />
-      <CreateNewCategory
+      <CategoryProductDetails />
+      <CategoriesProductTable/>
+      {/* <UnitDetails /> */}
+      {/* <BusinessUnitTable /> */}
+      <EditCategory
         opened={isEditCategoryOpen}
         onClose={() => setIsEditCategoryOpen(false)}
       />
