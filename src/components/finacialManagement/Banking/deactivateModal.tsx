@@ -1,24 +1,21 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useNavigate } from "react-router";
 import { RedQuestionMark } from "../../../assets/svg";
-import { ROUTES } from "../../../constants/routes";
 
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
 }
 
-const DeleteModal = ({ opened, onClose }: ResolveProps) => {
-  const navigate = useNavigate();
+const DeactivateModal = ({ opened, onClose }: ResolveProps) => {
   const handleToast = () => {
     notifications.show({
       title: "Success",
-      message: "Journal Entry has been successfully saved as draft",
+      message: "New Card has been deactivated successfully ",
       color: "green",
       autoClose: 3000,
     });
-    navigate(ROUTES.importJournal);
+
     onClose();
   };
 
@@ -39,7 +36,7 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-              Delete Journal Entry?
+              Deactivate Card?
             </Text>
 
             <div className="mt-[1em]"></div>
@@ -57,8 +54,10 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
             fontSize: "clamp(0.875rem, 2vw, 1rem)",
           }}
         >
-          After careful review of entries, are you sure you want to delete
-          Journal 39235 with 6 journal of entries?
+          Are you sure you want to deactivate card? By deactivating, Card
+          information and functionality would be removed temporarily from this
+          system, therefore this card can’t be used to make payment until
+          reactivated.
         </Text>
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
@@ -82,7 +81,7 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
             <Button
               variant="filled"
               style={{
-                backgroundColor: "#F16722",
+                backgroundColor: "#D42620",
                 color: "white",
                 borderRadius: "0.4rem",
                 height: "auto",
@@ -92,7 +91,7 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-              Yes, Delete
+           Yes, Deactivate
             </Button>
           </div>
         </div>
@@ -101,4 +100,4 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
   );
 };
 
-export default DeleteModal;
+export default DeactivateModal;

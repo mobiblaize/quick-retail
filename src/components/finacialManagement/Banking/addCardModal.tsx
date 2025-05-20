@@ -9,16 +9,16 @@ interface ResolveProps {
   onClose: () => void;
 }
 
-const DeleteModal = ({ opened, onClose }: ResolveProps) => {
+const AddcardModal = ({ opened, onClose }: ResolveProps) => {
   const navigate = useNavigate();
   const handleToast = () => {
     notifications.show({
       title: "Success",
-      message: "Journal Entry has been successfully saved as draft",
+      message: "New Card has been successfully added",
       color: "green",
       autoClose: 3000,
     });
-    navigate(ROUTES.importJournal);
+    navigate(ROUTES.allTransaction);
     onClose();
   };
 
@@ -39,7 +39,7 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
                 whiteSpace: "nowrap",
               }}
             >
-              Delete Journal Entry?
+              Add New Card
             </Text>
 
             <div className="mt-[1em]"></div>
@@ -57,9 +57,10 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
             fontSize: "clamp(0.875rem, 2vw, 1rem)",
           }}
         >
-          After careful review of entries, are you sure you want to delete
-          Journal 39235 with 6 journal of entries?
+          Are you sure you want to add a new card into your financial system for
+          payment and transactions?
         </Text>
+
         <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
           <div className="">
             <Button
@@ -92,7 +93,7 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
                 width: "100%",
               }}
             >
-              Yes, Delete
+              Yes, Add
             </Button>
           </div>
         </div>
@@ -101,4 +102,4 @@ const DeleteModal = ({ opened, onClose }: ResolveProps) => {
   );
 };
 
-export default DeleteModal;
+export default AddcardModal;
