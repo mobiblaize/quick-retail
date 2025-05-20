@@ -2574,6 +2574,59 @@ export const storeTargetOrder = [
   },
 ];
 
+export const categoriesProductSingle = [
+ {
+    storeName: "laptop",
+    storeId: "2456781",
+    storeSizeA: "312",
+    storeSizeB: "2678",
+    location: "Ikeja, Ogba",
+    dateCreated: "13 Jun, 2025",
+    totalCustomer: "1312",
+    status: "Active",
+  },
+  {
+    storeName: "desktop",
+    storeId: "2456782",
+    storeSizeA: "123",
+    storeSizeB: "2050",
+    location: "Yaba, Lagos",
+    dateCreated: "20 May, 2025",
+    totalCustomer: "984",
+    status: "Inactive",
+  },
+  {
+    storeName: "africa shoes",
+    storeId: "2456783",
+    storeSizeA: "305",
+    storeSizeB: "3000",
+    location: "Lekki Phase 1",
+    dateCreated: "05 Apr, 2025",
+    totalCustomer: "1567",
+    status: "Active",
+  },
+  {
+    storeName: "flowwing grow",
+    storeId: "2456784",
+    storeSizeA: "220",
+    storeSizeB: "2180",
+    location: "Surulere, Lagos",
+    dateCreated: "11 Mar, 2025",
+    totalCustomer: "743",
+    status: "Inactive",
+  },
+  {
+    storeName: "mubbing stick",
+    storeId: "2456785",
+    storeSizeA: "27",
+    storeSizeB: "2800",
+    location: "Ajah, Lagos",
+    dateCreated: "22 Feb, 2025",
+    totalCustomer: "1210",
+    status: "Active",
+  },
+];
+
 export const storeAnalysisData = [
   {
     title: "total stores",
@@ -4371,6 +4424,29 @@ export const allPurchaseOverviewData = [
     altText: "approve-sign",
     borderColor: "#98A2B3",
   },
+];
+
+export const assetsMonthlyData = [
+  { month: 'Jan', inUse: 400, notInUse: 200, retired: 150, disposed: 10 },
+  { month: 'Feb', inUse: 500, notInUse: 250, retired: 200, disposed: 15 },
+  { month: 'Mar', inUse: 300, notInUse: 200, retired: 180, disposed: 12 },
+  { month: 'Apr', inUse: 350, notInUse: 220, retired: 160, disposed: 11 },
+  { month: 'May', inUse: 370, notInUse: 240, retired: 170, disposed: 14 },
+  { month: 'Jun', inUse: 900, notInUse: 300, retired: 600, disposed: 20 },
+  { month: 'Jul', inUse: 450, notInUse: 250, retired: 200, disposed: 10 },
+  { month: 'Aug', inUse: 870, notInUse: 320, retired: 550, disposed: 18 },
+  { month: 'Sep', inUse: 400, notInUse: 260, retired: 300, disposed: 13 },
+  { month: 'Oct', inUse: 390, notInUse: 240, retired: 220, disposed: 9 },
+  { month: 'Nov', inUse: 410, notInUse: 210, retired: 190, disposed: 8 },
+  { month: 'Dec', inUse: 430, notInUse: 230, retired: 210, disposed: 10 }
+];
+
+export const assetCategoryData = [
+  { category: "Office Materials", value: 1100 },
+  { category: "Computing", value: 700 },
+  { category: "Vehicles", value: 600 },
+  { category: "Manufacturing Machines", value: 300 },
+  { category: "Equipment's", value: 200 }
 ];
 
 export const allPurchaseInvoice = [
