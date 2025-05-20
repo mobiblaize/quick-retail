@@ -5,6 +5,7 @@ import { LogoSvg } from "../../assets/svg/logoSvg";
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link } from "react-router-dom";
+import { useSessionStorage } from "../../hooks/useCustomSession";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -18,7 +19,7 @@ const schema = z.object({
 
 const Login = () => {
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
-
+  // const { updateUser } = useSessionStorage();
   const form = useForm({
     validate: zodResolver(schema),
     initialValues: {
@@ -32,27 +33,35 @@ const Login = () => {
       email: form.values.email,
       password: form.values.password,
     };
-
+  
     try {
       const res = await login(payload);
       if (!res?.data) return;
+  
       const { accessToken, user } = res.data;
+      const tenant_uuid = user.tenants?.[0]?.uuid;
+  
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));
-      //   navigate("/");
+  
+      if (tenant_uuid) {
+        sessionStorage.setItem("tenant_uuid", tenant_uuid);
+      } else {
+        console.warn("Tenant UUID not found in login response.");
+      }
+  
       window.location.replace("/dashboard");
-      console.log("login successful");
+  
       notifications.show({
         title: "Success",
         message: "Login successful",
         color: "green",
       });
-      console.log(res);
     } catch (error) {
       console.log(error);
     }
   };
-
+  
   return (
     <div className="flex min-h-screen  bg-white">
       {/* Left Side - Login Form */}
