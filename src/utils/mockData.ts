@@ -2574,6 +2574,59 @@ export const storeTargetOrder = [
   },
 ];
 
+export const categoriesProductSingle = [
+ {
+    storeName: "laptop",
+    storeId: "2456781",
+    storeSizeA: "312",
+    storeSizeB: "2678",
+    location: "Ikeja, Ogba",
+    dateCreated: "13 Jun, 2025",
+    totalCustomer: "1312",
+    status: "Active",
+  },
+  {
+    storeName: "desktop",
+    storeId: "2456782",
+    storeSizeA: "123",
+    storeSizeB: "2050",
+    location: "Yaba, Lagos",
+    dateCreated: "20 May, 2025",
+    totalCustomer: "984",
+    status: "Inactive",
+  },
+  {
+    storeName: "africa shoes",
+    storeId: "2456783",
+    storeSizeA: "305",
+    storeSizeB: "3000",
+    location: "Lekki Phase 1",
+    dateCreated: "05 Apr, 2025",
+    totalCustomer: "1567",
+    status: "Active",
+  },
+  {
+    storeName: "flowwing grow",
+    storeId: "2456784",
+    storeSizeA: "220",
+    storeSizeB: "2180",
+    location: "Surulere, Lagos",
+    dateCreated: "11 Mar, 2025",
+    totalCustomer: "743",
+    status: "Inactive",
+  },
+  {
+    storeName: "mubbing stick",
+    storeId: "2456785",
+    storeSizeA: "27",
+    storeSizeB: "2800",
+    location: "Ajah, Lagos",
+    dateCreated: "22 Feb, 2025",
+    totalCustomer: "1210",
+    status: "Active",
+  },
+];
+
 export const storeAnalysisData = [
   {
     title: "total stores",

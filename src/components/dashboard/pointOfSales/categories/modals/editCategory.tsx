@@ -10,7 +10,7 @@ interface ResolveProps {
   onClose: () => void;
 }
 
-const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
+const EditCategory = ({ opened, onClose }: ResolveProps) => {
   const [categoryName, setCategoryName] = useState("");
   const { mutate, isPending  } = useCreateCategory();
 
@@ -55,9 +55,9 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
         title={
           <div>
             <Text size="1.8rem" c="black" fw={800}>
-              Create Category
+              Edit Category
             </Text>
-            <Text mt="5">Give your category a name below.</Text>
+            <Text mt="5">Fill the details below.</Text>
           </div>
         }
         centered
@@ -67,15 +67,23 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
       >
         <div className="space-y-4 grid grid-cols-1">
           <FormInput
-            label="Category Name"
-            placeholder="Enter Cateory Name"
+            label="Select Gender"
+            placeholder="select gender"
             paddingY={6}
             value={categoryName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
               setCategoryName(e.target.value)
             }
           />
+
+          <FormInput
+            label="Sub-category Name"
+            placeholder="enter sub-category name"
+            paddingY={6}
+            value={categoryName}
+          />
         </div>
+
         <div className="flex mt-7 gap-5">
           <Button
             variant="outline"
@@ -115,4 +123,4 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
   );
 };
 
-export default CreateNewCategory;
+export default EditCategory;
