@@ -188,5 +188,9 @@ createJournal:"/dashboard/account/journal/create-journal",
 viewJournal:"/dashboard/account/journal/view-journal",
 importJournal:"/dashboard/account/journal/import-journal",
 reviewJournal:"/dashboard/account/journal/review-journal",
+addCard:"/dashboard/banking/add-card",
+allTransaction:"/dashboard/banking/all-transactions",
+viewCardTransaction:"/dashboard/banking/view-card-transactions",
+addBank:"/dashboard/banking/add-bank",
 };
 

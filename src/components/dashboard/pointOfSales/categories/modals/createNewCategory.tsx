@@ -1,5 +1,9 @@
 import { Button, Modal, Text } from "@mantine/core";
+import { useState } from "react";
+import { useCreateCategory } from "../../../../../backendApis/pos/categories";
 import FormInput from "../../../../General/formInput";
+import { notifications } from '@mantine/notifications';
+
 
 interface ResolveProps {
   opened: boolean;
@@ -7,6 +11,42 @@ interface ResolveProps {
 }
 
 const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
+  const [categoryName, setCategoryName] = useState("");
+  const { mutate, isPending  } = useCreateCategory();
+
+  const handleSave = () => {
+    if (!categoryName.trim()) {
+      notifications.show({
+        title: 'Validation error',
+        message: 'Category name is required',
+        color: 'red',
+      });
+      return;
+    }
+
+    mutate(
+      { name: categoryName },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: 'Success',
+            message: 'Category created successfully',
+            color: 'green',
+          });
+          setCategoryName('');
+          onClose();
+        },
+        onError: (error: any) => {
+          notifications.show({
+            title: 'Error',
+            message:
+              error?.response?.data?.message || 'Failed to create category',
+            color: 'red',
+          });
+        },
+      }
+    );
+  }
   return (
     <>
       <Modal
@@ -30,11 +70,16 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
             label="Category Name"
             placeholder="Enter Cateory Name"
             paddingY={6}
+            value={categoryName}
+            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+              setCategoryName(e.target.value)
+            }
           />
         </div>
         <div className="flex mt-7 gap-5">
           <Button
             variant="outline"
+            onClick={onClose}
             style={{
               color: "#475367",
               borderRadius: "0.4rem",
@@ -50,6 +95,8 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
           </Button>
           <Button
             variant="filled-primary"
+            onClick={handleSave}
+            loading={isPending }
             style={{
               color: "white",
               borderRadius: "0.4rem",

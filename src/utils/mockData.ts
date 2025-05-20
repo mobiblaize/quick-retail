@@ -6463,3 +6463,142 @@ export const allJournal = [
     status: "Successful"
   },
 ]
+export const transaction = [
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Successful",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Successful",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Failed",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Processing",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Failed",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Processing",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Successful",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Successful",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Successful",
+  },
+  {
+    id: "#123232",
+    paystack: "Paystack",
+    amountDue: "₦51,000",
+    timeStamp: "13 Jun, 2024 4:20",
+    status: "Successful",
+  },
+]
+
+export const allTransactionOverviewData = [
+  {
+    title: "NO. of Transactions",
+    value: "50",
+    icon: dollar,
+    iconColor: "#099137",
+    textColor: "#E4E7EC",
+    cardBgColor: "#D75211",
+    percentageValue: 0.5,
+    altText: "approve-sign",
+  },
+
+  {
+    title: "total transaction value",
+    value: "$500,000",
+    icon: orangeboxes,
+    iconColor: "#DD900D",
+    textColor: "#1D2739",
+    cardBgColor: "#FDFDFD",
+    percentageValue: 0.5,
+    borderColor: "#98A2B3",
+    altText: "pending-icon",
+  },
+  {
+    title: "Successful Transactions",
+    value: "$500,000",
+    icon: orangeboxes,
+    iconColor: "#CB1A14",
+    textColor: "#1D2739",
+    cardBgColor: "#FDFDFD",
+    percentageValue: 0.5,
+    borderColor: "#98A2B3",
+    altText: "rejected-icon",
+  },
+  {
+    title: "Failed Transactions",
+    value: "$34,565",
+    icon: orangeboxes,
+    iconColor: "#099137",
+    textColor: "##D42620",
+    cardBgColor: "#FDFDFD",
+    percentageValue: +10,
+    altText: "approve-sign",
+    borderColor: "#98A2B3",
+  },
+];
+export const cards = [
+  {
+    bankName: 'Access Bank',
+    cardHolder: 'Quick Retail',
+    expiry: '06/24',
+    cardNumber: '1234 1234 1234 1234',
+  },
+  {
+    bankName: 'Access Bank',
+    cardHolder: 'Quick Retail',
+    expiry: '06/24',
+    cardNumber: '1234 1234 1234 1234',
+  },
+  {
+    bankName: 'Access Bank',
+    cardHolder: 'Quick Retail',
+    expiry: '06/24',
+    cardNumber: '1234 1234 1234 1234',
+  },
+];
