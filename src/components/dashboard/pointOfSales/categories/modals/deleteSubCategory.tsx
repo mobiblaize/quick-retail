@@ -3,9 +3,12 @@ import { Button, Modal, Text } from "@mantine/core";
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
+  subCategoryId: string | number | null;
+  handleDelete: () => void;
 }
 
-const DeleteSubCategory = ({ opened, onClose }: ResolveProps) => {
+const DeleteSubCategory = ({ opened, onClose, subCategoryId,
+  handleDelete, }: ResolveProps) => {
   return (
     <>
       <Modal
@@ -41,6 +44,7 @@ const DeleteSubCategory = ({ opened, onClose }: ResolveProps) => {
         <div className="flex mt-7 gap-14">
           <Button
             variant="outline"
+            onClick={onClose}
             style={{
               color: "#475367",
               borderRadius: "0.4rem",
@@ -56,6 +60,7 @@ const DeleteSubCategory = ({ opened, onClose }: ResolveProps) => {
           </Button>
           <Button
             variant="filled"
+            onClick={handleDelete}
             style={{
               backgroundColor: "#CB1A14",
               color: "white",

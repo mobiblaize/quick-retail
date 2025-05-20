@@ -1,13 +1,61 @@
 import { Button, Modal, Text } from "@mantine/core";
+import { notifications } from "@mantine/notifications";
+import { SetStateAction, useState } from "react";
+import { useCreateSubCategory } from "../../../../../hooks/backendApis/pos/categories";
+import Dropdown from "../../../../General/dropdown";
 import FormInput from "../../../../General/formInput";
-import FormSelect from "../../../../General/select";
+
 
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
+  categories: { label: string; value: number }[];
 }
 
-const CreateSubCategory = ({ opened, onClose }: ResolveProps) => {
+const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
+  const createSubCategory = useCreateSubCategory();
+
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
+    null
+  );
+  const [subCategoryName, setSubCategoryName] = useState("");
+
+  const handleSubmit = async () => {
+    if (!selectedCategoryId || !subCategoryName.trim()) {
+      notifications.show({
+        title: "Validation error",
+        message: "Please select a category and enter a sub-category name",
+        color: "red",
+      });
+      return;
+    }
+
+    try {
+      await createSubCategory.mutateAsync({
+        category_id: selectedCategoryId,
+        name: subCategoryName.trim(),
+      });
+
+      notifications.show({
+        title: "New Sub-category Saved!",
+        message: "You can now add products to the new category",
+        color: "green",
+      });
+
+      setSubCategoryName("");
+      setSelectedCategoryId(null);
+      onClose();
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message: "Failed to create sub-category",
+        color: "red",
+      });
+      console.error(error);
+    }
+  };
+  console.log("categories passed to CustomDropdown:", categories);
+
   return (
     <>
       <Modal
@@ -40,15 +88,24 @@ const CreateSubCategory = ({ opened, onClose }: ResolveProps) => {
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1">
-          <FormSelect
-            options={["TG GOLD"]}
-            paddingY="3"
+          <Dropdown
             label="Select Category"
+            options={categories}
+            placeholder="Select a category"
+            value={selectedCategoryId}
+            onChange={(val) => setSelectedCategoryId(val)}
+            required
+            textColorClass="text-gray-800"
           />
+
           <FormInput
             label="Sub-Category Name"
-            placeholder="Enter Cateory Name"
+            placeholder="Enter Category Name"
             paddingY={6}
+            value={subCategoryName}
+            onChange={(e: { target: { value: SetStateAction<string> } }) =>
+              setSubCategoryName(e.target.value)
+            }
           />
         </div>
         <div className="flex mt-7 gap-5">
@@ -78,6 +135,8 @@ const CreateSubCategory = ({ opened, onClose }: ResolveProps) => {
               fontSize: "16px",
               width: "100%",
             }}
+            onClick={handleSubmit}
+            loading={createSubCategory.isPending}
           >
             Save
           </Button>
