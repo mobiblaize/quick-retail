@@ -190,6 +190,10 @@ import ReviewJournalPage from "./pages/financialManagement/Accounting/reviewJour
 
 import Login from "./pages/auth/Login";
 import IsAuthenticated from "./layout/hoc/IsAuthenticated";
+import AddCardPage from "./pages/financialManagement/Banking/addCard";
+import AllTransactionPage from "./pages/financialManagement/Banking/transactionHistory";
+import ViewCardPage from "./pages/financialManagement/Banking/viewTransaction";
+import AddBankPage from "./pages/financialManagement/Banking/addBank";
 
 export default function App() {
   return (
@@ -766,6 +770,10 @@ export default function App() {
           <Route path={ROUTES.viewJournal} element={< ViewJournalPage/>} />
           <Route path={ROUTES.importJournal} element={< ImportJournalTablePage/>} />
           <Route path={ROUTES.reviewJournal} element={< ReviewJournalPage/>} />
+          <Route path={ROUTES.addCard} element={< AddCardPage/>} />
+          <Route path={ROUTES.allTransaction} element={<AllTransactionPage/>} />
+          <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage/>} />
+          <Route path={ROUTES.addBank} element={< AddBankPage/>} />
         </Route>
       </Routes>
     </Router>

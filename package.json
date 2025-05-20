@@ -31,6 +31,7 @@
     "@tiptap/react": "^2.11.5",
     "@tiptap/starter-kit": "^2.11.5",
     "axios": "^1.9.0",
+    "clsx": "^2.1.1",
     "dayjs": "^1.11.13",
     "framer-motion": "^12.5.0",
     "jotai": "^2.12.4",

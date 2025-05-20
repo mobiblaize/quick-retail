@@ -159,6 +159,21 @@ export const FinancialManagement: NavItem[] = [
     activeIcon: ActiveDashboardIcon,
   },
   {
+    label: "Banking",
+    href: ROUTES.selectVendor,
+    inactiveIcon: InActivePurchaseOrderIcon,
+    activeIcon: ActiveProductIcon,
+    hasChildren: true,
+    children: [
+      { label: "Card", href: `${ROUTES.addCard}` },
+      { label: "Bank", href: `${ROUTES.addBank}` },
+      { label: "Transactions", href: `${ROUTES.allPurchaseOrder}` },
+      { label: "Transfer", href: `${ROUTES.allPurchaseInvoice}` },
+      { label: "Account Reconciliation", href: `${ROUTES.createRemittance}` },
+      
+    ],
+  },
+  {
     label: "Accounting",
     href: ROUTES.accountChart,
     inactiveIcon: InActiveDashboardIcon,

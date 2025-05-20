@@ -12,9 +12,11 @@ const axiosInstance = axios.create({
 
 const attachToken = (config: any) => {
   const token = sessionStorage.getItem("access_token");
-
+  const tenantId = sessionStorage.getItem("tenant_uuid");
   if (token) config.headers.Authorization = `Bearer ${token}`;
-
+  if (tenantId) {
+    config.headers["X-Tenant-ID"] = tenantId;
+  }
   return config;
 };
 
