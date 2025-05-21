@@ -1,9 +1,7 @@
 import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-// import UnitDetails from "../../../components/dashboard/pointOfSales/categories/unitDetails";
-// import BusinessUnitTable from "../../../components/dashboard/pointOfSales/categories/businessUnitTable";
 import { useState } from "react";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import CategoryProductDetails from "../../../components/dashboard/pointOfSales/categories/categoryProductDetails";
 import CategoriesProductTable from "../../../components/dashboard/pointOfSales/categories/categoriesProductTable";
 import EditCategory from "../../../components/dashboard/pointOfSales/categories/modals/editCategory";
@@ -11,6 +9,14 @@ import EditCategory from "../../../components/dashboard/pointOfSales/categories/
 const ViewCollection = () => {
   const [isEditCategoryOpen, setIsEditCategoryOpen] = useState(false);
   const navigate = useNavigate();
+  const { state } = useLocation();
+  const category = state?.category;
+  const subCategory = state?.subCategory;
+  console.log("Category:", category);
+console.log("SubCategory:", subCategory);
+
+
+
   const subHeaders = [
     <div key="1" className="py-2.5">
       <div className="flex gap-8 items-center">
@@ -27,14 +33,16 @@ const ViewCollection = () => {
     <div key="2">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-          Shoes
+        {subCategory?.name}
         </Text>
+   
+
         <Button
           onClick={() => setIsEditCategoryOpen(true)}
           variant="outline-primary"
           style={{ padding: "14px 25px" }}
         >
-          Edit Category
+          Edit SubCategory
         </Button>
       </div>
     </div>,
@@ -42,13 +50,13 @@ const ViewCollection = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CategoryProductDetails />
+  <CategoryProductDetails category={category} />
       <CategoriesProductTable/>
-      {/* <UnitDetails /> */}
-      {/* <BusinessUnitTable /> */}
       <EditCategory
         opened={isEditCategoryOpen}
         onClose={() => setIsEditCategoryOpen(false)}
+        // category={category}
+        subCategory={subCategory}
       />
     </PageContainer>
   );

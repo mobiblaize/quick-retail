@@ -3,9 +3,10 @@ import { Button, Modal, Text } from "@mantine/core";
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
+  onConfirm: () => void; 
 }
 
-const DeactivateCategory = ({ opened, onClose }: ResolveProps) => {
+const DeactivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
   return (
     <>
       <Modal
@@ -43,6 +44,9 @@ const DeactivateCategory = ({ opened, onClose }: ResolveProps) => {
         <div className="flex mt-7 gap-14">
           <Button
             variant="outline"
+            onClick={() => {
+              onClose();
+            }}
             style={{
               color: "#475367",
               borderRadius: "0.4rem",
@@ -58,8 +62,12 @@ const DeactivateCategory = ({ opened, onClose }: ResolveProps) => {
           </Button>
           <Button
             variant="filled"
+            onClick={() => {
+              onConfirm();
+              onClose();
+            }}
             style={{
-              backgroundColor: "#CB1A14",
+              backgroundColor: "#BA110B",
               color: "white",
               borderRadius: "0.4rem",
               height: "auto",
@@ -69,7 +77,7 @@ const DeactivateCategory = ({ opened, onClose }: ResolveProps) => {
               width: "100%",
             }}
           >
-            Yes, delete
+            Yes, deactivate
           </Button>
         </div>
       </Modal>

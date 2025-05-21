@@ -1,33 +1,35 @@
 import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import SubCategoryTable from "../../../components/dashboard/pointOfSales/categories/subCategoryTable";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
+import {  useFetchSubCatOfCat } from "../../../hooks/backendApis/pos/categories";
 
 const SubCategories = () => {
+  const { state } = useLocation();
   const navigate = useNavigate();
+  const category = state?.category;
+  const { data, isLoading, isError } = useFetchSubCatOfCat(category?.id);
+  const subCategories = Array.isArray(data?.data) ? data.data : [];
+
+
   const subHeaders = [
     <div key="1" className="py-2.5">
       <div className="flex gap-8 items-center">
         <button onClick={() => navigate(-1)} className="cursor-pointer">
           Back
         </button>
-        <div className="flex items-center">
-          <Text>Categories</Text>
-          <span className="mx-2">/</span>
-          <Text c={"black"}>Cosmetics</Text>
-        </div>
       </div>
     </div>,
     <div key="2">
       <Text fw={500} size="xl" c="black">
-        Men
+      {category?.name || "Unnamed Category"}
       </Text>
     </div>,
   ];
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <SubCategoryTable />
+      <SubCategoryTable subCategories={subCategories} category={category}/>
     </PageContainer>
   );
 };
