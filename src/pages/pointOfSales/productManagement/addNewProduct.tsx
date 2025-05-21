@@ -58,7 +58,7 @@ const AddNewProduct: React.FC = () => {
         <Button variant="outline-primary" onClick={() => navigate(-1)}>
           Cancel
         </Button>
-        <Button variant="filled-primary">Confirm Order</Button>
+        <Button variant="filled-primary">Next</Button>
       </div>,
     ];
   };
