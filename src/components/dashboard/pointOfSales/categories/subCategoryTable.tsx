@@ -6,18 +6,77 @@ import { useState } from "react";
 import DeleteSubCategory from "./modals/deleteSubCategory";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { subCategoriesData } from "../../../../utils/mockData";
+import { notifications } from "@mantine/notifications";
+import { useDeleteSubCategory } from "../../../../hooks/backendApis/pos/categories";
 
-const SubCategoryTable = () => {
+interface SubCategoriesTableProps {
+  subCategories: Array<any>;
+  category: Array<any>;
+}
+
+const SubCategoryTable = ({ subCategories, category }: SubCategoriesTableProps) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  console.log("Category from props:", category);
+  const deleteMutation = useDeleteSubCategory(selectedId ?? "");
+
+  const handleOpenDelete = (id: string | number) => {
+    setSelectedId(id);
+    setIsDeleteOpen(true);
+  };
+  const enhancedSubCategories = subCategories.map((subCat) => ({
+    ...subCat,
+    category, // now each sub-category carries the category info
+  }));
+
+  const handleDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await deleteMutation.mutateAsync();
+      notifications.show({
+        title: "Sub-category Deleted!",
+        message: "This product sub-category has been deleted!",
+        color: "red",
+      });
+      setIsDeleteOpen(false);
+      setSelectedId(null);
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message: error?.message || "Failed to delete sub-category",
+        color: "red",
+      });
+    }
+  };
 
   const columns: ColumnDef<TableRowData>[] = [
     {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
+    {
       header: "Division",
-      accessorKey: "division",
+      accessorKey: "name",
       cell: ({ row }) => (
         <Text fw={700} c="#101928">
-          {row.original.division}
+          {row.original.name}
         </Text>
       ),
     },
@@ -27,38 +86,74 @@ const SubCategoryTable = () => {
     },
     {
       header: "Date Modified",
-      accessorKey: "dateModified",
-      cell: ({ row }) => <Text>{row.original.dateModified}</Text>,
+      accessorKey: "created_at",
+      cell: ({ row }) => {
+        const createdAt = row.original.created_at;
+
+        if (typeof createdAt === "string" || typeof createdAt === "number") {
+          const dateObj = new Date(createdAt);
+          const optionsDate = {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          } as const;
+          const optionsTime = {
+            hour: "numeric",
+            minute: "2-digit",
+            hour12: true,
+          } as const;
+
+          const datePart = new Intl.DateTimeFormat("en-GB", optionsDate).format(
+            dateObj
+          );
+          const timePart = new Intl.DateTimeFormat("en-GB", optionsTime).format(
+            dateObj
+          );
+
+          return <Text>{`${datePart}  ${timePart}`}</Text>; 
+        }
+
+    
+        return <Text>Invalid date</Text>;
+      },
     },
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <button onClick={() => setIsDeleteOpen(true)}>
+      cell: ({ row }) => (
+        //@ts-ignore
+        <button onClick={() => handleOpenDelete(row.original.id)}>
           <Text fw={600} c="#1D2939" className="cursor-pointer">
             Delete
           </Text>
         </button>
       ),
     },
+ 
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.categoryCollection}>
+      cell: ({ row }) => (
+        
+        <Link
+          to={ROUTES.categoryCollection}
+          state={{
+            category: row.original?.category,
+            subCategory: row.original,
+          }}
+        >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View
           </Text>
         </Link>
       ),
-    },
-  ];
-
+    }
+  ]
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={subCategoriesData}
+        data={enhancedSubCategories}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -69,7 +164,7 @@ const SubCategoryTable = () => {
               All Sub-categories
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{subCategoriesData.length}</Text>
+              <Text c="customPrimary.10">{subCategories.length}</Text>
             </div>
           </div>
         }
@@ -77,6 +172,8 @@ const SubCategoryTable = () => {
       <DeleteSubCategory
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
+        handleDelete={handleDelete}
+        subCategoryId={selectedId}
       />
     </main>
   );

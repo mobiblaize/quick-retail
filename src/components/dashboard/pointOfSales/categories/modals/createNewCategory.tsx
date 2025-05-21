@@ -29,8 +29,8 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
       {
         onSuccess: () => {
           notifications.show({
-            title: 'Success',
-            message: 'Category created successfully',
+            title: 'New Categorie Saved!',
+            message: 'You can now add products to the new Categories',
             color: 'green',
           });
           setCategoryName('');
@@ -46,7 +46,7 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
         },
       }
     );
-  }
+  } 
   return (
     <>
       <Modal
