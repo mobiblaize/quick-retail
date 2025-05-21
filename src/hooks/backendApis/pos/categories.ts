@@ -1,4 +1,4 @@
-import { useDeleteData, useFetchPostData, useGetData, usePostData } from "../../useApis";
+import { useDeleteData, useFetchPostData, useGetData, usePatchData, usePostData, usePutData } from "../../useApis";
 
 const defaultPayload = {
   search: "",
@@ -12,10 +12,6 @@ const defaultPayload = {
 export const useCreateCategory = () => {
   return usePostData("pos/category/add-category");
 };
-
-// export const useFetchCategories = () => {
-//   return useGetData("pos/category/show-category/1");
-// };
 
 
 export const useFetchAllCategories = (customPayload?: Partial<typeof defaultPayload>) => {
@@ -50,13 +46,13 @@ export const useFetchAllSubCategories = (customPayload?: Partial<typeof defaultP
   return useFetchPostData("pos/subcategory/all", payload);
 };
 
-// export const useFetchSubCategories = () => {
-//   return useGetData("pos/subcategory/show-subcategory/2");
-// };
 
-// export const useUpdateCategories = () => {
-//   return useGetData("pos/category/update-category/1");
-// };
+export const useUpdateCategories  = (categoryId: number | string) => {
+  return usePutData(`pos/category/update-category/${categoryId}`);
+};
+export const useUpdateSubCategories   = (subCategoryId: number | string) => {
+  return usePutData(`pos/subcategory/update-subcategory/${subCategoryId}`);
+};
 
 export const useCreateSubCategory = () => {
   return usePostData("pos/subcategory/add-subcategory");
@@ -68,4 +64,10 @@ export const useFetchSubCatOfCat = (categoryId: number | string) => {
 
 export const useDeleteSubCategory = (subCategoryId: number | string) => {
   return useDeleteData(`pos/subcategory/delete-subcategory/${subCategoryId}`);
+};
+export const useActivateCategories   = (categoryId: number | string) => {
+  return usePutData(`pos/category/activate-category/${categoryId}`);
+};
+export const useDeactivateCategories   = (categoryId: number | string) => {
+  return usePutData(`pos/category/deactivate-category/${categoryId}`);
 };

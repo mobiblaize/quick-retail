@@ -18,11 +18,6 @@ const SubCategories = () => {
         <button onClick={() => navigate(-1)} className="cursor-pointer">
           Back
         </button>
-        {/* <div className="flex items-center">
-          <Text>Categories</Text>
-          <span className="mx-2">/</span>
-          <Text c={"black"}>Cosmetics</Text>
-        </div> */}
       </div>
     </div>,
     <div key="2">
@@ -34,7 +29,7 @@ const SubCategories = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <SubCategoryTable subCategories={subCategories}/>
+      <SubCategoryTable subCategories={subCategories} category={category}/>
     </PageContainer>
   );
 };

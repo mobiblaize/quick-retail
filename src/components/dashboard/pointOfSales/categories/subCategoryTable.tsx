@@ -11,18 +11,23 @@ import { useDeleteSubCategory } from "../../../../hooks/backendApis/pos/categori
 
 interface SubCategoriesTableProps {
   subCategories: Array<any>;
+  category: Array<any>;
 }
 
-const SubCategoryTable = ({ subCategories }: SubCategoriesTableProps) => {
+const SubCategoryTable = ({ subCategories, category }: SubCategoriesTableProps) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
-
+  console.log("Category from props:", category);
   const deleteMutation = useDeleteSubCategory(selectedId ?? "");
 
   const handleOpenDelete = (id: string | number) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
+  const enhancedSubCategories = subCategories.map((subCat) => ({
+    ...subCat,
+    category, // now each sub-category carries the category info
+  }));
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -36,7 +41,6 @@ const SubCategoryTable = ({ subCategories }: SubCategoriesTableProps) => {
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
-      // refetch or update your data here as needed
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -125,24 +129,31 @@ const SubCategoryTable = ({ subCategories }: SubCategoriesTableProps) => {
         </button>
       ),
     },
+ 
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.categoryCollection}>
+      cell: ({ row }) => (
+        
+        <Link
+          to={ROUTES.categoryCollection}
+          state={{
+            category: row.original?.category,
+            subCategory: row.original,
+          }}
+        >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View
           </Text>
         </Link>
       ),
-    },
-  ];
-
+    }
+  ]
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={subCategories}
+        data={enhancedSubCategories}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
