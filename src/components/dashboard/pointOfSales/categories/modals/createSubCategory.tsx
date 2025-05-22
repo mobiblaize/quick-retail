@@ -5,7 +5,6 @@ import { useCreateSubCategory } from "../../../../../hooks/backendApis/pos/categ
 import Dropdown from "../../../../General/dropdown";
 import FormInput from "../../../../General/formInput";
 
-
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
@@ -54,7 +53,6 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
       console.error(error);
     }
   };
-  console.log("categories passed to CustomDropdown:", categories);
 
   return (
     <>
@@ -93,6 +91,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
             options={categories}
             placeholder="Select a category"
             value={selectedCategoryId}
+            //@ts-ignore
             onChange={(val) => setSelectedCategoryId(val)}
             required
             textColorClass="text-gray-800"

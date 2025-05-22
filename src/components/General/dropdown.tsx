@@ -9,8 +9,8 @@ interface CustomDropdownProps {
   options: Option[];
   label?: string;
   placeholder?: string;
-  value: number | null;
-  onChange: (val: number) => void;
+  value: string | number | null;
+  onChange: (val: string | number) => void;
   required?: boolean;
   textColorClass?: string;
 }

@@ -5,9 +5,7 @@ import { useActivateCategories, useDeactivateCategories } from "../../../../hook
 import ActivateCategory from "./modals/activateCategories";
 import DeactivateCategory from "./modals/deactivateCategories";
 
-type TableData = {
-  status: "Active" | "Inactive";
-};
+
 
 interface CategoryProductDetailsProps {
   category: {
