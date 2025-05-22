@@ -7,7 +7,7 @@ interface StoreOverviewProps {
   statData: any;
 }
 
-const StoreOverview: React.FC<StoreOverviewProps> = ({ store, statData }) => {
+const StoreOverview: React.FC<StoreOverviewProps> = ({ statData }) => {
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
       <header className="flex justify-between items-center">

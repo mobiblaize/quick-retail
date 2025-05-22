@@ -1,7 +1,7 @@
 import { Text } from "@mantine/core";
 import { Key } from "react";
-import { storeAnalysisData } from "../../../../utils/mockData";
 import AnalyticsCard from "../../../General/card";
+//@ts-ignore
 
 const AnalysisOverview = ({ stats }) => {
   return (

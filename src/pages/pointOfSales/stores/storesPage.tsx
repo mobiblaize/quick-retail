@@ -6,7 +6,7 @@ import { ROUTES } from "../../../constants/routes";
 import StoreTargetTable from "../../../components/dashboard/pointOfSales/stores/storeTargetTable";
 import { useState } from "react";
 import SetStoreTarget from "../../../components/dashboard/pointOfSales/stores/modals/setStoreTarget";
-import { uselocationTarget } from "../../../hooks/backendApis/pos/storeManagement";
+
 
 const StoresPage = () => {
   const [isSetStoreOpen, setIsSetStoreOpen] = useState(false);

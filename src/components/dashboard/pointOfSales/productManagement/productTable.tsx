@@ -8,7 +8,11 @@ import imageSrc from "../../../../assets/images/productIMG.png";
 import { Menu, Button } from "@mantine/core";
 import { MoreVertical } from "lucide-react";
 
+
+
 const ProductTable = () => {
+
+  
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Name",

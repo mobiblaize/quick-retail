@@ -1,6 +1,5 @@
-import { useMutation } from "@tanstack/react-query";
+
 import { defaultPayload2 } from "../../../types";
-import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
 import { useFetchPostData, useGetData, usePostData, usePutData, } from "../../useApis";
 
 
@@ -42,16 +41,7 @@ export const useSinglestoreOverview = (locationId: string, customPayload?: Parti
 };
 
 
-// export const useToggleStore = () => {
-//   useMutation<any, Error, string | number>({
-//     mutationFn: async (locationId: any) => {
-//       const response = await axiosInstance.put(baseUrl + `pos/location/toggle-status/${locationId}`);
-//       return response.data;
-//     }
-//   });
-// }
-
-export const useToggleStore  = (locationId: string) => {
+export const useToggleStore = (locationId: string) => {
   return usePutData(`pos/location/toggle-status/${locationId}`);
 };
 

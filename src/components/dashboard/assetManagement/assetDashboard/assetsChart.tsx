@@ -1,5 +1,5 @@
 import {
-  BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer
+  BarChart, Bar, CartesianGrid, Tooltip, Legend, ResponsiveContainer
 } from 'recharts';
 import { assetsMonthlyData } from '../../../../utils/mockData';
 
@@ -9,8 +9,8 @@ export const AssetsChart = () => (
     <ResponsiveContainer width="100%" height={300}>
       <BarChart data={assetsMonthlyData}>
         <CartesianGrid strokeDasharray="3 3" />
-        <XAxis dataKey="month" tick={{ fontSize: 12 }} tickLine={false} />
-        <YAxis tick={{ fontSize: 12 }} tickLine={false} />
+        {/* <XAxis dataKey="month" tick={{ fontSize: 12 }} tickLine={false} />
+        <YAxis tick={{ fontSize: 12 }} tickLine={false} /> */}
         <Tooltip />
         <Legend />
         <Bar dataKey="inUse" name="Assets in Use" fill="#1E40AF" />

@@ -30,7 +30,7 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
   const storeIdForEdit = store?.locationID || "";
   //   const { mutate: createStore, isPending } = useCreateStore();
   const { mutate: editStore, isPending } = useEditStore(storeIdForEdit);
-  const [createdAt, setCreatedAt] = useState("");
+  const [, setCreatedAt] = useState("");
 
   useEffect(() => {
     if (store) {

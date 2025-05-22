@@ -19,7 +19,7 @@ const CategoriesPage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CategoriesTable />
+      <CategoriesTable categories={[]} isLoading={false} />
     </PageContainer>
   );
 };

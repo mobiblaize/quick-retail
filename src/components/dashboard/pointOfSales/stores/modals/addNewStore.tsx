@@ -14,7 +14,7 @@ interface AddNewStoreModalProps {
 }
 
 const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
-  const [isEnabled, setIsEnabled] = useState(false);
+  const [isEnabled, ] = useState(false);
   const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
 
   const [name, setName] = useState("");
