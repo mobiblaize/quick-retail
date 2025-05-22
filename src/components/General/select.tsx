@@ -84,9 +84,9 @@ const FormSelect = ({
               {placeholder}
             </option>
           )}
-          {options?.map((option, ind) => (
-            <option className="" key={ind} value={option}>
-              {option}
+          {options?.map((option: any, ind) => (
+            <option className="" key={ind} value={option?.value}>
+              {option?.label}
             </option>
           ))}
         </select>
