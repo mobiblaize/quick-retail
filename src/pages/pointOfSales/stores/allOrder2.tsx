@@ -5,8 +5,17 @@ import StoreOverview from "../../../components/dashboard/pointOfSales/stores/sto
 const AllOrders2 = () => {
   return (
     <main className="grid grid-cols-1  gap-6">
-      <StoreOverview />
-      <StoreDetails />
+      <StoreOverview store={undefined} statData={undefined} />
+      <StoreDetails store={{
+        storeID: "",
+        created_at: "",
+        gla: "",
+        gsa: "",
+        state: "",
+        lga: "",
+        address: "",
+        is_active: 0
+      }} />
       <StoreOrderTable2 />
     </main>
   );

@@ -5,7 +5,7 @@ import { LogoSvg } from "../../assets/svg/logoSvg";
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link } from "react-router-dom";
-import { useSessionStorage } from "../../hooks/useCustomSession";
+
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";

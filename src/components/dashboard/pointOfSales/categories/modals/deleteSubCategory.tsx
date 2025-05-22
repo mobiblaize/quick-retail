@@ -7,7 +7,7 @@ interface ResolveProps {
   handleDelete: () => void;
 }
 
-const DeleteSubCategory = ({ opened, onClose, subCategoryId,
+const DeleteSubCategory = ({ opened, onClose, 
   handleDelete, }: ResolveProps) => {
   return (
     <>

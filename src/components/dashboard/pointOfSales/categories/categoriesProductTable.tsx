@@ -3,15 +3,18 @@ import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { categoriesProductSingle } from "../../../../utils/mockData";
-// import { Link } from "react-router";
-// import { ROUTES } from "../../../../constants/routes";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
 import DeleteSubCategory from "./modals/deleteSubCategory";
+import { notifications } from "@mantine/notifications";
+import { useDeleteSubCategory } from "../../../../hooks/backendApis/pos/categories";
 
 const CategoriesProductTable = () => {
-  const [isDeleteCategoryOpen, setIsDeleteCategoryOpen] = useState(false);
+  // const [isDeleteCategoryOpen, setIsDeleteCategoryOpen] = useState(false);
   const [tableData, setTableData] = useState(categoriesProductSingle);
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const deleteMutation = useDeleteSubCategory(selectedId ?? "");
 
   const handleToggle = (index: number) => {
     const updatedData = [...tableData];
@@ -20,6 +23,28 @@ const CategoriesProductTable = () => {
       currentStatus === "Active" ? "Inactive" : "Active";
     setTableData(updatedData);
   };
+
+  const handleDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await deleteMutation.mutateAsync();
+      notifications.show({
+        title: "Sub-category Deleted!",
+        message: "This product sub-category has been deleted!",
+        color: "red",
+      });
+      setIsDeleteOpen(false);
+      setSelectedId(null);
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message: error?.message || "Failed to delete sub-category",
+        color: "red",
+      });
+    }
+  };
+
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -93,7 +118,7 @@ const CategoriesProductTable = () => {
       header: "",
       accessorKey: "action",
       cell: () => (
-        <Text fw={600} c="black" className="cursor-pointer"  onClick={() => setIsDeleteCategoryOpen(true)}>
+        <Text fw={600} c="black" className="cursor-pointer"  onClick={() => setIsDeleteOpen(true)}>
           Delete
         </Text>
       ),
@@ -135,9 +160,10 @@ const CategoriesProductTable = () => {
           }
         />
         <DeleteSubCategory
-          opened={isDeleteCategoryOpen}
-          onClose={() => setIsDeleteCategoryOpen(false)}
-        />
+              opened={isDeleteOpen}
+              onClose={() => setIsDeleteOpen(false)}
+          handleDelete={handleDelete}
+          subCategoryId={selectedId}     />
       </main>
     </div>
   );

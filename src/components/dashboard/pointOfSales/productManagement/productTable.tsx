@@ -7,8 +7,6 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { Menu, Button } from "@mantine/core";
 import { MoreVertical } from "lucide-react";
-import { notifications } from "@mantine/notifications";
-import { getAllProduct } from "../../../../hooks/backendApis/pos/products";
 
 
 

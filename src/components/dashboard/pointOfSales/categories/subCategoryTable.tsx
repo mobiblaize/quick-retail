@@ -1,7 +1,7 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Text } from "@mantine/core";
+import { Center, Loader, Text } from "@mantine/core";
 import { useState } from "react";
 import DeleteSubCategory from "./modals/deleteSubCategory";
 import { Link } from "react-router";
@@ -12,12 +12,12 @@ import { useDeleteSubCategory } from "../../../../hooks/backendApis/pos/categori
 interface SubCategoriesTableProps {
   subCategories: Array<any>;
   category: Array<any>;
+  isLoading?: boolean;
 }
 
-const SubCategoryTable = ({ subCategories, category }: SubCategoriesTableProps) => {
+const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesTableProps) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
-  console.log("Category from props:", category);
   const deleteMutation = useDeleteSubCategory(selectedId ?? "");
 
   const handleOpenDelete = (id: string | number) => {
@@ -151,24 +151,31 @@ const SubCategoryTable = ({ subCategories, category }: SubCategoriesTableProps) 
   ]
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
-      <TanTable
-        columnData={columns}
-        data={enhancedSubCategories}
-        showSearch
-        showSortFilter
-        searchPlaceholder="Search orders"
-        length={5}
-        tableTitle={
-          <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">
-              All Sub-categories
-            </Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{subCategories.length}</Text>
+      {isLoading ? (
+        <Center className="h-64">
+          <Loader color="customPrimary.10" size="lg" />
+        </Center>
+      ) : (
+        <TanTable
+          columnData={columns}
+          data={enhancedSubCategories}
+          showSearch
+          showSortFilter
+          searchPlaceholder="Search orders"
+          length={5}
+          tableTitle={
+            <div className="flex gap-2.5">
+              <Text fw={500} size="xl" c="textSecondary.9">
+                All Sub-categories
+              </Text>
+              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+                <Text c="customPrimary.10">{subCategories.length}</Text>
+              </div>
             </div>
-          </div>
-        }
-      />
+          }
+        />
+      )}
+
       <DeleteSubCategory
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
@@ -178,5 +185,6 @@ const SubCategoryTable = ({ subCategories, category }: SubCategoriesTableProps) 
     </main>
   );
 };
+
 
 export default SubCategoryTable;
