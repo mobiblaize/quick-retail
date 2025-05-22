@@ -17,6 +17,8 @@ const AddProductForm = () => {
   //   { name: "Colour", values: ["White", "Pink", "Black"], label: ["Small", "Medium", "Large"] },
   // ]);
 
+  console.log(isPending, isEnabled);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -27,7 +29,6 @@ const AddProductForm = () => {
   const removeFile = () => {
     setSelectedFile(null);
   };
-
 
   const initialFormState = {
     product_name: "",
@@ -48,60 +49,63 @@ const AddProductForm = () => {
     image_path: "",
   };
 
-  
-
   const [formData, setFormData] = useState({ ...initialFormState });
 
- const handleSave = () => {
-  if (!formData.product_name || !formData.category_id || !formData.location_id || !formData.sku) {
-    notifications.show({
-      title: 'Validation error',
-      message: 'Please fill all required fields',
-      color: 'red',
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-
-  const payload = {
-    product_name: formData.product_name,
-    sku: formData.sku,
-    category_id: formData.category_id,
-    sub_category_id: formData.sub_category_id,
-    short_description: formData.short_description,
-    long_description: formData.long_description,
-    location_id: formData.location_id,
-    has_variation: formData.has_variation,
-    tags: formData.tags,
-    promotional_price: formData.promotional_price,
-    promotional_start_date: formData.promotional_start_date,
-    safety_instructions: formData.safety_instructions,
-    certificates: formData.certificates,
-    image_path: formData.image_path,
-  };
-
-  mutate(payload, {
-    onSuccess: () => {
+  const handleSave = () => {
+    if (
+      !formData.product_name ||
+      !formData.category_id ||
+      !formData.location_id ||
+      !formData.sku
+    ) {
       notifications.show({
-        title: 'Success',
-        message: 'Product added successfully',
-        color: 'green',
+        title: "Validation error",
+        message: "Please fill all required fields",
+        color: "red",
       });
-      setFormData({ ...initialFormState });
-      setSelectedFile(null);
-      setIsEnabled(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: 'Error',
-        message: error?.response?.data?.message || 'Failed to add product',
-        color: 'red',
-      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
     }
-  });
-};
 
+    const payload = {
+      product_name: formData.product_name,
+      sku: formData.sku,
+      category_id: formData.category_id,
+      sub_category_id: formData.sub_category_id,
+      short_description: formData.short_description,
+      long_description: formData.long_description,
+      location_id: formData.location_id,
+      has_variation: formData.has_variation,
+      tags: formData.tags,
+      promotional_price: formData.promotional_price,
+      promotional_start_date: formData.promotional_start_date,
+      safety_instructions: formData.safety_instructions,
+      certificates: formData.certificates,
+      image_path: formData.image_path,
+    };
+
+    mutate(payload, {
+      onSuccess: () => {
+        notifications.show({
+          title: "Success",
+          message: "Product added successfully",
+          color: "green",
+        });
+        setFormData({ ...initialFormState });
+        setSelectedFile(null);
+        setIsEnabled(false);
+        window.scrollTo({ top: 0, behavior: "smooth" });
+      },
+      onError: (error: any) => {
+        notifications.show({
+          title: "Error",
+          message: error?.response?.data?.message || "Failed to add product",
+          color: "red",
+        });
+      },
+    });
+  };
+  console.log(handleSave);
 
   return (
     <div>
@@ -334,7 +338,10 @@ const AddProductForm = () => {
               placeholder="₦"
               value={formData.promotional_start_date}
               onChange={(e: any) =>
-                setFormData({ ...formData, promotional_start_date: e.target.value })
+                setFormData({
+                  ...formData,
+                  promotional_start_date: e.target.value,
+                })
               }
             />
           </div>
