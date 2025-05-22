@@ -13,6 +13,7 @@ const CategoriesPage = () => {
 
   const { data, isLoading, isError } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
+  
 
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0

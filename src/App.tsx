@@ -194,6 +194,7 @@ import AddCardPage from "./pages/financialManagement/Banking/addCard";
 import AllTransactionPage from "./pages/financialManagement/Banking/transactionHistory";
 import ViewCardPage from "./pages/financialManagement/Banking/viewTransaction";
 import AddBankPage from "./pages/financialManagement/Banking/addBank";
+import InventoryDetailsPage from "./pages/pointOfSales/productManagement/inventoryDetailsPage";
 
 export default function App() {
   return (
@@ -218,6 +219,7 @@ export default function App() {
             element={<ProductManagementPage />}
           />
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
+          <Route path={ROUTES.inventoryDetails} element={<InventoryDetailsPage />} />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />

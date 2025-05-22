@@ -1,21 +1,45 @@
 // import { Checkbox } from "@mantine/core";
 import { Upload, UploadCloud, X } from "lucide-react";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
 import AddVariation from "./modal/addVariation";
-import { notifications } from "@mantine/notifications";
-import { useCreateProduct } from "../../../../hooks/backendApis/pos/products";
+import useStore, { initialFormState } from "./addProductStore";
+import { useFetchAllCategories } from "../../../../hooks/backendApis/pos/categories";
+import { useFetchAllSubCategories } from "../../../../hooks/backendApis/pos/categories";
 
 const AddProductForm = () => {
-  const { mutate, isPending } = useCreateProduct();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [isEnabled, setIsEnabled] = useState(false);
   const [addVariation, setAddVariation] = useState(false);
+
   // const [variations, setVariations] = useState([
   //   { name: "Size", values: ["S", "M", "L"], label: ["Small", "Medium", "Large"]},
   //   { name: "Colour", values: ["White", "Pink", "Black"], label: ["Small", "Medium", "Large"] },
   // ]);
+
+  const { data, isLoading, isError } = useFetchAllCategories();
+  const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
+
+  const { data: subCategoryData } = useFetchAllSubCategories();
+  const subCategories = Array.isArray(subCategoryData?.data?.data)
+    ? subCategoryData.data.data
+    : [];
+
+  const categoryOptions =
+    Array.isArray(categories) && categories.length > 0
+      ? categories.map((cat: { name: string; id: number }) => ({
+          label: cat.name,
+          value: cat.id,
+        }))
+      : [];
+
+  const subCategoryOptions =
+    Array.isArray(subCategories) && subCategories.length > 0
+      ? subCategories.map((cat: { name: string; id: number }) => ({
+          label: cat.name,
+          value: cat.id,
+        }))
+      : [];
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -28,80 +52,37 @@ const AddProductForm = () => {
     setSelectedFile(null);
   };
 
+  const { form_data, updateForm } = useStore();
 
-  const initialFormState = {
-    product_name: "",
-    sku: "",
-    ean: "",
-    category_id: "",
-    sub_category_id: "",
-    short_description: "",
-    long_description: "",
-    location_id: "",
-    has_variation: "",
-    tags: "",
-    promotional_price: "",
-    promotional_start_date: "",
-    promotional_end_date: "",
-    safety_instructions: "",
-    certificates: "",
-    image_path: "",
+  const [formData, setFormData] = useState({ ...initialFormState });
+
+  useEffect(() => {
+    updateForm(formData);
+  }, [formData]);
+
+  const fileInputRef = useRef<HTMLInputElement | null>(null);
+  const [images, setImages] = useState<File[]>([]);
+
+  const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = Array.from(e.target.files || []);
+    setImages((prev) => [...prev, ...files]);
+    const file = e.target.files?.[0];
+
+     
+      const reader = new FileReader();
+
+      reader.readAsDataURL(file);
+       
+      reader.onload = () => {
+        setFormData({ ...formData, image_path: reader.result ?? ""})
+      };
   };
 
   
 
-  const [formData, setFormData] = useState({ ...initialFormState });
-
- const handleSave = () => {
-  if (!formData.product_name || !formData.category_id || !formData.location_id || !formData.sku) {
-    notifications.show({
-      title: 'Validation error',
-      message: 'Please fill all required fields',
-      color: 'red',
-    });
-    window.scrollTo({ top: 0, behavior: 'smooth' });
-    return;
-  }
-
-  const payload = {
-    product_name: formData.product_name,
-    sku: formData.sku,
-    category_id: formData.category_id,
-    sub_category_id: formData.sub_category_id,
-    short_description: formData.short_description,
-    long_description: formData.long_description,
-    location_id: formData.location_id,
-    has_variation: formData.has_variation,
-    tags: formData.tags,
-    promotional_price: formData.promotional_price,
-    promotional_start_date: formData.promotional_start_date,
-    safety_instructions: formData.safety_instructions,
-    certificates: formData.certificates,
-    image_path: formData.image_path,
+  const handleUploadClick = () => {
+    fileInputRef.current?.click();
   };
-
-  mutate(payload, {
-    onSuccess: () => {
-      notifications.show({
-        title: 'Success',
-        message: 'Product added successfully',
-        color: 'green',
-      });
-      setFormData({ ...initialFormState });
-      setSelectedFile(null);
-      setIsEnabled(false);
-      window.scrollTo({ top: 0, behavior: 'smooth' });
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: 'Error',
-        message: error?.response?.data?.message || 'Failed to add product',
-        color: 'red',
-      });
-    }
-  });
-};
-
 
   return (
     <div>
@@ -146,7 +127,7 @@ const AddProductForm = () => {
           <FormSelect
             label="Category"
             placeholder="Select product category"
-            options={["Category 1", "Category 2", "Category 3"]}
+            options={categoryOptions}
             name="category"
             paddingY="4"
             value={formData.category_id}
@@ -158,7 +139,7 @@ const AddProductForm = () => {
           <FormSelect
             label="Sub-category"
             placeholder="Select sub-category"
-            options={["Sub-category 1", "Sub-category 2"]}
+            options={subCategoryOptions}
             name="sub-category"
             paddingY="4"
             value={formData.sub_category_id}
@@ -334,7 +315,10 @@ const AddProductForm = () => {
               placeholder="₦"
               value={formData.promotional_start_date}
               onChange={(e: any) =>
-                setFormData({ ...formData, promotional_start_date: e.target.value })
+                setFormData({
+                  ...formData,
+                  promotional_start_date: e.target.value,
+                })
               }
             />
           </div>
@@ -374,7 +358,7 @@ const AddProductForm = () => {
             type="text"
             label="Tags"
             paddingY={"0.7rem"}
-            placeholder="Enter short product description"
+            placeholder="Enter tags"
             value={formData.tags}
             onChange={(e: any) =>
               setFormData({ ...formData, tags: e.target.value })
@@ -399,7 +383,11 @@ const AddProductForm = () => {
           <h3 className="text-gray-800 font-medium mb-2">Product Images</h3>
 
           <div className="flex md:flex-row flex-col md:items-center gap-6">
-            <div className="w-48 h-48 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center rounded-md cursor-pointer hover:border-blue-500 transition">
+            {/* Upload Box */}
+            <div
+              className="w-48 h-48 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center rounded-md cursor-pointer hover:border-blue-500 transition"
+              onClick={handleUploadClick}
+            >
               <UploadCloud className="text-gray-400" size={32} />
               <p className="text-orange-500 text-sm font-medium mt-2">
                 Click to upload
@@ -408,10 +396,38 @@ const AddProductForm = () => {
               <p className="text-gray-400 text-xs mt-1">PNG, JPEG (max 5 MB)</p>
             </div>
 
-            <button className="text-orange-500 flex items-center gap-2 font-medium text-sm">
+            {/* Add More Button */}
+            <button
+              className="text-orange-500 flex items-center gap-2 font-medium text-sm"
+              onClick={handleUploadClick}
+            >
               + Add more photos
             </button>
+
+            {/* Hidden File Input */}
+            <input
+              type="file"
+              ref={fileInputRef}
+              onChange={handleFileImageChange}
+              accept="image/png, image/jpeg"
+              multiple
+              className="hidden"
+            />
           </div>
+
+          {/* Previews */}
+          {images.length > 0 && (
+            <div className="mt-4 flex flex-wrap gap-4">
+              {images.map((file, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(file)}
+                  alt={`preview-${index}`}
+                  className="w-24 h-24 object-cover rounded"
+                />
+              ))}
+            </div>
+          )}
         </div>
       </div>
 
