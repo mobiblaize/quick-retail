@@ -1,7 +1,13 @@
 import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 
-const StoreOverview = () => {
+
+interface StoreOverviewProps {
+  store: any;
+  statData: any;
+}
+
+const StoreOverview: React.FC<StoreOverviewProps> = ({ store, statData }) => {
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
       <header className="flex justify-between items-center">
@@ -20,44 +26,58 @@ const StoreOverview = () => {
           />
         </Group>
       </header>
+
       <section className="grid gap-4 md:gap-6 mt-6 grid-cols-1  md:grid-cols-5">
         <div className="bg-[#F1672226] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Total Orders
           </Text>
-          <p className="rounded-full text-white w-fit bg-[#E16635] p-2">500</p>
+          <p className="rounded-full text-white w-fit bg-[#E16635] p-2">
+            {statData?.totalOrders ?? 0}
+          </p>
         </div>
 
         <div className="bg-[#E7F6EC] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
-            Total Orders
+            Completed Orders
           </Text>
-          <p className="rounded-full text-white w-fit bg-[#0F973D] p-2">500</p>
+          <p className="rounded-full text-white w-fit bg-[#0F973D] p-2">
+            {statData?.completedOrders ?? 0}
+          </p>
         </div>
 
         <div className="bg-[#FEF6E7] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Processing Orders
           </Text>
-          <p className="rounded-full text-white w-fit bg-[#F3A218] p-2">40</p>
+          <p className="rounded-full text-white w-fit bg-[#F3A218] p-2">
+            {statData?.processingOrders ?? 0}
+          </p>
         </div>
 
         <div className="bg-[#F1672226] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Cancelled Orders
           </Text>
-          <p className="rounded-full text-white w-fit bg-[#E16635] p-2">20</p>
+          <p className="rounded-full text-white w-fit bg-[#E16635] p-2">
+            {statData?.cancelledOrders ?? 0}
+          </p>
         </div>
 
         <div className="bg-[#E7F6EC] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Pre-Orders
           </Text>
-          <p className="rounded-full text-white w-fit bg-[#0F973D] p-2">20</p>
+          <p className="rounded-full text-white w-fit bg-[#0F973D] p-2">
+            {statData?.preOrders?? 0}
+          </p>
         </div>
       </section>
     </main>
   );
 };
+
+
+
 
 export default StoreOverview;

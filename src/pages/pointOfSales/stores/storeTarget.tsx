@@ -7,9 +7,56 @@ import AnalysisOverview from "../../../components/dashboard/pointOfSales/stores/
 import StoreOverviewTable from "../../../components/dashboard/pointOfSales/stores/storeOverviewTable";
 import AddNewStore from "../../../components/dashboard/pointOfSales/stores/modals/addNewStore";
 import { useState } from "react";
+import { useFetchStat, useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
+import house from "../../../assets/images/house.png";
+import activeStore from "../../../assets/images/activeStore.png";
+import inactiveStore from "../../../assets/images/inactiveStore.png";
 
 const StoreTarget = () => {
   const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
+  const { data, isPending } = useFetchStore({ paginate: true });
+  const stores = Array.isArray(data?.data?.stores?.data) ? data.data.stores.data : [];
+  const { data: statData } = useFetchStat();
+
+  const stats = statData?.data
+  ? [
+      {
+        title: "Total Stores",
+        value: statData.data.totalStores,
+        icon: house,
+        altText: "Total Stores",
+        iconColor: "#E17036",
+        textColor: "#000",
+        cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
+        percentageValue: 0.5,
+        borderColor: "#b3d8ff",
+      },
+      {
+        title: "Active Stores",
+        value: statData.data.activeStores,
+        icon: activeStore,
+        altText: "Active Stores",
+        iconColor: "#E17036",
+        textColor: "#000",
+        cardBgColor: "#EFF8FF",
+        percentageValue: 0.5,
+        borderColor: "#98A2B3",
+      },
+      {
+        title: "Inactive Stores",
+        value: statData.data.inActiveStores,
+        icon: inactiveStore,
+        altText: "Inactive Stores",
+        iconColor: "#E17036",
+        textColor: "#000",
+        cardBgColor: "#F4F3FF",
+        percentageValue: 0.5,
+        borderColor: "#98A2B3",
+      },
+    ]
+  : [];
+
+
   const subHeaders = [
     <div key="1" className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
@@ -41,10 +88,12 @@ const StoreTarget = () => {
     </div>,
   ];
 
+
   return (
     <PageContainer subHeaders={subHeaders}>
-      <AnalysisOverview />
-      <StoreOverviewTable />
+   
+   <AnalysisOverview stats={stats} />
+      <StoreOverviewTable stores={stores} loading={isPending} />
       <AddNewStore
         opened={isAddNewStoreOpen}
         onClose={() => setIsAddNewStoreOpen(false)}

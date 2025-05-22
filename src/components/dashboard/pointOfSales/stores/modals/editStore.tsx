@@ -1,22 +1,24 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useEffect, useState } from "react";
 import storeIcon from "../../../../../assets/images/newStore.png";
 import { CircleHelp } from "lucide-react";
 import ActivateStore from "./activateStore";
-import { useCreateStore } from "../../../../../hooks/backendApis/pos/storeManagement";
+import { useEditStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
-
 
 interface AddNewStoreModalProps {
   opened: boolean;
   onClose: () => void;
+  store: any;
 }
 
-const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
+const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
+  // const dayjs = require('dayjs');
+  // dayjs.extend(customParseFormat);
   const [isEnabled, setIsEnabled] = useState(false);
   const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
-
+  console.log("stores", store);
   const [name, setName] = useState("");
   const [gla, setGla] = useState("");
   const [gsa, setGsa] = useState("");
@@ -25,8 +27,29 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
   const [address, setAddress] = useState("");
+  const storeIdForEdit = store?.locationID || "";
+  //   const { mutate: createStore, isPending } = useCreateStore();
+  const { mutate: editStore, isPending } = useEditStore(storeIdForEdit);
+  const [createdAt, setCreatedAt] = useState("");
 
-  const { mutate: createStore, isPending } = useCreateStore();
+  useEffect(() => {
+    if (store) {
+      setName(store.name || "");
+      setGla(store.gla || "");
+      setGsa(store.gsa || "");
+      setStoreID(store.storeID || "");
+      setCountry(store.country || "");
+      setStateVal(store.state || "");
+      setLga(store.lga || "");
+      setAddress(store.address || "");
+      setIsEnabled(store.is_active === 1);
+      setCreatedAt(store.created_at || "");
+    }
+  }, [store]);
+
+  // const formattedDate = dayjs(createdAt, "YYYY-MM-DDTHH:mm:ss.SSSSSSZ").format(
+  //   "MMMM D, YYYY h:mm:ss A"
+  // );
 
   const handleSubmit = () => {
     const payload = {
@@ -40,31 +63,31 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
       address,
       status: isEnabled ? "active" : "inactive",
     };
-  
-    createStore(payload, {
+
+    editStore(payload, {
       onSuccess: () => {
         notifications.show({
-          title: 'Creation Successful',
-          message: `${name} has been successfully created.`,
-          color: 'green',
+          title: "Update Successful",
+          message: `${name} has been successfully done.`,
+          color: "green",
           autoClose: 4000,
         });
-  
+
         onClose();
         setIsActivateOpen(true);
       },
       onError: (err: any) => {
         console.error("Failed to create store", err);
         notifications.show({
-          title: 'Creation Failed',
-          message: 'An error occurred while creating the store.',
-          color: 'red',
+          title: "Creation Failed",
+          message: "An error occurred while creating the store.",
+          color: "red",
           autoClose: 5000,
         });
       },
     });
   };
-  
+
   return (
     <>
       <Modal
@@ -74,9 +97,13 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
           <div>
             <img src={storeIcon} alt="store-icon" className="mb-2" />
             <Text size="1.5rem" c="black" fw={700}>
-              Add New Store
+              Edit Store
             </Text>
             <Text mt="5">Input store information below.</Text>
+
+            {/* <div className="bg-[#FFF4ED] text-black mt-3 p-2 rounded text-sm font-medium w-full">
+            Date Created: {formattedDate}
+            </div> */}
           </div>
         }
         centered
@@ -93,7 +120,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
               type="text"
               paddingY="6px"
               value={name}
-              onChange={(e: { target: { value: SetStateAction<string>; }; }) => setName(e.target.value)}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setName(e.target.value)
+              }
             />
           </div>
 
@@ -106,7 +135,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={gla}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setGla(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setGla(e.target.value)
+                }
               />
             </div>
             <div>
@@ -117,7 +148,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={gsa}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setGsa(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setGsa(e.target.value)
+                }
               />
             </div>
             <div>
@@ -128,7 +161,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={storeID}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setStoreID(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setStoreID(e.target.value)
+                }
               />
             </div>
             <div>
@@ -139,7 +174,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={country}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setCountry(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setCountry(e.target.value)
+                }
               />
             </div>
             <div>
@@ -150,7 +187,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={stateVal}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setStateVal(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setStateVal(e.target.value)
+                }
               />
             </div>
             <div>
@@ -161,7 +200,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={lga}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setLga(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setLga(e.target.value)
+                }
               />
             </div>
             <div className="col-span-1 sm:col-span-2">
@@ -172,7 +213,9 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 type="text"
                 paddingY="6px"
                 value={address}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setAddress(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setAddress(e.target.value)
+                }
               />
             </div>
             {/* <div>
@@ -217,4 +260,4 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
   );
 };
 
-export default AddNewStore;
+export default EditStore;

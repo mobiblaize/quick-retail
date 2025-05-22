@@ -8,7 +8,7 @@ const SubCategories = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const category = state?.category;
-  const { data, isLoading, isError } = useFetchSubCatOfCat(category?.id);
+  const { data, isLoading, } = useFetchSubCatOfCat(category?.id);
   const subCategories = Array.isArray(data?.data) ? data.data : [];
 
 
@@ -29,7 +29,7 @@ const SubCategories = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <SubCategoryTable subCategories={subCategories} category={category}/>
+      <SubCategoryTable subCategories={subCategories} category={category} isLoading={isLoading} />
     </PageContainer>
   );
 };

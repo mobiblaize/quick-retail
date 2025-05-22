@@ -12,10 +12,6 @@ const ViewCollection = () => {
   const { state } = useLocation();
   const category = state?.category;
   const subCategory = state?.subCategory;
-  console.log("Category:", category);
-console.log("SubCategory:", subCategory);
-
-
 
   const subHeaders = [
     <div key="1" className="py-2.5">
@@ -33,9 +29,8 @@ console.log("SubCategory:", subCategory);
     <div key="2">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-        {subCategory?.name}
+          {subCategory?.name}
         </Text>
-   
 
         <Button
           onClick={() => setIsEditCategoryOpen(true)}
@@ -50,12 +45,11 @@ console.log("SubCategory:", subCategory);
 
   return (
     <PageContainer subHeaders={subHeaders}>
-  <CategoryProductDetails category={category} />
-      <CategoriesProductTable/>
+      <CategoryProductDetails category={category} />
+      <CategoriesProductTable />
       <EditCategory
         opened={isEditCategoryOpen}
         onClose={() => setIsEditCategoryOpen(false)}
-        // category={category}
         subCategory={subCategory}
       />
     </PageContainer>

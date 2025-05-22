@@ -6,10 +6,13 @@ import { ROUTES } from "../../../constants/routes";
 import StoreTargetTable from "../../../components/dashboard/pointOfSales/stores/storeTargetTable";
 import { useState } from "react";
 import SetStoreTarget from "../../../components/dashboard/pointOfSales/stores/modals/setStoreTarget";
+import { uselocationTarget } from "../../../hooks/backendApis/pos/storeManagement";
 
 const StoresPage = () => {
   const [isSetStoreOpen, setIsSetStoreOpen] = useState(false);
 
+
+  
   const subHeaders = [
     <div key="1" className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">

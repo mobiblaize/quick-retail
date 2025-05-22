@@ -1,15 +1,16 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Text } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 
 interface CategoriesTableProps {
   categories: Array<any>;
+  isLoading: boolean;
 }
 
-const CategoriesTable = ({ categories }: CategoriesTableProps) => {
+const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -118,6 +119,17 @@ const CategoriesTable = ({ categories }: CategoriesTableProps) => {
       },
     },
   ];
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-10">
+        <Loader size="lg" variant="dots" />
+        <Text ml={10} size="md" color="dimmed">
+          Loading categories...
+        </Text>
+      </div>
+    );
+  }
 
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">

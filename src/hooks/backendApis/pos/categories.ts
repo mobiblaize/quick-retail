@@ -1,14 +1,7 @@
-import { useDeleteData, useFetchPostData, useGetData, usePatchData, usePostData, usePutData } from "../../useApis";
+import { defaultPayload } from "../../../types";
+import { useDeleteData, useFetchPostData, useGetData, usePostData, usePutData } from "../../useApis";
 
-const defaultPayload = {
-  search: "",
-  sort_by: "",
-  start_date: "",
-  end_date: "",
-  date_range: "",
-  per_page: "",
-  paginate: true,
-};
+
 export const useCreateCategory = () => {
   return usePostData("pos/category/add-category");
 };

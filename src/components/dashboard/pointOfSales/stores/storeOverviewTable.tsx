@@ -1,38 +1,58 @@
 import { useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Text, Switch } from "@mantine/core";
+import { Text, Switch, Loader } from "@mantine/core";
 import TanTable from "../../../General/table";
-import {
-  storeOverviewData as initialData,
-  storeTargetOrder,
-} from "../../../../utils/mockData";
+import { storeTargetOrder } from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
+import { useToggleStore } from "../../../../hooks/backendApis/pos/storeManagement";
 
-const StoreOverviewTable = () => {
-  const [tableData, setTableData] = useState(initialData);
+const StoreOverviewTable = ({ stores = [], loading = false }) => {
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-10">
+        <Loader size="lg" variant="dots" />
+        <Text ml={10} size="md" color="dimmed">
+          Loading stores...
+        </Text>
+      </div>
+    );
+  }
 
-  const handleToggle = (index: number) => {
-    const updatedData = [...tableData];
-    const currentStatus = updatedData[index].status;
-    updatedData[index].status =
-      currentStatus === "Active" ? "Inactive" : "Active";
-    setTableData(updatedData);
-  };
+  if (!stores.length) return <p>No stores available.</p>;
 
   const columns: ColumnDef<TableRowData>[] = [
     {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
+    {
       header: "Store Name",
-      accessorKey: "storeName",
+      accessorKey: "name",
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {props.row.original.storeName}
+            {props.row.original.name}
           </Text>
           <Text fw={400} className="text-sm">
-            Store ID: {props.row.original.storeId}
+            Store ID: {props.row.original.storeID}
           </Text>
         </div>
       ),
@@ -43,10 +63,10 @@ const StoreOverviewTable = () => {
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            GLA: {props.row.original.storeSizeA}
+            GLA: {props.row.original.gla}
           </Text>
           <Text fw={400} className="text-sm">
-            GSA: {props.row.original.storeSizeB}
+            GSA: {props.row.original.gsa}
           </Text>
         </div>
       ),
@@ -54,16 +74,31 @@ const StoreOverviewTable = () => {
     {
       header: "Store Location",
       accessorKey: "location",
-      cell: (props) => <Text>{props.row.original.location}</Text>,
+      cell: (props) => <Text>{props.row.original.lga}</Text>,
     },
     {
       header: "Date Created",
       accessorKey: "dateCreated",
-      cell: (props) => (
-        <Text c="black" fw={500} className="text-sm font-medium">
-          {props.row.original.dateCreated}
-        </Text>
-      ),
+      cell: ({ row }) => {
+        const createdAt = row.original.created_at;
+
+        if (typeof createdAt === "string" || typeof createdAt === "number") {
+          const dateObj = new Date(createdAt);
+          const optionsDate = {
+            day: "2-digit",
+            month: "short",
+            year: "numeric",
+          } as const;
+
+          const datePart = new Intl.DateTimeFormat("en-GB", optionsDate).format(
+            dateObj
+          );
+
+          return <Text>{`${datePart}`}</Text>;
+        }
+
+        return <Text>Invalid date</Text>;
+      },
     },
     {
       header: "Total Customers",
@@ -74,28 +109,50 @@ const StoreOverviewTable = () => {
         </Text>
       ),
     },
+
     {
       header: "Status",
       accessorKey: "status",
       cell: (props) => {
-        const rowIndex = props.row.index;
-        const status = props.row.original.status;
+        const store = props.row.original;
+        console.log("Store object:", store);
+        const locationId = store.locationID as string;
+        const [isActive, setIsActive] = useState(store.is_active === 1);
+
+        const toggleMutation = useToggleStore(locationId);
+
+        const handleSwitchToggle = () => {
+          toggleMutation.mutate(undefined, {
+            onSuccess: () => {
+              setIsActive((prev) => !prev);
+            },
+            onError: (err) => {
+              console.error("Toggle failed", err);
+            },
+          });
+        };
+
+        const dotClass = isActive ? "bg-[#27ae60]" : "bg-[#94a3b8]";
+        const statusText = isActive ? "Active" : "Inactive";
 
         return (
           <div className="flex items-center gap-2">
             <div
               className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-                status === "Active"
+                isActive
                   ? "bg-[#ECFDF3] text-[#027A48]"
                   : "bg-[#F2F4F7] text-[#667085]"
               }`}
             >
-              {status === "Active" ? <PaidDot /> : <UnpaidDot />}
-              <span className="ml-2">{status}</span>
+              <span
+                className={`inline-block w-3 h-3 rounded-full ${dotClass}`}
+              />
+              <span className="ml-2">{statusText}</span>
             </div>
+
             <Switch
-              checked={status === "Active"}
-              onChange={() => handleToggle(rowIndex)}
+              checked={isActive}
+              onChange={handleSwitchToggle}
               color="orange"
               size="md"
             />
@@ -103,11 +160,12 @@ const StoreOverviewTable = () => {
         );
       },
     },
+
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.viewStore}>
+      cell: (props) => (
+        <Link to={ROUTES.viewStore} state={{ store: props.row.original }}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View
           </Text>
@@ -121,7 +179,7 @@ const StoreOverviewTable = () => {
       <main className="w-full h-auto py-6 rounded-lg bg-white">
         <TanTable
           columnData={columns}
-          data={tableData}
+          data={stores}
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"

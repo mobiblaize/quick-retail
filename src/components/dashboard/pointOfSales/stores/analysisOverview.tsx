@@ -1,8 +1,9 @@
 import { Text } from "@mantine/core";
+import { Key } from "react";
 import { storeAnalysisData } from "../../../../utils/mockData";
 import AnalyticsCard from "../../../General/card";
 
-const AnalysisOverview = () => {
+const AnalysisOverview = ({ stats }) => {
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
       <header className="flex justify-between items-center">
@@ -13,8 +14,8 @@ const AnalysisOverview = () => {
           <Text size="sm">An overview sales made</Text>
         </div>
       </header>
-      <section className="flex overflow-auto md:flex-row flex-col gap-4  mt-2.5">
-        {storeAnalysisData.map((card, index) => (
+      <section className="flex overflow-auto md:flex-row flex-col gap-4 mt-2.5">
+        {stats?.map((card: { title: string; value: string | number; icon: string | undefined; altText: string | undefined; iconColor: string | undefined; textColor: string | undefined; cardBgColor: string | undefined; percentageValue: number | undefined; borderColor: string | undefined; }, index: Key | null | undefined) => (
           <AnalyticsCard
             key={index}
             title={card.title}

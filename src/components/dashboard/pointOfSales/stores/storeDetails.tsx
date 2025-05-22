@@ -1,9 +1,32 @@
 import { Switch, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
-const StoreDetails = () => {
+interface StoreDetailsProps {
+  store: {
+    storeID: string;
+    created_at: string;
+    gla: string;
+    gsa: string;
+    state: string;
+    lga: string;
+    address: string;
+    is_active: number;
+  };
+}
+
+const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  console.log("Stores from props4:", store);
+  useEffect(() => {
+    if (store && typeof store.is_active !== "undefined") {
+      setIsEnabled(store.is_active === 1);
+    }
+  }, [store?.is_active]);
+
+  if (!store) {
+    return <div>Loading store data...</div>; 
+  }
   return (
     <main className="w-full h-auto rounded-lg bg-[#F9FAFB] px-6 md:py-8">
       <section className="md:mt-6 mt-4">
@@ -11,25 +34,25 @@ const StoreDetails = () => {
           <div className="flex flex-col">
             <Text fw={"500"}>Store ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              34728042
+            {store.storeID}
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>Date Created</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              April 29, 2024 12:00:21 PM
+            {new Date(store.created_at).toLocaleString()}
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>GLA</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              7420 Sqm
+            {store.gla} Sqm
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>GSA</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              April 29, 2025 12:00:21 PM
+            {store.gsa} Sqm
             </Text>
           </div>
         </div>
@@ -50,13 +73,13 @@ const StoreDetails = () => {
           <div className="flex flex-col">
             <Text fw={"500"}>State Lagos</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              Lagos
+            {store.state}
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>Local Government Area</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              Ikeja
+            {store.lga}
             </Text>
           </div>
         </div>
@@ -70,7 +93,7 @@ const StoreDetails = () => {
               fw={"400"}
               className="whitespace-nowrap overflow-hidden text-ellipsis"
             >
-              142, Obafemi Awolowo Stree, Ikeja Alausa Lagos
+        {store.address}
             </Text>
           </div>
           <div className="flex flex-col col-span-2">
