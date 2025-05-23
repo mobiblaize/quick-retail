@@ -38,8 +38,8 @@ const CategoryProductDetails = ({
   const { mutate: deactivateCategory } = useDeactivateCategories(
     subCategory.id
   );
-  const isoDate = "2025-05-21T10:00:13.000000Z";
-  const date = new Date(isoDate);
+  // const isoDate = "2025-05-21T10:00:13.000000Z";
+  // const date = new Date(isoDate);
 
  
 

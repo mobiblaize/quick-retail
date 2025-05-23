@@ -10,7 +10,7 @@ import { MoreVertical } from "lucide-react";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
 
 const ProductTable = () => {
-  const { data, isLoading } = useFetchAllProducts();
+  const { data,  } = useFetchAllProducts();
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
     : [];

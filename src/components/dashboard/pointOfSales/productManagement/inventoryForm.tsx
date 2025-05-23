@@ -34,7 +34,7 @@ const initialVariants: Variant[] = [
 ];
 
 export default function InventoryForm() {
- const { data, isError } = useFetchAllLocations();
+ const { data, } = useFetchAllLocations();
 
 const locations = Array.isArray(data?.data?.stores?.data) ? data.data.stores.data : [];
 
@@ -65,13 +65,13 @@ console.log("location", locations);
     updateForm({ ...form_data, location_id:formData.location_id, variations: [formData] });
   }, [formData]);
 
-  const handleChange = (id: number, field: VariantField, value: string) => {
-    setVariants((prev) =>
-      prev.map((variant) =>
-        variant.id === id ? { ...variant, [field]: value } : variant
-      )
-    );
-  };
+  // const handleChange = (id: number, field: VariantField, value: string) => {
+  //   setVariants((prev) =>
+  //     prev.map((variant) =>
+  //       variant.id === id ? { ...variant, [field]: value } : variant
+  //     )
+  //   );
+  // };
 
   const handleAddVariant = () => {
     const newId = variants.length + 1;
