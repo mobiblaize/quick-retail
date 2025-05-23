@@ -10,6 +10,8 @@ import CreateDiscountModal from "../../../components/dashboard/pointOfSales/happ
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
 
+
+  
   const subHeaders = [
     <div key="1">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">

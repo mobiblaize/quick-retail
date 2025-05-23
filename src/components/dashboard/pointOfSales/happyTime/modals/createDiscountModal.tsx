@@ -1,6 +1,8 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
+import { useCreateDiscount } from "../../../../../hooks/backendApis/pos/discount";
+import Dropdown from "../../../../General/dropdown";
 
 interface CreateDiscountModalProps {
   opened: boolean;
@@ -9,6 +11,46 @@ interface CreateDiscountModalProps {
 
 const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
   const [discountType, setDiscountType] = useState<string>("Amount");
+
+  const [name, setName] = useState("");
+  const [code, setCode] = useState("");
+  const [from, setFrom] = useState("");
+  const [to, setTo] = useState("");
+  const [discountValue, setDiscountValue] = useState("");
+  const [currency, setCurrency] = useState("Naira");
+  const [percentage, setPercentage] = useState("");
+  const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
+  const [redemptionCount, setRedemptionCount] = useState("");
+
+  const createDiscount = useCreateDiscount();
+
+  const discountTypeOptions = [
+    { label: "Amount", value: "Amount" },
+    { label: "Percentage", value: "Percentage" },
+  ];
+
+  const handleSubmit = () => {
+    const payload = {
+      products: selectedProducts.map((id) => ({ id })),
+      name,
+      code,
+      type: discountType.toLowerCase(), // "percentage" or "amount"
+      value: Number(discountType === "Percentage" ? percentage : discountValue),
+      from,
+      to,
+      redemption_count: Number(redemptionCount),
+    };
+
+    createDiscount.mutate(payload, {
+      onSuccess: (res) => {
+        console.log("Success:", res);
+        onClose();
+      },
+      onError: (err) => {
+        console.error("Error:", err);
+      },
+    });
+  };
 
   return (
     <>
@@ -35,6 +77,10 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
               label="Discount Name"
               placeholder="Enter discount name"
               paddingY="6px"
+              value={name}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setName(e.target.value)
+              }
             />
 
             <FormInput
@@ -42,18 +88,52 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
               label="Discount Code"
               placeholder="Enter discount code"
               paddingY="6px"
+              value={code}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setCode(e.target.value)
+              }
             />
 
-            <FormInput type="date" label="Date From" paddingY="6px" />
-
-            <FormInput type="date" label="Date To" paddingY="6px" />
-
+            <FormInput
+              type="date"
+              label="Date From"
+              paddingY="6px"
+              value={from}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setFrom(e.target.value)
+              }
+            />
+            
+            <FormInput
+              type="date"
+              label="Date To"
+              paddingY="6px"
+              value={to}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setTo(e.target.value)
+              }
+            />
+              <div className="col-span-2">
+            <Dropdown
+              options={[]}
+              label="Select Product"
+              value={null}
+              onChange={function (val: string | number): void {
+                throw new Error("Function not implemented.");
+              }}
+              textColorClass="text-gray-800"
+              required
+            />
+</div>
             <div className="col-span-2">
               <FormInput
                 type="text"
-                label="Discount Product"
+                label="Redemption Count"
                 paddingY="6px"
-                placeholder="Search or select"
+                value={redemptionCount}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setRedemptionCount(e.target.value)
+                }
               />
             </div>
 
@@ -69,6 +149,16 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
                 <option value="Amount">Amount</option>
                 <option value="Percentage">Percentage</option>
               </select>
+
+              {/* <Dropdown
+  label="Discount Type"
+  options={discountTypeOptions}
+  placeholder="Select a discount type"
+  value={discountType}
+  onChange={(selected) => setDiscountType(selected?.value)}
+  required
+  textColorClass="text-gray-800"
+/> */}
             </div>
 
             {discountType === "Percentage" ? (
@@ -113,7 +203,9 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
             >
               Cancel
             </Button>
-            <Button variant="filled-primary">Submit</Button>
+            <Button variant="filled-primary" onClick={handleSubmit}>
+              Submit
+            </Button>
           </div>
         </div>
       </Modal>

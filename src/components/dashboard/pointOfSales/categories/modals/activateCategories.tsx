@@ -21,7 +21,7 @@ const ActivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
                 fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
               }}
             >
-              Activate Category
+              Activate Sub-Category
             </Text>
             <Text
               mt="5"

@@ -58,9 +58,9 @@ export const useFetchSubCatOfCat = (categoryId: number | string) => {
 export const useDeleteSubCategory = (subCategoryId: number | string) => {
   return useDeleteData(`pos/subcategory/delete-subcategory/${subCategoryId}`);
 };
-export const useActivateCategories   = (categoryId: number | string) => {
-  return usePutData(`pos/category/activate-category/${categoryId}`);
+export const useActivateCategories   = (subCategoryId: number | string) => {
+  return usePutData(`pos/subcategory/activate-subcategory/${subCategoryId}`);
 };
-export const useDeactivateCategories   = (categoryId: number | string) => {
-  return usePutData(`pos/category/deactivate-category/${categoryId}`);
+export const useDeactivateCategories   = (subCategoryId: number | string) => {
+  return usePutData(`pos/subcategory/deactivate-subcategory/${subCategoryId}`);
 };

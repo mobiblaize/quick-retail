@@ -1,12 +1,16 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Text } from "@mantine/core";
+import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable from "../../../General/table";
-import { discountProduct } from "../../../../utils/mockData";
+import { useFetchAllDiscount } from "../../../../hooks/backendApis/pos/discount";
 
 const DiscountTable = () => {
+
+  const { data, isLoading} = useFetchAllDiscount();
+
+  const discounts = data?.data || [];
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Product",
@@ -74,11 +78,22 @@ const DiscountTable = () => {
     },
   ];
 
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center p-10">
+        <Loader size="lg" variant="dots" />
+        <Text ml={10} size="md" color="dimmed">
+          Loading Discount Table
+        </Text>
+      </div>
+    );
+  }
+
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={discountProduct}
+        data={discounts}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -89,7 +104,7 @@ const DiscountTable = () => {
               Discount Product
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{discountProduct.length}</Text>
+              <Text c="customPrimary.10">{discounts.length}</Text>
             </div>
           </div>
         }

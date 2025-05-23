@@ -89,7 +89,7 @@ export const DashboardHeader = ({
             </Link>
           ))}
         </div>
-        <div className="flex items-center gap-3">
+        {/* <div className="flex items-center gap-3">
           <Settings />
           <QuestionMark />
           <div className="bg-[#F7F9FC] text-center rounded-full p-1 flex items-center gap-2">
@@ -98,7 +98,7 @@ export const DashboardHeader = ({
               Victoria LLC
             </Text>
           </div>
-        </div>
+        </div> */}
       </nav>
     </div>
   );

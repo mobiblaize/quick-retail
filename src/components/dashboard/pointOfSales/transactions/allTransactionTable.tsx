@@ -3,41 +3,69 @@ import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
-import { allTransaction, discountProduct } from "../../../../utils/mockData";
+import { formatDate, shortenTransactionId, toSentenceCase } from "../../../../utils/helpers";
 
-const AllTransactionTable = () => {
+interface AllTransactionTableProps {
+  data?: TableRowData[];
+  isLoading?: boolean;
+}
+
+const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
+  data = [],
+  // isLoading = false,
+}) => {
+
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Transaction ID",
-      accessorKey: "phoneNumber",
+      accessorKey: "transactionID",
       cell: ({ row }) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {row.original.phoneNumber}
-          </Text>
-          <Text fw={400} className="text-sm">
-            {row.original.transactionId}
+            {/* @ts-ignore */}
+            {shortenTransactionId(row.original.transactionID)}
           </Text>
         </div>
       ),
     },
     {
       header: "Transaction Date",
-      accessorKey: "transactionDate",
+      accessorFn: (row) => row.created_at,
       cell: ({ row }) => (
-        <Text c="textSecondary.7">{row.original.transactionDate}</Text>
+        <Text fw={400} className="text-sm">
+                    {/* @ts-ignore */}
+          {formatDate(row.original.created_at)}
+        </Text>
       ),
     },
     {
       header: "Order ID",
-      accessorKey: "orderId",
+      // @ts-ignore
+      accessorFn: (row) => row.sales_order?.orderID ?? "",
+      cell: ({ row }) => (
+        <Text fw={500} c="black">
+           {/* @ts-ignore */}
+          {shortenTransactionId(row.original.sales_order?.orderID)}
+        </Text>
+      ),
+    },
+    {
+      header: "Customer Name",
+      accessorKey: "name",
+      cell: ({ row }) => (
+        <span className="text-gray-900 text-sm font-medium">
+           {/* @ts-ignore */}
+          {row.original.sales_order?.customer_name}
+        </span>
+      ),
     },
     {
       header: "Amount",
-      accessorKey: "Amount",
+      accessorKey: "amount",
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
-          {row.original.Amount}
+          {row.original.amount}
         </span>
       ),
     },
@@ -45,21 +73,25 @@ const AllTransactionTable = () => {
       header: "Payment Status",
       accessorKey: "paymentStatus",
       cell: ({ row }) => {
-        const status = row.original.paymentStatus;
+        // @ts-ignore
+        const status = row.original.sales_order.payment_status?.toLowerCase() || "";
+    
+        const isPaid = status === "paid";
+    
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "Successful"
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FEF3F2] text-[#B42318]"
+              isPaid ? "bg-[#ECFDF3] text-[#027A48]" : "bg-[#FEF3F2] text-[#B42318]"
             }`}
           >
-            {status === "Successful" ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2">{status}</span>
+            {isPaid ? <PaidDot /> : <UnpaidDot />}
+            {/* @ts-ignore */}
+            <span className="ml-2">{toSentenceCase(row.original.sales_order.payment_status)}</span>
           </div>
         );
       },
     },
+    
     {
       header: "",
       accessorKey: "action",
@@ -75,7 +107,7 @@ const AllTransactionTable = () => {
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={allTransaction}
+        data={data}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -86,7 +118,7 @@ const AllTransactionTable = () => {
               Transaction
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{discountProduct.length}</Text>
+              <Text c="customPrimary.10">{data.length}</Text>
             </div>
           </div>
         }
