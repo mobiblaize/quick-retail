@@ -90,3 +90,9 @@ export interface OrderData {
   updated_at: string;
   customer: Customer;
 }
+
+export const defaultDiscountPayload = {
+  month: "",
+  year: "",
+
+}

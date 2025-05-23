@@ -1,12 +1,25 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Text } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { storeTargetOrder } from "../../../../utils/mockData";
 import { useState } from "react";
 import ViewStoreTarget from "./modals/viewStoreTarget";
+import { formatDate } from "../../../../utils/helpers";
 
-const StoreTargetTable = () => {
+const StoreTargetTable = ({ stores = [], loading = false }) => {
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center p-10">
+        <Loader size="lg" variant="dots" />
+        <Text ml={10} size="md" color="dimmed">
+          Loading stores...
+        </Text>
+      </div>
+    );
+  }
+  console.log(stores, "stores");
+  if (!stores.length) return <p>No stores available.</p>;
   const [isViewTargetOpen, setIsViewTargetOpen] = useState(false);
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -19,7 +32,7 @@ const StoreTargetTable = () => {
             {props.row.original.name}
           </Text>
           <Text fw={400} className="text-sm">
-            Store ID: {props.row.original.id}
+            Store ID: {props.row.original.storeID}
           </Text>
         </div>
       ),
@@ -27,19 +40,20 @@ const StoreTargetTable = () => {
     {
       header: "Date Created",
       accessorKey: "date",
-      cell: (props) => <Text>{props.row.original.date}</Text>,
+      //@ts-ignore
+      cell: (props) => <Text>{formatDate(props.row.original.created_at)}</Text>,
     },
     {
       header: "Conversion Rate",
       accessorKey: "conversionRate",
-      cell: (props) => <Text>{props.row.original.conversionRate}</Text>,
+      cell: (props) => <Text>{props.row.original.conversion_rate}</Text>,
     },
     {
       header: "ATV",
       accessorKey: "atv",
       cell: ({ row }) => (
         <Text c={"black"} fw={500} className="text-sm font-medium">
-          {row.original.atv}
+          {row.original.avg_transaction_value}
         </Text>
       ),
     },
@@ -60,7 +74,7 @@ const StoreTargetTable = () => {
       <main className="w-full h-auto py-6 rounded-lg bg-white">
         <TanTable
           columnData={columns}
-          data={storeTargetOrder}
+          data={stores}
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"

@@ -1,37 +1,51 @@
-import { useMemo } from "react";
-import { Text } from "@mantine/core";
-import { monthlySalesData } from "../../../../utils/mockData";
+import { useState, useMemo } from "react";
+import { Text, Select } from "@mantine/core";
 import LineChart from "../../../General/lineChart";
 import { ChartDataPoint } from "../../../../types";
+import { useFetchDiscountAnalysis } from "../../../../hooks/backendApis/pos/discount";
+
+const monthLabels = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
+
+const currentYear = new Date().getFullYear();
+const years = Array.from({ length: 5 }, (_, i) => `${currentYear - i}`);
 
 const DiscountAnalytics = () => {
+  const [selectedMonthLabel, setSelectedMonthLabel] = useState(monthLabels[new Date().getMonth()]);
+  const [selectedYear, setSelectedYear] = useState(String(currentYear));
+
+  const selectedMonthInt = monthLabels.indexOf(selectedMonthLabel) + 1;
+
+  const { data, isLoading } = useFetchDiscountAnalysis({
+    // @ts-ignore
+    month: selectedMonthInt,  
+    // month: String(selectedMonthInt),       
+    year: String(selectedYear),          
+  });
+  
   const chartData = useMemo(() => {
-    return monthlySalesData.map((item) => ({
-      month: item.month,
+    if (!data?.data || !Array.isArray(data.data)) return [];
+
+    return data.data.map((item: { day: number; revenue: number }) => ({
+      month: `Day ${item.day}`,
       revenue: item.revenue,
     })) as ChartDataPoint[];
-  }, []);
+  }, [data]);
 
   const highlightedPoint = useMemo(() => {
-    const highlightedData = monthlySalesData.find(
-      (item) => "highlighted" in item && item.highlighted === true
-    );
+    const highlight = chartData.find((item) => item.revenue > 0);
 
-    if (highlightedData) {
-      return {
-        month: highlightedData.month,
-        value: highlightedData.revenue,
-        dataKey: "revenue",
-        label:
-          "label" in highlightedData &&
-          typeof highlightedData.label === "string"
-            ? highlightedData.label
-            : `₦${highlightedData.revenue}M`,
-      };
-    }
-
-    return undefined;
-  }, []);
+    return highlight
+      ? {
+          month: highlight.month,
+          value: highlight.revenue,
+          dataKey: "revenue",
+          label: `₦${highlight.revenue}M`,
+        }
+      : undefined;
+  }, [chartData]);
 
   return (
     <main className="w-full h-auto px-6 py-8 rounded-lg bg-white">
@@ -41,28 +55,56 @@ const DiscountAnalytics = () => {
             Discount Analytics
           </Text>
           <Text size="sm" c="secondary">
-            An overview of sales made
+            An overview of discounts over time
           </Text>
+        </div>
+
+        <div className="flex gap-4 items-center">
+          <Select
+            data={monthLabels}
+            value={selectedMonthLabel}
+            onChange={(value) => setSelectedMonthLabel(value || '')}
+            placeholder="Select month"
+            size="xs"
+            className="w-32"
+          />
+          <Select
+            data={years}
+            value={selectedYear}
+            onChange={(value) => setSelectedYear(value || '')} 
+            placeholder="Select year"
+            size="xs"
+            className="w-24"
+          />
         </div>
       </header>
 
-      <div className="mt-4">
-        <div className="flex items-center mb-2">
-          <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-          <Text size="sm">Revenue</Text>
-        </div>
+      {isLoading ? (
+  <Text>Loading chart...</Text>
+) : (
+  <div className="mt-4">
+    <div className="flex items-center mb-2">
+      <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
+      <Text size="sm">Revenue</Text>
+    </div>
 
-        <div className="mt-4">
-          <LineChart
-            data={chartData}
-            lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
-            height={280}
-            yAxisFormatter={(value) => `${value}M`}
-            showLegend={false}
-            highlightedPoint={highlightedPoint}
-          />
-        </div>
-      </div>
+    <div className="mt-4">
+      {!chartData.length ? (
+        <Text>No discount data available for this period.</Text>
+      ) : (
+        <LineChart
+          data={chartData}
+          lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
+          height={280}
+          yAxisFormatter={(value) => `${value}M`}
+          showLegend={false}
+          highlightedPoint={highlightedPoint}
+        />
+      )}
+    </div>
+  </div>
+)}
+
     </main>
   );
 };

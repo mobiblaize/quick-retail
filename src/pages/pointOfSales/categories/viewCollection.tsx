@@ -45,7 +45,9 @@ const ViewCollection = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CategoryProductDetails category={category} />
+      {/* <CategoryProductDetails category={category} /> */}
+      <CategoryProductDetails category={category} subCategory={subCategory} />
+
       <CategoriesProductTable />
       <EditCategory
         opened={isEditCategoryOpen}
