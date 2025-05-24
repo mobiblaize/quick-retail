@@ -1,9 +1,7 @@
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import { useDashboard } from "../../../layout/dashboardContext";
-import { QuestionMark, Settings } from "../../../assets/svg";
-import avatar from "../../../assets/images/Avatars.png";
-import { Text } from "@mantine/core";
+
 
 export const DashboardHeader = ({
   toggleSidebar,

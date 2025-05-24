@@ -1,26 +1,69 @@
 import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
-import { ChevronDown, ChevronUp, Plus, Search, X } from "lucide-react";
-import { useState } from "react";
+import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
+import { useState, useEffect } from "react";
+import { useSearchAllCustomers } from "../../../../hooks/backendApis/pos/products";
 
-const SearchCustomer = () => {
+interface CustomerData {
+  customerID: string;
+  customer_name: string;
+  customer_email: string;
+}
+
+interface SearchCustomerProps {
+  onCustomerSelect: (customerID: string | null) => void;
+}
+
+const SearchCustomer: React.FC<SearchCustomerProps> = ({ onCustomerSelect }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isAddingCustomer, setIsAddingCustomer] = useState(false);
+  const [isAddingCustomer] = useState(false);
 
-  const toggleExpand = () => {
-    setIsExpanded(!isExpanded);
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
+    null
+  );
+
+  const toggleExpand = () => setIsExpanded(!isExpanded);
+
+  // Fetch customers matching searchTerm
+  const { data, refetch, isFetching } = useSearchAllCustomers(
+    { search: searchTerm },
+    false
+  );
+
+  const customerList: CustomerData[] = data
+    ? Array.isArray(data)
+      ? data
+      : [data]
+    : [];
+
+  useEffect(() => {
+    if (searchTerm.length > 2) {
+      refetch();
+    }
+  }, [searchTerm, refetch]);
+
+  // When user types:
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+    setSelectedCustomer(null);
   };
 
-  const toggleAddCustomer = () => {
-    setIsAddingCustomer(!isAddingCustomer);
+  // When user selects from dropdown:
+  const handleSelectCustomer = (customer: CustomerData) => {
+    setSelectedCustomer(customer);
+    setSearchTerm(customer.customer_name);
+    onCustomerSelect(customer.customerID);  // <-- Pass customerID to parent here
   };
+  ;
 
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <header className="px-6 py-2 cursor-pointer" onClick={toggleExpand}>
         <div className="flex items-center justify-between">
-          <Text size="lg" fw={500} c="textSecondary.9" tt={"uppercase"}>
-            {isAddingCustomer ? "add new customer" : "customer"}
+          <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
+            {isAddingCustomer ? "Add New Customer" : "Customer"}
           </Text>
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
         </div>
@@ -29,66 +72,65 @@ const SearchCustomer = () => {
       {isExpanded && (
         <>
           <Divider size="sm" className="mt-3" color="#E4E7EC" />
-          <div className="pt-8 pb-6  px-6 transition-all duration-300">
+          <div className="pt-8 pb-6 px-6 max-w-md transition-all duration-300">
             {!isAddingCustomer ? (
               <>
-                <div className="max-w-xl">
+                <div className="pt-8 pb-4 relative">
                   <FormInput
-                    type="text"
+                    value={searchTerm}
+                    onChange={handleSearchChange}
                     placeholder="Enter Customer Name"
                     leftIcon={<Search color="#667185" />}
+                    readOnly={!!selectedCustomer}
                   />
+
+                  {!selectedCustomer &&
+                    searchTerm.length > 2 &&
+                    customerList.length > 0 && (
+                      <div className="absolute z-10 w-full bg-white border mt-1 rounded shadow-md max-h-48 overflow-y-auto">
+                        {customerList.map((customer) => (
+                          <div
+                            key={customer.customerID}
+                            className="cursor-pointer hover:bg-gray-100 p-2 rounded"
+                            onClick={() => handleSelectCustomer(customer)}
+                          >
+                            {customer.customer_name} ({customer.customer_email})
+                          </div>
+                        ))}
+                      </div>
+                    )}
+
+                  {/* Loading indicator */}
+                  {isFetching && (
+                    <div className="absolute z-10 w-full bg-white border mt-1 rounded shadow-md p-2 text-gray-500">
+                      Loading...
+                    </div>
+                  )}
                 </div>
-                <footer
-                  className="flex mt-5 items-center gap-2.5 cursor-pointer"
-                  onClick={toggleAddCustomer}
-                >
-                  <Plus color="#CC400C" />
-                  <Text c="customPrimary.10" fw={500}>
-                    Add New Customer
-                  </Text>
-                </footer>
+
+                {/* Show email input if a customer is selected */}
+                {selectedCustomer && (
+                  <div className="mt-4 max-w-xl">
+                    <FormInput
+                      label="Email"
+                      value={selectedCustomer.customer_email}
+                      readOnly
+                    />
+                    <button
+                      className="mt-2 text-red-600 underline"
+                      onClick={() => {
+                        setSelectedCustomer(null);
+                        setSearchTerm("");
+                        onCustomerSelect(null); 
+                      }}
+                    >
+                      Clear selection
+                    </button>
+                  </div>
+                )}
               </>
             ) : (
-              <>
-                <div>
-                  <section className="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <FormInput
-                      type="text"
-                      label="Name"
-                      placeholder="Enter Customer Name"
-                    />
-                    <FormInput
-                      type="text"
-                      label="Email"
-                      placeholder="Enter Customer Email"
-                      optional
-                    />
-                    <FormInput
-                      type="number"
-                      label="Phone Number"
-                      placeholder="Enter customer Phone Number"
-                      optional
-                    />
-                    <FormInput
-                      type="text"
-                      label="Address"
-                      placeholder="Enter Customer Address"
-                      optional
-                    />
-                  </section>
-                  <Text
-                    fw={500}
-                    c="#CB1A14"
-                    className="flex cursor-pointer gap-2"
-                    onClick={toggleAddCustomer}
-                    mt={20}
-                  >
-                    <X />
-                    Remove Customer
-                  </Text>
-                </div>
-              </>
+              <div></div>
             )}
           </div>
         </>

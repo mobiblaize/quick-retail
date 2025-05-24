@@ -3,7 +3,17 @@ import { ChevronDown, ChevronUp, CircleHelp } from "lucide-react";
 import { useState } from "react";
 import { paymentData } from "../../../../utils/mockData";
 
-const PaymentDetails = () => {
+type PaymentItem = {
+  label: string;
+  amount: string;
+};
+
+interface PaymentDetailsProps {
+  items: PaymentItem[];
+  total: string;
+}
+
+const PaymentDetails1: React.FC<PaymentDetailsProps> = ({ items, total }) => {
   const [isExpanded, setIsExpanded] = useState(true);
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
@@ -23,7 +33,7 @@ const PaymentDetails = () => {
           <Divider size="sm" className="mt-3" color="#E4E7EC" />
           <div className="pt-8 pb-6 max-w-md px-6">
             <div className="flex flex-col gap-2.5">
-              {paymentData.map((item, index) => (
+              {items.map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Text fw={500}>
@@ -41,10 +51,10 @@ const PaymentDetails = () => {
               ))}
               <div className="flex items-center justify-between">
                 <Text c="black" fw={700}>
-                  Total
+                  SubTotal
                 </Text>
                 <Text c="black" fw={700}>
-                  ₦ 33,250
+                  {total}
                 </Text>
               </div>
             </div>
@@ -55,4 +65,4 @@ const PaymentDetails = () => {
   );
 };
 
-export default PaymentDetails;
+export default PaymentDetails1;
