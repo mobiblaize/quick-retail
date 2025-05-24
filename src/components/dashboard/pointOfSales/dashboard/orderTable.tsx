@@ -8,7 +8,7 @@ import { useFetchAllSales } from "../../../../hooks/backendApis/pos/salesProcess
 import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
 
 const CustomerOrdersTable = () => {
-  const { data, isLoading, error } = useFetchAllSales();
+  const { data, } = useFetchAllSales();
 
   const salesData = data?.data?.sales?.data ?? [];
 

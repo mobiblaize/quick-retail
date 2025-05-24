@@ -81,7 +81,6 @@ const CreateOrderPageContent: React.FC = () => {
       })),
     };
   
-    console.log("Submitting Order Payload:", payload);
     createSale(payload);
   };
 useEffect(() => {

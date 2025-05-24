@@ -1,7 +1,7 @@
 import { Divider, Text } from "@mantine/core";
 import { ChevronDown, ChevronUp, CircleHelp } from "lucide-react";
 import { useState } from "react";
-import { paymentData } from "../../../../utils/mockData";
+
 
 type PaymentItem = {
   label: string;

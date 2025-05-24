@@ -16,10 +16,7 @@ interface PaymentDetailsProps {
   total: string;
 }
 
-type Option = {
-  label: string;
-  value: string; 
-};
+
 
 
 const PaymentDetails2: React.FC<PaymentDetailsProps> = ({ method, amount, onPaymentChange, items, total }) => {
@@ -33,7 +30,6 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({ method, amount, onPaym
   ];
 
 
-  console.log("Payment method:", method);
 
   return (
     <main className="w-full h-auto rounded-lg bg-white">
