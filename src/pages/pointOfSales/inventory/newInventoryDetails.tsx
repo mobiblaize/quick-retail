@@ -1,8 +1,29 @@
 import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../components/General/formInput";
 import FormSelect from "../../../components/General/select";
+import { useLocation } from "react-router";
+import { useActivateInventory } from "../../../hooks/backendApis/pos/inventory";
+import { useFetchAllLocations } from "../../../hooks/backendApis/pos/products";
 
 const NewInventoryDetails = () => {
+  const { state } = useLocation();
+  const inventories = state?.inventories;
+  const { data: activateInventoryData } = useActivateInventory(inventories?.id);
+  const inventory = Array.isArray(activateInventoryData?.data) ? activateInventoryData.data : [];
+
+  const { data: locationsData, isError } = useFetchAllLocations();
+
+  const locations = Array.isArray(locationsData?.data?.stores?.data)
+    ? locationsData.data.stores.data
+    : [];
+
+  const locationOptions = locations.map(
+    (loc: { name: string; locationID: string }) => ({
+      label: loc?.name || "Unnamed",
+      value: loc?.locationID || "",
+    })
+  );
+
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <div className="px-6 py-2 ">
@@ -21,11 +42,15 @@ const NewInventoryDetails = () => {
           paddingY={"0.7rem"}
         />
         <FormSelect
-          options={["Lagos"]}
+          options={locationOptions}
           label="Location"
           placeholder="Enter Location"
           optional
           paddingY="4"
+          // value={formData.location_id}
+          // onChange={(e: any) =>
+          //   setFormData({ ...formData, location_id: e.target.value })
+          // }
         />
         <FormInput
           type="text"

@@ -43,8 +43,6 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
   value: loc?.locationID,
 }));
 
-console.log("location", locations);
-
     
 
   const initialFormState = {
