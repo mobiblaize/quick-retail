@@ -10,19 +10,21 @@ const monthLabels = [
 ];
 
 const currentYear = new Date().getFullYear();
-const years = Array.from({ length: 5 }, (_, i) => `${currentYear - i}`);
+const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
+
 
 const DiscountAnalytics = () => {
   const [selectedMonthLabel, setSelectedMonthLabel] = useState(monthLabels[new Date().getMonth()]);
-  const [selectedYear, setSelectedYear] = useState(String(currentYear));
+  const [selectedYear, setSelectedYear] = useState(currentYear);
+
 
   const selectedMonthInt = monthLabels.indexOf(selectedMonthLabel) + 1;
 
   const { data, isLoading } = useFetchDiscountAnalysis({
     // @ts-ignore
-    month: selectedMonthInt,  
-    // month: String(selectedMonthInt),       
-    year: String(selectedYear),          
+    month: selectedMonthInt, 
+    // @ts-ignore 
+    year: selectedYear,          
   });
   
   const chartData = useMemo(() => {
@@ -69,9 +71,9 @@ const DiscountAnalytics = () => {
             className="w-32"
           />
           <Select
-            data={years}
-            value={selectedYear}
-            onChange={(value) => setSelectedYear(value || '')} 
+      data={years.map(String)}
+            value={String(selectedYear)}
+            onChange={(value) => setSelectedYear(Number(value))} 
             placeholder="Select year"
             size="xs"
             className="w-24"
