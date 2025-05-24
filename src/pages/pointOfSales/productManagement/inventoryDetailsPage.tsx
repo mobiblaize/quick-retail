@@ -10,7 +10,7 @@ import { useCreateProduct } from "../../../hooks/backendApis/pos/products";
 const InventoryDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { form_data, resetForm } = useStore();
-  const { mutate, isPending } = useCreateProduct();
+  const { mutate,  } = useCreateProduct();
 
   const handleSave = () => {
     if (!form_data.product_name) {

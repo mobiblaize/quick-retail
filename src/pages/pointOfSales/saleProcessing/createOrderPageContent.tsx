@@ -9,7 +9,8 @@ import CustomerReceipt from "./customerReceipt";
 import { OrderCreationStep } from "../../../utils/orderCreationTypes";
 import { motion, AnimatePresence } from "framer-motion";
 import CreateOrderForm from "./createOrderForm";
-import ConfirmPayment from "./confirmPayment";
+import { useState } from "react";
+import PaymentDetails2 from "../../../components/dashboard/pointOfSales/salesProcessing/confirmPayment/paymentDetails";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -46,6 +47,76 @@ const CreateOrderPageContent: React.FC = () => {
     }
   };
 
+  const [submitHandler, setSubmitHandler] = useState<
+  ((status: string) => void) | null
+>(null);
+
+  const [paymentDetails, setPaymentDetails] = useState<{
+    method: string;
+    amount: string;
+    items: any[];
+    customerId: string | null;
+  }>({
+    method: "",
+    amount: "",
+    items: [],
+    customerId: null,
+  });
+
+  const registerSubmitHandler = (handler: (status: string) => void) => {
+    console.log("Submitting with method:", paymentMethod); // ✅
+    console.log("Collected:", amountCollected); // ✅
+    console.log("paymentDetails:", paymentDetails); // ✅
+    setSubmitHandler(() => handler);
+  };
+
+  const updatePaymentDetails = (details: {
+    method: string;
+    amount: string;
+    items: any[];
+    customerId: string | null;
+  }) => {
+    setPaymentDetails(details);
+  };
+
+  
+  const [paymentMethod, setPaymentMethod] = useState("");
+  const [amountCollected, setAmountCollected] = useState("");
+  const handlePaymentChange = (method: string, amount: string) => {
+    setPaymentMethod(method);
+    setAmountCollected(amount);
+    setPaymentDetails((prev) => ({
+      ...prev,
+      method,
+      amount,
+    }));
+  };
+  
+  const formatCurrency = (amount: number) => {
+    if (isNaN(amount)) return "₦ 0";
+    return `₦ ${amount.toLocaleString()}`;
+  };
+
+  const subtotal = paymentDetails.items.reduce((acc, item) => {
+    const price = Number(item.price) || 0;
+    const quantity = Number(item.quantity) || 0;
+    return acc + price * quantity;
+  }, 0);
+  
+  const tax = subtotal * 0.075;
+  
+  const paymentItems = [
+    { label: `Subtotal (${paymentDetails.items.length} items)`, amount: formatCurrency(subtotal) },
+    { label: "Discount", amount: "-" },
+    { label: "Tax (7.5% VAT)", amount: formatCurrency(tax) },
+  ];
+  
+  const totalAmount = subtotal + tax;
+  const total = formatCurrency(totalAmount);
+  
+
+  
+  
   const getSubHeaders = () => {
     const backButton = (
       <button
@@ -117,17 +188,32 @@ const CreateOrderPageContent: React.FC = () => {
             <Button variant="filled-primary" onClick={nextStep}>
               Confirm Order
             </Button>
+
+
+
           </div>,
         ];
       case OrderCreationStep.CONFIRM_PAYMENT:
         return [
           <div key="confirm-payment-buttons" className="flex gap-4 justify-end">
-            <Button variant="outline-primary" onClick={prevStep}>
-              Save to Draft
-            </Button>
-            <Button variant="filled-primary" onClick={nextStep}>
-              Confirm Payment
-            </Button>
+<button
+  type="button"
+  onClick={() => {
+    if (submitHandler) submitHandler("draft");
+  }}
+  className="btn btn-secondary"
+>
+  Save as Draft
+</button>
+
+   <Button
+  variant="filled-primary"
+  onClick={() => {
+    if (submitHandler) submitHandler("completed");
+  }}
+>
+  Confirm Payment
+</Button> 
           </div>,
         ];
       case OrderCreationStep.CUSTOMER_RECEIPT:
@@ -156,8 +242,15 @@ const CreateOrderPageContent: React.FC = () => {
             animate="animate"
             exit="exit"
             className="flex flex-col gap-4"
-          >
-            <CreateOrderForm />
+       >
+            <CreateOrderForm
+  registerSubmit={registerSubmitHandler}
+  paymentDetails={paymentDetails}
+  updatePaymentDetails={updatePaymentDetails}
+  paymentItems={paymentItems}
+  total={total}
+/>
+
           </motion.div>
         );
       case OrderCreationStep.CONFIRM_PAYMENT:
@@ -170,7 +263,15 @@ const CreateOrderPageContent: React.FC = () => {
             animate="animate"
             exit="exit"
           >
-            <ConfirmPayment />
+
+       
+<PaymentDetails2
+  method={paymentDetails.method}
+  amount={paymentDetails.amount}
+  onPaymentChange={handlePaymentChange}
+  items={paymentItems}
+  total={total}
+/>
           </motion.div>
         );
       case OrderCreationStep.CUSTOMER_RECEIPT:

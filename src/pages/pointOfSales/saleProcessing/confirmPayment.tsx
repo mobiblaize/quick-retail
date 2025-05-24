@@ -3,7 +3,7 @@ import PaymentDetails from "../../../components/dashboard/pointOfSales/salesProc
 const ConfirmPayment = () => {
   return (
     <div>
-      <PaymentDetails />
+      {/* <PaymentDetails /> */}
     </div>
   );
 };

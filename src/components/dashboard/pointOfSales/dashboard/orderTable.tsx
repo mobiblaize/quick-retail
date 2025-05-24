@@ -6,8 +6,38 @@ import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { useFetchAllSales } from "../../../../hooks/backendApis/pos/salesProcessing";
+import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
 
 const CustomerOrdersTable = () => {
+  const { data, isLoading, error } = useFetchAllSales();
+  const salesData = data?.data?.sales?.data ?? [];
+
+  const tableData = salesData.map(
+    (sale: {
+      sale_order_details: any[];
+      orderID: any;
+      date_completed: any;
+      customer_name: any;
+      order_total: any;
+      payment_status: string;
+    }) => {
+      // Sum total quantity of items
+      const totalItems = sale.sale_order_details.reduce(
+        (sum, item) => sum + item.quantity_ordered,
+        0
+      );
+
+      return {
+        id: sale.orderID, // or sale.order_number
+        timestamp: sale.date_completed,
+        customer: sale.customer_name,
+        amount: sale.order_total,
+        status: sale.payment_status === "paid" ? "Paid" : "Unpaid",
+        items: totalItems,
+      };
+    }
+  );
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Order ID",
@@ -15,58 +45,60 @@ const CustomerOrdersTable = () => {
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {props.row.original.id}
+            {/*@ts-ignore  */}
+            {shortenTransactionId(props.row.original.orderID)}
           </Text>
           <Text fw={500}>
             Total Items:
-            <span className="ml-1 text-black">{props.row.original.items}</span>
+            {/* /*/}
+            <span className="ml-1 text-black">
+              {/* {props.row.original.sale_order_detail.quantity_ordered} */}
+            </span>
           </Text>
         </div>
       ),
     },
     {
       header: "Date & Time",
-      accessorKey: "timestamp",
-      cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.timestamp}</Text>
-      ),
+      accessorFn: (row) => row.date_completed,
+      // cell: (row) => (
+      //   // <Text c="textSecondary.7"> {formatDate(row.original.date_completed)}</Text>
+      // ),
     },
     {
       header: "Customer",
       accessorKey: "customer",
+      cell: (props) => (
+        <Text c="textSecondary.7">{props.row.original.customer_name}</Text>
+      ),
     },
     {
       header: "Amount",
       accessorKey: "amount",
+      cell: (props) => (
+        <Text c="textSecondary.7">{props.row.original.amount_paid}</Text>
+      ),
     },
     {
       header: "Status",
       accessorKey: "status",
       cell: (props) => {
-        const status = props.row.original.status;
+        const status = props.row.original.payment_status;
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "Paid"
+              status === "paid"
                 ? "bg-[#ECFDF3] text-[#027A48]"
                 : "bg-[#FFFAEB] text-[#B54708]"
             }`}
           >
-            {status === "Paid" ? <PaidDot /> : <UnpaidDot />}
+            {status === "paid" ? <PaidDot /> : <UnpaidDot />}
             <span className="ml-2">{status}</span>
           </div>
         );
       },
     },
-    {
-      header: "Items",
-      accessorKey: "items",
-      cell: (props) => (
-        <span className="font-medium text-center">
-          {props.row.original.items}
-        </span>
-      ),
-    },
+  
     {
       header: "",
       accessorKey: "action",
@@ -84,7 +116,7 @@ const CustomerOrdersTable = () => {
     <main className="w-full h-auto  py-8 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={customerOrders}
+        data={salesData}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -106,7 +138,7 @@ const CustomerOrdersTable = () => {
               Recent Orders
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{customerOrders.length}</Text>
+              <Text c="customPrimary.10">{salesData.length}</Text>
             </div>
           </div>
         }

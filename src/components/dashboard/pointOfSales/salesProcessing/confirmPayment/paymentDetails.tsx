@@ -1,10 +1,41 @@
 import { Divider, Text } from "@mantine/core";
 import FormSelect from "../../../../General/select";
 import FormInput from "../../../../General/formInput";
-import { paymentData } from "../../../../../utils/mockData";
 import { CircleHelp } from "lucide-react";
+import Dropdown2 from "../../../../General/dropdown2";
 
-const PaymentDetails = () => {
+type PaymentItem = {
+  label: string;
+  amount: string;
+};
+
+interface PaymentDetailsProps {
+  method: string;
+  amount: string;
+  onPaymentChange: (method: string, amount: string) => void;
+  items: PaymentItem[];
+  total: string;
+}
+
+type Option = {
+  label: string;
+  value: string; // <- string instead of number
+};
+
+
+const PaymentDetails2: React.FC<PaymentDetailsProps> = ({ method, amount, onPaymentChange, items, total }) => {
+
+
+  const paymentMethodOptions = [
+    { label: "Pay with Cash", value: "cash" },
+    { label: "Pay with Debit Card", value: "debit_card" },
+    { label: "Pay with Credit Card", value: "credit_card" },
+    { label: "Pay with Transfer", value: "transfer" },
+  ];
+
+  
+  console.log("Payment method:", method);
+
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <header className="px-6 py-2 cursor-pointer">
@@ -17,39 +48,40 @@ const PaymentDetails = () => {
       <>
         <Divider size="sm" className="mt-3" color="#E4E7EC" />
         <section className="grid grid-cols-1 md:grid-cols-2 pt-8 pb-6 items-center gap-4 md:gap-10 px-3.5">
-          <FormSelect
-            label="Payment Method"
-            options={[
-              "Pay with cash",
-              "Pay with Debit/Credit Card",
-              "Pay With Transfer",
-            ]}
-            placeholder="Select Payment Method"
-            className="rounded-none w-full text-gray_4"
-            labelGap="gap-[5em]"
-            color="#000000"
-            paddingY="3"
-          />
+
+          <Dropdown2
+  label="Payment Method"
+  options={paymentMethodOptions as unknown as Option[]}
+  placeholder="Select Payment Method"
+  value={method}
+  onChange={(val) => onPaymentChange(val, amount)}
+  required
+  textColorClass="text-gray-800"
+/>
           <FormInput
             type="text"
             label="Payment Refrence Number"
             optional
             placeholder="Enter Payment Refrence Number"
             className="w-full"
+           
           />
-          <FormInput
-            type="text"
-            label="Amount Collected"
-            placeholder="Enter the amount customer paid in cash"
-            className="w-full"
-          />
+<FormInput
+  type="text" 
+  label="Amount Collected"
+  placeholder="Enter the amount customer paid in cash"
+  className="w-full"
+  value={amount}
+  onChange={(e: { target: { value: string; }; }) => onPaymentChange(method, e.target.value)}
+/>
+
           <FormInput type="text" label="Customer Balance" className="w-full" />
         </section>
         <Divider size="sm" className="mt-3" color="#E4E7EC" />
         <section>
           <div className="pt-8 pb-6 max-w-md px-6">
             <div className="flex flex-col gap-2.5">
-              {paymentData.map((item, index) => (
+            {items.map((item, index) => (
                 <div key={index} className="flex items-center justify-between">
                   <div className="flex items-center gap-2">
                     <Text fw={500}>
@@ -70,7 +102,7 @@ const PaymentDetails = () => {
                   Total
                 </Text>
                 <Text c="black" fw={700}>
-                  ₦ 33,250
+                {total}
                 </Text>
               </div>
             </div>
@@ -81,4 +113,4 @@ const PaymentDetails = () => {
   );
 };
 
-export default PaymentDetails;
+export default PaymentDetails2;

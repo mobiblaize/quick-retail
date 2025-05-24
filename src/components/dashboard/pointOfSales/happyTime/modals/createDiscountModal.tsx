@@ -1,8 +1,9 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
-import { SetStateAction, useState } from "react";
+import { SetStateAction, useMemo, useState } from "react";
 import { useCreateDiscount } from "../../../../../hooks/backendApis/pos/discount";
 import Dropdown from "../../../../General/dropdown";
+import { useFetchAllProducts } from "../../../../../hooks/backendApis/pos/products";
 
 interface CreateDiscountModalProps {
   opened: boolean;
@@ -23,6 +24,20 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
   const [redemptionCount, setRedemptionCount] = useState("");
 
   const createDiscount = useCreateDiscount();
+  const { data: productsData, isLoading: isLoadingProducts } =
+    useFetchAllProducts();
+
+    const productOptions = useMemo(() => {
+      return productsData?.data?.products?.data?.map((product: any) => ({
+        label: product.name,
+        value: product.id,
+      })) || [];
+    }, [productsData]);
+    
+    
+    
+    
+    console.log(productsData)
 
   const discountTypeOptions = [
     { label: "Amount", value: "Amount" },
@@ -103,7 +118,7 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
                 setFrom(e.target.value)
               }
             />
-            
+
             <FormInput
               type="date"
               label="Date To"
@@ -113,18 +128,17 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
                 setTo(e.target.value)
               }
             />
-              <div className="col-span-2">
-            <Dropdown
-              options={[]}
-              label="Select Product"
-              value={null}
-              onChange={function (val: string | number): void {
-                throw new Error("Function not implemented.");
-              }}
-              textColorClass="text-gray-800"
-              required
-            />
-</div>
+            <div className="col-span-2">
+              <Dropdown
+                options={productOptions}
+                label="Select Product"
+                value={selectedProducts[0] || null}
+                onChange={(val) => setSelectedProducts([Number(val)])}
+                
+                textColorClass="text-gray-800"
+                required
+              />
+            </div>
             <div className="col-span-2">
               <FormInput
                 type="text"

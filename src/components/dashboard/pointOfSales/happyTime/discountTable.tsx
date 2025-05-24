@@ -7,10 +7,29 @@ import TanTable from "../../../General/table";
 import { useFetchAllDiscount } from "../../../../hooks/backendApis/pos/discount";
 
 const DiscountTable = () => {
+  const { data, isLoading } = useFetchAllDiscount();
 
-  const { data, isLoading} = useFetchAllDiscount();
+  // const discounts = data?.data || [];
+  const rawDiscounts = data?.data?.discountedProducts?.data || [];
+  const discounts = rawDiscounts
+  // @ts-ignore
+    .filter((item) => item.discounted_products?.length)
+     // @ts-ignore
+    .map((item) => {
+      const discount = item.discounted_products[0].discount;
 
-  const discounts = data?.data || [];
+      return {
+        name: item.name || "Unnamed",
+        discountCode: discount?.code || "-",
+        percent: `${discount?.value || "0"}%`,
+        price: item.selling_price || "-",
+        dateFrom: discount?.from?.split("T")[0],
+        dateTo: discount?.to?.split("T")[0],
+        status: discount?.status === "active" ? "Active" : "Inactive",
+        image: item.image_path,
+      };
+    });
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Product",
@@ -18,7 +37,8 @@ const DiscountTable = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={imageSrc}
+           // @ts-ignore
+            src={row.original.image || imageSrc}
             alt={row.original.name as string}
             radius="md"
             size={40}
