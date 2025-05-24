@@ -14,7 +14,9 @@ interface SearchCustomerProps {
   onCustomerSelect: (customerID: string | null) => void;
 }
 
-const SearchCustomer: React.FC<SearchCustomerProps> = ({ onCustomerSelect }) => {
+const SearchCustomer: React.FC<SearchCustomerProps> = ({
+  onCustomerSelect,
+}) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isAddingCustomer] = useState(false);
 
@@ -54,10 +56,8 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({ onCustomerSelect }) => 
   const handleSelectCustomer = (customer: CustomerData) => {
     setSelectedCustomer(customer);
     setSearchTerm(customer.customer_name);
-    onCustomerSelect(customer.customerID);  // <-- Pass customerID to parent here
+    onCustomerSelect(customer.customerID); // <-- Pass customerID to parent here
   };
-  ;
-
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <header className="px-6 py-2 cursor-pointer" onClick={toggleExpand}>
@@ -72,67 +72,73 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({ onCustomerSelect }) => 
       {isExpanded && (
         <>
           <Divider size="sm" className="mt-3" color="#E4E7EC" />
-          <div className="pt-8 pb-6 px-6 max-w-md transition-all duration-300">
-            {!isAddingCustomer ? (
-              <>
-                <div className="pt-8 pb-4 relative">
-                  <FormInput
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Enter Customer Name"
-                    leftIcon={<Search color="#667185" />}
-                    readOnly={!!selectedCustomer}
-                  />
+          <div className="w-full mt-[2em] px-6 pb-6 relative">
+  {/* Flex row only if email is shown */}
+  <div
+    className={`flex gap-4 items-end ${
+      selectedCustomer ? "w-full" : "max-w-md"
+    }`}
+  >
+    <div className={`${selectedCustomer ? "w-1/2" : "w-full"}`}>
+      <FormInput
+        value={searchTerm}
+        onChange={handleSearchChange}
+        placeholder="Enter Customer Name"
+        leftIcon={<Search color="#667185" />}
+        readOnly={!!selectedCustomer}
+      />
+    </div>
 
-                  {!selectedCustomer &&
-                    searchTerm.length > 2 &&
-                    customerList.length > 0 && (
-                      <div className="absolute z-10 w-full bg-white border mt-1 rounded shadow-md max-h-48 overflow-y-auto">
-                        {customerList.map((customer) => (
-                          <div
-                            key={customer.customerID}
-                            className="cursor-pointer hover:bg-gray-100 p-2 rounded"
-                            onClick={() => handleSelectCustomer(customer)}
-                          >
-                            {customer.customer_name} ({customer.customer_email})
-                          </div>
-                        ))}
-                      </div>
-                    )}
+    {selectedCustomer && (
+      <div className="w-1/2">
+        <FormInput
+          label="Email"
+          value={selectedCustomer.customer_email}
+          readOnly
+        />
+      </div>
+    )}
+  </div>
 
-                  {/* Loading indicator */}
-                  {isFetching && (
-                    <div className="absolute z-10 w-full bg-white border mt-1 rounded shadow-md p-2 text-gray-500">
-                      Loading...
-                    </div>
-                  )}
-                </div>
-
-                {/* Show email input if a customer is selected */}
-                {selectedCustomer && (
-                  <div className="mt-4 max-w-xl">
-                    <FormInput
-                      label="Email"
-                      value={selectedCustomer.customer_email}
-                      readOnly
-                    />
-                    <button
-                      className="mt-2 text-red-600 underline"
-                      onClick={() => {
-                        setSelectedCustomer(null);
-                        setSearchTerm("");
-                        onCustomerSelect(null); 
-                      }}
-                    >
-                      Clear selection
-                    </button>
-                  </div>
-                )}
-              </>
-            ) : (
-              <div></div>
-            )}
+  {/* Dropdown results */}
+  {!selectedCustomer &&
+    searchTerm.length > 2 &&
+    customerList.length > 0 && (
+      <div className="absolute bg-white border mt-[1em] rounded shadow-md max-h-48 overflow-y-auto max-w-md z-10">
+        {customerList.map((customer) => (
+          <div
+            key={customer.customerID}
+            className="cursor-pointer hover:bg-gray-100 p-2 rounded"
+            onClick={() => handleSelectCustomer(customer)}
+          >
+            {customer.customer_name} ({customer.customer_email})
           </div>
+        ))}
+      </div>
+    )}
+
+  {/* Loading */}
+  {isFetching && (
+    <div className="absolute mt-1 text-sm text-gray-500 bg-white border rounded shadow p-2 max-w-lg z-10">
+      Loading...
+    </div>
+  )}
+
+  {/* Clear button */}
+  {selectedCustomer && (
+    <button
+      className="mt-2 text-red-600 underline"
+      onClick={() => {
+        setSelectedCustomer(null);
+        setSearchTerm("");
+        onCustomerSelect(null);
+      }}
+    >
+      Clear selection
+    </button>
+  )}
+</div>
+
         </>
       )}
     </main>

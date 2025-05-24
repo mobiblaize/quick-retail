@@ -1,5 +1,4 @@
 import { Divider, Text } from "@mantine/core";
-import FormSelect from "../../../../General/select";
 import FormInput from "../../../../General/formInput";
 import { CircleHelp } from "lucide-react";
 import Dropdown2 from "../../../../General/dropdown2";
@@ -19,7 +18,7 @@ interface PaymentDetailsProps {
 
 type Option = {
   label: string;
-  value: string; // <- string instead of number
+  value: string; 
 };
 
 
@@ -33,7 +32,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({ method, amount, onPaym
     { label: "Pay with Transfer", value: "transfer" },
   ];
 
-  
+
   console.log("Payment method:", method);
 
   return (
@@ -49,15 +48,16 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({ method, amount, onPaym
         <Divider size="sm" className="mt-3" color="#E4E7EC" />
         <section className="grid grid-cols-1 md:grid-cols-2 pt-8 pb-6 items-center gap-4 md:gap-10 px-3.5">
 
-          <Dropdown2
+        <Dropdown2
   label="Payment Method"
-  options={paymentMethodOptions as unknown as Option[]}
+  options={paymentMethodOptions}
   placeholder="Select Payment Method"
-  value={method}
-  onChange={(val) => onPaymentChange(val, amount)}
+  value={method} 
+  onChange={(val) => onPaymentChange(val, amount)} 
   required
   textColorClass="text-gray-800"
 />
+
           <FormInput
             type="text"
             label="Payment Refrence Number"
