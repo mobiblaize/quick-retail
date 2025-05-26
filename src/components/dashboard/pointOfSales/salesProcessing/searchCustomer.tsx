@@ -3,6 +3,10 @@ import FormInput from "../../../General/formInput";
 import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
 import { useState, useEffect } from "react";
 import { useSearchAllCustomers } from "../../../../hooks/backendApis/pos/products";
+import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
+import { notifications } from "@mantine/notifications";
+
+
 
 interface CustomerData {
   customerID: string;
@@ -18,7 +22,42 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   onCustomerSelect,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
-  const [isAddingCustomer] = useState(false);
+  const [isAddingCustomer, setIsAddingCustomer] = useState(false);
+  const [newCustomer, setNewCustomer] = useState({
+    customer_name: "",
+    customer_email: "",
+    customer_phone: "",
+    customer_address: "",
+  });
+  const createCustomer = useCreateCustomer();
+  
+  const handleCreateCustomer = () => {
+    createCustomer.mutate(newCustomer, {
+      onSuccess: (response) => {
+        const customerID = response?.data?.customerID;
+        if (customerID) {
+          onCustomerSelect(customerID);
+          setSearchTerm(newCustomer.customer_name);
+          setIsAddingCustomer(false);
+  
+          // ✅ Show success notification
+          notifications.show({
+            title: 'Customer Created',
+            message: `${newCustomer.customer_name} has been added successfully.`,
+            color: 'green',
+          });
+        }
+      },
+      onError: () => {
+        // ✅ Show error notification
+        notifications.show({
+          title: 'Error',
+          message: 'Failed to create customer. Please try again.',
+          color: 'red',
+        });
+      },
+    });
+  };
 
   const [searchTerm, setSearchTerm] = useState("");
 
@@ -29,7 +68,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   const toggleExpand = () => setIsExpanded(!isExpanded);
 
   // Fetch customers matching searchTerm
-  const { data, refetch, isFetching } = useSearchAllCustomers(
+  const { data, refetch, } = useSearchAllCustomers(
     { search: searchTerm },
     false
   );
@@ -72,73 +111,123 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
       {isExpanded && (
         <>
           <Divider size="sm" className="mt-3" color="#E4E7EC" />
-          <div className="w-full mt-[2em] px-6 pb-6 relative">
-  {/* Flex row only if email is shown */}
-  <div
-    className={`flex gap-4 items-end ${
-      selectedCustomer ? "w-full" : "max-w-md"
-    }`}
+
+          <div className="w-full px-6 pb-6 relative">
+            {!isAddingCustomer ? (
+              <>
+                <div className="max-w-md">
+                  <h1 className=" mt-[1em] ">SEARCH CUSTOMER</h1>
+                  <FormInput
+                    value={searchTerm}
+                    onChange={handleSearchChange}
+                    placeholder="Enter Customer Name"
+                    leftIcon={<Search color="#667185" />}
+                    readOnly={!!selectedCustomer}
+                  />
+                </div>
+                {/* Dropdown results */}
+                {!selectedCustomer &&
+                  searchTerm.length > 2 &&
+                  customerList.length > 0 && (
+                    <div className="absolute bg-white border mt-[1em] rounded shadow-md max-h-48 overflow-y-auto max-w-md z-10">
+                      {customerList.map((customer) => (
+                        <div
+                          key={customer.customerID}
+                          className="cursor-pointer hover:bg-gray-100 p-2 rounded"
+                          onClick={() => handleSelectCustomer(customer)}
+                        >
+                          {customer.customer_name}
+                        </div>
+                      ))}
+                    </div>
+                  )}
+
+                <div className="mt-[1em] text-[#EB5017] cursor-pointer">
+                  <span onClick={() => setIsAddingCustomer(true)}>
+                    + Add Customer
+                  </span>
+                </div>
+
+                {/* Clear selection */}
+                {selectedCustomer && (
+  <button
+    className="mt-2 text-red-600 flex items-center gap-1"
+    onClick={() => {
+      setSelectedCustomer(null);
+      setSearchTerm("");
+      onCustomerSelect(null);
+    }}
   >
-    <div className={`${selectedCustomer ? "w-1/2" : "w-full"}`}>
-      <FormInput
-        value={searchTerm}
-        onChange={handleSearchChange}
-        placeholder="Enter Customer Name"
-        leftIcon={<Search color="#667185" />}
-        readOnly={!!selectedCustomer}
-      />
-    </div>
+    <X size={16} />
+    Remove Customer
+  </button>
+)}
 
-    {selectedCustomer && (
-      <div className="w-1/2">
-        <FormInput
-          label="Email"
-          value={selectedCustomer.customer_email}
-          readOnly
-        />
-      </div>
-    )}
-  </div>
-
-  {/* Dropdown results */}
-  {!selectedCustomer &&
-    searchTerm.length > 2 &&
-    customerList.length > 0 && (
-      <div className="absolute bg-white border mt-[1em] rounded shadow-md max-h-48 overflow-y-auto max-w-md z-10">
-        {customerList.map((customer) => (
-          <div
-            key={customer.customerID}
-            className="cursor-pointer hover:bg-gray-100 p-2 rounded"
-            onClick={() => handleSelectCustomer(customer)}
-          >
-            {customer.customer_name} ({customer.customer_email})
+              </>
+            ) : (
+              // Add Customer Form
+              <div className="flex flex-col gap-4 w-full mt-4">
+                <div className="grid grid-cols-2 gap-4 ">
+                  <FormInput
+                    label="Customer Name"
+                    value={newCustomer.customer_name}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_name: e.target.value,
+                      })
+                    }
+                  />
+                  <FormInput
+                    label="Email"
+                    value={newCustomer.customer_email}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_email: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormInput
+                    label="Phone"
+                    value={newCustomer.customer_phone}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_phone: e.target.value,
+                      })
+                    }
+                  />
+                  <FormInput
+                    label="Address"
+                    value={newCustomer.customer_address}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_address: e.target.value,
+                      })
+                    }
+                  />
+                </div>
+                <div className="flex gap-4 justify-end text-right items-end">
+                  <button
+                    className="mt-2  w-[150px] px-2 h-[44px]  border border-[#F16722] text-[#F16722] bg-[white]  rounded-lg"
+                    onClick={() => setIsAddingCustomer(false)}
+                  >
+                    Cancel
+                  </button>
+                  <button
+                    className="mt-4  w-[150px] h-[44px] px-2 rounded-lg text-[white] bg-[#F16722] "
+                    onClick={handleCreateCustomer}
+                  >
+                    Create Customer
+                  </button>
+                </div>
+              </div>
+            )}
           </div>
-        ))}
-      </div>
-    )}
-
-  {/* Loading */}
-  {isFetching && (
-    <div className="absolute mt-1 text-sm text-gray-500 bg-white border rounded shadow p-2 max-w-lg z-10">
-      Loading...
-    </div>
-  )}
-
-  {/* Clear button */}
-  {selectedCustomer && (
-    <button
-      className="mt-2 text-red-600 underline"
-      onClick={() => {
-        setSelectedCustomer(null);
-        setSearchTerm("");
-        onCustomerSelect(null);
-      }}
-    >
-      Clear selection
-    </button>
-  )}
-</div>
-
         </>
       )}
     </main>

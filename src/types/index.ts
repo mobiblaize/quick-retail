@@ -96,3 +96,15 @@ export const defaultDiscountPayload = {
   year: "",
 
 }
+
+
+export const defaultSalesPayload = {
+  year: "",
+
+}
+
+export const defaultDashboardAnalysis = {
+  start_date: "",
+  end_date: "",
+
+}

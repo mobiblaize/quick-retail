@@ -1,4 +1,4 @@
-import { useEffect, useRef ,useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import PaymentDetails1 from "../../../components/dashboard/pointOfSales/salesProcessing/paymentDetails";
 import SearchCustomer from "../../../components/dashboard/pointOfSales/salesProcessing/searchCustomer";
 import SearchProduct from "../../../components/dashboard/pointOfSales/salesProcessing/searchProduct";
@@ -45,7 +45,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
     setPaymentMethod(paymentDetails.method);
     setAmountCollected(paymentDetails.amount);
   }, [paymentDetails.method, paymentDetails.amount]);
-  
+
   // Your mutation hook (assuming it returns a mutate function)
   const createSalesOrder = useCreateSales();
   const handlerRef = useRef<(status: string) => void>(() => {});
@@ -64,12 +64,11 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
     const payload = {
       customerId: selectedCustomerID,
       status,
-      payment_method: paymentMethod,  // ✅ Use local state
+      payment_method: paymentMethod, // ✅ Use local state
       amount_collected: paymentMethod === "cash" ? amountCollected : "",
       items: selectedItemsPayload,
     };
-    
-    console.log("Submitting with paymentMethod:", paymentMethod);
+
     createSalesOrder.mutate(payload, {
       onSuccess: () => {
         alert("Sales order created successfully!");
@@ -81,19 +80,15 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
     });
   };
 
-
-  useEffect(() => {
-    console.log("paymentDetails updated in form:", paymentDetails);
-  }, [paymentDetails]);
-  
-  useEffect(() => {
-    console.log("Local paymentMethod changed:", paymentMethod);
-  }, [paymentMethod]);
-
   useEffect(() => {
     handlerRef.current = handleSubmit;
-  }, [selectedCustomerID, selectedItemsPayload, paymentMethod, amountCollected]);
-  
+  }, [
+    selectedCustomerID,
+    selectedItemsPayload,
+    paymentMethod,
+    amountCollected,
+  ]);
+
   // Register the submit handler once
   useEffect(() => {
     if (registerSubmit) {
@@ -104,8 +99,6 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
       });
     }
   }, [registerSubmit]);
-
-
 
   useEffect(() => {
     updatePaymentDetails({
@@ -123,17 +116,13 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   ]);
 
   const handleSelectedItemsChange = (items: any[]) => {
-    console.log("Raw items received:", items);
-
     const payload = items
       .filter((item) => !item.custom && item.variationID && item.quantity)
       .map((item) => ({
         variationId: item.variationID,
         quantity: Number(item.quantity),
-        price: Number(item.selling_price), // convert string to number here
+        price: Number(item.selling_price),
       }));
-
-    console.log("Payload after mapping:", payload);
 
     setSelectedItemsPayload(payload);
   };
@@ -152,4 +141,3 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
 };
 
 export default CreateOrderForm;
-

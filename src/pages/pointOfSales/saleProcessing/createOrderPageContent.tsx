@@ -12,6 +12,7 @@ import CreateOrderForm from "./createOrderForm";
 import { useEffect, useState } from "react";
 import PaymentDetails2 from "../../../components/dashboard/pointOfSales/salesProcessing/confirmPayment/paymentDetails";
 import { useCreateSales } from "../../../hooks/backendApis/pos/salesProcessing";
+import { notifications } from "@mantine/notifications";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -67,13 +68,12 @@ const CreateOrderPageContent: React.FC = () => {
 
   const { mutate: createSale} = useCreateSales();
 
-  const handleSubmit = async (status: "draft" | "completed") => {
+  const handleSubmit = async (status: 'draft' | 'completed') => {
     const payload = {
       status,
       customerId: paymentDetails.customerId,
-      payment_method: paymentDetails.method, 
+      payment_method: paymentDetails.method,
       amount_collected: paymentDetails.amount,
-  
       items: paymentDetails.items.map((item) => ({
         variationId: item.variationId,
         quantity: Number(item.quantity),
@@ -81,8 +81,25 @@ const CreateOrderPageContent: React.FC = () => {
       })),
     };
   
-    createSale(payload);
+    try {
+      await createSale(payload);
+  
+      notifications.show({
+        title: 'Order Successful!',
+        message: status === 'completed'
+          ? 'Payment confirmed by cashier'
+          : 'Payment for this order wasn’t confirmed by cashier.',
+        color: 'green',
+      });
+    } catch (error: any) {
+      notifications.show({
+        title: 'Error',
+        message: error?.message || 'Something went wrong while creating the sale.',
+        color: 'red',
+      });
+    }
   };
+
 useEffect(() => {
   registerSubmitHandler((status: string) => {
     if (status === "draft" || status === "completed") {
@@ -96,8 +113,6 @@ useEffect(() => {
 
 
   const registerSubmitHandler = (handler: (status: string) => void) => {
-    console.log("Submitting with method:", paymentDetails.method); // ✅ use paymentDetails directly
-  console.log("Collected:", paymentDetails.amount);
     setSubmitHandler(() => handler);
   };
 
@@ -112,8 +127,6 @@ useEffect(() => {
 
 
   const handlePaymentChange = (method: string, amount: string) => {
-    console.log("Method Selected:", method);
-    console.log("Amount Collected:", amount);
     setPaymentDetails((prev) => ({
       ...prev,
       method,
@@ -226,15 +239,16 @@ useEffect(() => {
       case OrderCreationStep.CONFIRM_PAYMENT:
         return [
           <div key="confirm-payment-buttons" className="flex gap-4 justify-end">
-<button
-  type="button"
+
+<Button
+variant="outline-primary" 
   onClick={() => {
     if (submitHandler) submitHandler("draft");
   }}
   className="btn btn-secondary"
 >
   Save as Draft
-</button>
+  </Button> 
 
    <Button
   variant="filled-primary"
@@ -294,14 +308,6 @@ useEffect(() => {
             exit="exit"
           >
 
-       
-{/* <PaymentDetails2
-  method={paymentMethod}
-  amount={amountCollected}
-  onPaymentChange={handlePaymentChange}
-  items={paymentItems}
-  total={total}
-/> */}
 <PaymentDetails2
   method={paymentDetails.method}
   amount={paymentDetails.amount}

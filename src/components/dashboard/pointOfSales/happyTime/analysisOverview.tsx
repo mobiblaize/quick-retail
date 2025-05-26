@@ -2,7 +2,6 @@ import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import AnalyticsCard from "../../../General/card";
 import { useFetchDiscountStat } from "../../../../hooks/backendApis/pos/discount";
-import { Key } from "react";
 import house from "../../../../assets/images/house.png";
 import dollar from "../../../../assets/images/dollarSign.png";
 
