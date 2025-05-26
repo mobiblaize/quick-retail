@@ -16,6 +16,7 @@ const SalesAnalytics = () => {
   const [selectedYear, setSelectedYear] = useState<string>(currentYear.toString());
 
   const { data, isLoading } = useFetchSalesAnalysis({
+    //@ts-ignore
     year: selectedYear,
   });
 
