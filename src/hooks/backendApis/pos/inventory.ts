@@ -20,6 +20,12 @@ export const useFetchAllProducts = (
   return useFetchPostData("pos/product/all", payload);
 };
 
-export const useActivateInventory   = (inventoryId: number | string) => {
+// export const useActivateInventory   = (inventoryId: number | string) => {
+//   return usePutData(`pos/product/update-inventory/${inventoryId}`);
+// };
+
+export const useActivateInventory = (
+    inventoryId: number | string,
+) => {
   return usePutData(`pos/product/update-inventory/${inventoryId}`);
 };

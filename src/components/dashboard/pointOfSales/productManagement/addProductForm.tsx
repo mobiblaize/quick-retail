@@ -63,22 +63,24 @@ const AddProductForm = () => {
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [images, setImages] = useState<File[]>([]);
 
+  const handleRemoveImage = (index: number) => {
+  setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+};
+
+
   const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
     setImages((prev) => [...prev, ...files]);
     const file = e.target.files?.[0];
 
-     
-      const reader = new FileReader();
+    const reader = new FileReader();
 
-      reader.readAsDataURL(file);
-       
-      reader.onload = () => {
-        setFormData({ ...formData, image_path: reader.result ?? ""})
-      };
+    reader.readAsDataURL(file);
+
+    reader.onload = () => {
+      setFormData({ ...formData, image_path: reader.result ?? "" });
+    };
   };
-
-  
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
@@ -158,13 +160,13 @@ const AddProductForm = () => {
         </div>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
+      {/* <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
           PRICING INFORMATION
         </h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          {/* <div>
+          <div>
             <FormInput
               type="number"
               label="Cost Price"
@@ -179,9 +181,9 @@ const AddProductForm = () => {
               label="Apply to Variations"
               className="mt-2 text-gray-600"
             />
-          </div> */}
+          </div>
 
-          {/* <div>
+          <div>
             <FormInput
               type="number"
               label="Selling Price"
@@ -196,7 +198,7 @@ const AddProductForm = () => {
               label="Apply to Variations"
               className="mt-2 text-gray-600"
             />
-          </div> */}
+          </div>
 
           <FormSelect
             label="Tax %"
@@ -210,7 +212,7 @@ const AddProductForm = () => {
             }
           />
 
-          {/* <FormInput
+          <FormInput
             type="number"
             label=" Discount"
             paddingY={"0.7rem"}
@@ -219,9 +221,9 @@ const AddProductForm = () => {
             onChange={(e: any) =>
               setFormData({ ...formData, discount: e.target.value })
             }
-          /> */}
+          />
         </div>
-      </div>
+      </div> */}
 
       {/* <div className="mt-12 bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <div className="flex justify-between items-center max-w-full w-full">
@@ -387,6 +389,12 @@ const AddProductForm = () => {
             <div
               className="w-48 h-48 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center rounded-md cursor-pointer hover:border-blue-500 transition"
               onClick={handleUploadClick}
+              role="button"
+              aria-label="Upload images"
+              tabIndex={0}
+              onKeyPress={(e) => {
+                if (e.key === "Enter" || e.key === " ") handleUploadClick();
+              }}
             >
               <UploadCloud className="text-gray-400" size={32} />
               <p className="text-orange-500 text-sm font-medium mt-2">
@@ -398,6 +406,7 @@ const AddProductForm = () => {
 
             {/* Add More Button */}
             <button
+              type="button"
               className="text-orange-500 flex items-center gap-2 font-medium text-sm"
               onClick={handleUploadClick}
             >
@@ -415,16 +424,25 @@ const AddProductForm = () => {
             />
           </div>
 
-          {/* Previews */}
+          {/* Previews with Remove Option */}
           {images.length > 0 && (
             <div className="mt-4 flex flex-wrap gap-4">
               {images.map((file, index) => (
-                <img
-                  key={index}
-                  src={URL.createObjectURL(file)}
-                  alt={`preview-${index}`}
-                  className="w-24 h-24 object-cover rounded"
-                />
+                <div key={index} className="relative w-24 h-24 group">
+                  <img
+                    src={URL.createObjectURL(file)}
+                    alt={`preview-${index}`}
+                    className="w-full h-full object-cover rounded"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => handleRemoveImage(index)}
+                    className="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition-opacity opacity-0 group-hover:opacity-100"
+                    aria-label="Remove image"
+                  >
+                    ×
+                  </button>
+                </div>
               ))}
             </div>
           )}

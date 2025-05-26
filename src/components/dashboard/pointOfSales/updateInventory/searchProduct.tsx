@@ -2,7 +2,7 @@ import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 import { SqrCode } from "../../../../assets/svg";
-import product from "../../../../assets/images/productIMG.png";
+// import product from "../../../../assets/images/productIMG.png";
 
 const SearchProduct = () => {
   return (
@@ -20,7 +20,7 @@ const SearchProduct = () => {
           rightIcon={<SqrCode />}
         />
       </div>
-      <section className="mt-3 px-6 pb-4 max-w-5xl flex flex-col md:flex-row md:justify-between">
+      {/* <section className="mt-3 px-6 pb-4 max-w-5xl flex flex-col md:flex-row md:justify-between">
         <div className="flex gap-4 mb-4 md:mb-0">
           <img src={product} alt="product_img" className="w-15 h-15" />
           <div className="flex flex-col space-y-1.5">
@@ -69,7 +69,7 @@ const SearchProduct = () => {
             <Text>100</Text>
           </div>
         </div>
-      </section>
+      </section> */}
     </main>
   );
 };

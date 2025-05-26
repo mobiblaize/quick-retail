@@ -9,7 +9,6 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
 
-
 const InventoryTable = () => {
   const { data, isLoading } = useFetchAllProducts();
 
@@ -20,7 +19,7 @@ const InventoryTable = () => {
   const mappedProducts: TableRowData[] = products.map((product: any) => ({
     name: product.name,
     sku: product.sku,
-    location: product.product?.location_id ?? "N/A",
+    location: product.product?.location?.name ?? "N/A",
     stockLevel: product.quantity_available ?? 0,
     date: new Date(product.created_at).toLocaleDateString(),
     status:
@@ -30,6 +29,8 @@ const InventoryTable = () => {
         ? "Low Stock"
         : "Available",
     image: product.image_path,
+    variationID: product.variationID,
+    ...product, 
   }));
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -100,7 +101,7 @@ const InventoryTable = () => {
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
+      cell: (props) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <Button variant="subtle" size="xs" p={1}>
@@ -109,7 +110,10 @@ const InventoryTable = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Link to={ROUTES.updateInventory}>
+            <Link
+              to={ROUTES.updateInventory}
+              state={{ inventories: props.row.original }}
+            >
               <Menu.Item>Update</Menu.Item>
             </Link>
             <Link to={ROUTES.triggerOrder}>
