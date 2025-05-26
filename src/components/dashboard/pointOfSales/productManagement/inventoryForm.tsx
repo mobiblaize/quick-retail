@@ -19,7 +19,6 @@ interface Variant {
   location_id?: string;
 }
 
-type VariantField = keyof Pick<Variant, "quantity" | "reorder_level">;
 
 const initialVariants: Variant[] = [
   {

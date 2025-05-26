@@ -1,5 +1,5 @@
 import { defaultPayload2 } from "../../../types";
-import { useFetchPostData, usePostData } from "../../useApis";
+import { useFetchPostData, useGetData, usePostData } from "../../useApis";
 
 export const useCreateSales = () => {
     return usePostData("pos/sales/add-sales");
@@ -9,9 +9,6 @@ export const useCreateSales = () => {
     const defaultPayload = {
       search: "",
       sort_by: "",
-    //   start_date: "",
-    //   end_date: "",
-    //   date_range: "",
       per_page: "",
       paginate: true,
     };
@@ -21,3 +18,10 @@ export const useCreateSales = () => {
     return useFetchPostData("pos/sales/all-sales", payload);
   };
   
+  export const useFetchSingleSale = (orderId: number | string) => {
+    return useGetData(`pos/sales/show-sale-order/${orderId}`);
+  };
+  
+  export const useFetchDownloadReceipt = (orderId: number | string) => {
+    return useGetData(`pos/sales/sales-order/${orderId}`);
+  };

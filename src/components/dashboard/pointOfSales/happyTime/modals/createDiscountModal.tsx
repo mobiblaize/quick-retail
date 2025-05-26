@@ -17,32 +17,23 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
   const [code, setCode] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [discountValue, setDiscountValue] = useState("");
-  const [currency, setCurrency] = useState("Naira");
-  const [percentage, setPercentage] = useState("");
+  const [discountValue, ] = useState("");
+  const [percentage, ] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [redemptionCount, setRedemptionCount] = useState("");
 
   const createDiscount = useCreateDiscount();
-  const { data: productsData, isLoading: isLoadingProducts } =
+  const { data: productsData,  } =
     useFetchAllProducts();
 
-    const productOptions = useMemo(() => {
-      return productsData?.data?.products?.data?.map((product: any) => ({
+  const productOptions = useMemo(() => {
+    return (
+      productsData?.data?.products?.data?.map((product: any) => ({
         label: product.name,
         value: product.id,
-      })) || [];
-    }, [productsData]);
-    
-    
-    
-    
-    console.log(productsData)
-
-  const discountTypeOptions = [
-    { label: "Amount", value: "Amount" },
-    { label: "Percentage", value: "Percentage" },
-  ];
+      })) || []
+    );
+  }, [productsData]);
 
   const handleSubmit = () => {
     const payload = {
@@ -134,7 +125,6 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
                 label="Select Product"
                 value={selectedProducts[0] || null}
                 onChange={(val) => setSelectedProducts([Number(val)])}
-                
                 textColorClass="text-gray-800"
                 required
               />

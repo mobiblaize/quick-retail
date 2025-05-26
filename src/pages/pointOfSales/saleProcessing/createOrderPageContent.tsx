@@ -9,8 +9,10 @@ import CustomerReceipt from "./customerReceipt";
 import { OrderCreationStep } from "../../../utils/orderCreationTypes";
 import { motion, AnimatePresence } from "framer-motion";
 import CreateOrderForm from "./createOrderForm";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PaymentDetails2 from "../../../components/dashboard/pointOfSales/salesProcessing/confirmPayment/paymentDetails";
+import { useCreateSales } from "../../../hooks/backendApis/pos/salesProcessing";
+import { notifications } from "@mantine/notifications";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -46,6 +48,7 @@ const CreateOrderPageContent: React.FC = () => {
       prevStep();
     }
   };
+  
 
   const [submitHandler, setSubmitHandler] = useState<
   ((status: string) => void) | null
@@ -63,10 +66,53 @@ const CreateOrderPageContent: React.FC = () => {
     customerId: null,
   });
 
+  const { mutate: createSale} = useCreateSales();
+
+  const handleSubmit = async (status: 'draft' | 'completed') => {
+    const payload = {
+      status,
+      customerId: paymentDetails.customerId,
+      payment_method: paymentDetails.method,
+      amount_collected: paymentDetails.amount,
+      items: paymentDetails.items.map((item) => ({
+        variationId: item.variationId,
+        quantity: Number(item.quantity),
+        price: item.selling_price,
+      })),
+    };
+  
+    try {
+      await createSale(payload);
+  
+      notifications.show({
+        title: 'Order Successful!',
+        message: status === 'completed'
+          ? 'Payment confirmed by cashier'
+          : 'Payment for this order wasn’t confirmed by cashier.',
+        color: 'green',
+      });
+    } catch (error: any) {
+      notifications.show({
+        title: 'Error',
+        message: error?.message || 'Something went wrong while creating the sale.',
+        color: 'red',
+      });
+    }
+  };
+
+useEffect(() => {
+  registerSubmitHandler((status: string) => {
+    if (status === "draft" || status === "completed") {
+      handleSubmit(status);  // call your typed async function
+    } else {
+      console.warn(`Invalid status: ${status}`);
+    }
+  });
+}, [paymentDetails]);
+// Re-register handler if details change
+
+
   const registerSubmitHandler = (handler: (status: string) => void) => {
-    console.log("Submitting with method:", paymentMethod); // ✅
-    console.log("Collected:", amountCollected); // ✅
-    console.log("paymentDetails:", paymentDetails); // ✅
     setSubmitHandler(() => handler);
   };
 
@@ -79,18 +125,15 @@ const CreateOrderPageContent: React.FC = () => {
     setPaymentDetails(details);
   };
 
-  
-  const [paymentMethod, setPaymentMethod] = useState("");
-  const [amountCollected, setAmountCollected] = useState("");
+
   const handlePaymentChange = (method: string, amount: string) => {
-    setPaymentMethod(method);
-    setAmountCollected(amount);
     setPaymentDetails((prev) => ({
       ...prev,
       method,
       amount,
     }));
   };
+  
   
   const formatCurrency = (amount: number) => {
     if (isNaN(amount)) return "₦ 0";
@@ -174,7 +217,7 @@ const CreateOrderPageContent: React.FC = () => {
       </div>,
     ];
 
-    return subHeaders;
+    return subHeaders;                       
   };
 
   const getBottomButtons = () => {
@@ -196,15 +239,16 @@ const CreateOrderPageContent: React.FC = () => {
       case OrderCreationStep.CONFIRM_PAYMENT:
         return [
           <div key="confirm-payment-buttons" className="flex gap-4 justify-end">
-<button
-  type="button"
+
+<Button
+variant="outline-primary" 
   onClick={() => {
     if (submitHandler) submitHandler("draft");
   }}
   className="btn btn-secondary"
 >
   Save as Draft
-</button>
+  </Button> 
 
    <Button
   variant="filled-primary"
@@ -264,7 +308,6 @@ const CreateOrderPageContent: React.FC = () => {
             exit="exit"
           >
 
-       
 <PaymentDetails2
   method={paymentDetails.method}
   amount={paymentDetails.amount}
@@ -272,6 +315,7 @@ const CreateOrderPageContent: React.FC = () => {
   items={paymentItems}
   total={total}
 />
+
           </motion.div>
         );
       case OrderCreationStep.CUSTOMER_RECEIPT:
