@@ -1,7 +1,5 @@
 import TanTable from "../../../General/table";
-import { customerOrders } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
-import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { Link } from "react-router";
@@ -10,80 +8,70 @@ import { useFetchAllSales } from "../../../../hooks/backendApis/pos/salesProcess
 import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
 
 const CustomerOrdersTable = () => {
-  const { data, isLoading, error } = useFetchAllSales();
+  const { data, } = useFetchAllSales();
+
   const salesData = data?.data?.sales?.data ?? [];
 
-  const tableData = salesData.map(
-    (sale: {
-      sale_order_details: any[];
-      orderID: any;
-      date_completed: any;
-      customer_name: any;
-      order_total: any;
-      payment_status: string;
-    }) => {
-      // Sum total quantity of items
-      const totalItems = sale.sale_order_details.reduce(
-        (sum, item) => sum + item.quantity_ordered,
-        0
-      );
+  // ✅ Mapped data
+  const tableData = salesData.map((sale: { sale_order_details: any[]; orderID: any; date_completed: any; customer_name: any; order_total: any; payment_status: any; }) => {
+    const totalItems = sale.sale_order_details?.reduce(
+      (sum, item) => sum + (item.quantity_ordered || 0),
+      0
+    );
 
-      return {
-        id: sale.orderID, // or sale.order_number
-        timestamp: sale.date_completed,
-        customer: sale.customer_name,
-        amount: sale.order_total,
-        status: sale.payment_status === "paid" ? "Paid" : "Unpaid",
-        items: totalItems,
-      };
-    }
-  );
-  const columns: ColumnDef<TableRowData>[] = [
+    return {
+      orderID: sale.orderID,
+      date: sale.date_completed,
+      customer: sale.customer_name,
+      amount: sale.order_total,
+      status: sale.payment_status,
+      items: totalItems,
+    };
+  });
+
+  // ✅ Define columns based on tableData keys
+  const columns: ColumnDef<any>[] = [
     {
       header: "Order ID",
-      accessorKey: "id",
+      accessorKey: "orderID",
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {/*@ts-ignore  */}
             {shortenTransactionId(props.row.original.orderID)}
           </Text>
           <Text fw={500}>
-            Total Items:
-            {/* /*/}
-            <span className="ml-1 text-black">
-              {/* {props.row.original.sale_order_detail.quantity_ordered} */}
-            </span>
+            Total Items:{" "}
+            <span className="ml-1 text-black">{props.row.original.items}</span>
           </Text>
         </div>
       ),
     },
     {
       header: "Date & Time",
-      accessorFn: (row) => row.date_completed,
-      // cell: (row) => (
-      //   // <Text c="textSecondary.7"> {formatDate(row.original.date_completed)}</Text>
-      // ),
+      accessorKey: "date",
+      cell: (props) => (
+        <Text c="textSecondary.7">{formatDate(props.row.original.date)}</Text>
+      ),
     },
     {
       header: "Customer",
       accessorKey: "customer",
       cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.customer_name}</Text>
+        <Text c="textSecondary.7">{props.row.original.customer}</Text>
       ),
     },
     {
       header: "Amount",
       accessorKey: "amount",
       cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.amount_paid}</Text>
+        <Text c="textSecondary.7">{props.row.original.amount}</Text>
       ),
     },
     {
       header: "Status",
       accessorKey: "status",
       cell: (props) => {
-        const status = props.row.original.payment_status;
+        const status = props.row.original.status;
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
@@ -93,30 +81,33 @@ const CustomerOrdersTable = () => {
             }`}
           >
             {status === "paid" ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2">{status}</span>
+            <span className="ml-2 capitalize">{status}</span>
           </div>
         );
       },
     },
-  
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.viewOrder}>
-          <Text fw={700} c="customPrimary.10" className="cursor-pointer">
-            View Order
-          </Text>
-        </Link>
-      ),
+      cell: (props) => {
+        const orderID = props.row.original.orderID;
+        return (
+          <Link to={ROUTES.viewOrder} state={{ orderID }}>
+            <Text fw={700} c="customPrimary.10" className="cursor-pointer">
+              View Order
+            </Text>
+          </Link>
+        );
+      },
     },
   ];
 
   return (
-    <main className="w-full h-auto  py-8 rounded-lg bg-white">
+    <main className="w-full h-auto py-8 rounded-lg bg-white">
       <TanTable
+    // @ts-ignore
         columnData={columns}
-        data={salesData}
+        data={tableData} 
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -138,7 +129,7 @@ const CustomerOrdersTable = () => {
               Recent Orders
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{salesData.length}</Text>
+              <Text c="customPrimary.10">{tableData.length}</Text>
             </div>
           </div>
         }
@@ -148,3 +139,4 @@ const CustomerOrdersTable = () => {
 };
 
 export default CustomerOrdersTable;
+

@@ -17,7 +17,7 @@ const AddProductForm = () => {
   //   { name: "Colour", values: ["White", "Pink", "Black"], label: ["Small", "Medium", "Large"] },
   // ]);
 
-  const { data, isLoading, isError } = useFetchAllCategories();
+  const { data, } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
 
   const { data: subCategoryData } = useFetchAllSubCategories();
