@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -11,7 +11,9 @@ import {
   useReturns,
 } from "../../../components/General/orderContext/orderCreationContext";
 import ReturnedProduct from "../../../components/dashboard/pointOfSales/returnsRefunds/returnedProduct";
-import SendMail from "../../../components/dashboard/pointOfSales/returnsRefunds/sendMail";
+import SendMail, {
+  SendMailRef,
+} from "../../../components/dashboard/pointOfSales/returnsRefunds/sendMail";
 import Resolve from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/resolve";
 import Decline from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/decline";
 import { Attachment } from "../../../assets/svg";
@@ -44,6 +46,8 @@ const ViewReturnsContent: React.FC = () => {
   const { currentStep, prevStep } = useReturns();
   const [isResolveOpen, setIsResolveOpen] = useState(false);
   const [isDeclineOpen, setIsDeclineOpen] = useState(false);
+
+  const sendMailRef = useRef<SendMailRef>(null);
 
   const handleBack = () => {
     if (currentStep === ReturnsStep.VIEW_RETURNS) {
@@ -151,6 +155,9 @@ const ViewReturnsContent: React.FC = () => {
             <Button
               variant="filled-primary"
               className="flex-1 sm:flex-none sm:w-40"
+              onClick={() => {
+                sendMailRef.current?.handleSave();
+              }}
             >
               Send
             </Button>
@@ -187,7 +194,7 @@ const ViewReturnsContent: React.FC = () => {
             animate="animate"
             exit="exit"
           >
-            <SendMail />
+            <SendMail ref={sendMailRef} />
           </motion.div>
         );
 

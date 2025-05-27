@@ -57,7 +57,8 @@ const FormSelect = ({
         )}
         <select
           value={value}
-          onChange={onSelect}
+          // onChange={onSelect}
+          onChange={(e) => onSelect?.(e.target.value)}
           name={name}
           disabled={readOnly}
           className={`block px-${paddingX ? paddingX : "4"} py-${

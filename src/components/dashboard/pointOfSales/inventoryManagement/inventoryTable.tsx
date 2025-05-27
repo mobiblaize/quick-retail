@@ -1,15 +1,38 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Button, Menu, Text } from "@mantine/core";
+import { Avatar, Button, Loader, Menu, Text } from "@mantine/core";
 import { LowDot, PaidDot, SoldoutDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import { InventoryTableData } from "../../../../utils/mockData";
 import { MoreVertical } from "lucide-react";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
 
 const InventoryTable = () => {
+  const { data, isLoading } = useFetchAllProducts();
+
+  const products = Array.isArray(data?.data?.products?.data)
+    ? data.data.products.data
+    : [];
+
+  const mappedProducts: TableRowData[] = products.map((product: any) => ({
+    name: product.name,
+    sku: product.sku,
+    location: product.product?.location?.name ?? "N/A",
+    stockLevel: product.quantity_available ?? 0,
+    date: new Date(product.created_at).toLocaleDateString(),
+    status:
+      product.quantity_available === 0
+        ? "Sold Out"
+        : parseInt(product.reorder_level) >= product.quantity_available
+        ? "Low Stock"
+        : "Available",
+    image: product.image_path,
+    variationID: product.variationID,
+    ...product, 
+  }));
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Product",
@@ -17,12 +40,15 @@ const InventoryTable = () => {
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={imageSrc}
+            src={
+              typeof props.row.original.image === "string"
+                ? props.row.original.image
+                : imageSrc
+            }
             alt={props.row.original.name as string}
             radius="md"
             size={40}
           />
-
           <Text fw={500} c="black">
             {props.row.original.name}
           </Text>
@@ -75,7 +101,7 @@ const InventoryTable = () => {
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
+      cell: (props) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <Button variant="subtle" size="xs" p={1}>
@@ -84,9 +110,12 @@ const InventoryTable = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item onClick={() => alert("View Order Clicked!")}>
-              Update
-            </Menu.Item>
+            <Link
+              to={ROUTES.updateInventory}
+              state={{ inventories: props.row.original }}
+            >
+              <Menu.Item>Update</Menu.Item>
+            </Link>
             <Link to={ROUTES.triggerOrder}>
               <Menu.Item color="red">Trigger Reorder</Menu.Item>
             </Link>
@@ -95,11 +124,18 @@ const InventoryTable = () => {
       ),
     },
   ];
+
   return (
-    <main className="w-full h-auto py-6 rounded-lg bg-white">
+    <main className="relative w-full h-auto py-6 rounded-lg bg-white">
+      {isLoading && (
+        <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-50">
+          <Loader color="orange" size="lg" />
+        </div>
+      )}
+
       <TanTable
         columnData={columns}
-        data={InventoryTableData}
+        data={mappedProducts}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
@@ -111,7 +147,7 @@ const InventoryTable = () => {
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">
-                {InventoryTableData.length}
+                {mappedProducts.length}
                 <span className="ml-2">Product</span>
               </Text>
             </div>

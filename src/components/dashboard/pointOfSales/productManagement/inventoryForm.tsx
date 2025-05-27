@@ -42,8 +42,6 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
   value: loc?.locationID,
 }));
 
-console.log("location", locations);
-
     
 
   const initialFormState = {
@@ -141,13 +139,13 @@ console.log("location", locations);
                 />
                 <span className="truncate">{variant.name}</span>
               </div>
-              <Input
+              {/* <Input
                 placeholder="Quantity"
                 value={formData.quantity}
                 onChange={(e: any) =>
                   setFormData({ ...formData, quantity: e.target.value })
                 }
-              />
+              /> */}
               <Input
                 placeholder="Enter cost price"
                 value={formData.cost_price}
