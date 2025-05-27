@@ -4,10 +4,10 @@ import LineChart from "../../../General/lineChart";
 import { ChartDataPoint } from "../../../../types";
 import { useFetchSalesAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 
-// const monthLabels = [
-//   "January", "February", "March", "April", "May", "June",
-//   "July", "August", "September", "October", "November", "December",
-// ];
+const monthOrder = [
+  "January", "February", "March", "April", "May", "June",
+  "July", "August", "September", "October", "November", "December",
+];
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 5 }, (_, i) => (currentYear - i).toString());
@@ -22,8 +22,12 @@ const SalesAnalytics = () => {
 
   const chartData = useMemo(() => {
     if (!data?.data?.data || !Array.isArray(data.data.data)) return [];
-
-    return data.data.data.map((item: { month: string; revenue: number }) => ({
+  
+    const sorted = [...data.data.data].sort(
+      (a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month)
+    );
+  
+    return sorted.map((item) => ({
       month: item.month,
       revenue: item.revenue,
     })) as ChartDataPoint[];
@@ -79,6 +83,7 @@ const SalesAnalytics = () => {
             {!chartData.length ? (
               <Text>No sales data available for this year.</Text>
             ) : (
+              
               <LineChart
                 data={chartData}
                 lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
@@ -86,6 +91,7 @@ const SalesAnalytics = () => {
                 yAxisFormatter={(value) => `${value}M`}
                 showLegend={false}
                 highlightedPoint={highlightedPoint}
+            
               />
             )}
           </div>
