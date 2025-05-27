@@ -22,3 +22,14 @@ export const useFetchAnalysisOverview = (customPayload?: Partial<typeof defaultD
     return useFetchPostData("pos/dashboard/sales-overview", payload);
   };
   
+  export const useFetchCustomerAnalysis =  (customPayload?: Partial<typeof defaultDashboardAnalysis>) => {
+    const defaultDashboardAnalysis = {
+      start_date: "",
+      end_date:"",
+  };
+
+    const payload = { ...defaultDashboardAnalysis , ...customPayload };
+  
+    return useFetchPostData("pos/dashboard/customer-stats", payload);
+  };
+  

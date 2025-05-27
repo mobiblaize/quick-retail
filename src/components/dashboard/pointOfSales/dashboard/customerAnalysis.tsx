@@ -6,21 +6,21 @@ import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useMediaQuery } from "@mantine/hooks";
+import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 
 const CustomerAnalysis = () => {
   const isSmallScreen = useMediaQuery("(max-width: 640px)");
+  const { data,} = useFetchCustomerAnalysis();
 
+  const stats = data?.data;
   return (
     <main className="flex flex-col lg:flex-row gap-6">
       <div className="w-full lg:w-[65%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
         <div className="flex justify-between items-center">
           <div className="flex-col">
             <Text size="xl" fw={600} c="textSecondary.9">
-              Recent Customers
+            Customer Analysis 
             </Text>
-            <span className="text-gray-400 font-normal">
-              An overview of sales made
-            </span>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <Group className="w-auto">
@@ -46,13 +46,18 @@ const CustomerAnalysis = () => {
             )}
           </div>
         </div>
-        <DivisionSaleChart />
+        <DivisionSaleChart
+  newCustomers={stats?.new_customers ?? 0}
+  existingCustomers={stats?.existing_customers ?? 0}
+  new_customers_percentage={stats?.new_customers_percentage ?? 0}
+  existing_customers_percentage={stats?.existing_customers_percentage ?? 0}
+/>
       </div>
 
       <div className="w-full lg:w-[35%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Customer Analysis
+           Recent Customers
           </Text>
           <span className="text-gray-400 font-normal">
             An overview of sales made

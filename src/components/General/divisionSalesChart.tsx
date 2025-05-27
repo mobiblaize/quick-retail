@@ -1,25 +1,64 @@
 import { PieChart } from "@mantine/charts";
 import { Divider, Text } from "@mantine/core";
-import { customerAnalysis, customerData } from "../../utils/mockData";
 
-const DivisionSaleChart = () => {
+interface Props {
+  newCustomers: number;
+  existingCustomers: number;
+  existing_customers_percentage: number;
+  new_customers_percentage: number;
+}
+
+const DivisionSaleChart = ({ newCustomers, existingCustomers,new_customers_percentage, existing_customers_percentage }: Props) => {
+  const total = newCustomers + existingCustomers;
+
+  
+  const pieData = [
+    {
+      name: "New Customers",
+      value: new_customers_percentage,
+      color: "#E76E50", 
+    },
+    {
+      name: "Existing Customers",
+      value: existing_customers_percentage,
+      color: "#274754", 
+    },
+  ];
+
+  const customerAnalysis = [
+    {
+      label: "New Customers",
+      num: newCustomers,
+    },
+    {
+      label: "Existing Customers",
+      num: existingCustomers,
+  
+    },
+  ];
+  console.log("Pie Chart Data:", pieData);
   return (
     <main className="flex flex-col md:flex-row mt-6 justify-between">
       <div className="flex flex-col md:flex-row w-full md:w-[63%] items-center">
         <div className="w-48 h-48 md:w-56 md:h-56 flex  items-center justify-center mb-4 md:mb-0">
-          <PieChart
-            data={customerData}
-            size={180}
-            tooltipDataSource="segment"
-            strokeWidth={1}
-            paddingAngle={1}
-            withTooltip={false}
-            style={{ height: "100%", width: "100%" }}
-          />
+        {total > 0 ? (
+  <PieChart
+    data={pieData}
+    size={180}
+    tooltipDataSource="segment"
+    strokeWidth={1}
+    paddingAngle={1}
+    withTooltip={false}
+    style={{ height: "100%", width: "100%" }}
+  />
+) : (
+  <Text>No data available</Text>
+)}
+
         </div>
 
         <div className="flex flex-row md:flex-col flex-wrap justify-center gap-4 md:ml-2">
-          {customerData.map((item, index) => (
+          {pieData.map((item, index) => (
             <div
               key={index}
               className="flex whitespace-nowrap items-center gap-2 mr-4 md:mr-0"
@@ -29,7 +68,7 @@ const DivisionSaleChart = () => {
                 style={{ backgroundColor: item.color }}
               />
               <Text fw={500} size="sm" c="gray.9">
-                {item.name} {index === 2 && " - 10%"}
+                {item.name}
               </Text>
             </div>
           ))}
@@ -43,7 +82,7 @@ const DivisionSaleChart = () => {
               {data.label}
             </Text>
             <div className="flex flex-col gap-3">
-              <Text size="lg" fw={700} style={{ color: data.color }}>
+              <Text size="lg" fw={700} >
                 {data.num}
               </Text>
               <Divider size="sm" color="#E4E7EC" />
