@@ -195,6 +195,7 @@ import AllTransactionPage from "./pages/financialManagement/Banking/transactionH
 import ViewCardPage from "./pages/financialManagement/Banking/viewTransaction";
 import AddBankPage from "./pages/financialManagement/Banking/addBank";
 import InventoryDetailsPage from "./pages/pointOfSales/productManagement/inventoryDetailsPage";
+import ViewOrderDraftPage from "./pages/pointOfSales/saleProcessing/viewOrderDraftPage";
 
 export default function App() {
   return (
@@ -224,6 +225,7 @@ export default function App() {
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
+          <Route path={ROUTES.viewOrderdraft} element={<ViewOrderDraftPage/>} />
           <Route
             path={ROUTES.inventory}
             element={<InventoryManagementPage />}

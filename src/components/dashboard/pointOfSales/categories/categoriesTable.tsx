@@ -44,13 +44,18 @@ const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
     {
       header: "Total Product",
       accessorKey: "totalProduct",
+      cell: ({ row }) => (
+        <Text c="textSecondary.9" fw={500}>
+          {row.original.total_products}
+        </Text>
+      ),
     },
     {
       header: "Total Amount",
       accessorKey: "totalAmount",
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
-          {row.original.totalAmount}
+          {row.original.total_amount}
         </span>
       ),
     },

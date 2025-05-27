@@ -24,4 +24,8 @@ export function formatDate(dateString: string): string {
     if (!str) return "";
     return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
   }
+  export const formatCurrency = (amount: number) => {
+    if (isNaN(amount)) return "₦ 0";
+    return `₦ ${amount.toLocaleString()}`;
+  };
   

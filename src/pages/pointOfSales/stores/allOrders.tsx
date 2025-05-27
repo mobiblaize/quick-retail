@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import StoreDetails from "../../../components/dashboard/pointOfSales/stores/storeDetails";
 import StoreOrderTable from "../../../components/dashboard/pointOfSales/stores/storeOrderTable";
 import StoreOverview from "../../../components/dashboard/pointOfSales/stores/storeOverview";
@@ -18,9 +19,10 @@ const AllOrders: React.FC<AllOrdersProps> = ({ store }) => {
     end_date: end.toISOString().split("T")[0],
   });
 
+
   return (
     <main className="grid grid-cols-1 gap-6">
-      <StoreOverview store={store} statData={statData} />
+     <StoreOverview store={store} statData={statData?.data?.stats} />
       <StoreDetails store={store} />
       <StoreOrderTable
         locationId={store?.locationID}

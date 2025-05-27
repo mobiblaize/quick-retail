@@ -2,6 +2,7 @@ export const ROUTES = {
   dashboard: "/dashboard",
   productManagement: "/dashboard/product-management",
   sales: "/dashboard/sales",
+  viewOrderdraft: "/dashboard/sales/draft",
   inventory: "/dashboard/inventory",
   updateInventory: "/dashboard/inventory/updateInventory",
   triggerOrder: "/dashboard/inventory/triggerorders",

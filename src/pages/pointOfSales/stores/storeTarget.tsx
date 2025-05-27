@@ -73,7 +73,7 @@ const StoreTarget = () => {
             Add New Store
             <Plus />
           </Button>
-          <Link to={ROUTES.storeTarget}>
+          {/* <Link to={ROUTES.storeTarget}>
             <Button
               variant="outline-primary"
               className="flex gap-1.5 items-center whitespace-nowrap"
@@ -82,7 +82,7 @@ const StoreTarget = () => {
               Stores Target
               <ChevronRight />
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>,
