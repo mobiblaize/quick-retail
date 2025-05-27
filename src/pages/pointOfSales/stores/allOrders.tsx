@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+
 import StoreDetails from "../../../components/dashboard/pointOfSales/stores/storeDetails";
 import StoreOrderTable from "../../../components/dashboard/pointOfSales/stores/storeOrderTable";
 import StoreOverview from "../../../components/dashboard/pointOfSales/stores/storeOverview";

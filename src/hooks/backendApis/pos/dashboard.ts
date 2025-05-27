@@ -1,4 +1,4 @@
-import { defaultDashboardAnalysis, defaultSalesPayload } from "../../../types";
+import { defaultDashboardAnalysis } from "../../../types";
 import { useFetchPostData } from "../../useApis";
 
 export const useFetchAnalysisOverview = (customPayload?: Partial<typeof defaultDashboardAnalysis>) => {

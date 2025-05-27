@@ -4,10 +4,10 @@ import LineChart from "../../../General/lineChart";
 import { ChartDataPoint } from "../../../../types";
 import { useFetchSalesAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 
-const monthLabels = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
-];
+// const monthLabels = [
+//   "January", "February", "March", "April", "May", "June",
+//   "July", "August", "September", "October", "November", "December",
+// ];
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 5 }, (_, i) => (currentYear - i).toString());

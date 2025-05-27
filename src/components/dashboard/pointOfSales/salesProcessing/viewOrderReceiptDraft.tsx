@@ -20,12 +20,7 @@ type Customer = {
   customer_email: string;
 };
 
-type Fees = {
-  tax_rate: number;
-  tax: number;
-  discount: number;
-  // service_fee?: number;
-};
+
 
 export interface SaleData {
   data: {
