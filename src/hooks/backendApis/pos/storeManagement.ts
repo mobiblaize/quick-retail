@@ -37,7 +37,7 @@ const defaultPayload = {
 export const useSinglestoreOverview = (locationId: string, customPayload?: Partial<typeof defaultPayload>) => {
   const payload = { ...defaultPayload, ...customPayload };
 
-  return useFetchPostData(`pos/location/toggle-status/${locationId}`, payload);
+  return useFetchPostData(`pos/location/single-location-overview/${locationId}`, payload);
 };
 
 

@@ -56,11 +56,11 @@ const ViewOrderPage = () => {
     <div key="1" className="py-2.5">
       <div className="hidden sm:flex gap-8 items-center">
         {backButton}
-        <div className="flex items-center">
+        {/* <div className="flex items-center">
           <Text>Sales processing</Text>
           <span className="mx-2">/</span>
           <Text c="black">View Order</Text>
-        </div>
+        </div> */}
       </div>
 
       <div className="flex sm:hidden">{backButton}</div>

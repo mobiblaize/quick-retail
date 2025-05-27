@@ -64,3 +64,7 @@ export const useActivateCategories   = (subCategoryId: number | string) => {
 export const useDeactivateCategories   = (subCategoryId: number | string) => {
   return usePutData(`pos/subcategory/deactivate-subcategory/${subCategoryId}`);
 };
+
+export const useFetchSubCategory = (subCategoryId: number | string) => {
+  return useGetData(`pos/subcategory/show-subcategory/${subCategoryId}`);
+};

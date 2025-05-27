@@ -17,7 +17,6 @@ interface StoreDetailsProps {
 
 const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  console.log("Stores from props4:", store);
   useEffect(() => {
     if (store && typeof store.is_active !== "undefined") {
       setIsEnabled(store.is_active === 1);

@@ -11,7 +11,9 @@ const ViewCollection = () => {
   const navigate = useNavigate();
   const { state } = useLocation();
   const category = state?.category;
-  const subCategory = state?.subCategory;
+
+  const initialSubCategory = state?.subCategory;
+  const [subCategory] = useState(initialSubCategory);
 
   const subHeaders = [
     <div key="1" className="py-2.5">
@@ -45,10 +47,9 @@ const ViewCollection = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      {/* <CategoryProductDetails category={category} /> */}
       <CategoryProductDetails category={category} subCategory={subCategory} />
 
-      <CategoriesProductTable />
+      <CategoriesProductTable subCategoryId={subCategory?.id} />
       <EditCategory
         opened={isEditCategoryOpen}
         onClose={() => setIsEditCategoryOpen(false)}

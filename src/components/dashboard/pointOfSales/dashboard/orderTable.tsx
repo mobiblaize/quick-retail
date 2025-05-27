@@ -2,7 +2,7 @@ import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { Link } from "react-router";
+import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllSales } from "../../../../hooks/backendApis/pos/salesProcessing";
 import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
@@ -13,7 +13,7 @@ const CustomerOrdersTable = () => {
   const salesData = data?.data?.sales?.data ?? [];
 
   // ✅ Mapped data
-  const tableData = salesData.map((sale: { sale_order_details: any[]; orderID: any; date_completed: any; customer_name: any; order_total: any; payment_status: any; }) => {
+  const tableData = salesData.map((sale: { sale_order_details: any[]; orderID: any; updated_at: any; customer_name: any; order_total: any; payment_status: any; }) => {
     const totalItems = sale.sale_order_details?.reduce(
       (sum, item) => sum + (item.quantity_ordered || 0),
       0
@@ -21,7 +21,7 @@ const CustomerOrdersTable = () => {
 
     return {
       orderID: sale.orderID,
-      date: sale.date_completed,
+      date: sale.updated_at,
       customer: sale.customer_name,
       amount: sale.order_total,
       status: sale.payment_status,
@@ -29,8 +29,40 @@ const CustomerOrdersTable = () => {
     };
   });
 
-  // ✅ Define columns based on tableData keys
+  const navigate = useNavigate();
+
+  const handleViewClick = (orderID: string, status: string) => {
+
+    if (status === "paid") {
+      navigate(ROUTES.viewOrder, { state: { orderID } });
+    } else if (status === "pending") {
+      navigate(ROUTES.viewOrderdraft, { state: { orderID } });
+    } else {
+      console.warn("Unhandled order status:", status);
+    }
+  };
+   
   const columns: ColumnDef<any>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
     {
       header: "Order ID",
       accessorKey: "orderID",
@@ -86,20 +118,26 @@ const CustomerOrdersTable = () => {
         );
       },
     },
+   
     {
       header: "",
       accessorKey: "action",
       cell: (props) => {
-        const orderID = props.row.original.orderID;
+        const { orderID, status } = props.row.original;
+    
         return (
-          <Link to={ROUTES.viewOrder} state={{ orderID }}>
-            <Text fw={700} c="customPrimary.10" className="cursor-pointer">
-              View Order
-            </Text>
-          </Link>
+          <Text
+            fw={700}
+            c="customPrimary.10"
+            className="cursor-pointer"
+            onClick={() => handleViewClick(orderID, status)}
+          >
+            View Order
+          </Text>
         );
       },
     },
+    
   ];
 
   return (
