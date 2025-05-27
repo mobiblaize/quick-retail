@@ -5,9 +5,11 @@ import PageContainer from "../../../layout/pageContainer";
 import ReturnsAnalytics from "../../../components/dashboard/pointOfSales/returnsRefunds/returnsAnlytics";
 import ReturnsTable from "../../../components/dashboard/pointOfSales/returnsRefunds/returnsTable";
 import LogComplaints from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/logComplaints";
+import { useFetchAllreturns } from "../../../hooks/backendApis/pos/returns";
 
 const ReturnsPage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
+  const { data, isLoading } = useFetchAllreturns();
 
   const subHeaders = [
     <div key="1">
@@ -29,7 +31,15 @@ const ReturnsPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <ReturnsAnalytics />
+      <ReturnsAnalytics
+        data={{
+          totalReturns: data?.data?.totalReturns ?? 0,
+          pending_complaints: data?.data?.pending_complaints ?? 0,
+          resolved_complaints: data?.data?.resolved_complaints ?? 0,
+          declined_complaints: data?.data?.declined_complaints ?? 0,
+        }}
+        isLoading={isLoading}
+      />
       <ReturnsTable />
       <LogComplaints
         opened={isLogComplaintsOpen}

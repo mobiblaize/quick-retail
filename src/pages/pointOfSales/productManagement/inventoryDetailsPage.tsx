@@ -10,7 +10,7 @@ import { useCreateProduct } from "../../../hooks/backendApis/pos/products";
 const InventoryDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { form_data, resetForm } = useStore();
-  const { mutate,  } = useCreateProduct();
+  const { mutate } = useCreateProduct();
 
   const handleSave = () => {
     if (!form_data.product_name) {
@@ -23,6 +23,7 @@ const InventoryDetailsPage: React.FC = () => {
       return;
     }
 
+    const hasVariations = true;
 
     const payload = {
       product_name: form_data.product_name,
@@ -32,19 +33,24 @@ const InventoryDetailsPage: React.FC = () => {
       short_description: form_data.short_description,
       long_description: form_data.long_description,
       location_id: form_data.location_id,
-      has_variation: form_data.has_variation,
+      has_variations: hasVariations,
       tags: form_data.tags,
       promotional_price: form_data.promotional_price,
       promotional_start_date: form_data.promotional_start_date,
       safety_instructions: form_data.safety_instructions,
       certificates: form_data.certificates,
-      image_path: [form_data.image_path],
-      cost_price: form_data.variations[0]?.cost_price,
-      selling_price: form_data.variations[0]?.selling_price,
-      quantity: form_data.variations[0]?.quantity,
-      reorder_level: form_data.variations[0]?.reorder_level,
-      size: form_data.variations[0]?.size,
-      color: form_data.variations[0]?.color,
+     
+
+      // Always use variations
+      variations: form_data.variations?.map((v) => ({
+        cost_price: v.cost_price,
+        selling_price: v.selling_price,
+        quantity: v.quantity,
+        reorder_level: v.reorder_level,
+        size: v.size,
+        colour: v.color, // Rename key from color -> colour
+        image_path: form_data.image_path,
+      })),
     };
 
     mutate(payload, {

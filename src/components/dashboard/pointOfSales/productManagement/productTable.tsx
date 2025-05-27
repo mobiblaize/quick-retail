@@ -1,19 +1,35 @@
 import TanTable from "../../../General/table";
-// import { productTableData } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Text } from "@mantine/core";
+import { Avatar, Text, Menu, Button, Loader } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import { Menu, Button } from "@mantine/core";
 import { MoreVertical } from "lucide-react";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
 
 const ProductTable = () => {
-  const { data,  } = useFetchAllProducts();
+  const { data, isLoading  } = useFetchAllProducts();
+
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
     : [];
+
+  const mappedProducts: TableRowData[] = products.map((product: any) => {
+    const statusRaw = product.status?.toLowerCase?.();
+    const isActive = statusRaw === "active";
+
+    return {
+      name: product.name,
+      productCode: product.code,
+      location: product.product?.location?.name || "—",
+      category: product.product?.category?.name || "—",
+      sellingPrice: `₦${Number(product.selling_price).toLocaleString()}`,
+      stockLevel: product.quantity_available,
+      status: isActive ? "Active" : "Inactive",
+      image: product.image_path,
+      items: product.items ?? "",
+    };
+  });
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -22,12 +38,11 @@ const ProductTable = () => {
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={imageSrc}
+            src={typeof props.row.original.image === "string" ? props.row.original.image : imageSrc}
             alt={props.row.original.name as string}
             radius="md"
             size={40}
           />
-
           <div className="flex flex-col">
             <Text fw={500} c="black">
               {props.row.original.name}
@@ -107,7 +122,7 @@ const ProductTable = () => {
             <Menu.Item onClick={() => alert("View Order Clicked!")}>
               View
             </Menu.Item>
-            <Menu.Item onClick={() => alert("View Order Clicked!")}>
+            <Menu.Item onClick={() => alert("Edit Order Clicked!")}>
               Edit
             </Menu.Item>
             <Menu.Item
@@ -121,23 +136,15 @@ const ProductTable = () => {
       ),
     },
   ];
-  const mappedProducts: TableRowData[] = products.map((product: any) => {
-    const statusRaw = product.status?.toLowerCase?.();
-    const isActive = statusRaw === "active";
-
-    return {
-      name: product.name,
-      productCode: product.code,
-      location: product.product?.location?.name || "—",
-      category: product.product?.category?.name || "—",
-      sellingPrice: `₦${Number(product.selling_price).toLocaleString()}`,
-      stockLevel: product.quantity_available,
-      status: isActive ? "Active" : "Inactive",
-    };
-  });
 
   return (
-    <main className="w-full h-auto py-6 rounded-lg bg-white">
+    <main className="relative w-full h-auto py-6 rounded-lg bg-white">
+      {isLoading && (
+        <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-50">
+          <Loader color="orange" size="lg" />
+        </div>
+      )}
+
       <TanTable
         columnData={columns}
         data={mappedProducts}

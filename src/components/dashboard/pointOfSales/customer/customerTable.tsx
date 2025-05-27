@@ -4,8 +4,14 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
+import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
 
 const CustomerTable = () => {
+  const { data, isLoading } = useFetchAllCustomers();
+  const customers = Array.isArray(data?.data?.customers?.data)
+    ? data.data.customers.data
+    : [];
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Name",
@@ -82,11 +88,26 @@ const CustomerTable = () => {
       },
     },
   ];
+  const mappedCustomers: TableRowData[] = customers.map((customer: any) => ({
+    name: customer.customer_name,
+    date: customer.last_visit
+      ? new Date(customer.last_visit).toLocaleDateString()
+      : "—",
+    contact: customer.customer_email,
+    number: customer.customer_phone,
+    totalAmount: customer.sales_orders_sum_order_total
+      ? `₦${Number(customer.sales_orders_sum_order_total).toLocaleString()}`
+      : "₦0",
+    totalTransaction: `${customer.sales_orders_count} transaction(s)`,
+    timeStamp: new Date(customer.created_at).toLocaleString(),
+    status: customer.status === "active" ? "Active" : "Inactive",
+  }));
+
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={allCustomers}
+        data={mappedCustomers}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"

@@ -1,17 +1,24 @@
 import { Button, Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
-import { salesCustomer } from "../../../../utils/mockData";
 import { ArrowUpRight, ChevronRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useMediaQuery } from "@mantine/hooks";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
+import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
+import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from "react";
+import { JSX } from "react/jsx-runtime";
 
 const CustomerAnalysis = () => {
   const isSmallScreen = useMediaQuery("(max-width: 640px)");
   const { data,} = useFetchCustomerAnalysis();
+  const { data: allCustomersData } = useFetchAllCustomers();
 
+  const customers =
+    allCustomersData?.data?.customers?.data?.sort(
+      (a: { sales_orders_count: number; }, b: { sales_orders_count: number; }) => b.sales_orders_count - a.sales_orders_count
+    ) ?? [];
   const stats = data?.data;
   return (
     <main className="flex flex-col lg:flex-row gap-6">
@@ -64,11 +71,11 @@ const CustomerAnalysis = () => {
           </span>
         </div>
         <div className="flex mt-4 flex-col gap-2">
-          {salesCustomer.map((data, index) => (
+        {customers.slice(0, 3).map((data: { usericon: JSX.IntrinsicAttributes; customer_name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; customer_email: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | ReactPortal | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; }, index: Key | null | undefined) => (
             <div key={index}>
               <div className="flex px-2 justify-between items-center">
                 <div className="flex items-center gap-2.5">
-                  <span className="flex-shrink-0">{<data.usericon />}</span>
+                  {/* <span className="flex-shrink-0">{<data.usericon />}</span> */}
                   <div className="flex flex-col">
                     <Text
                       size="lg"
@@ -76,10 +83,10 @@ const CustomerAnalysis = () => {
                       c="textSecondary.9"
                       className="break-all sm:break-normal"
                     >
-                      {data.customerName}
+                {data.customer_name}
                     </Text>
                     <Text className="secondary font-normal text-sm sm:text-base break-all sm:break-normal">
-                      {data.email}
+                    {data.customer_email}
                     </Text>
                   </div>
                 </div>
