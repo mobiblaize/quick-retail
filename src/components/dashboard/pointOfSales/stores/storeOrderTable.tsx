@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useStoreOrders } from "../../../../hooks/backendApis/pos/storeManagement";
 
+
 interface StoreOrderTableProps {
   locationId: string;
   startDate: string;
@@ -22,7 +23,8 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
     end_date: endDate,
   });
 
-  const orders = data?.orders?.data ?? [];
+  const orders = data?.data?.orders?.data ?? [];
+
 
   if (isLoading) {
     return (
@@ -35,9 +37,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
     );
   }
 
-  if (!orders.length) {
-    return <Text>No orders available.</Text>;
-  }
+ 
 
   const columns: ColumnDef<any>[] = [
     {
@@ -167,7 +167,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
     <div>
       <main className="w-full h-auto py-6 rounded-lg bg-white">
         <TanTable
-          //@ts-ignore
+        //@ts-ignore
           columnData={columns}
           data={orders}
           isLoading={isLoading}
@@ -175,6 +175,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
           showSortFilter
           searchPlaceholder="Search orders"
           length={5}
+          hidePaging
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

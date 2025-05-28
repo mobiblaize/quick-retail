@@ -83,6 +83,11 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
     {
       header: "Total Product",
       accessorKey: "totalProduct",
+      cell: ({ row }) => (
+        <Text fw={300} c="#101928">
+          {row.original.total_quantity}
+        </Text>
+      ),
     },
     {
       header: "Date Modified",
@@ -162,7 +167,7 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={20}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

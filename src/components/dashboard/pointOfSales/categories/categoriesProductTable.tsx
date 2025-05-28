@@ -1,20 +1,46 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch } from "@mantine/core";
 import TanTable from "../../../General/table";
-import { categoriesProductSingle } from "../../../../utils/mockData";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
 import DeleteSubCategory from "./modals/deleteSubCategory";
 import { notifications } from "@mantine/notifications";
-import { useDeleteSubCategory } from "../../../../hooks/backendApis/pos/categories";
+import {
+  useDeleteSubCategory,
+  useFetchSubCategory,
+} from "../../../../hooks/backendApis/pos/categories";
+import DeleteProduct from "./modals/deleteProduct";
+import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
 
-const CategoriesProductTable = () => {
-  // const [isDeleteCategoryOpen, setIsDeleteCategoryOpen] = useState(false);
-  const [tableData, setTableData] = useState(categoriesProductSingle);
+interface CategoriesProductTableProps {
+  subCategoryId: number | string;
+}
+
+const CategoriesProductTable = ({
+  subCategoryId,
+}: CategoriesProductTableProps) => {
+  const { data, refetch } = useFetchSubCategory(subCategoryId);
+  const transformedData =
+    data?.products?.map((p: { productID: any; name: any; product_name: any; in_stock: any; total_quantity: any; is_active: number; updated_at: any; }) => ({
+      id: p.productID,
+      product_name: p.name || p.product_name || "Unnamed",
+      total_quantity: p.in_stock || p.total_quantity || 0,
+      status: p.is_active === 1 ? "Active" : "Inactive",
+      updated_at: p.updated_at || "",
+    })) || [];
+  const products = data?.data?.products || [];
+  console.log(products);
+
+  const [tableData, setTableData] = useState<typeof transformedData>([]);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const deleteMutation = useDeleteSubCategory(selectedId ?? "");
+  const deleteMutation = useDeleteProuct(selectedId ?? "");
+
+
+  useEffect(() => {
+    setTableData(products);
+  }, [products]);
 
   const handleToggle = (index: number) => {
     const updatedData = [...tableData];
@@ -26,52 +52,67 @@ const CategoriesProductTable = () => {
 
   const handleDelete = async () => {
     if (!selectedId) return;
-
+  
     try {
       await deleteMutation.mutateAsync();
       notifications.show({
-        title: "Sub-category Deleted!",
-        message: "This product sub-category has been deleted!",
+        title: "Product Deleted!",
+        message: "This product has been successfully deleted!",
         color: "red",
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
+      refetch(); // <--- Refresh data
     } catch (error: any) {
       notifications.show({
         title: "Error",
-        message: error?.message || "Failed to delete sub-category",
+        message: error?.message || "Failed to delete product",
         color: "red",
       });
     }
   };
-
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
+    {
       header: "Product Name",
-      accessorKey: "storeName",
+      accessorKey: "productName",
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {props.row.original.storeName}
+            {props.row.original.product_name}
           </Text>
-          {/* <Text fw={400} className="text-sm">
-            Store ID: {props.row.original.storeId}
-          </Text> */}
         </div>
       ),
     },
     {
       header: "Quantity",
-      accessorKey: "store",
+      accessorKey: "quantity",
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {props.row.original.storeSizeA} left
+            {props.row.original.total_quantity} left
           </Text>
-          {/* <Text fw={400} className="text-sm">
-            GSA: {props.row.original.storeSizeB}
-          </Text> */}
         </div>
       ),
     },
@@ -81,7 +122,7 @@ const CategoriesProductTable = () => {
       accessorKey: "dateCreated",
       cell: (props) => (
         <Text c="black" fw={500} className="text-sm font-medium">
-          {props.row.original.dateCreated}
+          {props.row.original.updated_at}
         </Text>
       ),
     },
@@ -117,15 +158,25 @@ const CategoriesProductTable = () => {
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Text fw={600} c="black" className="cursor-pointer"  onClick={() => setIsDeleteOpen(true)}>
+      cell: (props) => (
+        <Text
+          fw={600}
+          c="black"
+          className="cursor-pointer"
+          onClick={() => {
+            //@ts-ignore
+            setSelectedId(props.row.original.productID); // Ensure the correct product is selected
+            setIsDeleteOpen(true);
+          }}
+        >
           Delete
         </Text>
       ),
     },
+    
     {
       header: "",
-      accessorKey: "action",
+      accessorKey: "action2",
       cell: () => (
         // <Link to={ROUTES.viewStore}>
         <Text fw={600} c="customPrimary.10" className="cursor-pointer">
@@ -153,17 +204,18 @@ const CategoriesProductTable = () => {
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
                 <Text c="customPrimary.10">
-                  {categoriesProductSingle.length}
+                  {tableData.length}
                 </Text>
               </div>
             </div>
           }
         />
-        <DeleteSubCategory
-              opened={isDeleteOpen}
-              onClose={() => setIsDeleteOpen(false)}
+        <DeleteProduct
+          opened={isDeleteOpen}
+          onClose={() => setIsDeleteOpen(false)}
           handleDelete={handleDelete}
-          subCategoryId={selectedId}     />
+          productID={selectedId}
+        />
       </main>
     </div>
   );

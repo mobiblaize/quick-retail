@@ -1,8 +1,6 @@
 import { Button, Text } from "@mantine/core";
-import { ChevronRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import PageContainer from "../../../layout/pageContainer";
-import { Link } from "react-router";
-import { ROUTES } from "../../../constants/routes";
 import AnalysisOverview from "../../../components/dashboard/pointOfSales/stores/analysisOverview";
 import StoreOverviewTable from "../../../components/dashboard/pointOfSales/stores/storeOverviewTable";
 import AddNewStore from "../../../components/dashboard/pointOfSales/stores/modals/addNewStore";
@@ -73,7 +71,7 @@ const StoreTarget = () => {
             Add New Store
             <Plus />
           </Button>
-          <Link to={ROUTES.storeTarget}>
+          {/* <Link to={ROUTES.storeTarget}>
             <Button
               variant="outline-primary"
               className="flex gap-1.5 items-center whitespace-nowrap"
@@ -82,7 +80,7 @@ const StoreTarget = () => {
               Stores Target
               <ChevronRight />
             </Button>
-          </Link>
+          </Link> */}
         </div>
       </div>
     </div>,

@@ -1,20 +1,56 @@
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
-import imageSrc from "../../../../assets/images/productIMG.png"; // fallback
-import { CircleHelp } from "lucide-react";
-import { useLocation } from "react-router";
-import { useFetchSingleSale } from "../../../../hooks/backendApis/pos/salesProcessing";
+import imageSrc from "../../../../assets/images/productIMG.png";
 
-const ViewOrderReceipt = () => {
-  const location = useLocation();
-  const orderId = location.state?.orderID;
-  const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
+type SaleOrderDetails = {
+  product_variation?: {
+    image_path?: string;
+    name?: string;
+    sku?: string;
+    code?: string;
+  };
+  unit_price: number;
+  quantity_ordered: number;
+  total_price: number;
+};
+
+type Customer = {
+  customer_name: string;
+  customer_phone: string;
+  customer_email: string;
+};
 
 
-  if (!orderId) return <div>Preparing receipt...</div>;
-if (isLoading) return <div>Loading receipt...</div>;
-if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
 
+export interface SaleData {
+  data: {
+    order_number: string;
+    payment_status: string;
+    date_completed: string;
+    payment_method: string;
+    customer: Customer;
+    sale_order_details: SaleOrderDetails[];
+    order_total: number;
+    amount_paid: number;
+    fees: string; // JSON string you parse
+  };
+}
+
+
+interface ViewOrderReceiptDraftProps {
+  saleData: SaleData;
+  isLoading: boolean;
+  isError: boolean;
+}
+
+const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceiptDraftProps) =>
+{
+
+  if (isLoading) return <div>Loading receipt...</div>;
+  if (isError || !saleData) return <div>Failed to load receipt data.</div>;
+
+
+  
 
   const order = saleData.data;
 
@@ -129,10 +165,10 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
               <Text fw={500}>Tax ({fees.tax_rate}%)</Text>
               <Text>₦{fees.tax}</Text>
             </div>
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <Text fw={500}>Service Fee <CircleHelp size={16} className="inline-block ml-2 text-[#2E90FA]" /></Text>
               <Text>₦{fees.service_fee}</Text>
-            </div>
+            </div> */}
             <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
               <Text>₦{fees.discount}</Text>
@@ -148,4 +184,4 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
   );
 };
 
-export default ViewOrderReceipt;
+export default ViewOrderReceiptDraft;

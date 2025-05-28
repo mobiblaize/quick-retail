@@ -1,5 +1,5 @@
 import { defaultPayload2 } from "../../../types";
-import { useFetchPostData, useGetData, usePostData } from "../../useApis";
+import { useFetchPostData, useGetData, usePostData, usePutData } from "../../useApis";
 
 export const useCreateSales = () => {
     return usePostData("pos/sales/add-sales");
@@ -24,4 +24,7 @@ export const useCreateSales = () => {
   
   export const useFetchDownloadReceipt = (orderId: number | string) => {
     return useGetData(`pos/sales/sales-order/${orderId}`);
+  };
+  export const useUpdateDraft  = (orderId: number | string) => {
+    return usePutData(`pos/sales/update-draft-order/${orderId}`);
   };

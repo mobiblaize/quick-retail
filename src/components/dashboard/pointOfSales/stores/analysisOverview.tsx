@@ -28,7 +28,7 @@ const AnalysisOverview = ({ stats }) => {
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-            percentageValue={card.percentageValue}
+            // percentageValue={card.percentageValue}
             borderColor={card.borderColor}
           />
         ))}

@@ -20,6 +20,7 @@ interface CreateOrderFormProps {
   }) => void;
   paymentItems: { label: string; amount: string }[];
   total: string;
+  
 }
 const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   registerSubmit,
@@ -64,7 +65,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
     const payload = {
       customerId: selectedCustomerID,
       status,
-      payment_method: paymentMethod, // ✅ Use local state
+      payment_method: paymentMethod, 
       amount_collected: paymentMethod === "cash" ? amountCollected : "",
       items: selectedItemsPayload,
     };

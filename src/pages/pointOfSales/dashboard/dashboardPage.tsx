@@ -4,7 +4,6 @@ import AnalyticsOverview from "../../../components/dashboard/pointOfSales/dashbo
 import SalesOverview from "../../../components/dashboard/pointOfSales/dashboard/salesOverview";
 import CustomerAnalysis from "../../../components/dashboard/pointOfSales/dashboard/customerAnalysis";
 import DivisionSalesOverview from "../../../components/dashboard/pointOfSales/dashboard/divisionSalesOverview";
-import KeyPerformance from "../../../components/dashboard/pointOfSales/dashboard/keyPerformance";
 import CustomerOrdersTable from "../../../components/dashboard/pointOfSales/dashboard/orderTable";
 
 
@@ -21,7 +20,6 @@ const DashboardPage = () => {
       <SalesOverview />
       <CustomerAnalysis />
       <DivisionSalesOverview />
-      <KeyPerformance />
       <CustomerOrdersTable />
     </PageContainer>
   );

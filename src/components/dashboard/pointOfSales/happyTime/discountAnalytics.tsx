@@ -5,46 +5,65 @@ import { ChartDataPoint } from "../../../../types";
 import { useFetchDiscountAnalysis } from "../../../../hooks/backendApis/pos/discount";
 
 const monthLabels = [
-  "January", "February", "March", "April", "May", "June",
-  "July", "August", "September", "October", "November", "December",
+  "January",
+  "February",
+  "March",
+  "April",
+  "May",
+  "June",
+  "July",
+  "August",
+  "September",
+  "October",
+  "November",
+  "December",
 ];
 
 const currentYear = new Date().getFullYear();
 const years = Array.from({ length: 5 }, (_, i) => currentYear - i);
 
-
 const DiscountAnalytics = () => {
-  const [selectedMonthLabel, setSelectedMonthLabel] = useState(monthLabels[new Date().getMonth()]);
+  const [selectedMonthLabel, setSelectedMonthLabel] = useState(
+    monthLabels[new Date().getMonth()]
+  );
   const [selectedYear, setSelectedYear] = useState(currentYear);
 
-
+  // Convert month label to number (1-based)
   const selectedMonthInt = monthLabels.indexOf(selectedMonthLabel) + 1;
 
+  // Fetch data for selected month and year
   const { data, isLoading } = useFetchDiscountAnalysis({
     // @ts-ignore
-    month: selectedMonthInt, 
-    // @ts-ignore 
-    year: selectedYear,          
+    month: selectedMonthInt,
+    // @ts-ignore
+    year: selectedYear,
   });
-  
-  const chartData = useMemo(() => {
-    if (!data?.data || !Array.isArray(data.data)) return [];
 
-    return data.data.map((item: { day: number; revenue: number }) => ({
-      month: `Day ${item.day}`,
+  // Debug log incoming data
+  console.log("Fetched data:", data);
+  const chartData: ChartDataPoint[] = useMemo(() => {
+    if (!data?.data?.data || !Array.isArray(data.data.data)) return [];
+
+    const month = data.data.month ?? selectedMonthLabel;
+
+    return data.data.data.map((item: { day: number; revenue: number }) => ({
+      day: item.day,
       revenue: item.revenue,
-    })) as ChartDataPoint[];
-  }, [data]);
+      month,
+    }));
+  }, [data, selectedMonthLabel]);
 
+  // Find the first point with revenue > 0 to highlight
   const highlightedPoint = useMemo(() => {
     const highlight = chartData.find((item) => item.revenue > 0);
 
     return highlight
       ? {
-          month: highlight.month,
+          month: highlight.month, // add this property here
+          day: `Day ${highlight.day}`, // optional formatting
           value: highlight.revenue,
           dataKey: "revenue",
-          label: `₦${highlight.revenue}M`,
+          label: `₦${(highlight.revenue / 1_000_000).toFixed(1)}M`,
         }
       : undefined;
   }, [chartData]);
@@ -65,15 +84,15 @@ const DiscountAnalytics = () => {
           <Select
             data={monthLabels}
             value={selectedMonthLabel}
-            onChange={(value) => setSelectedMonthLabel(value || '')}
+            onChange={(value) => setSelectedMonthLabel(value || "")}
             placeholder="Select month"
             size="xs"
             className="w-32"
           />
           <Select
-      data={years.map(String)}
+            data={years.map(String)}
             value={String(selectedYear)}
-            onChange={(value) => setSelectedYear(Number(value))} 
+            onChange={(value) => setSelectedYear(Number(value))}
             placeholder="Select year"
             size="xs"
             className="w-24"
@@ -82,31 +101,31 @@ const DiscountAnalytics = () => {
       </header>
 
       {isLoading ? (
-  <Text>Loading chart...</Text>
-) : (
-  <div className="mt-4">
-    <div className="flex items-center mb-2">
-      <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
-      <Text size="sm">Revenue</Text>
-    </div>
-
-    <div className="mt-4">
-      {!chartData.length ? (
-        <Text>No discount data available for this period.</Text>
+        <Text>Loading chart...</Text>
+      ) : chartData.length === 0 ? (
+        <Text>No data available for the selected period.</Text>
       ) : (
-        <LineChart
-          data={chartData}
-          lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
-          height={280}
-          yAxisFormatter={(value) => `${value}M`}
-          showLegend={false}
-          highlightedPoint={highlightedPoint}
-        />
-      )}
-    </div>
-  </div>
-)}
+        <div className="mt-4">
+          <div className="flex items-center mb-2">
+            <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
+            <Text size="sm">Revenue</Text>
+          </div>
 
+          <div className="mt-4">
+            <LineChart
+              data={chartData}
+              lines={[
+                { dataKey: "revenue", color: "#F16722", name: "Revenue" },
+              ]}
+              xAxisDataKey="day"
+              height={280}
+              yAxisFormatter={(value) => `₦${(value / 1_000_000).toFixed(1)}M`}
+              showLegend={false}
+              highlightedPoint={highlightedPoint}
+            />
+          </div>
+        </div>
+      )}
     </main>
   );
 };

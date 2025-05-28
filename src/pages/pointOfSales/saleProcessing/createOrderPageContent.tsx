@@ -1,6 +1,6 @@
 import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import PageContainer from "../../../layout/pageContainer";
 import { useOrderCreation } from "../../../components/General/orderContext/orderCreationContext";
@@ -11,8 +11,9 @@ import { motion, AnimatePresence } from "framer-motion";
 import CreateOrderForm from "./createOrderForm";
 import { useEffect, useState } from "react";
 import PaymentDetails2 from "../../../components/dashboard/pointOfSales/salesProcessing/confirmPayment/paymentDetails";
-import { useCreateSales } from "../../../hooks/backendApis/pos/salesProcessing";
+import { useCreateSales, useUpdateDraft } from "../../../hooks/backendApis/pos/salesProcessing";
 import { notifications } from "@mantine/notifications";
+import { ROUTES } from "../../../constants/routes";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -39,6 +40,30 @@ const slideVariants = {
 
 const CreateOrderPageContent: React.FC = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+const saleData = location.state?.saleData;
+const orderId = location.state?.saleData?.data?.orderID;
+
+
+
+
+useEffect(() => {
+  if (saleData) {
+    setPaymentDetails({
+      method: saleData.payment_method || "",
+      amount: saleData.amount_collected || "",
+      customerId: saleData.customerId || null,
+      items: (saleData.items || []).map((item: any) => ({
+        ...item,
+        quantity: item.quantity || 1,
+        price: item.selling_price || 0,
+      })),
+    });
+  }
+}, [saleData]);
+
+
+
   const { currentStep, nextStep, prevStep } = useOrderCreation();
 
   const handleBack = () => {
@@ -48,7 +73,6 @@ const CreateOrderPageContent: React.FC = () => {
       prevStep();
     }
   };
-  
 
   const [submitHandler, setSubmitHandler] = useState<
   ((status: string) => void) | null
@@ -66,8 +90,11 @@ const CreateOrderPageContent: React.FC = () => {
     customerId: null,
   });
 
-  const { mutate: createSale} = useCreateSales();
 
+
+
+  const createSaleMutation = useCreateSales();
+const updateDraftMutation = useUpdateDraft(orderId);
   const handleSubmit = async (status: 'draft' | 'completed') => {
     const payload = {
       status,
@@ -82,19 +109,24 @@ const CreateOrderPageContent: React.FC = () => {
     };
   
     try {
-      await createSale(payload);
+      if (orderId) {
+        await updateDraftMutation.mutateAsync(payload);
+      } else {
+        await createSaleMutation.mutateAsync(payload);
+      }
   
       notifications.show({
-        title: 'Order Successful!',
-        message: status === 'completed'
-          ? 'Payment confirmed by cashier'
-          : 'Payment for this order wasn’t confirmed by cashier.',
+        title: 'Success',
+        message:
+          status === 'completed' ? 'Payment confirmed' : 'Draft saved successfully',
         color: 'green',
       });
-    } catch (error: any) {
+          navigate(ROUTES.sales);
+    } catch (error) {
       notifications.show({
         title: 'Error',
-        message: error?.message || 'Something went wrong while creating the sale.',
+        //@ts-ignore
+        message: error?.message || 'Failed to save order',
         color: 'red',
       });
     }
@@ -274,6 +306,8 @@ variant="outline-primary"
     }
   };
 
+  
+
   const renderStepContent = () => {
     switch (currentStep) {
       case OrderCreationStep.SEARCH_PRODUCT:
@@ -293,6 +327,7 @@ variant="outline-primary"
   updatePaymentDetails={updatePaymentDetails}
   paymentItems={paymentItems}
   total={total}
+
 />
 
           </motion.div>

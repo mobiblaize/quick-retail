@@ -1,49 +1,31 @@
 import { PieChart } from "@mantine/charts";
 import { Divider, Text } from "@mantine/core";
 
-interface Props {
-  newCustomers: number;
-  existingCustomers: number;
-  existing_customers_percentage: number;
-  new_customers_percentage: number;
+interface CategoryData {
+  category: string;
+  total_sold: string;
+  percentage: number;
 }
 
-const DivisionSaleChart = ({
-  newCustomers,
-  existingCustomers,
-  new_customers_percentage,
-  existing_customers_percentage,
-}: Props) => {
-  const total = newCustomers + existingCustomers;
+interface Props {
+  data: CategoryData[];
+}
 
-  const pieData = [
-    {
-      name: "New Customers",
-      value: new_customers_percentage,
-      color: "#E76E50",
-    },
-    {
-      name: "Existing Customers",
-      value: existing_customers_percentage,
-      color: "#274754",
-    },
-  ];
+const DivisionSalePie = ({ data }: Props) => {
+  const total = data.reduce((acc, item) => acc + Number(item.total_sold), 0);
 
-  const customerAnalysis = [
-    {
-      label: "New Customers",
-      num: newCustomers,
-    },
-    {
-      label: "Existing Customers",
-      num: existingCustomers,
-    },
-  ];
+  const colors = ["#E76E50", "#274754", "#84CC16", "#06B6D4", "#FACC15"];
+
+  const pieData = data.map((item, index) => ({
+    name: item.category,
+    value: parseFloat(item.percentage.toFixed(2)),
+    color: colors[index % colors.length],
+  }));
 
   return (
     <main className="flex flex-col md:flex-row mt-6 justify-between">
       <div className="flex flex-col md:flex-row w-full md:w-[63%] items-center">
-        <div className="w-48 h-48 md:w-56 md:h-56 flex  items-center justify-center mb-4 md:mb-0">
+        <div className="w-48 h-48 md:w-56 md:h-56 flex items-center justify-center mb-4 md:mb-0">
           {total > 0 ? (
             <PieChart
               data={pieData}
@@ -78,14 +60,14 @@ const DivisionSaleChart = ({
       </div>
 
       <div className="bg-[#F9FAFB] rounded-lg py-4 w-full md:w-[35%] px-4 md:px-8 flex flex-col gap-6 mt-6 md:mt-0">
-        {customerAnalysis.map((data, index) => (
+        {data.map((item, index) => (
           <div key={index} className="flex flex-col gap-1">
             <Text size="sm" fw={400}>
-              {data.label}
+              {item.category}
             </Text>
             <div className="flex flex-col gap-3">
               <Text size="lg" fw={700}>
-                {data.num}
+                {item.total_sold}
               </Text>
               <Divider size="sm" color="#E4E7EC" />
             </div>
@@ -96,4 +78,4 @@ const DivisionSaleChart = ({
   );
 };
 
-export default DivisionSaleChart;
+export default DivisionSalePie;

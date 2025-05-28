@@ -1,5 +1,5 @@
 import TanTable from "../../../General/table";
-import { allCustomers, productTableData } from "../../../../utils/mockData";
+import { productTableData } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
@@ -7,7 +7,7 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
 
 const CustomerTable = () => {
-  const { data, isLoading } = useFetchAllCustomers();
+  const { data } = useFetchAllCustomers();
   const customers = Array.isArray(data?.data?.customers?.data)
     ? data.data.customers.data
     : [];
