@@ -94,6 +94,6 @@ export const useSearchAllCustomers = (
   });
 };
 
-export const useDeleteProuct = (productId: number | string) => {
-  return useDeleteData(`pos/product/delete-product/${productId}`);
+export const useDeleteProuct = (variationID: number | string) => {
+  return useDeleteData(`pos/product/delete-product/${variationID}`);
 };

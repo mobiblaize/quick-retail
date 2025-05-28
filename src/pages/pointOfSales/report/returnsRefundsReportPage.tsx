@@ -1,17 +1,21 @@
 import { Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import ReturnsRefundsReport from "../../../components/dashboard/pointOfSales/reportsPages/returnsRefundsReport";
 import ReturnsReportAnalytics from "../../../components/dashboard/pointOfSales/reportsPages/returnsReportAnlytics";
 
+
+
+
 const RetunsRefundsReportPage = () => {
     const navigate = useNavigate();
-   
+    const location = useLocation();
+    const { reportData, startDate, endDate } = location.state || {};
      const handleBack = () => {
        navigate(-2);
      };
-   
+ 
      const getSubHeaders = () => {
        const backButton = (
          <button
@@ -53,12 +57,19 @@ const RetunsRefundsReportPage = () => {
     
    
      return (
-       <PageContainer
-         subHeaders={getSubHeaders()}
-       >
-        <ReturnsReportAnalytics/>
-         <ReturnsRefundsReport />
-       </PageContainer>
+      <PageContainer subHeaders={getSubHeaders()}>
+      <ReturnsReportAnalytics
+        reportData={reportData}
+        startDate={startDate}
+        endDate={endDate}
+      />
+      <ReturnsRefundsReport
+        reportData={reportData}
+        startDate={startDate}
+        endDate={endDate}
+      />
+    </PageContainer>
+    
      );
    };
 

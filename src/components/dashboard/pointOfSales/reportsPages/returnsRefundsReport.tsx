@@ -1,18 +1,25 @@
 import TanTable from "../../../General/table";
-import { loggedReturn } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import imageSrc from "../../../../assets/images/productIMG.png";
-import { Link, useLocation } from "react-router";
+import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { shortenTransactionId } from "../../../../utils/helpers";
 
-const ReturnsRefundsReport = () => {
-  const location = useLocation();
-  const { reportData, startDate, endDate } = location.state || {};
+type ReturnsReportProps = {
+  reportData: any;
+  startDate: string;
+  endDate: string;
+};
+
+const ReturnsRefundsReport = ({
+  reportData,
+  startDate,
+  endDate,
+}: ReturnsReportProps) => {
   const [data, setData] = useState<TableRowData[]>([]);
   const { mutateAsync: exportReport, isPending: isExporting } =
     useGenerateReportExport();
@@ -24,6 +31,29 @@ const ReturnsRefundsReport = () => {
     return date.toLocaleDateString("en-GB");
   }
 
+  useEffect(() => {
+    if (Array.isArray(reportData?.data)) {
+      const formattedData = reportData.data.map((item: any) => ({
+        id: shortenTransactionId(item["Order ID"]),
+        productId: shortenTransactionId(item["Product ID"]),
+        items: 1,
+        dateReturned: item["Date Returned"],
+        customer: item["Customer Name"],
+        product: item["Product name"],
+        returnedReason: item["Reason"],
+        imageUrl: item["Image"],
+        complaintStatus:
+          item["Status"] === "Approved"
+            ? "Resolved"
+            : item["Status"] === "Pending"
+            ? "Pending"
+            : "Declined",
+      }));
+      setData(formattedData);
+    } else {
+    }
+  }, [reportData]);
+
   const handleExport = async () => {
     const exportPayload = {
       start_date: startDate || "",
@@ -31,13 +61,16 @@ const ReturnsRefundsReport = () => {
       report_type: "returns",
       export_format: "csv",
     };
-  
+
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `sales-report.${exportPayload.export_format}`);
+      link.setAttribute(
+        "download",
+        `sales-report.${exportPayload.export_format}`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -73,20 +106,32 @@ const ReturnsRefundsReport = () => {
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={imageSrc}
+            //@ts-ignore
+            src={row.original.imageUrl ?? undefined}
             alt={row.original.name as string}
             radius="md"
             size={40}
           />
           <div className="flex flex-col">
             <Text fw={500} c="black">
-              {row.original.name}
+              {row.original.product}
             </Text>
             <Text fw={500} className="text-sm">
               ID:{" "}
-              <span className="text-[#F16722]">{row.original.productCode}</span>
+              <span className="text-[#F16722]">{row.original.productId}</span>
             </Text>
           </div>
+        </div>
+      ),
+    },
+    {
+      header: "Order ID",
+      accessorKey: "id",
+      cell: (props) => (
+        <div className="flex flex-col">
+          <Text fw={500} c="black">
+            {props.row.original.id}
+          </Text>
         </div>
       ),
     },
@@ -99,8 +144,16 @@ const ReturnsRefundsReport = () => {
     },
     {
       header: "Order ID",
-      accessorKey: "orderId",
+      accessorKey: "id",
+      cell: (props) => (
+        <div className="flex flex-col">
+          <Text fw={500} c="black">
+            {props.row.original.id}
+          </Text>
+        </div>
+      ),
     },
+
     {
       header: "Customer",
       accessorKey: "customer",
@@ -113,21 +166,41 @@ const ReturnsRefundsReport = () => {
     {
       header: "Returned Reason",
       accessorKey: "returnedReason",
+      cell: ({ row }) => (
+        <span className=" text-gray-900 text-sm font-medium">
+          {row.original.returnedReason}
+        </span>
+      ),
     },
     {
       header: "Complaint Status",
       accessorKey: "complaintStatus",
       cell: ({ row }) => {
         const status = row.original.complaintStatus;
+        let bgClass = "";
+        let textClass = "";
+        let icon = null;
+
+        if (status === "Resolved") {
+          bgClass = "bg-[#ECFDF3]";
+          textClass = "text-[#027A48]";
+          icon = <PaidDot />;
+        } else if (status === "Pending") {
+          bgClass = "bg-[#E0F2FE]";
+          textClass = "text-[#0369A1]";
+          icon = <UnpaidDot />;
+        } else {
+          // Declined
+          bgClass = "bg-[#FFFAEB]";
+          textClass = "text-[#B54708]";
+          icon = <UnpaidDot />;
+        }
+
         return (
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "Resolved"
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
+            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bgClass} ${textClass}`}
           >
-            {status === "Resolved" ? <PaidDot /> : <UnpaidDot />}
+            {icon}
             <span className="ml-2">{status}</span>
           </div>
         );
@@ -150,7 +223,7 @@ const ReturnsRefundsReport = () => {
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={loggedReturn}
+        data={data}
         showSearch={false}
         showSortFilter={false}
         length={5}
@@ -161,7 +234,7 @@ const ReturnsRefundsReport = () => {
                 Logged Returns
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{loggedReturn.length}</Text>
+                <Text c="customPrimary.10">{data.length}</Text>
               </div>
             </div>
 

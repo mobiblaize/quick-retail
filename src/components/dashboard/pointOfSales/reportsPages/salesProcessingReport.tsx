@@ -23,7 +23,6 @@ const SalesProcessingReport = () => {
   }
 
   useEffect(() => {
-    // console.log("reportData:", reportData);
     if (Array.isArray(reportData?.data)) {
       const formattedData = reportData.data.map((item: any) => ({
         id: shortenTransactionId(item["Order ID"]), 
@@ -33,10 +32,8 @@ const SalesProcessingReport = () => {
         Amount: item["Total Amount"],
         paymentStatus: item["Status"] === "Completed" ? "Completed" : "Draft",
       }));
-      // console.log("formattedData:", formattedData);
       setData(formattedData);
     } else {
-      // console.log("reportData.data is not an array or is missing");
     }
   }, [reportData]);
 
