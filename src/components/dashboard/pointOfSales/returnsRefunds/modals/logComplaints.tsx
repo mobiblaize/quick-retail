@@ -2,6 +2,7 @@ import { Button, Modal, Text } from "@mantine/core";
 import FormSelect from "../../../../General/select";
 import FormInput from "../../../../General/formInput";
 import {
+  // useFetchAllCustomers,
   useFetchOrdersByCustomer,
   useLogComplain,
 } from "../../../../../hooks/backendApis/pos/returns";
@@ -29,12 +30,16 @@ const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
     isLoading: ordersLoading,
   } = useFetchOrdersByCustomer(customerId);
 
+
   const orderOptions = Array.isArray(customerOrders)
     ? customerOrders.map((order) => ({
         label: order.order_no,
         value: order.order_no,
       }))
     : [];
+
+  console.log("customerOrders", customerOrders);
+  console.log("orderOptions", orderOptions);
 
   const customers = Array.isArray(customersData?.data?.customers?.data)
     ? customersData.data.customers.data
@@ -121,14 +126,13 @@ const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
           }}
         />
 
-        <FormSelect
+        <FormInput
           label="Order No"
-          options={orderOptions}
           placeholder="Select order"
           paddingY="3"
           value={orderNo}
-          onSelect={setOrderNo}
-          loading={ordersLoading}
+          // onSelect={setOrderNo}
+          // loading={ordersLoading}
         />
 
         <FormInput
