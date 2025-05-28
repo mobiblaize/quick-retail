@@ -5,11 +5,68 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
+import { useState } from "react";
 
 const ReturnsRefundsReport = () => {
+  const location = useLocation();
+  const { reportData, startDate, endDate } = location.state || {};
+  const [data, setData] = useState<TableRowData[]>([]);
+  const { mutateAsync: exportReport, isPending: isExporting } =
+    useGenerateReportExport();
+
+  function formatDate(dateStr: string | Date | undefined) {
+    if (!dateStr) return "";
+    const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
+    if (isNaN(date.getTime())) return "";
+    return date.toLocaleDateString("en-GB");
+  }
+
+  const handleExport = async () => {
+    const exportPayload = {
+      start_date: startDate || "",
+      end_date: endDate || "",
+      report_type: "returns",
+      export_format: "csv",
+    };
+  
+    try {
+      const blob = await exportReport(exportPayload);
+      const url = window.URL.createObjectURL(new Blob([blob]));
+      const link = document.createElement("a");
+      link.href = url;
+      link.setAttribute("download", `sales-report.${exportPayload.export_format}`);
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error("Failed to export report:", error);
+    }
+  };
   const columns: ColumnDef<TableRowData>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
     {
       header: "Name",
       accessorKey: "name",
@@ -110,10 +167,16 @@ const ReturnsRefundsReport = () => {
 
             <div className="flex items-center gap-3">
               <div className="border border-[#E0E0E0] rounded-lg px-4 py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
-                14/01/2025 – 14/02/2025
+                {formatDate(startDate)} – {formatDate(endDate)}
               </div>
-              <button className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm">
-                Export
+              <button
+                onClick={handleExport}
+                disabled={isExporting}
+                className={`bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm ${
+                  isExporting ? "opacity-50 cursor-not-allowed" : ""
+                }`}
+              >
+                {isExporting ? "Exporting..." : "Export"}
               </button>
             </div>
           </div>
