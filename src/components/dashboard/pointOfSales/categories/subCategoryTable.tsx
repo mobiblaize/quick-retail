@@ -80,15 +80,15 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
         </Text>
       ),
     },
-    // {
-    //   header: "Total Product",
-    //   accessorKey: "totalProduct",
-    //   cell: ({ row }) => (
-    //     <Text fw={300} c="#101928">
-    //       {row.original.total_products}
-    //     </Text>
-    //   ),
-    // },
+    {
+      header: "Total Product",
+      accessorKey: "totalProduct",
+      cell: ({ row }) => (
+        <Text fw={300} c="#101928">
+          {row.original.total_quantity}
+        </Text>
+      ),
+    },
     {
       header: "Date Modified",
       accessorKey: "created_at",

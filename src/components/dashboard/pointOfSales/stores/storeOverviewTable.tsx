@@ -105,7 +105,7 @@ const StoreOverviewTable = ({ stores = [], loading = false }) => {
       accessorKey: "totalCustomer",
       cell: (props) => (
         <Text c="black" fw={500} className="text-sm font-medium">
-          {props.row.original.totalCustomer}
+          {props.row.original.total_customers}
         </Text>
       ),
     },

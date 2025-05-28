@@ -10,8 +10,11 @@ const ViewOrderReceipt = () => {
   const orderId = location.state?.orderID;
   const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
 
-  if (isLoading) return <div>Loading receipt...</div>;
-  if (isError || !saleData) return <div>Failed to load receipt data.</div>;
+
+  if (!orderId) return <div>Preparing receipt...</div>;
+if (isLoading) return <div>Loading receipt...</div>;
+if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
+
 
   const order = saleData.data;
 

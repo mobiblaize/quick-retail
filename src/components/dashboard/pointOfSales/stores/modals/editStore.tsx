@@ -3,7 +3,7 @@ import FormInput from "../../../../General/formInput";
 import { SetStateAction, useEffect, useState } from "react";
 import storeIcon from "../../../../../assets/images/newStore.png";
 import { CircleHelp } from "lucide-react";
-import ActivateStore from "./activateStore";
+// import ActivateStore from "./activateStore";
 import { useEditStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 
@@ -17,7 +17,7 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
   // const dayjs = require('dayjs');
   // dayjs.extend(customParseFormat);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [ setIsActivateOpen] = useState(false);
+  // const [ setIsActivateOpen] = useState(false);
   console.log("stores", store);
   const [name, setName] = useState("");
   const [gla, setGla] = useState("");
@@ -72,7 +72,7 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
         });
 
         onClose();
-        setIsActivateOpen(true);
+        // setIsActivateOpen(true);
       },
       onError: (err: any) => {
         console.error("Failed to create store", err);

@@ -49,6 +49,9 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
   if (isLoading) return <div>Loading receipt...</div>;
   if (isError || !saleData) return <div>Failed to load receipt data.</div>;
 
+
+  
+
   const order = saleData.data;
 
   // Parse fees
