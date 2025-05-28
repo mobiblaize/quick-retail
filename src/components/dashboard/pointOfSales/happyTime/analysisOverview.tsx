@@ -18,7 +18,7 @@ const AnalysisOverview = () => {
           iconColor: "#E17036",
           textColor: "white",
           cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
-          percentageValue: 0,
+          // percentageValue: 0,
           borderColor: "#BAE6FD",
         },
         {
@@ -29,7 +29,7 @@ const AnalysisOverview = () => {
           iconColor: "#E17036",
           cardBgColor: "#EFF8FF",
           borderColor: "#98A2B3",
-          percentageValue: 0,
+          // percentageValue: 0,
         },
         {
           title: "New Amount",
@@ -37,7 +37,7 @@ const AnalysisOverview = () => {
           icon: dollar,
           iconColor: "#E17036",
           cardBgColor: "#F4F3FF",
-          percentageValue: 0,
+          // percentageValue: 0,
           borderColor: "#98A2B3",
           altText: "customer-icon",
         },
@@ -76,7 +76,7 @@ const AnalysisOverview = () => {
               iconColor={card.iconColor}
               textColor={card.textColor}
               cardBgColor={card.cardBgColor}
-              percentageValue={card.percentageValue}
+              // percentageValue={card.percentageValue}
               borderColor={card.borderColor}
             />
           )

@@ -17,7 +17,7 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
   // const dayjs = require('dayjs');
   // dayjs.extend(customParseFormat);
   const [isEnabled, setIsEnabled] = useState(false);
-  const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
+  const [ setIsActivateOpen] = useState(false);
   console.log("stores", store);
   const [name, setName] = useState("");
   const [gla, setGla] = useState("");
@@ -47,9 +47,7 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
     }
   }, [store]);
 
-  // const formattedDate = dayjs(createdAt, "YYYY-MM-DDTHH:mm:ss.SSSSSSZ").format(
-  //   "MMMM D, YYYY h:mm:ss A"
-  // );
+
 
   const handleSubmit = () => {
     const payload = {
@@ -252,10 +250,10 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
           </div>
         </div>
       </Modal>
-      <ActivateStore
+      {/* <ActivateStore
         opened={isActivateStoreOpen}
         onClose={() => setIsActivateOpen(false)}
-      />
+      /> */}
     </>
   );
 };
