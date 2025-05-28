@@ -35,6 +35,7 @@ const ProductManagementReport  = () => {
         product: item["Product Name"],
         stockLevel: item["Stock"],
         Amount: item["Price"],
+        location:item["location"],
         discountStatus: item["Status"] === "Active" ? "Active" : "Draft",
       }));
       console.log("formattedData:", formattedData);
@@ -91,12 +92,12 @@ const ProductManagementReport  = () => {
        accessorKey: "name",
        cell: (props) => (
          <div className="flex items-center gap-3">
-           {/* <Avatar
+           <Avatar
              src={imageSrc}
              alt={props.row.original.name as string}
              radius="md"
              size={40}
-           /> */}
+           />
  
            <div className="flex flex-col">
              <Text fw={500} c="black">
@@ -119,6 +120,9 @@ const ProductManagementReport  = () => {
      {
        header: "Location",
        accessorKey: "location",
+       cell: (props) => (
+        <Text c="textSecondary.7">{props.row.original.location}</Text>
+      ),
      },
      {
        header: "Category",
