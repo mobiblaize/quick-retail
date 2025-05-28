@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
-import { useDeleteData, useFetchPostData, usePostData } from "../../useApis";
+import { useFetchPostData, useGetData, usePostData, usePutData } from "../../useApis";
 
   const defaultPayload = {
     search: "palm city mall",
@@ -94,6 +94,12 @@ export const useSearchAllCustomers = (
   });
 };
 
-export const useDeleteProuct = (productId: number | string) => {
-  return useDeleteData(`pos/product/delete-product/${productId}`);
+export const useSingleProduct = (productId?: string) => {
+  if (!productId) return { data: null, isLoading: false };
+
+  return useGetData(`pos/product/show-product/${productId}`);
+};
+
+export const useUpdateProduct = (productId?: string) => {
+  return usePutData(`pos/product/update-product/${productId}`);
 };

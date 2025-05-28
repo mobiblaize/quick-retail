@@ -12,8 +12,6 @@ import NewInventoryDetails from "./newInventoryDetails";
 const UpdateInventory = () => {
   const { state } = useLocation();
   const inventories = state?.inventories || {};
-
-  console.log("inventories:", inventories);
   
 
   const activateInventory = useActivateInventory(inventories.variationID);
@@ -134,7 +132,10 @@ const UpdateInventory = () => {
       subHeaders={subHeaders()}
       subHeaderButtom={subHeaderButtom()}
     >
-      <SearchProduct />
+      <SearchProduct
+        onSelect={() => {}}
+        onItemsChange={() => {}}
+      />
       <NewInventoryDetails
         current_level={current_level}
         setCurrentLevel={setCurrentLevel}

@@ -117,7 +117,6 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
         <div className="min-w-[1000px]">
           <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
             <div className="col-span-2">Product Variant</div>
-            <div>Quantity</div>
             <div>Cost Price</div>
             <div>Selling Price</div>
             <div>Reorder Level</div>
