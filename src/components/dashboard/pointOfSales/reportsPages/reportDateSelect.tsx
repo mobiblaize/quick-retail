@@ -7,7 +7,7 @@ const ReportDateSelect = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { reportType, reportLabel } = location.state || {};
-  const [loading, setLoading] = useState(false);
+  const [, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const generateReport = useGenerateReport();

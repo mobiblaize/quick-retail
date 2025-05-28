@@ -11,7 +11,7 @@ type ReturnsReportAnalyticsProps = {
   endDate: string;
 };
 
-const ReturnsReportAnalytics = ({ reportData, startDate, endDate }: ReturnsReportAnalyticsProps) => {
+const ReturnsReportAnalytics = ({ reportData,  }: ReturnsReportAnalyticsProps) => {
   const stats = reportData?.stats;
  
   

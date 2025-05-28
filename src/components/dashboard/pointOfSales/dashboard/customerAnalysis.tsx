@@ -11,7 +11,7 @@ import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from
 import { JSX } from "react/jsx-runtime";
 
 const CustomerAnalysis = () => {
-  const isSmallScreen = useMediaQuery("(max-width: 640px)");
+ 
   const { data,} = useFetchCustomerAnalysis();
   const { data: allCustomersData } = useFetchAllCustomers();
 
@@ -38,19 +38,7 @@ const CustomerAnalysis = () => {
                 showIconOnly="sm"
               />
             </Group>
-            {!isSmallScreen && (
-              <Button
-                rightSection={<ChevronRight />}
-                variant="default"
-                px={6}
-                py={2}
-                className="rounded-lg"
-              >
-                <Text c="textSecondary.8" fw={500}>
-                  View Report
-                </Text>
-              </Button>
-            )}
+          
           </div>
         </div>
         <DivisionSaleChart

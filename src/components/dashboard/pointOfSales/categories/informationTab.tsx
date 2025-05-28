@@ -9,6 +9,10 @@ const InformationTab: React.FC<InformationTabProps> = ({ orderData }) => {
   if (!orderData) return null;
 
   const customer = orderData.customer || {};
+  const addressParts = (customer.customer_address || "").split(",").map(s => s.trim());
+
+  const state = addressParts.length > 0 ? addressParts[addressParts.length - 1] : "";
+  // const state = addressParts.length > 1 ? addressParts[addressParts.length - 2] : "";
   return (
     <main className="w-full h-auto rounded-lg bg-white px-6 py-8">
       <Text className="" c="black" size="xl" fw={"500"}>
@@ -48,21 +52,21 @@ const InformationTab: React.FC<InformationTabProps> = ({ orderData }) => {
           <div className="flex flex-col">
             <Text fw={"500"}>State</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-            {customer.customer_address}
+            {state}
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>Country</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-            {customer.customer_address}
+            Nigeria
             </Text>
           </div>
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <Text fw={"500"}>Amount</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {orderData.amount_paid}
             </Text>
-          </div>
+          </div> */}
           <div className="flex flex-col">
             <Text fw={"500"}>Payment Method</Text>
             <Text size="lg" c={"black"} fw={"400"}>

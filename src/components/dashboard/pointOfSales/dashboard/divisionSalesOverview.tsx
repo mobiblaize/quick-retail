@@ -2,14 +2,13 @@ import {  Group, Text, Loader } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { useMediaQuery } from "@mantine/hooks";
 import { useFetchCategorySales,  } from "../../../../hooks/backendApis/pos/dashboard";
 import DivisionSalePie from "../../../General/DivisionPie";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
 
 
 const DivisionSalesOverview = () => {
-  const isSmallScreen = useMediaQuery("(max-width: 640px)");
+
   const { data, } = useFetchCategorySales();
   const { data: productData, isLoading: loadingProducts, error: productError } = useFetchAllProducts();
 

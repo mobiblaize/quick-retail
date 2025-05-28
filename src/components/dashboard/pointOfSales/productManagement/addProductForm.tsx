@@ -52,7 +52,7 @@ const AddProductForm = () => {
     setSelectedFile(null);
   };
 
-  const { form_data, updateForm } = useStore();
+  const { updateForm } = useStore();
 
   const [formData, setFormData] = useState({ ...initialFormState });
 
