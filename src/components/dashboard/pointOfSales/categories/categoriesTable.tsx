@@ -55,7 +55,7 @@ const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
       accessorKey: "totalAmount",
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
-          {row.original.total_amount}
+   {row.original.total_amount ?? 0}
         </span>
       ),
     },
@@ -144,7 +144,7 @@ const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={20}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

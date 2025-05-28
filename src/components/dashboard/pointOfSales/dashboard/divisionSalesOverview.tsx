@@ -1,4 +1,4 @@
-import {  Divider, Group, Text, Loader } from "@mantine/core";
+import {  Group, Text, Loader } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -10,7 +10,7 @@ import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products"
 
 const DivisionSalesOverview = () => {
   const isSmallScreen = useMediaQuery("(max-width: 640px)");
-  const { data, isLoading, error } = useFetchCategorySales();
+  const { data, } = useFetchCategorySales();
   const { data: productData, isLoading: loadingProducts, error: productError } = useFetchAllProducts();
 
   const stats = data?.data;

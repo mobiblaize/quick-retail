@@ -35,7 +35,7 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
       iconColor: "#E17036",
       textColor: "white",
       cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
-      percentageValue: 0,
+      // percentageValue: 0,
       altText: "dollar-sign",
     },
 
@@ -45,7 +45,7 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
       icon: orders,
       iconColor: "#E17036",
       cardBgColor: "#EFF8FF",
-      percentageValue: 0,
+      // percentageValue: 0,
       borderColor: "#98A2B3",
       altText: "orders-icon",
     },
@@ -82,7 +82,7 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-            percentageValue={card.percentageValue}
+            // percentageValue={card.percentageValue}
             borderColor={card.borderColor}
           />
         ))}

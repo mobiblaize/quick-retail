@@ -39,7 +39,7 @@ const DivisionSaleChart = ({
       num: existingCustomers,
     },
   ];
-  console.log("Pie Chart Data:", pieData);
+
   return (
     <main className="flex flex-col md:flex-row mt-6 justify-between">
       <div className="flex flex-col md:flex-row w-full md:w-[63%] items-center">

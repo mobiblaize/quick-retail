@@ -10,6 +10,8 @@ import {
   useDeleteSubCategory,
   useFetchSubCategory,
 } from "../../../../hooks/backendApis/pos/categories";
+import DeleteProduct from "./modals/deleteProduct";
+import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
 
 interface CategoriesProductTableProps {
   subCategoryId: number | string;
@@ -18,7 +20,7 @@ interface CategoriesProductTableProps {
 const CategoriesProductTable = ({
   subCategoryId,
 }: CategoriesProductTableProps) => {
-  const { data } = useFetchSubCategory(subCategoryId);
+  const { data, refetch } = useFetchSubCategory(subCategoryId);
   const transformedData =
     data?.products?.map((p: { productID: any; name: any; product_name: any; in_stock: any; total_quantity: any; is_active: number; updated_at: any; }) => ({
       id: p.productID,
@@ -33,7 +35,8 @@ const CategoriesProductTable = ({
   const [tableData, setTableData] = useState<typeof transformedData>([]);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const deleteMutation = useDeleteSubCategory(selectedId ?? "");
+  const deleteMutation = useDeleteProuct(selectedId ?? "");
+
 
   useEffect(() => {
     setTableData(products);
@@ -49,24 +52,26 @@ const CategoriesProductTable = ({
 
   const handleDelete = async () => {
     if (!selectedId) return;
-
+  
     try {
       await deleteMutation.mutateAsync();
       notifications.show({
-        title: "Sub-category Deleted!",
-        message: "This product sub-category has been deleted!",
+        title: "Product Deleted!",
+        message: "This product has been successfully deleted!",
         color: "red",
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
+      refetch(); // <--- Refresh data
     } catch (error: any) {
       notifications.show({
         title: "Error",
-        message: error?.message || "Failed to delete sub-category",
+        message: error?.message || "Failed to delete product",
         color: "red",
       });
     }
   };
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -153,17 +158,22 @@ const CategoriesProductTable = ({
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
+      cell: (props) => (
         <Text
           fw={600}
           c="black"
           className="cursor-pointer"
-          onClick={() => setIsDeleteOpen(true)}
+          onClick={() => {
+            //@ts-ignore
+            setSelectedId(props.row.original.productID); // Ensure the correct product is selected
+            setIsDeleteOpen(true);
+          }}
         >
           Delete
         </Text>
       ),
     },
+    
     {
       header: "",
       accessorKey: "action2",
@@ -200,11 +210,11 @@ const CategoriesProductTable = ({
             </div>
           }
         />
-        <DeleteSubCategory
+        <DeleteProduct
           opened={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
           handleDelete={handleDelete}
-          subCategoryId={selectedId}
+          productID={selectedId}
         />
       </main>
     </div>
