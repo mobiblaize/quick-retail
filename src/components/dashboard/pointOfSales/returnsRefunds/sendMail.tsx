@@ -9,6 +9,7 @@ import FormInput from "../../../General/formInput";
 import product from "../../../../assets/images/Image.png";
 import { useSendMail } from "../../../../hooks/backendApis/pos/returns";
 import { notifications } from "@mantine/notifications";
+// import { useFetchSaleOrderById } from "../../../../hooks/backendApis/pos/returns";
 
 export interface SendMailRef {
   handleSave: () => void;
@@ -17,16 +18,18 @@ export interface SendMailRef {
 const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [orderId, setOrderId] = useState("");
-  const [productId, setProductId] = useState("");
+  const [orderID, setOrderID] = useState("");
+  const [productID, setProductID] = useState("");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [attachments, setAttachments] = useState<File[]>([]);
 
+  // const { data, error } = useFetchSaleOrderById(orderId || "");
+
   const { mutate } = useSendMail();
 
   const handleSave = () => {
-    if (!from || !to || !orderId || !productId || !subject || !description) {
+    if (!from || !to || !orderID || !productID || !subject || !description) {
       notifications.show({
         title: "Validation Error",
         message: "Please fill all required fields",
@@ -38,8 +41,8 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
     const payload = {
       from,
       to,
-      order_id: orderId,
-      product_id: productId,
+      orderID: orderID,
+      productID: productID,
       subject,
       description,
       attachments,
@@ -56,8 +59,8 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
         // Reset form
         setFrom("");
         setTo("");
-        setOrderId("");
-        setProductId("");
+        setOrderID("");
+        setProductID("");
         setSubject("");
         setDescription("");
         setAttachments([]);
@@ -114,8 +117,8 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
             <FormInput
               placeholder="#22543 3783"
               className="flex-1"
-              value={orderId}
-              onChange={(e: any) => setOrderId(e.target.value)}
+              value={orderID}
+              onChange={(e: any) => setOrderID(e.target.value)}
             />
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-10 space-y-2 sm:space-y-0 flex-1">
@@ -129,8 +132,8 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
             <FormInput
               placeholder="BSD27836427LL"
               className="flex-1"
-              value={productId}
-              onChange={(e: any) => setProductId(e.target.value)}
+              value={productID}
+              onChange={(e: any) => setProductID(e.target.value)}
             />
           </div>
         </div>

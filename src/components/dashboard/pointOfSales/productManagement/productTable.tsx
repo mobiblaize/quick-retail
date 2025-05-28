@@ -6,9 +6,14 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { MoreVertical } from "lucide-react";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
+import { Link } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
+import useStore from "./addProductStore";
 
 const ProductTable = () => {
-  const { data, isLoading  } = useFetchAllProducts();
+  const { data, isLoading } = useFetchAllProducts();
+
+  console.log("Product Data:", data);
 
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
@@ -28,8 +33,19 @@ const ProductTable = () => {
       status: isActive ? "Active" : "Inactive",
       image: product.image_path,
       items: product.items ?? "",
+      variationID: product.variationID,
+      ...product,
     };
   });
+
+  const { updateForm } = useStore();
+
+  const handleProductEdit = (product: TableRowData) => {
+    updateForm(product);
+
+    console.log("Editing product:", product);
+    
+  };
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -38,7 +54,11 @@ const ProductTable = () => {
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={typeof props.row.original.image === "string" ? props.row.original.image : imageSrc}
+            src={
+              typeof props.row.original.image === "string"
+                ? props.row.original.image
+                : imageSrc
+            }
             alt={props.row.original.name as string}
             radius="md"
             size={40}
@@ -110,7 +130,7 @@ const ProductTable = () => {
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
+      cell: (props) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <Button variant="subtle" size="xs" p={1}>
@@ -119,18 +139,24 @@ const ProductTable = () => {
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item onClick={() => alert("View Order Clicked!")}>
-              View
+            <Menu.Item>
+              <Link
+                to={ROUTES.viewProduct}
+                state={{ variationID: props.row.original.variationID }}
+              >
+                View
+              </Link>
             </Menu.Item>
-            <Menu.Item onClick={() => alert("Edit Order Clicked!")}>
-              Edit
+            <Menu.Item>
+              <Link
+                to={ROUTES.editProduct}
+                state={{ variationID: props.row.original.variationID }}
+                onClick={() => handleProductEdit(props.row.original)}
+              >
+                Edit
+              </Link>
             </Menu.Item>
-            <Menu.Item
-              color="red"
-              onClick={() => alert("Delete Order Clicked!")}
-            >
-              Delete
-            </Menu.Item>
+            <Menu.Item color="red">Delete</Menu.Item>
           </Menu.Dropdown>
         </Menu>
       ),

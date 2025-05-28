@@ -31,6 +31,8 @@ export const ROUTES = {
   test: "/dashboard/#",
   addNewProduct: "/dashboard/product-management/add-new-product",
   addBulkProduct: "/dashboard/product-management/add-bulk-product",
+  viewProduct: "/dashboard/product-management/view-product",
+  editProduct: "/dashboard/product-management/edit-product",
   inventoryDetails: "/dashboard/product-management/inventory-details",
 
   // PROCUREMENT SECTION
