@@ -9,7 +9,7 @@ import { useFetchAllreturns } from "../../../hooks/backendApis/pos/returns";
 
 const ReturnsPage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-  const { data, isLoading } = useFetchAllreturns();
+  const { data } = useFetchAllreturns();
 
   const subHeaders = [
     <div key="1">
@@ -38,7 +38,6 @@ const ReturnsPage = () => {
           resolved_complaints: data?.data?.resolved_complaints ?? 0,
           declined_complaints: data?.data?.declined_complaints ?? 0,
         }}
-        isLoading={isLoading}
       />
       <ReturnsTable />
       <LogComplaints

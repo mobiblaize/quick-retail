@@ -56,7 +56,8 @@ interface iCheckForm extends iFormProps {
 
 interface iSelect extends iFormProps {
   onSelect?: ChangeEventHandler<HTMLSelectElement>;
-  options: string[];
+  // options: string[];
+  options: string[] | { label: string; value: string | number }[];
   leftIcon?: ReactNode;
   rightIcon?: ReactNode;
   leftIconClick?: () => void;

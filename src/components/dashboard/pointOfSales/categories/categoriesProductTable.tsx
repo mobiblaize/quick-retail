@@ -4,10 +4,10 @@ import { Text, Switch } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
-import DeleteSubCategory from "./modals/deleteSubCategory";
+// import DeleteSubCategory from "./modals/deleteSubCategory";
 import { notifications } from "@mantine/notifications";
 import {
-  useDeleteSubCategory,
+  // useDeleteSubCategory,
   useFetchSubCategory,
 } from "../../../../hooks/backendApis/pos/categories";
 import DeleteProduct from "./modals/deleteProduct";

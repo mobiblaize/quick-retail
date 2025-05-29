@@ -83,7 +83,10 @@ const TriggerOrder = () => {
       subHeaders={subHeaders()}
       subHeaderButtom={subHeaderButtom()}
     >
-      <SearchProduct />
+      <SearchProduct
+        onSelect={() => {}}
+        onItemsChange={() => {}}
+      />
     </PageContainer>
   );
 };

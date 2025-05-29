@@ -52,7 +52,7 @@ const AddProductForm = () => {
     setSelectedFile(null);
   };
 
-  const { form_data, updateForm } = useStore();
+  const { updateForm } = useStore();
 
   const [formData, setFormData] = useState({ ...initialFormState });
 
@@ -73,13 +73,15 @@ const AddProductForm = () => {
     setImages((prev) => [...prev, ...files]);
     const file = e.target.files?.[0];
 
-    const reader = new FileReader();
+    if (file) {
+      const reader = new FileReader();
 
-    reader.readAsDataURL(file);
+      reader.readAsDataURL(file);
 
-    reader.onload = () => {
-      setFormData({ ...formData, image_path: reader.result ?? "" });
-    };
+      reader.onload = () => {
+        setFormData({ ...formData, image_path: reader.result ?? "" });
+      };
+    }
   };
 
   const handleUploadClick = () => {
@@ -98,9 +100,9 @@ const AddProductForm = () => {
             label="Product Name"
             placeholder="Enter product name"
             paddingY={"0.7rem"}
-            value={formData.product_name}
+            value={formData.name}
             onChange={(e: any) =>
-              setFormData({ ...formData, product_name: e.target.value })
+              setFormData({ ...formData, name: e.target.value })
             }
           />
 
@@ -132,9 +134,9 @@ const AddProductForm = () => {
             options={categoryOptions}
             name="category"
             paddingY="4"
-            value={formData.category_id}
+            value={formData.category}
             onChange={(e: any) =>
-              setFormData({ ...formData, category_id: e.target.value })
+              setFormData({ ...formData, category: e.target.value })
             }
           />
 
@@ -303,9 +305,9 @@ const AddProductForm = () => {
             label="Promotion Price"
             paddingY={"0.7rem"}
             placeholder="₦"
-            value={formData.promotional_price}
+            value={formData.selling_price}
             onChange={(e: any) =>
-              setFormData({ ...formData, promotional_price: e.target.value })
+              setFormData({ ...formData, selling_price: e.target.value })
             }
           />
 
