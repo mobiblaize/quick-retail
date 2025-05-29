@@ -4,7 +4,6 @@ import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable from "../../../General/table";
-import { useFetchAllDiscount } from "../../../../hooks/backendApis/pos/discount";
 
 type DiscountTableProps = {
   data: any;
@@ -14,9 +13,7 @@ type DiscountTableProps = {
 
 
 const DiscountTable = ({ data, isLoading, refresh }: DiscountTableProps) => {
-  // const { data, isLoading } = useFetchAllDiscount();
 
-  // const discounts = data?.data || [];
   const rawDiscounts = data?.data?.discountedProducts?.data || [];
   const discounts = rawDiscounts
   // @ts-ignore

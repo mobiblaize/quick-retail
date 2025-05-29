@@ -1,4 +1,4 @@
-import { FC, useState } from "react";
+import { FC } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch, Loader } from "@mantine/core";
 import TanTable from "../../../General/table";
@@ -7,6 +7,7 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { TableRowData } from "../../../../types";
 import { useToggleStore } from "../../../../hooks/backendApis/pos/storeManagement";
+import { shortenTransactionId } from "../../../../utils/helpers";
 
 type StoreData = {
   id: string;
@@ -69,7 +70,8 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
             {props.row.original.name}
           </Text>
           <Text fw={400} className="text-sm">
-            Store ID: {props.row.original.storeID}
+            {/* @ts-ignore */}
+            Store ID: {shortenTransactionId(props.row.original.storeID)}
           </Text>
         </div>
       ),
@@ -202,7 +204,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={8}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

@@ -41,24 +41,24 @@ const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountMod
       products: selectedProducts.map((id) => ({ id })),
       name,
       code,
-      type: discountType.toLowerCase(), // "percentage" or "amount"
+      type: discountType.toLowerCase(),
       value: Number(discountType === "Percentage" ? percentage : discountValue),
       from,
       to,
       redemption_count: Number(redemptionCount),
     };
-
+  
     createDiscount.mutate(payload, {
       onSuccess: (res) => {
         console.log("Success:", res);
-        onClose();
+        onCreated(); // <--- this is key
       },
       onError: (err) => {
         console.error("Error:", err);
       },
     });
   };
-
+  
   return (
     <>
       <Modal

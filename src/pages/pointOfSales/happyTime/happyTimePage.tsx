@@ -56,7 +56,7 @@ const HappyTimePage = () => {
         onClose={() => setIsLogComplaintsOpen(false)}
         onCreated={() => {
           setIsLogComplaintsOpen(false);
-          refetch(); // Refresh discounts when modal triggers create success
+          refetch();
         }}
       />
     </PageContainer>

@@ -39,7 +39,7 @@ const locations = Array.isArray(data?.data?.stores?.data) ? data.data.stores.dat
 
 const locationOptions = locations.map((loc: { name: string; id: string }) => ({
   label: loc?.name,
-  value: loc?.locationID,
+  value: loc?.id,
 }));
 
     
@@ -116,8 +116,7 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
       <div className="overflow-auto">
         <div className="min-w-[1000px]">
           <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
-            <div className="col-span-2">Product Variant</div>
-            <div>Quantity</div>
+            {/* <div className="col-span-2">Product Variant</div> */}
             <div>Cost Price</div>
             <div>Selling Price</div>
             <div>Reorder Level</div>
@@ -130,7 +129,7 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
               key={variant.id}
               className="grid grid-cols-8 gap-4 items-center px-4 py-3 border-b border-gray-200"
             >
-              <div className="col-span-2 flex items-center gap-3">
+              {/* <div className="col-span-2 flex items-center gap-3">
                 <input type="checkbox" className="accent-orange-500" />
                 <img
                   src={variant.image}
@@ -138,7 +137,7 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
                   className="w-10 h-10 rounded object-cover"
                 />
                 <span className="truncate">{variant.name}</span>
-              </div>
+              </div> */}
               {/* <Input
                 placeholder="Quantity"
                 value={formData.quantity}

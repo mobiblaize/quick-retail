@@ -3,20 +3,22 @@ import FormInput from "../../../../General/formInput";
 import { SetStateAction, useState } from "react";
 import storeIcon from "../../../../../assets/images/newStore.png";
 import { CircleHelp } from "lucide-react";
-import ActivateStore from "./activateStore";
 import { useCreateStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
-
 
 interface AddNewStoreModalProps {
   opened: boolean;
   onClose: () => void;
-  refetchStores?: () => void | Promise<any>; 
+  refetchStores?: () => void | Promise<any>;
 }
 
-const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps) => {
+const AddNewStore = ({
+  opened,
+  onClose,
+  refetchStores,
+}: AddNewStoreModalProps) => {
   // const [isEnabled, ] = useState(false);
-  const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
+  // const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
 
   const [name, setName] = useState("");
   const [gla, setGla] = useState("");
@@ -39,38 +41,39 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
       state: stateVal,
       lga,
       address,
-      // status: isEnabled ? "active" : "inactive",
     };
-  
+
     createStore(payload, {
       onSuccess: async () => {
         notifications.show({
-          title: 'Creation Successful',
+          title: "Creation Successful",
           message: `${name} has been successfully created.`,
-          color: 'green',
+          color: "green",
           autoClose: 4000,
         });
 
-        // Refetch the store list to update table immediately
         if (refetchStores) {
-          await refetchStores();
+          try {
+            await refetchStores(); 
+          } catch (err) {
+            console.error("Error while refetching stores:", err);
+          }
         }
 
-        onClose();
-        setIsActivateOpen(true);
+        onClose(); 
       },
       onError: (err: any) => {
         console.error("Failed to create store", err);
         notifications.show({
-          title: 'Creation Failed',
-          message: 'An error occurred while creating the store.',
-          color: 'red',
+          title: "Creation Failed",
+          message: "An error occurred while creating the store.",
+          color: "red",
           autoClose: 5000,
         });
       },
     });
   };
-  
+
   return (
     <>
       <Modal
@@ -99,7 +102,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
               type="text"
               paddingY="6px"
               value={name}
-              onChange={(e: { target: { value: SetStateAction<string>; }; }) => setName(e.target.value)}
+              onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                setName(e.target.value)
+              }
             />
           </div>
 
@@ -112,7 +117,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={gla}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setGla(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setGla(e.target.value)
+                }
               />
             </div>
             <div>
@@ -123,7 +130,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={gsa}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setGsa(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setGsa(e.target.value)
+                }
               />
             </div>
             {/* <div>
@@ -137,7 +146,7 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 onChange={(e: { target: { value: SetStateAction<string>; }; }) => setStoreID(e.target.value)}
               />
             </div> */}
-           
+
             <div>
               <label className="flex items-center gap-2 mb-1.5">
                 State <CircleHelp color="#98A2B3" size={20} />
@@ -146,7 +155,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={stateVal}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setStateVal(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setStateVal(e.target.value)
+                }
               />
             </div>
             <div>
@@ -157,7 +168,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={lga}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setLga(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setLga(e.target.value)
+                }
               />
             </div>
             <div className="col-span-1 sm:col-span-2">
@@ -168,7 +181,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={country}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setCountry(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setCountry(e.target.value)
+                }
               />
             </div>
             <div className="col-span-1 sm:col-span-2">
@@ -179,7 +194,9 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={address}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setAddress(e.target.value)}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setAddress(e.target.value)
+                }
               />
             </div>
             <div className="col-span-1 sm:col-span-2">
@@ -190,7 +207,10 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
                 type="number"
                 paddingY="6px"
                 value={staff_no}
-                onChange={(e: { target: { value: string } }) => setstaff_no(Number(e.target.value))}
+                onChange={(e: { target: { value: string } }) =>
+                //@ts-ignore
+                  setstaff_no(Number(e.target.value))
+                }
               />
             </div>
             {/* <div>
@@ -227,10 +247,10 @@ const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps
           </div>
         </div>
       </Modal>
-      <ActivateStore
+      {/* <ActivateStore
         opened={isActivateStoreOpen}
         onClose={() => setIsActivateOpen(false)}
-      />
+      /> */}
     </>
   );
 };

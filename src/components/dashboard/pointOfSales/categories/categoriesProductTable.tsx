@@ -6,8 +6,11 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
 import { notifications } from "@mantine/notifications";
 import { useFetchSubCategory } from "../../../../hooks/backendApis/pos/categories";
+// import DeleteSubCategory from "./modals/deleteSubCategory";
 import DeleteProduct from "./modals/deleteProduct";
 import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
+import { Link } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
 
 interface CategoriesProductTableProps {
   subCategoryId: number | string;
@@ -28,7 +31,7 @@ const CategoriesProductTable = ({
         product.product_variations.length === 0
       ) {
         console.warn(
-          "⛔ Skipping product due to missing/empty variations:",
+          "Skipping product due to missing/empty variations:",
           product
         );
         return [];
@@ -72,7 +75,7 @@ const CategoriesProductTable = ({
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
-      refetch(); 
+      refetch();
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -186,12 +189,15 @@ const CategoriesProductTable = ({
     {
       header: "",
       accessorKey: "action2",
-      cell: () => (
-        // <Link to={ROUTES.viewStore}>
-        <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-          View
-        </Text>
-        // </Link>
+      cell: (props) => (
+        <Link
+          to={ROUTES.viewProduct}
+          state={{ variationID: props.row.original.id }}
+        >
+          <Text fw={600} c="customPrimary.10" className="cursor-pointer">
+            View
+          </Text>
+        </Link>
       ),
     },
   ];
@@ -205,7 +211,7 @@ const CategoriesProductTable = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={8}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

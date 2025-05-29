@@ -196,7 +196,7 @@ const SalesProcessingReport = () => {
         data={data}
         showSearch={false}
         showSortFilter={false}
-        length={5}
+        length={8}
         tableTitle={
           <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex gap-2.5 items-center">

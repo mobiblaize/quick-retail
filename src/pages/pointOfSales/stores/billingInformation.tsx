@@ -52,8 +52,10 @@ const BillingInformation = () => {
     <PageContainer subHeaders={subHeaders}>
       <OrderInformation orderData={orderData} />
       <InformationTab orderData={orderData} />
-      <ProductOrderedTable />
-      {/* <ProductOrderedTable items={orderData?.items || []} /> */}
+      <ProductOrderedTable orderId={orderData?.orderID} />
+
+
+    
     </PageContainer>
   );
   

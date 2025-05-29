@@ -6,6 +6,10 @@ export const useLogComplain = () => {
   return usePostData("pos/returns/log-complaint");
 };
 
+export const useFetchAllCustomers = (customerID: string) => {
+  return useGetData(`pos/returns/completed-sales-order/${customerID}`);
+};
+
 export const useFetchOrdersByCustomer = (customerID?: string) => {
   return useGetData(`pos/returns/all-orders/${customerID}`,
     {}, 

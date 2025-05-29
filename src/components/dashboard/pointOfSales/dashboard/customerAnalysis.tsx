@@ -1,10 +1,9 @@
-import { Button, Divider, Group, Text } from "@mantine/core";
+import { Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { useMediaQuery } from "@mantine/hooks";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from "react";

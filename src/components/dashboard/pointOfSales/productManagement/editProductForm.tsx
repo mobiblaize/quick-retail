@@ -1,24 +1,60 @@
-// import { Checkbox } from "@mantine/core";
-import { Upload, UploadCloud, X } from "lucide-react";
+import { Plus, Upload, UploadCloud, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
-import AddVariation from "./modal/addVariation";
-import useStore, { initialFormState } from "./addProductStore";
-import { useFetchAllCategories } from "../../../../hooks/backendApis/pos/categories";
-import { useFetchAllSubCategories } from "../../../../hooks/backendApis/pos/categories";
+import { notifications } from "@mantine/notifications";
+import useStore from "./addProductStore";
+import {
+  useFetchAllCategories,
+  useFetchAllSubCategories,
+} from "../../../../hooks/backendApis/pos/categories";
+import { useFetchAllLocations, useUpdateProduct } from "../../../../hooks/backendApis/pos/products";
+import { Input } from "@mantine/core";
 
-const AddProductForm = () => {
+interface Variant {
+  id: number;
+  image: string;
+  name: string;
+  quantity: string;
+  cost_price: string;
+  selling_price: string;
+  reorder_level: string;
+  size?: string;
+  color?: string;
+  location_id?: string;
+}
+
+const initialVariants: Variant[] = [
+  {
+    id: 1,
+    image: "/product.jpg",
+    name: "",
+    quantity: "",
+    cost_price: "30000",
+    selling_price: "30000",
+    reorder_level: "",
+  },
+];
+
+const EditProductForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const [addVariation, setAddVariation] = useState(false);
-
-  // const [variations, setVariations] = useState([
-  //   { name: "Size", values: ["S", "M", "L"], label: ["Small", "Medium", "Large"]},
-  //   { name: "Colour", values: ["White", "Pink", "Black"], label: ["Small", "Medium", "Large"] },
-  // ]);
-
-  const { data, } = useFetchAllCategories();
+  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct();
+  const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
+  const [serverImages, setServerImages] = useState<string[]>([]);
+
+  const { data: locationData } = useFetchAllLocations();
+
+  const locations = Array.isArray(locationData?.data?.stores?.data)
+    ? locationData.data.stores.data
+    : [];
+
+  const locationOptions = locations.map(
+    (loc: { name: string; id: string }) => ({
+      label: loc?.name,
+      value: loc?.id,
+    })
+  );
 
   const { data: subCategoryData } = useFetchAllSubCategories();
   const subCategories = Array.isArray(subCategoryData?.data?.data)
@@ -41,6 +77,18 @@ const AddProductForm = () => {
         }))
       : [];
 
+  const { form_data } = useStore();
+
+  const [formData, setFormData] = useState({ ...form_data });
+
+  useEffect(() => {
+    if (Array.isArray(formData?.image_path)) {
+      setServerImages(formData.image_path);
+    } else {
+      setServerImages([]);
+    }
+  }, [formData]);
+
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
     if (file) {
@@ -52,21 +100,12 @@ const AddProductForm = () => {
     setSelectedFile(null);
   };
 
-  const { updateForm } = useStore();
-
-  const [formData, setFormData] = useState({ ...initialFormState });
-
-  useEffect(() => {
-    updateForm(formData);
-  }, [formData]);
-
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [images, setImages] = useState<File[]>([]);
 
   const handleRemoveImage = (index: number) => {
-  setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-};
-
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
 
   const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
@@ -79,13 +118,75 @@ const AddProductForm = () => {
       reader.readAsDataURL(file);
 
       reader.onload = () => {
-        setFormData({ ...formData, image_path: reader.result ?? "" });
+        // setFormData({ ...formData, image_path: reader.result ?? "" });
+        setFormData({
+          ...formData,
+          image_path: reader.result ?? "",
+        });
       };
     }
   };
 
   const handleUploadClick = () => {
     fileInputRef.current?.click();
+  };
+
+  // const initialFormState = {
+  //   id: "",
+  //   cost_price: "",
+  //   selling_price: "",
+  //   quantity: "",
+  //   reorder_level: "",
+  //   size: "",
+  //   color: "",
+  //   location_id: "",
+  // };
+  const [variants, setVariants] = useState<Variant[]>(initialVariants);
+
+  const handleUpdateSubmit = () => {
+    const formPayload = {
+      ...formData,
+      category: String(formData.category),
+      sub_category_id: Number(formData.sub_category_id),
+      image_path: formData.image_path,
+    };
+
+    updateProduct(
+      {
+        id: formData.variationID,
+        body: formPayload,
+      },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: "Success",
+            message: "Product updated successfully",
+            color: "green",
+          });
+        },
+        onError: (err: any) => {
+          notifications.show({
+            title: "Error",
+            message: err?.response?.data?.message || "Failed to update product",
+            color: "red",
+          });
+        },
+      }
+    );
+  };
+
+  const handleAddVariant = () => {
+    const newId = variants.length + 1;
+    const newVariant: Variant = {
+      id: newId,
+      image: "/product.jpg",
+      name: `New Variant ${newId}`,
+      quantity: "",
+      cost_price: "30000",
+      selling_price: "30000",
+      reorder_level: "",
+    };
+    setVariants((prev) => [...prev, newVariant]);
   };
 
   return (
@@ -100,7 +201,7 @@ const AddProductForm = () => {
             label="Product Name"
             placeholder="Enter product name"
             paddingY={"0.7rem"}
-            value={formData.name}
+            value={formData?.name}
             onChange={(e: any) =>
               setFormData({ ...formData, name: e.target.value })
             }
@@ -134,7 +235,7 @@ const AddProductForm = () => {
             options={categoryOptions}
             name="category"
             paddingY="4"
-            value={formData.category}
+            value={formData?.category}
             onChange={(e: any) =>
               setFormData({ ...formData, category: e.target.value })
             }
@@ -317,11 +418,15 @@ const AddProductForm = () => {
               label="Price Effective Date"
               paddingY={"0.7rem"}
               placeholder="₦"
-              value={formData.promotional_start_date}
+              value={
+                formData.updated_at
+                  ? new Date(formData.updated_at).toISOString().split("T")[0]
+                  : ""
+              }
               onChange={(e: any) =>
                 setFormData({
                   ...formData,
-                  promotional_start_date: e.target.value,
+                  updated_at: e.target.value,
                 })
               }
             />
@@ -427,10 +532,28 @@ const AddProductForm = () => {
           </div>
 
           {/* Previews with Remove Option */}
-          {images.length > 0 && (
+          {(serverImages.length > 0 || images.length > 0) && (
             <div className="mt-4 flex flex-wrap gap-4">
+              {/* Server Images */}
+              {serverImages.map((url, index) => (
+                <div
+                  key={`server-${index}`}
+                  className="relative w-24 h-24 group"
+                >
+                  <img
+                    src={url}
+                    alt={`server-preview-${index}`}
+                    className="w-full h-full object-cover rounded"
+                  />
+                </div>
+              ))}
+
+              {/* Uploaded Images */}
               {images.map((file, index) => (
-                <div key={index} className="relative w-24 h-24 group">
+                <div
+                  key={`uploaded-${index}`}
+                  className="relative w-24 h-24 group"
+                >
                   <img
                     src={URL.createObjectURL(file)}
                     alt={`preview-${index}`}
@@ -448,6 +571,118 @@ const AddProductForm = () => {
               ))}
             </div>
           )}
+        </div>
+      </div>
+
+      <div className="p-4 bg-white rounded-xl shadow-sm">
+        <h2 className="text-lg font-semibold mb-4">Inventory Details</h2>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+          <FormInput
+            type="text"
+            label="Total Stock Quantity"
+            placeholder="Enter stock quantity"
+            paddingY={"0.7rem"}
+            value={formData.quantity}
+            onChange={(e: any) =>
+              setFormData({ ...formData, quantity: e.target.value })
+            }
+          />
+
+          <FormSelect
+            label="Location"
+            placeholder="Select location"
+            options={locationOptions}
+            name="category"
+            paddingY="4"
+            value={formData.location}
+            onChange={(e: any) =>
+              setFormData({ ...formData, location: e.target.value })
+            }
+          />
+        </div>
+
+        <div className="overflow-auto">
+          <div className="min-w-[1000px]">
+            <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
+              {/* <div className="col-span-2">Product Variant</div> */}
+              <div>Cost Price</div>
+              <div>Selling Price</div>
+              <div>Reorder Level</div>
+              <div>Size</div>
+              <div>Color</div>
+            </div>
+
+            {variants.map((variant) => (
+              <div
+                key={variant.id}
+                className="grid grid-cols-8 gap-4 items-center px-4 py-3 border-b border-gray-200"
+              >
+                {/* <div className="col-span-2 flex items-center gap-3">
+                <input type="checkbox" className="accent-orange-500" />
+                <img
+                  src={variant.image}
+                  alt="variant"
+                  className="w-10 h-10 rounded object-cover"
+                />
+                <span className="truncate">{variant.name}</span>
+              </div> */}
+                {/* <Input
+                placeholder="Quantity"
+                value={formData.quantity}
+                onChange={(e: any) =>
+                  setFormData({ ...formData, quantity: e.target.value })
+                }
+              /> */}
+                <Input
+                  placeholder="Enter cost price"
+                  value={formData.cost_price}
+                  onChange={(e: any) =>
+                    setFormData({ ...formData, cost_price: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Enter selling price"
+                  value={formData.selling_price}
+                  onChange={(e: any) =>
+                    setFormData({ ...formData, selling_price: e.target.value })
+                  }
+                />
+                <Input
+                  type="number"
+                  placeholder="Reorder Level"
+                  value={formData.reorder_level}
+                  onChange={(e: any) =>
+                    setFormData({ ...formData, reorder_level: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Size"
+                  value={formData.size}
+                  onChange={(e: any) =>
+                    setFormData({ ...formData, size: e.target.value })
+                  }
+                />
+                <Input
+                  placeholder="Color"
+                  value={formData.color}
+                  onChange={(e: any) =>
+                    setFormData({ ...formData, color: e.target.value })
+                  }
+                />
+              </div>
+            ))}
+          </div>
+
+          <div className="flex justify-end mt-4">
+            <button
+              className="flex items-center px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-medium rounded transition"
+              onClick={handleAddVariant}
+            >
+              <Plus className="w-4 h-4 mr-2" />
+              Add Variation
+            </button>
+          </div>
         </div>
       </div>
 
@@ -514,13 +749,18 @@ const AddProductForm = () => {
             )}
           </div>
         </div>
+        <div className="flex justify-end mt-6">
+          <button
+            className="bg-orange-600 text-white px-6 py-2 rounded-md hover:bg-orange-700"
+            onClick={handleUpdateSubmit}
+            disabled={isLoading}
+          >
+            {isLoading ? "Updating..." : "Update Product"}
+          </button>
+        </div>
       </div>
-      <AddVariation
-        opened={addVariation}
-        onClose={() => setAddVariation(false)}
-      />
     </div>
   );
 };
 
-export default AddProductForm;
+export default EditProductForm;

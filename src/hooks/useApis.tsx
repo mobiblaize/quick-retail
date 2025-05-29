@@ -1,4 +1,4 @@
-import { useQuery, useMutation } from "@tanstack/react-query";
+import { useQuery, useMutation} from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../utils/axios-instance";
 
 // Create Data
@@ -12,6 +12,7 @@ export const usePostData = (url: string) => {
 
   return mutation;
 };
+
 
 export const useCreateExportData = (url: string) => {
   const mutation = useMutation({

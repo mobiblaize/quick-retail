@@ -174,7 +174,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={8}
           hidePaging
           tableTitle={
             <div className="flex gap-2.5">

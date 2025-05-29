@@ -149,7 +149,7 @@ const CustomerOrdersTable = () => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={8}
         showFilter
         sortOptions={[
           {
