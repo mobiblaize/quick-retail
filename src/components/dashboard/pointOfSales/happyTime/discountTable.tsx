@@ -12,7 +12,7 @@ type DiscountTableProps = {
 };
 
 
-const DiscountTable = ({ data, isLoading, refresh }: DiscountTableProps) => {
+const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
 
   const rawDiscounts = data?.data?.discountedProducts?.data || [];
   const discounts = rawDiscounts
