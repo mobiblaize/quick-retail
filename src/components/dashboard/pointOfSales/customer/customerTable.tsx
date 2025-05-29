@@ -36,7 +36,7 @@ const CustomerTable = () => {
             {props.row.original.contact}
           </Text>
           <Text fw={400} className="text-[#667185] text-sm">
-            Last Visit:{""}{" "}
+            Tel:{""}{" "}
             <span className="text-gray-500">{props.row.original.number}</span>
           </Text>
         </div>
@@ -51,7 +51,7 @@ const CustomerTable = () => {
             {props.row.original.totalAmount}
           </Text>
           <Text fw={400} className="text-[#667185] text-sm">
-            Last Visit:{""}
+           Total Trasactions:{""}
             <span className="text-gray-500">
               {props.row.original.totalTransaction}
             </span>

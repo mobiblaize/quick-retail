@@ -1,8 +1,7 @@
-import { Button, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import InventoryTable from "../../../components/dashboard/pointOfSales/inventoryManagement/inventoryTable";
-import { Link } from "react-router";
-import { ROUTES } from "../../../constants/routes";
+
 
 const InventoryManagementPage = () => {
   const subHeaders = [
@@ -11,9 +10,9 @@ const InventoryManagementPage = () => {
         <Text fw={500} size="xl" c="black">
           Inventory
         </Text>
-        <Link to={ROUTES.updateInventory}>
+        {/* <Link to={ROUTES.updateInventory}>
           <Button variant="filled-primary">Update Inventory</Button>
-        </Link>
+        </Link> */}
       </div>
     </div>,
   ];
