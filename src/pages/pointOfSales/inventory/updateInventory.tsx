@@ -31,7 +31,7 @@ const UpdateInventory = () => {
   );
   const [locationID, setLocationID] = useState(inventories?.location_id || "");
 
-  const { data: locationsData, isError } = useFetchAllLocations();
+  const { data: locationsData } = useFetchAllLocations();
 
   const locations = Array.isArray(locationsData?.data?.stores?.data)
     ? locationsData.data.stores.data

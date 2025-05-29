@@ -24,10 +24,10 @@ const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
   const [description, setDescription] = useState("");
   const { mutate, isPending } = useLogComplain();
   
-  const { data: customersData, isError } = useFetchAllCustomers();
+  const { data: customersData } = useFetchAllCustomers();
   const {
     data: customerOrders,
-    isLoading: ordersLoading,
+    // isLoading: ordersLoading,
   } = useFetchOrdersByCustomer(customerId);
 
 

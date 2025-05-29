@@ -14,10 +14,9 @@ interface ReturnsAnalyticsData {
 
 interface ReturnsAnalyticsProps {
   data: ReturnsAnalyticsData;
-  isLoading: boolean;
 }
 
-const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, isLoading }) => {
+const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data }) => {
   const cards = [
     {
       title: "Total Returned Product",

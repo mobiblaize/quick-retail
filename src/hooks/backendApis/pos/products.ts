@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
-import { useFetchPostData, useGetData, usePostData, usePutData,  } from "../../useApis";
+import { useDeleteData, useFetchPostData, useGetData, usePostData, usePutData,  } from "../../useApis";
 
   const defaultPayload = {
     search: "palm city mall",

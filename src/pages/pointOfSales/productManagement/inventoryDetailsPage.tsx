@@ -13,7 +13,7 @@ const InventoryDetailsPage: React.FC = () => {
   const { mutate } = useCreateProduct();
 
   const handleSave = () => {
-    if (!form_data.product_name) {
+    if (!form_data.name) {
       notifications.show({
         title: "Validation error",
         message: "Please fill all required fields",
@@ -26,9 +26,9 @@ const InventoryDetailsPage: React.FC = () => {
     const hasVariations = true;
 
     const payload = {
-      product_name: form_data.product_name,
+      name: form_data.name,
       sku: form_data.sku,
-      category_id: form_data.category_id,
+      category: form_data.category,
       sub_category_id: form_data.sub_category_id,
       short_description: form_data.short_description,
       long_description: form_data.long_description,

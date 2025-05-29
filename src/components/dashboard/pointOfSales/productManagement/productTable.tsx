@@ -5,13 +5,47 @@ import { Avatar, Text, Menu, Button, Loader } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { MoreVertical } from "lucide-react";
-import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
+import {
+  useDeleteProuct,
+  useFetchAllProducts,
+} from "../../../../hooks/backendApis/pos/products";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import useStore from "./addProductStore";
+import DeleteProduct from "../categories/modals/deleteProduct";
+import { useState } from "react";
+import { notifications } from "@mantine/notifications";
 
 const ProductTable = () => {
-  const { data, isLoading } = useFetchAllProducts();
+  const { data, isLoading, refetch } = useFetchAllProducts();
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const deleteMutation = useDeleteProuct(selectedId ?? "");
+
+  const handleDelete = async () => {
+    if (!selectedId) return;
+
+    try {
+      await deleteMutation.mutateAsync();
+      notifications.show({
+        title: "Product Deleted!",
+        message: "This product has been successfully deleted!",
+        color: "red",
+      });
+      setIsDeleteOpen(false);
+      setSelectedId(null);
+      refetch(); // <--- Refresh data
+    } catch (error) {
+      notifications.show({
+        title: "Error",
+        message:
+          (error && typeof error === "object" && "message" in error
+            ? (error as any).message
+            : "Failed to delete product"),
+        color: "red",
+      });
+    }
+  };
 
   console.log("Product Data:", data);
 
@@ -40,11 +74,10 @@ const ProductTable = () => {
 
   const { updateForm } = useStore();
 
-  const handleProductEdit = (product: TableRowData) => {
+  const handleProductEdit = (product: any) => {
     updateForm(product);
 
     console.log("Editing product:", product);
-    
   };
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -156,7 +189,16 @@ const ProductTable = () => {
                 Edit
               </Link>
             </Menu.Item>
-            <Menu.Item color="red">Delete</Menu.Item>
+            <Menu.Item
+              color="red"
+              onClick={() => {
+                //@ts-ignore
+                setSelectedId(props.row.original.variationID); // Ensure the correct product is selected
+                setIsDeleteOpen(true);
+              }}
+            >
+              Delete
+            </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       ),
@@ -188,6 +230,12 @@ const ProductTable = () => {
             </div>
           </div>
         }
+      />
+      <DeleteProduct
+        opened={isDeleteOpen}
+        onClose={() => setIsDeleteOpen(false)}
+        handleDelete={handleDelete}
+        productID={selectedId}
       />
     </main>
   );
