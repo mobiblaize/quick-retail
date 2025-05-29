@@ -7,6 +7,7 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchingleOrderProducts } from "../../../../hooks/backendApis/pos/salesProcessing";
+import { truncateText } from "../../../../utils/helpers";
 
 type ProductOrderedTableProps = {
   orderId?: string;
@@ -75,6 +76,7 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
+          //@ts-ignore
             src={props.row.original.image}
             alt={props.row.original.name as string}
             radius="md"
@@ -83,7 +85,7 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
 
           <div className="flex flex-col">
             <Text fw={500} c="black">
-              {props.row.original.name}
+              {truncateText(String(props.row.original.name ?? ""))}
             </Text>
             <Text fw={600} className="text-[#667185] text-sm">
               {props.row.original.items}

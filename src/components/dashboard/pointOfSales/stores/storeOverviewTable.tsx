@@ -40,6 +40,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
 
   if (!stores.length) return <p>No stores available.</p>;
 
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -70,8 +71,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
             {props.row.original.name}
           </Text>
           <Text fw={400} className="text-sm">
-            {/* @ts-ignore */}
-            Store ID: {shortenTransactionId(props.row.original.storeID)}
+          Store ID: {shortenTransactionId(String(props.row.original.storeID ?? ""))}
           </Text>
         </div>
       ),
@@ -205,6 +205,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSortFilter
           searchPlaceholder="Search orders"
           length={8}
+          hidePaging
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

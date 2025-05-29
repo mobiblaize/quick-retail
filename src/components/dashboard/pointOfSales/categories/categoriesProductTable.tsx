@@ -11,6 +11,7 @@ import DeleteProduct from "./modals/deleteProduct";
 import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { formatDate } from "../../../../utils/helpers";
 
 interface CategoriesProductTableProps {
   subCategoryId: number | string;
@@ -134,7 +135,7 @@ const CategoriesProductTable = ({
       accessorKey: "dateCreated",
       cell: (props) => (
         <Text c="black" fw={500} className="text-sm font-medium">
-          {props.row.original.updated_at}
+          {formatDate(String(props.row.original.updated_at))}
         </Text>
       ),
     },
