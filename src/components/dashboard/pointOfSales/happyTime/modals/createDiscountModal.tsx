@@ -8,9 +8,10 @@ import { useFetchAllProducts } from "../../../../../hooks/backendApis/pos/produc
 interface CreateDiscountModalProps {
   opened: boolean;
   onClose: () => void;
+  onCreated: () => void; 
 }
 
-const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
+const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountModalProps) => {
   const [discountType, setDiscountType] = useState<string>("Amount");
 
   const [name, setName] = useState("");

@@ -14,7 +14,7 @@ const StoreTarget = () => {
   const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
   const { data, isPending } = useFetchStore({ paginate: true });
   const stores = Array.isArray(data?.data?.stores?.data) ? data.data.stores.data : [];
-  const { data: statData } = useFetchStat();
+  const { data: statData, refetch  } = useFetchStat();
 
   const stats = statData?.data
   ? [
@@ -71,16 +71,7 @@ const StoreTarget = () => {
             Add New Store
             <Plus />
           </Button>
-          {/* <Link to={ROUTES.storeTarget}>
-            <Button
-              variant="outline-primary"
-              className="flex gap-1.5 items-center whitespace-nowrap"
-              style={{ padding: "0.8rem 1rem" }}
-            >
-              Stores Target
-              <ChevronRight />
-            </Button>
-          </Link> */}
+         
         </div>
       </div>
     </div>,
@@ -91,10 +82,11 @@ const StoreTarget = () => {
     <PageContainer subHeaders={subHeaders}>
    
    <AnalysisOverview stats={stats} />
-      <StoreOverviewTable stores={stores} loading={isPending} />
+      <StoreOverviewTable stores={stores} loading={isPending} refetchStores={refetch} />
       <AddNewStore
         opened={isAddNewStoreOpen}
         onClose={() => setIsAddNewStoreOpen(false)}
+        refetchStores={refetch} 
       />
     </PageContainer>
   );

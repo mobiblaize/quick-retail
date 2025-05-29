@@ -72,7 +72,7 @@ const CategoriesProductTable = ({
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
-      refetch(); // <--- Refresh data
+      refetch(); 
     } catch (error: any) {
       notifications.show({
         title: "Error",

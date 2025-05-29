@@ -3,13 +3,15 @@ import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
-import { useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { useEffect, useState } from "react";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
+import { ROUTES } from "../../../../constants/routes";
 
 const SalesProcessingReport = () => {
   const location = useLocation();
+  const navigate = useNavigate();
   const { reportData, startDate, endDate } = location.state || {};
   const [data, setData] = useState<TableRowData[]>([]);
   const { mutateAsync: exportReport, isPending: isExporting } =
@@ -25,7 +27,8 @@ const SalesProcessingReport = () => {
   useEffect(() => {
     if (Array.isArray(reportData?.data)) {
       const formattedData = reportData.data.map((item: any) => ({
-        id: shortenTransactionId(item["Order ID"]), 
+        fullId: item["Order ID"],
+        id: shortenTransactionId(item["Order ID"]),
         items: 1,
         timeStamp: item["Date"],
         customer: item["Customer Name"],
@@ -37,6 +40,18 @@ const SalesProcessingReport = () => {
     }
   }, [reportData]);
 
+  const handleViewClick = (fullId: string, paymentStatus: string) => {
+    console.log("Navigating to:", fullId, paymentStatus);
+
+    if (paymentStatus === "Completed") {
+      navigate(ROUTES.viewOrder, { state: { orderID: fullId } });
+    } else if (paymentStatus === "Draft") {
+      navigate(ROUTES.viewOrderdraft, { state: { orderID: fullId } });
+    } else {
+      console.warn("Unhandled order status:", paymentStatus);
+    }
+  };
+
   const handleExport = async () => {
     const exportPayload = {
       start_date: startDate || "",
@@ -44,13 +59,16 @@ const SalesProcessingReport = () => {
       report_type: "returns",
       export_format: "csv",
     };
-  
+
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `sales-report.${exportPayload.export_format}`);
+      link.setAttribute(
+        "download",
+        `sales-report.${exportPayload.export_format}`
+      );
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -138,15 +156,36 @@ const SalesProcessingReport = () => {
         );
       },
     },
-
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Text fw={700} c="customPrimary.10" className="cursor-pointer">
-          View order
-        </Text>
-      ),
+      cell: (props) => {
+        const { fullId, paymentStatus } = props.row.original;
+
+        console.log("Rendering action cell with:", { fullId, paymentStatus }); // log on render
+
+        return (
+          <Text
+            fw={700}
+            c="customPrimary.10"
+            className="cursor-pointer"
+            onClick={() => {
+              console.log("Clicked View Order with:", {
+                fullId,
+                paymentStatus,
+              }); // log on click
+              if (typeof fullId === "string") {
+                // @ts-ignore
+                handleViewClick(fullId, paymentStatus);
+              } else {
+                console.warn("Invalid ID for navigation:", fullId);
+              }
+            }}
+          >
+            View Order
+          </Text>
+        );
+      },
     },
   ];
 

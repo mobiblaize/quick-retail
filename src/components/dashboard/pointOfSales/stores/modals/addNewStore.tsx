@@ -11,16 +11,17 @@ import { notifications } from "@mantine/notifications";
 interface AddNewStoreModalProps {
   opened: boolean;
   onClose: () => void;
+  refetchStores?: () => void | Promise<any>; 
 }
 
-const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
-  const [isEnabled, ] = useState(false);
+const AddNewStore = ({ opened, onClose,   refetchStores }: AddNewStoreModalProps) => {
+  // const [isEnabled, ] = useState(false);
   const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
 
   const [name, setName] = useState("");
   const [gla, setGla] = useState("");
   const [gsa, setGsa] = useState("");
-  const [storeID, setStoreID] = useState("");
+  const [staff_no, setstaff_no] = useState();
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
@@ -33,23 +34,28 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
       name,
       gla,
       gsa,
-      storeID,
+      staff_no,
       country,
       state: stateVal,
       lga,
       address,
-      status: isEnabled ? "active" : "inactive",
+      // status: isEnabled ? "active" : "inactive",
     };
   
     createStore(payload, {
-      onSuccess: () => {
+      onSuccess: async () => {
         notifications.show({
           title: 'Creation Successful',
           message: `${name} has been successfully created.`,
           color: 'green',
           autoClose: 4000,
         });
-  
+
+        // Refetch the store list to update table immediately
+        if (refetchStores) {
+          await refetchStores();
+        }
+
         onClose();
         setIsActivateOpen(true);
       },
@@ -120,7 +126,7 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 onChange={(e: { target: { value: SetStateAction<string>; }; }) => setGsa(e.target.value)}
               />
             </div>
-            <div>
+            {/* <div>
               <label className="flex items-center gap-2 mb-1.5">
                 Store ID <CircleHelp color="#98A2B3" size={20} />
               </label>
@@ -130,18 +136,8 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 value={storeID}
                 onChange={(e: { target: { value: SetStateAction<string>; }; }) => setStoreID(e.target.value)}
               />
-            </div>
-            <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                Country <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={country}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setCountry(e.target.value)}
-              />
-            </div>
+            </div> */}
+           
             <div>
               <label className="flex items-center gap-2 mb-1.5">
                 State <CircleHelp color="#98A2B3" size={20} />
@@ -166,6 +162,17 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
             </div>
             <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
+                Country <CircleHelp color="#98A2B3" size={20} />
+              </label>
+              <FormInput
+                type="text"
+                paddingY="6px"
+                value={country}
+                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setCountry(e.target.value)}
+              />
+            </div>
+            <div className="col-span-1 sm:col-span-2">
+              <label className="flex items-center gap-2 mb-1.5">
                 Address <CircleHelp color="#98A2B3" size={20} />
               </label>
               <FormInput
@@ -173,6 +180,17 @@ const AddNewStore = ({ opened, onClose }: AddNewStoreModalProps) => {
                 paddingY="6px"
                 value={address}
                 onChange={(e: { target: { value: SetStateAction<string>; }; }) => setAddress(e.target.value)}
+              />
+            </div>
+            <div className="col-span-1 sm:col-span-2">
+              <label className="flex items-center gap-2 mb-1.5">
+                Number of Staff <CircleHelp color="#98A2B3" size={20} />
+              </label>
+              <FormInput
+                type="number"
+                paddingY="6px"
+                value={staff_no}
+                onChange={(e: { target: { value: string } }) => setstaff_no(Number(e.target.value))}
               />
             </div>
             {/* <div>

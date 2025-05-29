@@ -3,11 +3,11 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { Link } from "react-router";
+import { Link } from "react-router-dom"; // ✅ Correct
 import { ROUTES } from "../../../../constants/routes";
 import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
 import { useEffect, useState } from "react";
-import { shortenTransactionId } from "../../../../utils/helpers";
+import { shortenTransactionId, truncateText } from "../../../../utils/helpers";
 
 type ReturnsReportProps = {
   reportData: any;
@@ -34,6 +34,7 @@ const ReturnsRefundsReport = ({
   useEffect(() => {
     if (Array.isArray(reportData?.data)) {
       const formattedData = reportData.data.map((item: any) => ({
+        fullOrderId: item["Order ID"],  
         id: shortenTransactionId(item["Order ID"]),
         productId: shortenTransactionId(item["Product ID"]),
         items: 1,
@@ -113,9 +114,10 @@ const ReturnsRefundsReport = ({
             size={40}
           />
           <div className="flex flex-col">
-            <Text fw={500} c="black">
-              {row.original.product}
+            <Text fw={500} c="black" title={String(row.original.product ?? "")}>
+              {truncateText(String(row.original.product ?? ""))}
             </Text>
+
             <Text fw={500} className="text-sm">
               ID:{" "}
               <span className="text-[#F16722]">{row.original.productId}</span>
@@ -124,17 +126,7 @@ const ReturnsRefundsReport = ({
         </div>
       ),
     },
-    {
-      header: "Order ID",
-      accessorKey: "id",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="black">
-            {props.row.original.id}
-          </Text>
-        </div>
-      ),
-    },
+
     {
       header: "Date Returned",
       accessorKey: "dateReturned",
@@ -209,8 +201,8 @@ const ReturnsRefundsReport = ({
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.viewReturns}>
+      cell: ({ row }) => (
+        <Link to={ROUTES.viewReturns} state={{ orderId: row.original.fullOrderId }}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View
           </Text>

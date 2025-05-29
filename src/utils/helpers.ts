@@ -28,4 +28,8 @@ export function formatDate(dateString: string): string {
     if (isNaN(amount)) return "₦ 0";
     return `₦ ${amount.toLocaleString()}`;
   };
+  export function truncateText(text: string, length = 10) {
+    return text.length > length ? text.slice(0, length) + "..." : text;
+  }
+  
   

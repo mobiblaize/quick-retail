@@ -6,8 +6,15 @@ import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable from "../../../General/table";
 import { useFetchAllDiscount } from "../../../../hooks/backendApis/pos/discount";
 
-const DiscountTable = () => {
-  const { data, isLoading } = useFetchAllDiscount();
+type DiscountTableProps = {
+  data: any;
+  isLoading: boolean;
+  refresh: () => void;
+};
+
+
+const DiscountTable = ({ data, isLoading, refresh }: DiscountTableProps) => {
+  // const { data, isLoading } = useFetchAllDiscount();
 
   // const discounts = data?.data || [];
   const rawDiscounts = data?.data?.discountedProducts?.data || [];
