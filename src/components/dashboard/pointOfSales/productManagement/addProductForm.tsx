@@ -5,25 +5,44 @@ import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
 import AddVariation from "./modal/addVariation";
 import useStore, { initialFormState } from "./addProductStore";
-import { useFetchAllCategories } from "../../../../hooks/backendApis/pos/categories";
-import { useFetchAllSubCategories } from "../../../../hooks/backendApis/pos/categories";
+import {
+  useFetchAllCategories,
+  useFetchSubCatOfCat,
+} from "../../../../hooks/backendApis/pos/categories";
+// import { useFetchAllSubCategories } from "../../../../hooks/backendApis/pos/categories";
 
 const AddProductForm = () => {
+  // const { state } = useLocation();
+  const [selectedCategoryId, setSelectedCategoryId] = useState<
+    number | undefined
+  >();
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [addVariation, setAddVariation] = useState(false);
+  // const category = state?.category;
+
+  const { data: subCatData } = useFetchSubCatOfCat(
+  selectedCategoryId,
+  {
+    enabled: selectedCategoryId !== undefined,
+  }
+);
+
+  const subCategories = Array.isArray(subCatData?.data) ? subCatData.data : [];
+
+  console.log("Sub Categories:", subCategories);
 
   // const [variations, setVariations] = useState([
   //   { name: "Size", values: ["S", "M", "L"], label: ["Small", "Medium", "Large"]},
   //   { name: "Colour", values: ["White", "Pink", "Black"], label: ["Small", "Medium", "Large"] },
   // ]);
 
-  const { data, } = useFetchAllCategories();
+  const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
 
-  const { data: subCategoryData } = useFetchAllSubCategories();
-  const subCategories = Array.isArray(subCategoryData?.data?.data)
-    ? subCategoryData.data.data
-    : [];
+  // const { data: subCategoryData } = useFetchAllSubCategories();
+  // const subCategories = Array.isArray(subCategoryData?.data?.data)
+  //   ? subCategoryData.data.data
+  //   : [];
 
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0
@@ -64,24 +83,68 @@ const AddProductForm = () => {
   const [images, setImages] = useState<File[]>([]);
 
   const handleRemoveImage = (index: number) => {
-  setImages((prevImages) => prevImages.filter((_, i) => i !== index));
-};
+    setImages((prevImages) => prevImages.filter((_, i) => i !== index));
+  };
 
+  // const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   const files = Array.from(e.target.files || []);
+  //   setImages((prev) => [...prev, ...files]);
+  //   const file = e.target.files?.[0];
+
+  //   if (file) {
+  //     const reader = new FileReader();
+
+  //     reader.readAsDataURL(file);
+
+  //     reader.onload = () => {
+  //       setFormData({ ...formData, image: reader.result ?? "" });
+  //     };
+  //   }
+  // };
 
   const handleFileImageChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
+
+    // Add to the local state for preview
     setImages((prev) => [...prev, ...files]);
-    const file = e.target.files?.[0];
 
-    if (file) {
+    // Convert files to base64 strings
+    Promise.all(files.map(fileToBase64))
+      .then((base64Images) => {
+        const updatedImage = formData.image || base64Images[0]; // first image only if not already set
+        const remainingImages =
+          formData.image || base64Images.length > 1
+            ? base64Images.slice(formData.image ? 0 : 1)
+            : [];
+
+        setFormData({
+          ...formData,
+          image: updatedImage,
+          image_path: [...formData.image_path, ...remainingImages],
+        });
+      })
+      .catch((err) => {
+        console.error("Failed to read files:", err);
+      });
+  };
+
+  // Utility function to convert file to base64
+  const fileToBase64 = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
       const reader = new FileReader();
-
       reader.readAsDataURL(file);
 
       reader.onload = () => {
-        setFormData({ ...formData, image_path: reader.result ?? "" });
+        if (typeof reader.result === "string") {
+          resolve(reader.result);
+        } else {
+          reject("Failed to convert file to base64");
+        }
       };
-    }
+
+      reader.onerror = reject;
+    });
   };
 
   const handleUploadClick = () => {
@@ -100,9 +163,9 @@ const AddProductForm = () => {
             label="Product Name"
             placeholder="Enter product name"
             paddingY={"0.7rem"}
-            value={formData.name}
+            value={formData.product_name}
             onChange={(e: any) =>
-              setFormData({ ...formData, name: e.target.value })
+              setFormData({ ...formData, product_name: e.target.value })
             }
           />
 
@@ -128,16 +191,30 @@ const AddProductForm = () => {
             }
           />
 
+          {/* <FormSelect
+            label="Category"
+            placeholder="Select product category"
+            options={categoryOptions}
+            name="category"
+            paddingY="4"
+            // value={formData.category_id}
+            // onChange={(e: any) =>
+            //   setFormData({ ...formData, category_id: e.target.value })
+            // }
+            value={categoryOptions.find(
+              (option) => option.value === selectedCategoryId
+            )}
+            onChange={(option) => setSelectedCategoryId(option?.value)}
+            // placeholder="Select Category"
+          /> */}
           <FormSelect
             label="Category"
             placeholder="Select product category"
             options={categoryOptions}
             name="category"
             paddingY="4"
-            value={formData.category}
-            onChange={(e: any) =>
-              setFormData({ ...formData, category: e.target.value })
-            }
+            value={selectedCategoryId}
+            onChange={(e: any) => setSelectedCategoryId(Number(e.target.value))}
           />
 
           <FormSelect

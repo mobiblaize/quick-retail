@@ -13,7 +13,7 @@ const InventoryDetailsPage: React.FC = () => {
   const { mutate } = useCreateProduct();
 
   const handleSave = () => {
-    if (!form_data.name) {
+    if (!form_data.product_name) {
       notifications.show({
         title: "Validation error",
         message: "Please fill all required fields",
@@ -26,9 +26,9 @@ const InventoryDetailsPage: React.FC = () => {
     const hasVariations = true;
 
     const payload = {
-      name: form_data.name,
+      product_name: form_data.product_name,
       sku: form_data.sku,
-      category: form_data.category,
+      category_id: form_data.category_id,
       sub_category_id: form_data.sub_category_id,
       short_description: form_data.short_description,
       long_description: form_data.long_description,
@@ -39,6 +39,7 @@ const InventoryDetailsPage: React.FC = () => {
       promotional_start_date: form_data.promotional_start_date,
       safety_instructions: form_data.safety_instructions,
       certificates: form_data.certificates,
+      image_path: form_data.image_path || [],
      
 
       // Always use variations
@@ -48,8 +49,8 @@ const InventoryDetailsPage: React.FC = () => {
         quantity: v.quantity,
         reorder_level: v.reorder_level,
         size: v.size,
-        colour: v.color, // Rename key from color -> colour
-        image_path: form_data.image_path,
+        colour: v.color, 
+        image: form_data.image,
       })),
     };
 

@@ -1,7 +1,7 @@
 import { useRef, useState } from "react";
 import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 
 import PageContainer from "../../../layout/pageContainer";
 
@@ -42,6 +42,9 @@ const slideVariants = {
 };
 
 const ViewReturnsContent: React.FC = () => {
+  const location = useLocation();
+  const orderId = location.state?.orderId;
+
   const navigate = useNavigate();
   const { currentStep, prevStep } = useReturns();
   const [isResolveOpen, setIsResolveOpen] = useState(false);
@@ -210,8 +213,12 @@ const ViewReturnsContent: React.FC = () => {
     >
       <AnimatePresence mode="wait">{renderStepContent()}</AnimatePresence>
 
-      <Resolve opened={isResolveOpen} onClose={() => setIsResolveOpen(false)} />
-      <Decline opened={isDeclineOpen} onClose={() => setIsDeclineOpen(false)} />
+      <Resolve
+        opened={isResolveOpen}
+        onClose={() => setIsResolveOpen(false)}
+        returnID={orderId}
+      />
+      <Decline opened={isDeclineOpen} onClose={() => setIsDeclineOpen(false)}  returnID={orderId}/>
     </PageContainer>
   );
 };

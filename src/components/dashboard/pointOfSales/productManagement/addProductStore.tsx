@@ -37,12 +37,18 @@
 
 import { create } from "zustand";
 
+interface VariationAttribute {
+  option_value: string;
+}
+
 // Step 1: Define a separate type for form data
 type FormData = {
-  name: string;
+  product_name: string;
+  name?: string; // Optional field for variations
   sku: string;
   ean: string;
-  category: string;
+  category:string;
+  category_id: string;
   sub_category_id: string;
   short_description: string;
   long_description: string;
@@ -54,7 +60,8 @@ type FormData = {
   promotional_end_date: string;
   safety_instructions: string;
   certificates: string;
-  image_path: string | ArrayBuffer | null; // <== Correct type
+  image: string | ArrayBuffer | null;
+  image_path: string[];
   variations: any[];
   variationID?: string;
   selling_price: string;
@@ -65,14 +72,17 @@ type FormData = {
   reorder_level?: string; // Optional field
   size?: string; // Optional field
   color?: string; // Optional field
+  variation_attributes?: VariationAttribute[]; 
 };
 
 // Step 2: Use the type for your initial state
 export const initialFormState: FormData = {
-  name: "",
+  product_name: "",
+  name: "", 
   sku: "",
   ean: "",
   category: "",
+  category_id: "",
   sub_category_id: "",
   short_description: "",
   long_description: "",
@@ -84,7 +94,8 @@ export const initialFormState: FormData = {
   promotional_end_date: "",
   safety_instructions: "",
   certificates: "",
-  image_path: null,
+  image: null,
+  image_path: [],
   variations: [],
   variationID: "",
   selling_price: "",
@@ -95,6 +106,7 @@ export const initialFormState: FormData = {
   reorder_level: "",
   size: "",
   color: "",
+  variation_attributes: [],
 };
 
 // Step 3: Define the store interface
