@@ -8,8 +8,12 @@ const SubCategories = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const category = state?.category;
-  const { data, isLoading, } = useFetchSubCatOfCat(category?.id);
+  const { data, isLoading,refetch  } = useFetchSubCatOfCat(category?.id);
   const subCategories = Array.isArray(data?.data) ? data.data : [];
+  const handleDeleteSuccess = () => {
+    // Refetch data from backend
+    refetch();
+  };
 
 
   const subHeaders = [
@@ -29,7 +33,7 @@ const SubCategories = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <SubCategoryTable subCategories={subCategories} category={category} isLoading={isLoading} />
+      <SubCategoryTable subCategories={subCategories} category={category} isLoading={isLoading}  onDeleteSuccess={handleDeleteSuccess}  />
     </PageContainer>
   );
 };

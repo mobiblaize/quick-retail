@@ -8,6 +8,7 @@ import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products"
 
 
 const DivisionSalesOverview = () => {
+
   const { data, } = useFetchCategorySales();
   const { data: productData, isLoading: loadingProducts, error: productError } = useFetchAllProducts();
 

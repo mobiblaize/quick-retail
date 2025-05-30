@@ -11,7 +11,7 @@ const CategoriesPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
   const [isCreateSubCategoryOpen, setIsSubCreateCategoryOpen] = useState(false);
 
-  const { data, isLoading,  } = useFetchAllCategories();
+  const { data, isLoading,refetch  } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
   
 
@@ -79,6 +79,10 @@ const CategoriesPage = () => {
       <CreateNewCategory
         opened={isCreateCategoryOpen}
         onClose={() => setIsCreateCategoryOpen(false)}
+        onCreated={() => {
+          refetch();          
+          setIsCreateCategoryOpen(false); 
+        }}
       />
       <CreateSubCategory
         opened={isCreateSubCategoryOpen}

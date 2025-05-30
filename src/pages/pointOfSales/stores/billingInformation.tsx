@@ -26,7 +26,7 @@ const BillingInformation = () => {
     <div key="2">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-          Shoes
+          {orderData.location.name}
         </Text>
         <Button
           variant="filled"
@@ -52,8 +52,10 @@ const BillingInformation = () => {
     <PageContainer subHeaders={subHeaders}>
       <OrderInformation orderData={orderData} />
       <InformationTab orderData={orderData} />
-      <ProductOrderedTable />
-      {/* <ProductOrderedTable items={orderData?.items || []} /> */}
+      <ProductOrderedTable orderId={orderData?.orderID} />
+
+
+    
     </PageContainer>
   );
   

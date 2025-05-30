@@ -219,7 +219,7 @@ const ProductTable = () => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={8}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
@@ -235,7 +235,7 @@ const ProductTable = () => {
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
         handleDelete={handleDelete}
-        productID={selectedId}
+        id={selectedId}
       />
     </main>
   );

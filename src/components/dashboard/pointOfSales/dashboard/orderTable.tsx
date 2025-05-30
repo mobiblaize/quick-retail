@@ -32,7 +32,7 @@ const CustomerOrdersTable = () => {
   const navigate = useNavigate();
 
   const handleViewClick = (orderID: string, status: string) => {
-
+    console.log("Navigating with orderID:", orderID);
     if (status === "paid") {
       navigate(ROUTES.viewOrder, { state: { orderID } });
     } else if (status === "pending") {
@@ -149,8 +149,9 @@ const CustomerOrdersTable = () => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={8}
         showFilter
+        hidePaging
         sortOptions={[
           {
             key: "products",

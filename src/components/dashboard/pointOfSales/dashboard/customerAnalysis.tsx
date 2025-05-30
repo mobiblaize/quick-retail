@@ -1,17 +1,16 @@
-import { Button, Divider, Group, Text } from "@mantine/core";
+import { Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
-import { ArrowUpRight, ChevronRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { useMediaQuery } from "@mantine/hooks";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
 import { ReactElement, JSXElementConstructor, ReactNode, ReactPortal, Key } from "react";
 import { JSX } from "react/jsx-runtime";
 
 const CustomerAnalysis = () => {
-  const isSmallScreen = useMediaQuery("(max-width: 640px)");
+ 
   const { data,} = useFetchCustomerAnalysis();
   const { data: allCustomersData } = useFetchAllCustomers();
 
@@ -38,19 +37,7 @@ const CustomerAnalysis = () => {
                 showIconOnly="sm"
               />
             </Group>
-            {!isSmallScreen && (
-              <Button
-                rightSection={<ChevronRight />}
-                variant="default"
-                px={6}
-                py={2}
-                className="rounded-lg"
-              >
-                <Text c="textSecondary.8" fw={500}>
-                  View Report
-                </Text>
-              </Button>
-            )}
+          
           </div>
         </div>
         <DivisionSaleChart

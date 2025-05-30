@@ -13,7 +13,7 @@ const ViewCollection = () => {
   const category = state?.category;
 
   const initialSubCategory = state?.subCategory;
-  const [subCategory] = useState(initialSubCategory);
+  const [subCategory, setSubCategory] = useState(initialSubCategory); 
 
   const subHeaders = [
     <div key="1" className="py-2.5">
@@ -54,6 +54,10 @@ const ViewCollection = () => {
         opened={isEditCategoryOpen}
         onClose={() => setIsEditCategoryOpen(false)}
         subCategory={subCategory}
+        onUpdate={(updatedSubCategory) => {
+          setSubCategory(updatedSubCategory); 
+          setIsEditCategoryOpen(false);
+        }}
       />
     </PageContainer>
   );

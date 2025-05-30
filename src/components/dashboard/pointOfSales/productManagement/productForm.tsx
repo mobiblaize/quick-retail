@@ -59,7 +59,6 @@ const Section = ({
 };
 
 export default function ProductForm({ overview }: { overview: OverviewProps }) {
-  console.log("ProductForm rendered with overview:", overview);
   return (
     <div className="w-full mx-auto p-4">
       <div className="bg-white p-4 rounded-lg shadow mb-[1em]">
@@ -74,7 +73,8 @@ export default function ProductForm({ overview }: { overview: OverviewProps }) {
             </Text>
           </div>
           <Text size="1.8rem" c="black" fw={600}>
-            Sleek Sneakers ''24
+            {/* Sleek Sneakers ''24 */}
+            {overview?.name || "N/A"}
           </Text>
         </section>
         <div className="flex mt-5 gap-10">

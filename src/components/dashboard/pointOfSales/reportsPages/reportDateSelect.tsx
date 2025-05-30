@@ -1,21 +1,57 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { Text } from "@mantine/core";
+import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
 
 const ReportDateSelect = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { reportType, reportLabel } = location.state || {};
-
+  const [, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
-
-  const handleGenerate = () => {
+  const generateReport = useGenerateReport();
+ 
+  const handleGenerate = async () => {
     if (!reportType || !startDate || !endDate) return;
 
-    navigate(
-      `/dashboard/reports/${reportType}?from=${startDate}&to=${endDate}`
-    );
+    setLoading(true);
+    try {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        report_type: mapReportType(reportType),
+      };
+
+      const response = await generateReport.mutateAsync(payload);
+
+      // Option 1: Navigate to report view page with data in state
+      navigate(`/dashboard/reports/${reportType}`, {
+        state: {
+          reportData: response.data,
+          startDate,
+          endDate,
+        },
+      });
+
+    } catch (error) {
+      console.error("Report generation failed", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const mapReportType = (path: any) => {
+    switch (path) {
+      case "sales-processing":
+        return "sales";
+      case "product-management":
+        return "products";
+      case "returns-refunds":
+        return "returns";
+      default:
+        return path;
+    }
   };
 
   if (!reportType) {

@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { FC } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch, Loader } from "@mantine/core";
 import TanTable from "../../../General/table";
@@ -7,8 +7,26 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { TableRowData } from "../../../../types";
 import { useToggleStore } from "../../../../hooks/backendApis/pos/storeManagement";
+import { shortenTransactionId } from "../../../../utils/helpers";
 
-const StoreOverviewTable = ({ stores = [], loading = false }) => {
+type StoreData = {
+  id: string;
+  name: string;
+  isActive: boolean;
+  // Add any other fields your store has
+};
+
+type StoreOverviewTableProps = {
+  stores?: StoreData[];
+  loading?: boolean;
+  refetchStores?: () => void;
+};
+
+const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
+  stores = [],
+  loading = false,
+  refetchStores,
+}) => {
   if (loading) {
     return (
       <div className="flex justify-center items-center p-10">
@@ -21,6 +39,7 @@ const StoreOverviewTable = ({ stores = [], loading = false }) => {
   }
 
   if (!stores.length) return <p>No stores available.</p>;
+
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -52,7 +71,7 @@ const StoreOverviewTable = ({ stores = [], loading = false }) => {
             {props.row.original.name}
           </Text>
           <Text fw={400} className="text-sm">
-            Store ID: {props.row.original.storeID}
+          Store ID: {shortenTransactionId(String(props.row.original.storeID ?? ""))}
           </Text>
         </div>
       ),
@@ -115,16 +134,18 @@ const StoreOverviewTable = ({ stores = [], loading = false }) => {
       accessorKey: "status",
       cell: (props) => {
         const store = props.row.original;
-        console.log("Store object:", store);
         const locationId = store.locationID as string;
-        const [isActive, setIsActive] = useState(store.is_active === 1);
+        const isActive = store.is_active === 1;
+        // const [isActive, setIsActive] = useState(store.is_active === 1);
 
         const toggleMutation = useToggleStore(locationId);
 
         const handleSwitchToggle = () => {
           toggleMutation.mutate(undefined, {
             onSuccess: () => {
-              setIsActive((prev) => !prev);
+              props.row.original.is_active = isActive ? 0 : 1;
+
+              refetchStores?.();
             },
             onError: (err) => {
               console.error("Toggle failed", err);
@@ -183,7 +204,8 @@ const StoreOverviewTable = ({ stores = [], loading = false }) => {
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={8}
+          hidePaging
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

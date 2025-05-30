@@ -8,9 +8,10 @@ import { useCreateCategory } from "../../../../../hooks/backendApis/pos/categori
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
+  onCreated?: () => void;
 }
 
-const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
+const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
   const [categoryName, setCategoryName] = useState("");
   const { mutate, isPending  } = useCreateCategory();
 
@@ -23,18 +24,22 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
       });
       return;
     }
-
+  
     mutate(
       { name: categoryName },
       {
         onSuccess: () => {
           notifications.show({
-            title: 'New Categorie Saved!',
+            title: 'New Category Saved!',
             message: 'You can now add products to the new Categories',
             color: 'green',
           });
           setCategoryName('');
-          onClose();
+          if (onCreated) {
+            onCreated();  // <-- call this here to refetch & close modal
+          } else {
+            onClose();
+          }
         },
         onError: (error: any) => {
           notifications.show({
@@ -46,7 +51,8 @@ const CreateNewCategory = ({ opened, onClose }: ResolveProps) => {
         },
       }
     );
-  } 
+  };
+  
   return (
     <>
       <Modal
