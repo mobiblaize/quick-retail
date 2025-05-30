@@ -8,7 +8,10 @@ import {
   useFetchAllCategories,
   useFetchAllSubCategories,
 } from "../../../../hooks/backendApis/pos/categories";
-import { useFetchAllLocations, useUpdateProduct } from "../../../../hooks/backendApis/pos/products";
+import {
+  useFetchAllLocations,
+  useUpdateProduct,
+} from "../../../../hooks/backendApis/pos/products";
 import { Input } from "@mantine/core";
 
 interface Variant {
@@ -38,7 +41,12 @@ const initialVariants: Variant[] = [
 
 const EditProductForm = () => {
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
-  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct();
+  const { form_data } = useStore();
+
+  const [formData, setFormData] = useState({ ...form_data });
+  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct(
+    formData.variationID
+  );
   const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
   const [serverImages, setServerImages] = useState<string[]>([]);
@@ -77,13 +85,9 @@ const EditProductForm = () => {
         }))
       : [];
 
-  const { form_data } = useStore();
-
-  const [formData, setFormData] = useState({ ...form_data });
-
   useEffect(() => {
-    if (Array.isArray(formData?.image_path)) {
-      setServerImages(formData.image_path);
+    if (Array.isArray(formData?.image)) {
+      setServerImages(formData.image);
     } else {
       setServerImages([]);
     }
@@ -121,7 +125,7 @@ const EditProductForm = () => {
         // setFormData({ ...formData, image_path: reader.result ?? "" });
         setFormData({
           ...formData,
-          image_path: reader.result ?? "",
+          image: reader.result ?? "",
         });
       };
     }
@@ -146,10 +150,13 @@ const EditProductForm = () => {
   const handleUpdateSubmit = () => {
     const formPayload = {
       ...formData,
-      category: String(formData.category),
+      category: String(formData.category_id),
       sub_category_id: Number(formData.sub_category_id),
-      image_path: formData.image_path,
+      image: formData.image,
+      name: formData.product_name,
     };
+
+    console.log("forms", formData);
 
     updateProduct(
       {
@@ -231,7 +238,11 @@ const EditProductForm = () => {
 
           <FormSelect
             label="Category"
-            placeholder="Select product category"
+            placeholder={
+              formData?.category
+                ? formData?.category
+                : "Select product category"
+            }
             options={categoryOptions}
             name="category"
             paddingY="4"
@@ -243,7 +254,11 @@ const EditProductForm = () => {
 
           <FormSelect
             label="Sub-category"
-            placeholder="Select sub-category"
+            placeholder={
+              formData?.sub_category_id
+                ? formData?.sub_category_id
+                : "Select product sub category"
+            }
             options={subCategoryOptions}
             name="sub-category"
             paddingY="4"
@@ -532,6 +547,25 @@ const EditProductForm = () => {
           </div>
 
           {/* Previews with Remove Option */}
+          {Array.isArray(formData?.image_path) ? (
+            formData.image_path.map((imgSrc, index) => (
+              <img
+                key={index}
+                src={imgSrc}
+                className="w-50 h-50 object-cover rounded mt-5"
+                alt={`Image ${index + 1}`}
+              />
+            ))
+          ) : formData?.image_path ? (
+            <img
+              src={formData.image_path}
+              className="w-50 h-50 object-cover rounded mt-5"
+              alt="Product image"
+            />
+          ) : (
+            ""
+          )}
+
           {(serverImages.length > 0 || images.length > 0) && (
             <div className="mt-4 flex flex-wrap gap-4">
               {/* Server Images */}
@@ -574,7 +608,7 @@ const EditProductForm = () => {
         </div>
       </div>
 
-      <div className="p-4 bg-white rounded-xl shadow-sm">
+      <div className="p-4 bg-white rounded-xl shadow-sm mt-[3em]">
         <h2 className="text-lg font-semibold mb-4">Inventory Details</h2>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
@@ -591,7 +625,9 @@ const EditProductForm = () => {
 
           <FormSelect
             label="Location"
-            placeholder="Select location"
+            placeholder={
+              formData?.location ? formData?.location : "Select location"
+            }
             options={locationOptions}
             name="category"
             paddingY="4"
@@ -658,14 +694,24 @@ const EditProductForm = () => {
                 />
                 <Input
                   placeholder="Size"
-                  value={formData.size}
+                  value={
+                    Array.isArray(formData?.variation_attributes) &&
+                    formData.variation_attributes.length > 0
+                      ? formData?.variation_attributes[0]?.option_value
+                      : formData?.size
+                  }
                   onChange={(e: any) =>
                     setFormData({ ...formData, size: e.target.value })
                   }
                 />
                 <Input
                   placeholder="Color"
-                  value={formData.color}
+                  value={
+                    Array.isArray(formData?.variation_attributes) &&
+                    formData?.variation_attributes?.length > 0
+                      ? formData?.variation_attributes[1]?.option_value
+                      : formData?.color
+                  }
                   onChange={(e: any) =>
                     setFormData({ ...formData, color: e.target.value })
                   }

@@ -34,6 +34,10 @@ export const useCreateProduct = () => {
   return usePostData("pos/product/add-product");
 };
 
+export const useCreateBulkProduct = () => {
+  return usePostData("pos/product/bulk-upload");
+}
+
 export const useFetchAllProducts = (
   productPayload?: Partial<typeof defaultsPayload>
 ) => {

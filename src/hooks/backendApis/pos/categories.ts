@@ -51,9 +51,20 @@ export const useCreateSubCategory = () => {
   return usePostData("pos/subcategory/add-subcategory");
 };
 
-export const useFetchSubCatOfCat = (categoryId: number | string) => {
-  return useGetData(`pos/category/${categoryId}/subcategories`);
+// export const useFetchSubCatOfCat = (categoryId: number | string) => {
+//   return useGetData(`pos/category/${categoryId}/subcategories`);
+// };
+
+export const useFetchSubCatOfCat = (
+  categoryId: number | string | undefined,
+  options?: { enabled?: boolean }
+) => {
+  return useGetData(
+    `pos/category/${categoryId}/subcategories`,
+    options
+  );
 };
+
 
 export const useDeleteSubCategory = (subCategoryId: number | string) => {
   return useDeleteData(`pos/subcategory/delete-subcategory/${subCategoryId}`);

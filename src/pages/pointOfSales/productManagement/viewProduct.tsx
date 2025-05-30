@@ -68,7 +68,8 @@ const ViewProduct = () => {
         </div>
         <div className="order-1 md:order-2">
           <ProductImagesSection details={{
-                image_path: data?.data?.image_path,
+                image: data?.data?.image_path,
+                image_path: data?.data?.product?.image_path,
           }} />
         </div>
       </main>

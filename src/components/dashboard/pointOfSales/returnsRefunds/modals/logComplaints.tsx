@@ -2,11 +2,10 @@ import { Button, Modal, Text } from "@mantine/core";
 import FormSelect from "../../../../General/select";
 import FormInput from "../../../../General/formInput";
 import {
-  // useFetchAllCustomers,
-  useFetchOrdersByCustomer,
+  useFetchAllOrders,
   useLogComplain,
 } from "../../../../../hooks/backendApis/pos/returns";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { notifications } from "@mantine/notifications";
 import { useFetchAllCustomers } from "../../../../../hooks/backendApis/pos/customersManagement";
 
@@ -17,41 +16,125 @@ interface LogComplaintsProps {
 
 const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
   const [customerName, setCustomerName] = useState("");
-  const [customerId, setCustomerId] = useState<string | undefined>();
+  const [customerId, setCustomerId] = useState<string>();
   const [orderNo, setOrderNo] = useState("");
   const [productNo, setProductNo] = useState("");
   const [reasonForRefund, setReasonForRefund] = useState("");
   const [description, setDescription] = useState("");
   const { mutate, isPending } = useLogComplain();
-  
+
+  const [productOptions, setProductOptions] = useState<
+    {
+      label: string;
+      value: string;
+      product_code: string;
+      order_detail_id: string;
+    }[]
+  >([]);
+
   const { data: customersData } = useFetchAllCustomers();
+
   const {
-    data: customerOrders,
-    // isLoading: ordersLoading,
-  } = useFetchOrdersByCustomer(customerId);
+    mutate: fetchOrders,
+    data: allOrdersByCustomer,
+    // isLoading: isOrdersLoading,
+  } = useFetchAllOrders(customerId ?? "");
 
-
-  const orderOptions = Array.isArray(customerOrders)
-    ? customerOrders.map((order) => ({
-        label: order.order_no,
-        value: order.order_no,
-      }))
-    : [];
-
-  console.log("customerOrders", customerOrders);
-  console.log("orderOptions", orderOptions);
+  useEffect(() => {
+    if (customerId) {
+      fetchOrders();
+    }
+  }, [customerId, fetchOrders]);
 
   const customers = Array.isArray(customersData?.data?.customers?.data)
     ? customersData.data.customers.data
     : [];
 
-  const customerNames = customers.map((customer: any) => ({
-    label: customer.customer_name,
-    value: customer.customerID,
+  const customerNames = customers.map((c: any) => ({
+    label: c.customer_name,
+    value: c.customerID,
   }));
 
+  const orderOptions = Array.isArray(allOrdersByCustomer?.data)
+    ? allOrdersByCustomer.data.map((order: any) => ({
+        label: order.orderID,
+        value: order.orderID,
+      }))
+    : [];
+
+  useEffect(() => {
+    if (!orderNo || !Array.isArray(allOrdersByCustomer?.data)) {
+      setProductOptions([]);
+      return;
+    }
+
+    const selectedOrder = allOrdersByCustomer.data.find(
+      (order: any) => order.orderID === orderNo
+    );
+
+    if (selectedOrder) {
+      const products =
+        selectedOrder.sale_order_details?.map((detail: any) => {
+          const productCode =
+            detail.product_code || detail.product_variation?.code;
+          const label =
+            detail.product_variation?.name ||
+            detail.product_variation?.sku ||
+            productCode ||
+            "Unnamed Product";
+
+          return {
+            label,
+            value: productCode, 
+            product_code: productCode,
+            order_detail_id: detail.id, 
+          };
+        }) ?? [];
+
+      setProductOptions(products);
+    } else {
+      setProductOptions([]);
+    }
+  }, [orderNo, allOrdersByCustomer]);
+
+  // when productNo changes, set orderDetailId as well
+  useEffect(() => {
+    if (!orderNo || !Array.isArray(allOrdersByCustomer?.data)) {
+      setProductOptions([]);
+      return;
+    }
+
+    const selectedOrder = allOrdersByCustomer.data.find(
+      (order: any) => order.orderID === orderNo
+    );
+
+    if (selectedOrder) {
+      const products =
+        selectedOrder.sale_order_details?.map((detail: any) => {
+          const productCode =
+            detail.product_code || detail.product_variation?.code;
+          const label =
+            detail.product_variation?.name ||
+            detail.product_variation?.sku ||
+            productCode ||
+            "Unnamed Product";
+
+          return {
+            label,
+            value: productCode,
+            product_code: productCode,
+            order_detail_id: detail.id || detail.order_detail_id || "", // <-- fix here
+          };
+        }) ?? [];
+
+      setProductOptions(products);
+    } else {
+      setProductOptions([]);
+    }
+  }, [orderNo, allOrdersByCustomer]);
+
   const handleSave = () => {
-    if (!customerName.trim() || !orderNo || !productNo || !reasonForRefund) {
+    if (!customerId || !orderNo || !productNo || !reasonForRefund) {
       notifications.show({
         title: "Validation Error",
         message: "Please fill all required fields",
@@ -60,37 +143,63 @@ const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
       return;
     }
 
-    const payload = {
-      customer_name: customerName,
-      order_no: orderNo,
-      product_no: productNo,
-      reason_for_refund: reasonForRefund,
-      description: description || null,
-    };
+    const selectedProduct = productOptions.find((p) => p.value === productNo);
 
-    mutate(payload, {
-      onSuccess: () => {
-        notifications.show({
-          title: "Complaint Logged!",
-          message: "Customer complaint successfully logged.",
-          color: "green",
-        });
-        // Reset form
-        setCustomerName("");
-        setOrderNo("");
-        setProductNo("");
-        setReasonForRefund("");
-        setDescription("");
-        onClose();
-      },
-      onError: (error: any) => {
-        notifications.show({
-          title: "Error",
-          message: error?.response?.data?.message || "Failed to log complaint",
-          color: "red",
-        });
-      },
+    if (!selectedProduct) {
+      notifications.show({
+        title: "Validation Error",
+        message: "Invalid product selected",
+        color: "red",
+      });
+      return;
+    }
+
+    console.log("Payload:", {
+      customerId,
+      customer_name: customerName,
+      order_id: orderNo,
+      order_detail_id: selectedProduct.order_detail_id,
+      product_code: selectedProduct.product_code,
+      return_reason: reasonForRefund,
+      description: description || null,
     });
+
+    mutate(
+      {
+        customerId,
+        customer_name: customerName,
+        order_id: orderNo,
+        order_detail_id: selectedProduct.order_detail_id,
+        product_code: selectedProduct.product_code,
+        return_reason: reasonForRefund,
+        description: description || null,
+      },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: "Complaint Logged!",
+            message: "Customer complaint successfully logged.",
+            color: "green",
+          });
+          // reset states and close modal here
+          setCustomerName("");
+          setCustomerId(undefined);
+          setOrderNo("");
+          setProductNo("");
+          setReasonForRefund("");
+          setDescription("");
+          onClose();
+        },
+        onError: (error: any) => {
+          notifications.show({
+            title: "Error",
+            message:
+              error?.response?.data?.message || "Failed to log complaint",
+            color: "red",
+          });
+        },
+      }
+    );
   };
 
   return (
@@ -117,71 +226,73 @@ const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
           placeholder="Enter customer"
           paddingY="3"
           value={customerId}
-          onSelect={(selectedCustomerId: any) => {
-            setCustomerId(selectedCustomerId);
-            const selected = customerNames.find(
-              (c: any) => c.value === selectedCustomerId
-            );
-            setCustomerName(selected?.label || "");
+          onSelect={(id: string) => {
+            setCustomerId(id);
+            const sel = customerNames.find((c: any) => c.value === id);
+            setCustomerName(sel?.label || "");
+            setOrderNo("");
+            setProductNo("");
           }}
         />
 
-        <FormInput
+        <FormSelect
           label="Order No"
+          options={orderOptions}
           placeholder="Select order"
           paddingY="3"
           value={orderNo}
-          // onSelect={setOrderNo}
-          // loading={ordersLoading}
+          onSelect={(value: string) => {
+            setOrderNo(value);
+            setProductNo(""); // reset product selection on order change
+          }}
         />
 
-        <FormInput
+        <FormSelect
           label="Product No"
-          placeholder="Enter product no"
-          paddingY="6px"
+          options={productOptions.map((opt) => ({
+            label: opt.label,
+            value: opt.value,
+          }))}
+          placeholder="Select product"
+          paddingY="3"
           value={productNo}
-          onChange={(e: any) => setProductNo(e.target.value)}
+          onSelect={setProductNo}
         />
+
         <FormSelect
           label="Reason for Refund"
           options={[
             { label: "Damaged item", value: "damaged" },
-            { label: "Wrong item", value: "wrong" },
+            { label: "Wrong item", value: "wrong_item" },
+            { label: "Not as described", value: "not_as_described" },
             { label: "Other", value: "other" },
           ]}
-          placeholder="Enter reason"
+          placeholder="Select reason"
           paddingY="3"
           value={reasonForRefund}
           onSelect={setReasonForRefund}
         />
+
         <FormInput
-          label="Description"
-          placeholder="Optional description"
-          optional
-          paddingY="6px"
+          label="Description (optional)"
+          placeholder="Enter description"
+          paddingY="3"
           value={description}
-          onChange={(e: any) => setDescription(e.target.value)}
+          onChange={(e: any) => setDescription(e.currentTarget.value)}
         />
-      </div>
 
-      {/* <div className="flex mt-7 justify-between">
-        <Button variant="outline" onClick={onClose}>
-          Cancel
-        </Button>
-        <Button variant="filled" loading={isPending} onClick={handleSave}>
-          Log Complaint
-        </Button>
-      </div> */}
-
-      <div key="confirm-payment-buttons" className="flex mt-7 justify-between">
-        <Button variant="outline-primary">Cancel</Button>
-        <Button
-          variant="filled-primary"
-          loading={isPending}
-          onClick={handleSave}
-        >
-          Log Complaint
-        </Button>
+        <div className="flex mt-7 justify-between">
+          <Button variant="outline-primary" onClick={onClose}>
+            Cancel
+          </Button>
+          <Button
+            variant="filled-primary"
+            loading={isPending}
+            onClick={handleSave}
+          >
+            Log Complaint
+          </Button>
+        </div>
       </div>
     </Modal>
   );

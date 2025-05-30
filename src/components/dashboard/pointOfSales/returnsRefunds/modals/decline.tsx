@@ -1,11 +1,49 @@
 import { Button, Modal, Text } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
+import { useResolveComplaint } from "../../../../../hooks/backendApis/pos/returns";
 
 interface DeclineProps {
   opened: boolean;
   onClose: () => void;
+  returnID: string;
 }
 
-const Decline = ({ opened, onClose }: DeclineProps) => {
+const Decline = ({ opened, onClose, returnID }: DeclineProps) => {
+  const { mutate: resolveComplaint } = useResolveComplaint();
+
+  const handleResolveComplaint = () => {
+    resolveComplaint(
+      {
+        returnID: returnID,
+        payload: {
+          status: "declined",
+          refund_type: "cashback",
+        },
+      },
+      {
+        onSuccess: () => {
+          showNotification({
+            title: "Success",
+            message: "Complaint resolved successfully",
+            color: "green",
+          });
+          onClose(); // if you’re closing a modal or something similar
+        },
+        onError: (error: any) => {
+          const errMsg =
+            error?.response?.data?.message ||
+            error?.response?.data?.exception?.message ||
+            "Something went wrong";
+          showNotification({
+            title: "Error",
+            message: errMsg,
+            color: "red",
+          });
+        },
+      }
+    );
+  };
+
   return (
     <>
       <Modal
@@ -56,6 +94,7 @@ const Decline = ({ opened, onClose }: DeclineProps) => {
           </Button>
           <Button
             variant="filled"
+            onClick={handleResolveComplaint}
             style={{
               backgroundColor: "#CB1A14",
               color: "white",
