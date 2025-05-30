@@ -4,14 +4,14 @@ import { Text, Switch } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
-// import DeleteSubCategory from "./modals/deleteSubCategory";
 import { notifications } from "@mantine/notifications";
-import {
-  // useDeleteSubCategory,
-  useFetchSubCategory,
-} from "../../../../hooks/backendApis/pos/categories";
+import { useFetchSubCategory } from "../../../../hooks/backendApis/pos/categories";
+// import DeleteSubCategory from "./modals/deleteSubCategory";
 import DeleteProduct from "./modals/deleteProduct";
 import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
+import { Link } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
+import { formatDate } from "../../../../utils/helpers";
 
 interface CategoriesProductTableProps {
   subCategoryId: number | string;
@@ -21,26 +21,40 @@ const CategoriesProductTable = ({
   subCategoryId,
 }: CategoriesProductTableProps) => {
   const { data, refetch } = useFetchSubCategory(subCategoryId);
-  const transformedData =
-    data?.products?.map((p: { productID: any; name: any; product_name: any; in_stock: any; total_quantity: any; is_active: number; updated_at: any; }) => ({
-      id: p.productID,
-      product_name: p.name || p.product_name || "Unnamed",
-      total_quantity: p.in_stock || p.total_quantity || 0,
-      status: p.is_active === 1 ? "Active" : "Inactive",
-      updated_at: p.updated_at || "",
-    })) || [];
-  const products = data?.data?.products || [];
-  console.log(products);
 
-  const [tableData, setTableData] = useState<typeof transformedData>([]);
+  const products = data?.data?.products || [];
+  useEffect(() => {
+    if (!products) return;
+
+    const flattenedVariations = products.flatMap((product: any) => {
+      if (
+        !Array.isArray(product.product_variations) ||
+        product.product_variations.length === 0
+      ) {
+        console.warn(
+          "Skipping product due to missing/empty variations:",
+          product
+        );
+        return [];
+      }
+
+      return product.product_variations.map((variation: any) => ({
+        id: variation.variationID,
+        productID: product.productID,
+        product_name: variation.name || product.product_name || "Unnamed",
+        total_quantity: variation.total_quantity || 0,
+        status: variation.is_active === 1 ? "Active" : "Inactive",
+        updated_at: product.updated_at || "",
+      }));
+    });
+
+    setTableData(flattenedVariations);
+  }, [products]);
+
+  const [tableData, setTableData] = useState<typeof products>([]);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
-
-
-  useEffect(() => {
-    setTableData(products);
-  }, [products]);
 
   const handleToggle = (index: number) => {
     const updatedData = [...tableData];
@@ -52,7 +66,7 @@ const CategoriesProductTable = ({
 
   const handleDelete = async () => {
     if (!selectedId) return;
-  
+    console.log("Attempting to delete product with ID:", selectedId);
     try {
       await deleteMutation.mutateAsync();
       notifications.show({
@@ -62,7 +76,7 @@ const CategoriesProductTable = ({
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
-      refetch(); // <--- Refresh data
+      refetch();
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -71,7 +85,6 @@ const CategoriesProductTable = ({
       });
     }
   };
-  
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -122,7 +135,7 @@ const CategoriesProductTable = ({
       accessorKey: "dateCreated",
       cell: (props) => (
         <Text c="black" fw={500} className="text-sm font-medium">
-          {props.row.original.updated_at}
+          {formatDate(String(props.row.original.updated_at))}
         </Text>
       ),
     },
@@ -164,8 +177,8 @@ const CategoriesProductTable = ({
           c="black"
           className="cursor-pointer"
           onClick={() => {
-            //@ts-ignore
-            setSelectedId(props.row.original.productID); // Ensure the correct product is selected
+            // @ts-ignore
+            setSelectedId(props.row.original.id);
             setIsDeleteOpen(true);
           }}
         >
@@ -173,16 +186,19 @@ const CategoriesProductTable = ({
         </Text>
       ),
     },
-    
+
     {
       header: "",
       accessorKey: "action2",
-      cell: () => (
-        // <Link to={ROUTES.viewStore}>
-        <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-          View
-        </Text>
-        // </Link>
+      cell: (props) => (
+        <Link
+          to={ROUTES.viewProduct}
+          state={{ variationID: props.row.original.id }}
+        >
+          <Text fw={600} c="customPrimary.10" className="cursor-pointer">
+            View
+          </Text>
+        </Link>
       ),
     },
   ];
@@ -196,16 +212,14 @@ const CategoriesProductTable = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={8}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">
                 Products
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">
-                  {tableData.length}
-                </Text>
+                <Text c="customPrimary.10">{tableData.length}</Text>
               </div>
             </div>
           }
@@ -214,7 +228,7 @@ const CategoriesProductTable = ({
           opened={isDeleteOpen}
           onClose={() => setIsDeleteOpen(false)}
           handleDelete={handleDelete}
-          productID={selectedId}
+          id={selectedId}
         />
       </main>
     </div>

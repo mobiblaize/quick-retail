@@ -4,19 +4,80 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import imageSrc from "../../../../assets/images/productIMG.png";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
+import { useFetchingleOrderProducts } from "../../../../hooks/backendApis/pos/salesProcessing";
+import { truncateText } from "../../../../utils/helpers";
 
-const ProductOrderedTable = () => {
+type ProductOrderedTableProps = {
+  orderId?: string;
+};
+
+const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
+  // @ts-ignore
+  const { data } = useFetchingleOrderProducts(orderId);
+
+  const rawData = data?.data?.data || [];
+
+  const transformedProducts = rawData.map(
+    (item: { product_variation: any; order_detail_id: any }) => {
+      const variation = item.product_variation;
+      const product = variation.product;
+
+      const name = variation.name;
+      const attributes = variation.variation_attributes
+        .map(
+          (attr: { option_type: any; option_value: any }) =>
+            `${attr.option_type}: ${attr.option_value}`
+        )
+        .join(", ");
+
+      return {
+        id: item.order_detail_id,
+        name,
+        items: attributes,
+        brand: "-", // If brand is available somewhere, replace this.
+        category: product?.category?.name || "-",
+        subCategory: product?.sub_category?.name || "-",
+        sellingPrice: `₦${parseFloat(
+          variation.selling_price
+        ).toLocaleString()}`,
+        stockLevel: variation.quantity_available,
+        image: variation.image_path || null,
+        discountStatus: variation.discounts?.length > 0 ? "Active" : "Inactive",
+      };
+    }
+  );
+
   const columns: ColumnDef<TableRowData>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
     {
       header: "Name",
       accessorKey: "productName",
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
-            src={imageSrc}
+          //@ts-ignore
+            src={props.row.original.image}
             alt={props.row.original.name as string}
             radius="md"
             size={40}
@@ -24,7 +85,7 @@ const ProductOrderedTable = () => {
 
           <div className="flex flex-col">
             <Text fw={500} c="black">
-              {props.row.original.name}
+              {truncateText(String(props.row.original.name ?? ""))}
             </Text>
             <Text fw={600} className="text-[#667185] text-sm">
               {props.row.original.items}
@@ -33,15 +94,15 @@ const ProductOrderedTable = () => {
         </div>
       ),
     },
-    {
-      header: "Brand",
-      accessorKey: "brand",
-      cell: (props) => (
-        <Text fw={500} c="#1D2939">
-          {props.row.original.brand}{" "}
-        </Text>
-      ),
-    },
+    // {
+    //   header: "Brand",
+    //   accessorKey: "brand",
+    //   cell: (props) => (
+    //     <Text fw={500} c="#1D2939">
+    //       {props.row.original.brand}{" "}
+    //     </Text>
+    //   ),
+    // },
     {
       header: "Category",
       accessorKey: "category",
@@ -117,7 +178,7 @@ const ProductOrderedTable = () => {
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
         columnData={columns}
-        data={productOrdered}
+        data={transformedProducts}
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"

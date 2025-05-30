@@ -13,9 +13,10 @@ interface SubCategoriesTableProps {
   subCategories: Array<any>;
   category: Array<any>;
   isLoading?: boolean;
+  onDeleteSuccess?: () => void;
 }
 
-const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesTableProps) => {
+const SubCategoryTable = ({ subCategories, category, isLoading, onDeleteSuccess }: SubCategoriesTableProps) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const deleteMutation = useDeleteSubCategory(selectedId ?? "");
@@ -26,7 +27,7 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
   };
   const enhancedSubCategories = subCategories.map((subCat) => ({
     ...subCat,
-    category, // now each sub-category carries the category info
+    category, 
   }));
 
   const handleDelete = async () => {
@@ -41,6 +42,9 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
+
+      // Tell parent to refetch
+      if (onDeleteSuccess) onDeleteSuccess();
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -49,7 +53,6 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
       });
     }
   };
-
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -167,7 +170,7 @@ const SubCategoryTable = ({ subCategories, category, isLoading }: SubCategoriesT
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={20}
+          length={8}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

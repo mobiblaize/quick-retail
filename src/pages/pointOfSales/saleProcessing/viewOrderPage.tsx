@@ -11,14 +11,48 @@ const ViewOrderPage = () => {
     navigate(-1);
   };
 
+
+  // const handleDownloadReceipt = async (orderId: string | number) => {
+
+  //   try {
+  //     const response = await fetch(
+  //       `${import.meta.env.VITE_API_BASE_URL}/pos/sales/sales-order/${orderId}/receipt`,
+  //       {
+  //         method: "GET",
+  //         headers: {
+  //           Authorization: `Bearer ${localStorage.getItem("token")}`, // adjust token retrieval
+  //         },
+  //       }
+  //     );
+  
+  //     if (!response.ok) throw new Error("Failed to download receipt");
+  
+  //     const blob = await response.blob();
+  //     const url = window.URL.createObjectURL(blob);
+  
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.download = `order-receipt-${orderId}.pdf`; // adjust extension
+  //     link.click();
+  
+  //     window.URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.error(error);
+  //     alert("Could not download the receipt.");
+  //   }
+  // };
+  
   const handleDownloadReceipt = async (orderId: string | number) => {
     try {
+      const timestamp = new Date().getTime(); // unique timestamp to bust cache
       const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/pos/sales/sales-order/${orderId}/receipt`,
+        `${import.meta.env.VITE_API_BASE_URL}/pos/sales/sales-order/${orderId}/receipt?timestamp=${timestamp}`,
         {
           method: "GET",
           headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`, // adjust token retrieval
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // optionally add no-cache headers here
+            "Cache-Control": "no-cache",
           },
         }
       );
@@ -30,7 +64,7 @@ const ViewOrderPage = () => {
   
       const link = document.createElement("a");
       link.href = url;
-      link.download = `order-receipt-${orderId}.pdf`; // adjust extension
+      link.download = `order-receipt-${orderId}.pdf`;
       link.click();
   
       window.URL.revokeObjectURL(url);
@@ -39,7 +73,6 @@ const ViewOrderPage = () => {
       alert("Could not download the receipt.");
     }
   };
-  
   const backButton = (
     <button
       onClick={handleBack}

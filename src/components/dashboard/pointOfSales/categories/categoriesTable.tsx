@@ -144,8 +144,8 @@ const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={20}
-        tableTitle={
+        length={8}
+         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
               All Category

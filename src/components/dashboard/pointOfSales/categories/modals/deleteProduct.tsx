@@ -3,7 +3,7 @@ import { Button, Modal, Text } from "@mantine/core";
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
-  productID: string | number | null;
+  id: string | number | null;
   handleDelete: () => void;
 }
 

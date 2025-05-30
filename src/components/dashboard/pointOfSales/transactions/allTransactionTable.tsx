@@ -3,7 +3,11 @@ import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
-import { formatDate, shortenTransactionId, toSentenceCase } from "../../../../utils/helpers";
+import {
+  formatDate,
+  shortenTransactionId,
+  toSentenceCase,
+} from "../../../../utils/helpers";
 
 interface AllTransactionTableProps {
   data?: TableRowData[];
@@ -14,7 +18,39 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
   // isLoading = false,
 }) => {
+  const handleDownloadReceipt = async (orderId: string | number) => {
+    try {
+      const timestamp = new Date().getTime(); // unique timestamp to bust cache
+      const response = await fetch(
+        `${
+          import.meta.env.VITE_API_BASE_URL
+        }/pos/sales/sales-order/${orderId}/receipt?timestamp=${timestamp}`,
+        {
+          method: "GET",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+            // optionally add no-cache headers here
+            "Cache-Control": "no-cache",
+          },
+        }
+      );
 
+      if (!response.ok) throw new Error("Failed to download receipt");
+
+      const blob = await response.blob();
+      const url = window.URL.createObjectURL(blob);
+
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = `order-receipt-${orderId}.pdf`;
+      link.click();
+
+      window.URL.revokeObjectURL(url);
+    } catch (error) {
+      console.error(error);
+      alert("Could not download the receipt.");
+    }
+  };
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -54,7 +90,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       accessorFn: (row) => row.created_at,
       cell: ({ row }) => (
         <Text fw={400} className="text-sm">
-                    {/* @ts-ignore */}
+          {/* @ts-ignore */}
           {formatDate(row.original.created_at)}
         </Text>
       ),
@@ -65,7 +101,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       accessorFn: (row) => row.sales_order?.orderID ?? "",
       cell: ({ row }) => (
         <Text fw={500} c="black">
-           {/* @ts-ignore */}
+          {/* @ts-ignore */}
           {shortenTransactionId(row.original.sales_order?.orderID)}
         </Text>
       ),
@@ -75,7 +111,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       accessorKey: "name",
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
-           {/* @ts-ignore */}
+          {/* @ts-ignore */}
           {row.original.sales_order?.customer_name}
         </span>
       ),
@@ -93,30 +129,43 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       header: "Payment Status",
       accessorKey: "paymentStatus",
       cell: ({ row }) => {
-        // @ts-ignore
-        const status = row.original.sales_order.payment_status?.toLowerCase() || "";
-    
+        const status =
+          // @ts-ignore
+          row.original.sales_order.payment_status?.toLowerCase() || "";
+
         const isPaid = status === "paid";
-    
+
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              isPaid ? "bg-[#ECFDF3] text-[#027A48]" : "bg-[#FEF3F2] text-[#B42318]"
+              isPaid
+                ? "bg-[#ECFDF3] text-[#027A48]"
+                : "bg-[#FEF3F2] text-[#B42318]"
             }`}
           >
             {isPaid ? <PaidDot /> : <UnpaidDot />}
-            {/* @ts-ignore */}
-            <span className="ml-2">{toSentenceCase(row.original.sales_order.payment_status)}</span>
+
+            <span className="ml-2">
+              {/* @ts-ignore */}
+              {toSentenceCase(row.original.sales_order.payment_status)}
+            </span>
           </div>
         );
       },
     },
-    
+
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Text fw={700} c="customPrimary.10" className="cursor-pointer">
+      cell: ({ row }) => (
+        <Text
+          fw={700}
+          c="customPrimary.10"
+          className="cursor-pointer"
+             /* @ts-ignore */
+          onClick={() => handleDownloadReceipt(row.original.sales_order?.orderID)
+          }
+        >
           Download
         </Text>
       ),
@@ -131,7 +180,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={8}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

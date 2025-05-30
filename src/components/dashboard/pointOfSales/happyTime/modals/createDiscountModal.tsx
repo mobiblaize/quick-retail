@@ -8,9 +8,10 @@ import { useFetchAllProducts } from "../../../../../hooks/backendApis/pos/produc
 interface CreateDiscountModalProps {
   opened: boolean;
   onClose: () => void;
+  onCreated: () => void; 
 }
 
-const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
+const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountModalProps) => {
   const [discountType, setDiscountType] = useState<string>("Amount");
 
   const [name, setName] = useState("");
@@ -40,24 +41,24 @@ const CreateDiscountModal = ({ opened, onClose }: CreateDiscountModalProps) => {
       products: selectedProducts.map((id) => ({ id })),
       name,
       code,
-      type: discountType.toLowerCase(), // "percentage" or "amount"
+      type: discountType.toLowerCase(),
       value: Number(discountType === "Percentage" ? percentage : discountValue),
       from,
       to,
       redemption_count: Number(redemptionCount),
     };
-
+  
     createDiscount.mutate(payload, {
       onSuccess: (res) => {
         console.log("Success:", res);
-        onClose();
+        onCreated(); // <--- this is key
       },
       onError: (err) => {
         console.error("Error:", err);
       },
     });
   };
-
+  
   return (
     <>
       <Modal
