@@ -8,6 +8,8 @@ import {
   shortenTransactionId,
   toSentenceCase,
 } from "../../../../utils/helpers";
+import { useNavigate } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
 
 interface AllTransactionTableProps {
   data?: TableRowData[];
@@ -16,39 +18,18 @@ interface AllTransactionTableProps {
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
-  // isLoading = false,
+  isLoading = false,
 }) => {
-  const handleDownloadReceipt = async (orderId: string | number) => {
-    try {
-      const timestamp = new Date().getTime(); // unique timestamp to bust cache
-      const response = await fetch(
-        `${
-          import.meta.env.VITE_API_BASE_URL
-        }/pos/sales/sales-order/${orderId}/receipt?timestamp=${timestamp}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            // optionally add no-cache headers here
-            "Cache-Control": "no-cache",
-          },
-        }
-      );
+  const navigate = useNavigate();
 
-      if (!response.ok) throw new Error("Failed to download receipt");
-
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `order-receipt-${orderId}.pdf`;
-      link.click();
-
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error(error);
-      alert("Could not download the receipt.");
+  const handleViewClick = (orderID: string, payment_status: string) => {
+    console.log("Navigating with orderID:", orderID);
+    if (payment_status === "paid") {
+      navigate(ROUTES.viewOrder, { state: { orderID } });
+    } else if (payment_status === "pending") {
+      navigate(ROUTES.viewOrderdraft, { state: { orderID } });
+    } else {
+      console.warn("Unhandled order status:", payment_status);
     }
   };
 
@@ -157,18 +138,23 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "",
       accessorKey: "action",
-      cell: ({ row }) => (
-        <Text
-          fw={700}
-          c="customPrimary.10"
-          className="cursor-pointer"
-             /* @ts-ignore */
-          onClick={() => handleDownloadReceipt(row.original.sales_order?.orderID)
-          }
-        >
-          Download
-        </Text>
-      ),
+      cell: ({ row }) => {
+        //@ts-ignore
+        const orderID = row.original.sales_order?.orderID;
+                //@ts-ignore
+        const payment_status = row.original.sales_order?.payment_status;
+
+        return (
+          <Text
+            fw={700}
+            c="customPrimary.10"
+            className="cursor-pointer"
+            onClick={() => orderID && handleViewClick(orderID, payment_status)}
+          >
+            View
+          </Text>
+        );
+      },
     },
   ];
 
@@ -177,6 +163,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       <TanTable
         columnData={columns}
         data={data}
+        loadingState={isLoading} 
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"

@@ -21,7 +21,7 @@ const ReturnsRefundsReport = ({
   endDate,
 }: ReturnsReportProps) => {
   const [data, setData] = useState<TableRowData[]>([]);
-  const { mutateAsync: exportReport, isPending: isExporting } =
+  const {  isPending: isExporting } =
     useGenerateReportExport();
 
   function formatDate(dateStr: string | Date | undefined) {
@@ -55,31 +55,42 @@ const ReturnsRefundsReport = ({
     }
   }, [reportData]);
 
-  const handleExport = async () => {
-    const exportPayload = {
-      start_date: startDate || "",
-      end_date: endDate || "",
-      report_type: "returns",
-      export_format: "csv",
-    };
-
-    try {
-      const blob = await exportReport(exportPayload);
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute(
-        "download",
-        `sales-report.${exportPayload.export_format}`
-      );
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error("Failed to export report:", error);
-    }
+  const handleExport = () => {
+    if (!data.length) return;
+  
+    const csvHeaders = [
+      "Order ID",
+      "Product ID",
+      "Product Name",
+      "Date Returned",
+      "Customer",
+      "Reason",
+      "Status",
+    ];
+  
+    const csvRows = data.map((item) => [
+      item.fullOrderId,
+      item.productId,
+      `"${item.product}"`, // wrap text to avoid commas breaking CSV
+      item.dateReturned,
+      item.customer,
+      `"${item.returnedReason}"`,
+      item.complaintStatus,
+    ]);
+  
+    const csvContent =
+      [csvHeaders.join(","), ...csvRows.map((row) => row.join(","))].join("\n");
+  
+    const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement("a");
+    link.href = url;
+    link.setAttribute("download", "returns-report.csv");
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
   };
+  
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",

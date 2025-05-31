@@ -38,14 +38,15 @@ const ProductManagementReport = () => {
     } else {
     }
   }, [reportData]);
+  
   const handleExport = async () => {
     const exportPayload = {
       start_date: startDate || "",
       end_date: endDate || "",
-      report_type: "returns",
+      report_type: "products", // changed from 'returns'
       export_format: "csv",
     };
-
+  
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
@@ -53,7 +54,7 @@ const ProductManagementReport = () => {
       link.href = url;
       link.setAttribute(
         "download",
-        `sales-report.${exportPayload.export_format}`
+        `product-report.${exportPayload.export_format}` // proper filename
       );
       document.body.appendChild(link);
       link.click();
@@ -63,6 +64,7 @@ const ProductManagementReport = () => {
       console.error("Failed to export report:", error);
     }
   };
+  
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
