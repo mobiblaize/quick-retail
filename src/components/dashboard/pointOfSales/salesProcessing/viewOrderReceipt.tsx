@@ -1,7 +1,6 @@
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png"; // fallback
-import { CircleHelp } from "lucide-react";
 import { useLocation } from "react-router";
 import { useFetchSingleSale } from "../../../../hooks/backendApis/pos/salesProcessing";
 
@@ -125,21 +124,27 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
               <Text fw={500}>Subtotal</Text>
               <Text>₦{order.order_total}</Text>
             </div>
+              <div className="flex items-center justify-between">
+              <Text fw={500}>Discount</Text>
+              <Text>₦{fees.discount}</Text>
+            </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Tax ({fees.tax_rate}%)</Text>
               <Text>₦{fees.tax}</Text>
             </div>
-            <div className="flex items-center justify-between">
+            {/* <div className="flex items-center justify-between">
               <Text fw={500}>Service Fee <CircleHelp size={16} className="inline-block ml-2 text-[#2E90FA]" /></Text>
               <Text>₦{fees.service_fee}</Text>
-            </div>
-            <div className="flex items-center justify-between">
-              <Text fw={500}>Discount</Text>
-              <Text>₦{fees.discount}</Text>
-            </div>
-            <div className="flex items-center justify-between font-bold text-lg mt-4">
-              <Text>Total Paid</Text>
+            </div> */}
+          
+            <div className="flex items-center justify-between font-bold text-lg mt-[2em]">
+              <Text  fw={700}>Total</Text>
               <Text>₦{order.amount_paid}</Text>
+            </div>
+            <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
+              <Text>Cashier</Text>
+              <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
+
             </div>
           </div>
         </section>

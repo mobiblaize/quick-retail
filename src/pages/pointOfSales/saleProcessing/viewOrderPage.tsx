@@ -3,76 +3,34 @@ import PageContainer from "../../../layout/pageContainer";
 import { useLocation, useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 import ViewOrderReceipt from "../../../components/dashboard/pointOfSales/salesProcessing/viewOrderReceipt";
+import { ROUTES } from "../../../constants/routes";
+import { useFetchSingleSale } from "../../../hooks/backendApis/pos/salesProcessing";
 
 const ViewOrderPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
+  const initialOrderId = location.state?.orderId || location.state?.orderID;
+  const { data: orderData, isLoading, } = useFetchSingleSale(initialOrderId);
+  
+  const orderId = orderData?.orderID || orderData?.orderId || initialOrderId;
   const handleBack = () => {
     navigate(-1);
   };
 
-
-  // const handleDownloadReceipt = async (orderId: string | number) => {
-
-  //   try {
-  //     const response = await fetch(
-  //       `${import.meta.env.VITE_API_BASE_URL}/pos/sales/sales-order/${orderId}/receipt`,
-  //       {
-  //         method: "GET",
-  //         headers: {
-  //           Authorization: `Bearer ${localStorage.getItem("token")}`, // adjust token retrieval
-  //         },
-  //       }
-  //     );
-  
-  //     if (!response.ok) throw new Error("Failed to download receipt");
-  
-  //     const blob = await response.blob();
-  //     const url = window.URL.createObjectURL(blob);
-  
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.download = `order-receipt-${orderId}.pdf`; // adjust extension
-  //     link.click();
-  
-  //     window.URL.revokeObjectURL(url);
-  //   } catch (error) {
-  //     console.error(error);
-  //     alert("Could not download the receipt.");
-  //   }
-  // };
-  
-  const handleDownloadReceipt = async (orderId: string | number) => {
-    try {
-      const timestamp = new Date().getTime(); // unique timestamp to bust cache
-      const response = await fetch(
-        `${import.meta.env.VITE_API_BASE_URL}/pos/sales/sales-order/${orderId}/receipt?timestamp=${timestamp}`,
-        {
-          method: "GET",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-            // optionally add no-cache headers here
-            "Cache-Control": "no-cache",
-          },
-        }
-      );
-  
-      if (!response.ok) throw new Error("Failed to download receipt");
-  
-      const blob = await response.blob();
-      const url = window.URL.createObjectURL(blob);
-  
-      const link = document.createElement("a");
-      link.href = url;
-      link.download = `order-receipt-${orderId}.pdf`;
-      link.click();
-  
-      window.URL.revokeObjectURL(url);
-    } catch (error) {
-      console.error(error);
-      alert("Could not download the receipt.");
+  const handlePreview = () => {
+    if (orderData) {
+      navigate(ROUTES.previewdownload, {
+        state: { 
+          order: orderData,
+          orderId: orderId, 
+        },
+      });
     }
   };
+  
+  if (isLoading) return <div>Loading...</div>;
+  // if (isError || !orderData) return <div>Order not found.</div>;
+
   const backButton = (
     <button
       onClick={handleBack}
@@ -103,7 +61,7 @@ const ViewOrderPage = () => {
         View Order
       </Text>
       <div key="customer-receipt-buttons" className="flex gap-4 justify-end">
-        <Button variant="filled-primary"  onClick={() => handleDownloadReceipt(location.state?.orderID)}>Download Receipt</Button>
+        <Button variant="filled-primary"  onClick={handlePreview}>Preview Receipt</Button>
       </div>
     </div>,
   ];
