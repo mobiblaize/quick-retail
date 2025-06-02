@@ -51,24 +51,20 @@ const SalesProcessingReport = () => {
       console.warn("Unhandled order status:", paymentStatus);
     }
   };
-
   const handleExport = async () => {
     const exportPayload = {
       start_date: startDate || "",
       end_date: endDate || "",
-      report_type: "returns",
+      report_type: "sales", 
       export_format: "csv",
     };
-
+  
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `sales-report.${exportPayload.export_format}`
-      );
+      link.setAttribute("download", `sales-report.${exportPayload.export_format}`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -77,6 +73,7 @@ const SalesProcessingReport = () => {
       console.error("Failed to export report:", error);
     }
   };
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {

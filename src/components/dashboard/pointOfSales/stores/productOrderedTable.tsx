@@ -37,6 +37,7 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
         name,
         items: attributes,
         brand: "-", // If brand is available somewhere, replace this.
+        variationID: variation.variationID,
         category: product?.category?.name || "-",
         subCategory: product?.sub_category?.name || "-",
         sellingPrice: `₦${parseFloat(
@@ -165,14 +166,21 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
     {
       header: "",
       accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.aboutProduct}>
-          <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-            View
-          </Text>
-        </Link>
-      ),
+      cell: ({ row }) => {
+        const variationID = row.original.variationID;
+        return (
+          <Link
+            to={ROUTES.aboutProduct}
+            state={{ variationID }}  
+          >
+            <Text fw={600} c="customPrimary.10" className="cursor-pointer">
+              View
+            </Text>
+          </Link>
+        );
+      },
     },
+    
   ];
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">

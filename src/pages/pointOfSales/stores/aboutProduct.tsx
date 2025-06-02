@@ -1,11 +1,19 @@
-import { Text } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import { useNavigate } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import ProductDetails from "../../../components/dashboard/pointOfSales/stores/productDetails";
 import ProductImages from "../../../components/dashboard/pointOfSales/stores/productImages";
+import { useSingleProduct } from "../../../hooks/backendApis/pos/products";
 
 const AboutProduct = () => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { variationID } = location.state || {};
+  console.log("Received variationID:", variationID);
+
+  const { data, isLoading,} = useSingleProduct(variationID);
+  if (isLoading) return <Loader />;
+  const productData = data?.data;
   const subHeaders = [
     <div key="1" className="py-2.5">
       <div className="flex gap-8 items-center">
@@ -25,10 +33,10 @@ const AboutProduct = () => {
     <PageContainer subHeaders={subHeaders}>
       <main className="grid gap-8 grid-cols-1 md:grid-cols-2">
         <div className="order-2 md:order-1">
-          <ProductDetails />
+        <ProductDetails productData={productData} />
         </div>
         <div className="order-1 md:order-2">
-          <ProductImages />
+        <ProductImages productData={productData} />
         </div>
       </main>
     </PageContainer>

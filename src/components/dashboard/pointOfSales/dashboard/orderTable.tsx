@@ -13,11 +13,15 @@ const CustomerOrdersTable = () => {
   const salesData = data?.data?.sales?.data ?? [];
 
   // ✅ Mapped data
-  const tableData = salesData.map((sale: { sale_order_details: any[]; orderID: any; updated_at: any; customer_name: any; order_total: any; payment_status: any; }) => {
+  const tableData = salesData.map((sale: { sale_order_details: any[]; orderID: any; updated_at: any; customer_name: any; order_total: any; payment_status: any;  cashier: { firstname?: string; lastname?: string }; }) => {
     const totalItems = sale.sale_order_details?.reduce(
       (sum, item) => sum + (item.quantity_ordered || 0),
       0
     );
+
+    const cashierFullName = sale.cashier
+    ? `${sale.cashier.firstname || ''} ${sale.cashier.lastname || ''}`.trim()
+    : 'Unknown';
 
     return {
       orderID: sale.orderID,
@@ -26,6 +30,7 @@ const CustomerOrdersTable = () => {
       amount: sale.order_total,
       status: sale.payment_status,
       items: totalItems,
+      cashier: cashierFullName
     };
   });
 
@@ -79,10 +84,17 @@ const CustomerOrdersTable = () => {
       ),
     },
     {
-      header: "Date & Time",
+      header: "Time stamp",
       accessorKey: "date",
       cell: (props) => (
         <Text c="textSecondary.7">{formatDate(props.row.original.date)}</Text>
+      ),
+    },
+    {
+      header: "Cashier Issued",
+      accessorKey: "cashier",
+      cell: (props) => (
+        <Text c="textSecondary.7">{props.row.original.cashier}</Text>
       ),
     },
     {

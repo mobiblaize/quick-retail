@@ -198,6 +198,7 @@ import InventoryDetailsPage from "./pages/pointOfSales/productManagement/invento
 import ViewProduct from "./pages/pointOfSales/productManagement/viewProduct";
 import EditProduct from "./pages/pointOfSales/productManagement/editProduct";
 import ViewOrderDraftPage from "./pages/pointOfSales/saleProcessing/viewOrderDraftPage";
+import PreviewSalesDownloadPage from "./pages/pointOfSales/saleProcessing/previewDownload";
 
 export default function App() {
   return (
@@ -230,6 +231,8 @@ export default function App() {
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
           <Route path={ROUTES.viewOrderdraft} element={<ViewOrderDraftPage/>} />
+          <Route path={ROUTES.previewdownload} element={<PreviewSalesDownloadPage/>} />
+          {/* <Route   path= '/dashboard/sales/preview-download/:orderId' element={<PreviewSalesDownloadPage/>} /> */}
           <Route
             path={ROUTES.inventory}
             element={<InventoryManagementPage />}

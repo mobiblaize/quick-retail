@@ -1,13 +1,7 @@
 import { Text } from "@mantine/core";
 
-const Description = () => {
-  const productFeatures = [
-    "Premium Satin Fabric – Lightweight, silky-smooth, and gentle on the skin.",
-    "Elegant Beige Hue – A timeless neutral shade that exudes sophistication.",
-    "Relaxed Fit – Designed for ultimate comfort with a flattering silhouette.",
-    "Bride & Bridesmaid Personalization – Available with embroidered or printed titles for a personalized touch.",
-    "Chic Button-Down Top – Classic lapel collar with delicate piping details.",
-  ];
+const Description = ({ productData }: { productData: any }) => {
+  const product = productData?.product || {};
 
   return (
     <main>
@@ -15,13 +9,16 @@ const Description = () => {
         Overview
       </Text>
       <Text>
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Molestiae
-        temporibus possimus dolor id, laboriosam est?
+        {product?.long_description || "No description provided."}
       </Text>
+
       <section className="mt-8 grid gap-6 grid-cols-1 md:grid-cols-3">
         <div className="bg-[#F7F9FC] p-2 rounded-full whitespace-nowrap">
           <Text fw={600}>
-            Location: <span className="text-black ml-1">Warehouse 1</span>
+            Location:{" "}
+            <span className="text-black ml-1">
+              {product?.location?.name || "N/A"}
+            </span>
           </Text>
         </div>
         <div className="bg-[#F7F9FC] p-2 rounded-full whitespace-nowrap">
@@ -36,31 +33,22 @@ const Description = () => {
         </div>
         <div className="bg-[#F7F9FC] p-2 rounded-full whitespace-nowrap">
           <Text fw={600}>
-            Sub-category: <span className="text-black ml-1">Nightwear</span>
+            Sub-category:{" "}
+            <span className="text-black ml-1">
+              {product?.sub_category?.name || "N/A"}
+            </span>
           </Text>
         </div>
         <div className="bg-[#F7F9FC] p-2 rounded-full whitespace-nowrap">
           <Text fw={600}>
-            Sizes: <span className="text-black ml-1">sm, md, lg</span>
+            Sizes: <span className="text-black ml-1">N/A</span>
           </Text>
         </div>
         <div className="bg-[#F7F9FC] p-2 rounded-full whitespace-nowrap">
           <Text fw={600}>
-            Color: <span className="text-black ml-1">Beige</span>
+            Color: <span className="text-black ml-1">N/A</span>
           </Text>
         </div>
-      </section>
-      <section className="mt-5">
-        <Text c="black" size="lg" fw={"500"}>
-          Product Features
-        </Text>
-        <ul className="list-disc pl-5 mt-2 space-y-3">
-          {productFeatures.map((feature, index) => (
-            <li key={index} className="text-base">
-              <Text c="#101828">{feature}</Text>
-            </li>
-          ))}
-        </ul>
       </section>
     </main>
   );
