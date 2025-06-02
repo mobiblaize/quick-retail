@@ -12,12 +12,12 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
 
   const actualOrder = order.data;
 
-  let fees = {};
-  try {
-    fees = actualOrder.fees ? JSON.parse(actualOrder.fees) : {};
-  } catch (err) {
-    console.warn("Invalid JSON in order.fees", err);
-  }
+//   let fees = {};
+//   try {
+//     fees = actualOrder.fees ? JSON.parse(actualOrder.fees) : {};
+//   } catch (err) {
+//     console.warn("Invalid JSON in order.fees", err);
+//   }
 
   return (
     <>
