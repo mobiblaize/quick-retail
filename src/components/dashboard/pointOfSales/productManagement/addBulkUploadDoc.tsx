@@ -1,12 +1,20 @@
-import { useRef, useState } from "react";
+import { useRef, useState, useEffect } from "react";
 import { CheckCircle, FileText, UploadCloud } from "lucide-react";
 import csv from "../../../../assets/images/excelimg.png";
 
-const AddBulkUploadDoc = () => {
+type Props = {
+  file: File | null;
+  setFile: (file: File | null) => void;
+};
+
+const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
-  const [file, setFile] = useState<File | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+
+  useEffect(() => {
+    if (file) simulateUpload();
+  }, [file]);
 
   const simulateUpload = () => {
     let progress = 0;
@@ -41,7 +49,6 @@ const AddBulkUploadDoc = () => {
     setError(null);
     setFile(selectedFile);
     setUploadProgress(0);
-    simulateUpload();
   };
 
   const handleClickUpload = () => {
@@ -50,21 +57,18 @@ const AddBulkUploadDoc = () => {
 
   return (
     <div>
+      {/* Instructions */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full">
         <h3 className="text-lg font-semibold text-gray-800 mb-4">
           FOLLOW THE INSTRUCTIONS TO UPLOAD BULK PRODUCTS
         </h3>
-
-        <div className="border border-gray-300 rounded-md overflow-hidden mb-6">
-          <img
-            src={csv}
-            alt="csvfile"
-            width={800}
-            height={400}
-            className="w-full object-contain"
-          />
-        </div>
-
+        <img
+          src={csv}
+          alt="csvfile"
+          width={800}
+          height={400}
+          className="w-full object-contain mb-6"
+        />
         <ul className="text-gray-700 text-sm space-y-3 list-disc pl-5">
           <li>
             Download the product template CSV file{" "}
@@ -83,7 +87,8 @@ const AddBulkUploadDoc = () => {
         </ul>
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full mt-[3em]">
+      {/* Upload section */}
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full mt-12">
         <h3 className="text-base font-semibold text-gray-800 mb-4">
           UPLOAD CSV FILE
         </h3>
@@ -94,9 +99,7 @@ const AddBulkUploadDoc = () => {
             onClick={handleClickUpload}
           >
             <UploadCloud className="h-8 w-8 text-gray-400 mb-2" />
-            <p className="text-sm text-orange-600 font-medium">
-              Click to upload
-            </p>
+            <p className="text-sm text-orange-600 font-medium">Click to upload</p>
             <p className="text-sm text-gray-500">or drag and drop</p>
             <p className="text-xs text-gray-400 mt-1">CSV, XLSX (max. 4MB)</p>
           </div>

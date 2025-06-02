@@ -10,6 +10,7 @@ interface ResolveProps {
 
 const Resolve = ({ opened, onClose, returnID }: ResolveProps) => {
   const { mutate: resolveComplaint } = useResolveComplaint();
+  
 
   const handleResolveComplaint = () => {
     resolveComplaint(

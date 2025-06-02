@@ -118,7 +118,7 @@ export const useGetDataWithNoQuery = (url: string) => {
 };
 
 // Fetch Data (GET with Query)
-export const useGetData = (url: string, options?: any) => {
+export const useGetData = (url: string, options?: any,enabled?: boolean, ) => {
   const query = useQuery({
     queryKey: [url, options],
     queryFn: async () => {
@@ -129,10 +129,12 @@ export const useGetData = (url: string, options?: any) => {
     },
     staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
     refetchOnWindowFocus: false,
+    enabled: enabled
   });
 
   return {
     ...query,
+    // enabled,
     isLoading: query.isLoading && !query.isFetching,
   };
 };
