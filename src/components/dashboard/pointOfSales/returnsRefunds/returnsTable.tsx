@@ -23,7 +23,9 @@ const ReturnsTable = () => {
     customer: item.customer?.customer_name || "N/A",
     returnedReason: item.return_reason || "N/A",
     complaintStatus: item.status === "approved" ? "Resolved" : "Pending",
+     returnId: item.returnID || "N/A",
   }));
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -96,7 +98,12 @@ const ReturnsTable = () => {
       header: "",
       accessorKey: "action",
       cell: ({ row }: any) => (
-        <Link to={ROUTES.viewReturns} state={{ orderId: row.original.orderId }}>
+        <Link 
+           to={ROUTES.viewReturns} 
+           state={{ 
+             orderId: row.original.orderId,
+             returnId: row.original.returnId
+           }}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View Order
           </Text>

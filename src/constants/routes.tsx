@@ -1,4 +1,5 @@
 export const ROUTES = {
+  HOME: "/",
   dashboard: "/dashboard",
   productManagement: "/dashboard/product-management",
   sales: "/dashboard/sales",

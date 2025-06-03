@@ -1,4 +1,3 @@
-// import { Checkbox } from "@mantine/core";
 import { Upload, UploadCloud, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
@@ -12,29 +11,17 @@ import {
 // import { useFetchAllSubCategories } from "../../../../hooks/backendApis/pos/categories";
 
 const AddProductForm = () => {
-  // const { state } = useLocation();
   const [selectedCategoryId, setSelectedCategoryId] = useState<
-    number | undefined
-  >();
+    number | string
+  >('');
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [addVariation, setAddVariation] = useState(false);
-  // const category = state?.category;
 
   const { data: subCatData } = useFetchSubCatOfCat(
-  selectedCategoryId,
-  {
-    enabled: selectedCategoryId !== undefined,
-  }
+  selectedCategoryId, !!selectedCategoryId
 );
 
   const subCategories = Array.isArray(subCatData?.data) ? subCatData.data : [];
-
-  console.log("Sub Categories:", subCategories);
-
-  // const [variations, setVariations] = useState([
-  //   { name: "Size", values: ["S", "M", "L"], label: ["Small", "Medium", "Large"]},
-  //   { name: "Colour", values: ["White", "Pink", "Black"], label: ["Small", "Medium", "Large"] },
-  // ]);
 
   const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
@@ -214,7 +201,10 @@ const AddProductForm = () => {
             name="category"
             paddingY="4"
             value={selectedCategoryId}
-            onChange={(e: any) => setSelectedCategoryId(Number(e.target.value))}
+            onChange={(e: any) =>{
+               setSelectedCategoryId(Number(e.target.value))
+               setFormData({...formData, category_id: e.target.value})
+            }}
           />
 
           <FormSelect

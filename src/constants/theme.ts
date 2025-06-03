@@ -6,12 +6,17 @@ import {
 } from "../constants/customColor";
 
 export const theme: MantineThemeOverride = createTheme({
+  // Keep DM Sans as the default global font
   fontFamily: "DM Sans, sans-serif",
-  headings: { fontFamily: "DM Sans, sans-serif" },
+
+  // Use Clash Display for headings only
+  headings: {
+    fontFamily: "'Clash Display', DM Sans, sans-serif",
+  },
 
   colors: {
-    customPrimary, // Your orange palette
-    textSecondary, // Your gray palette
+    customPrimary,
+    textSecondary,
   },
 
   primaryColor: "customPrimary",
@@ -32,6 +37,7 @@ export const theme: MantineThemeOverride = createTheme({
             alignItems: "center",
             fontSize: "16px",
             justifyContent: "center",
+            fontFamily: "'Clash Display', DM Sans, sans-serif",
             "&:hover": {
               backgroundColor: "#dc5f20",
             },
@@ -45,6 +51,7 @@ export const theme: MantineThemeOverride = createTheme({
             height: "auto",
             fontWeight: 600,
             fontSize: "15px",
+            fontFamily: "'Clash Display', DM Sans, sans-serif",
             "&:hover": {
               backgroundColor: "rgba(241, 103, 34, 0.1)",
             },
@@ -52,14 +59,19 @@ export const theme: MantineThemeOverride = createTheme({
         },
       }),
     }),
+
     Text: Text.extend({
       defaultProps: {
-        // This sets all <Text> components to use textSecondary.7 by default
         color: "textSecondary.7",
+      },
+      styles: {
+        root: {
+          fontFamily: "'Clash Display', DM Sans, sans-serif",
+        },
       },
     }),
   },
-  // Define additional theme variables that aren't part of Mantine's default theme
+
   other: {
     textColor: textColors.primary,
     textSecondaryColor: textColors.secondary,
