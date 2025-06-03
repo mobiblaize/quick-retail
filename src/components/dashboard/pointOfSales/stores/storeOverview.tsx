@@ -27,7 +27,7 @@ const StoreOverview: React.FC<StoreOverviewProps> = ({ statData }) => {
         </Group>
       </header>
 
-      <section className="grid gap-4 md:gap-6 mt-6 grid-cols-1  md:grid-cols-5">
+      <section className="grid gap-4 md:gap-6 mt-6 grid-cols-1  md:grid-cols-3">
         <div className="bg-[#F1672226] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Total Orders
@@ -48,13 +48,13 @@ const StoreOverview: React.FC<StoreOverviewProps> = ({ statData }) => {
 
         <div className="bg-[#FEF6E7] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
-            Processing Orders
+       Drafts
           </Text>
           <p className="rounded-full text-white w-fit bg-[#F3A218] p-2">
-            {statData?.processingOrders ?? 0}
+          {statData?.preOrders?? 0}
           </p>
         </div>
-
+{/* 
         <div className="bg-[#F1672226] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
             Cancelled Orders
@@ -71,7 +71,7 @@ const StoreOverview: React.FC<StoreOverviewProps> = ({ statData }) => {
           <p className="rounded-full text-white w-fit bg-[#0F973D] p-2">
             {statData?.preOrders?? 0}
           </p>
-        </div>
+        </div> */}
       </section>
     </main>
   );

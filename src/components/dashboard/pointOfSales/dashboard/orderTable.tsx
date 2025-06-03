@@ -163,7 +163,6 @@ const CustomerOrdersTable = () => {
         searchPlaceholder="Search orders"
         length={8}
         showFilter
-        hidePaging
         sortOptions={[
           {
             key: "products",

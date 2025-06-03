@@ -2,11 +2,11 @@ import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useNavigate, useLocation } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import ViewOrderReceiptDraft from "../../../components/dashboard/pointOfSales/salesProcessing/viewOrderReceiptDraft";
 import { ROUTES } from "../../../constants/routes";
 import { useFetchSingleSale } from "../../../hooks/backendApis/pos/salesProcessing";
+import ViewPending from "../../../components/dashboard/pointOfSales/transactions/viewPending";
 
-const ViewOrderDraftPage = () => {
+const ViewPendingTransactionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const orderId = location.state?.orderID;
@@ -57,10 +57,10 @@ const ViewOrderDraftPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <ViewOrderReceiptDraft saleData={saleData} isLoading={isLoading} isError={isError} />
+      <ViewPending saleData={saleData} isLoading={isLoading} isError={isError} />
     </PageContainer>
   );
 };
 
-export default ViewOrderDraftPage;
+export default ViewPendingTransactionPage;
 

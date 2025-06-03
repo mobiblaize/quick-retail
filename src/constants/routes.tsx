@@ -37,6 +37,9 @@ export const ROUTES = {
   viewProduct: "/dashboard/product-management/view-product",
   editProduct: "/dashboard/product-management/edit-product",
   inventoryDetails: "/dashboard/product-management/inventory-details",
+  viewTransaction: "/dashboard/transaction/view-transaction",
+  viewPendingTransaction: "/dashboard/transaction/view-pending-transaction",
+  previewTransaction: "/dashboard/transaction/preview-transaction",
 
   // PROCUREMENT SECTION
 

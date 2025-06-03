@@ -361,7 +361,7 @@ const AddProductForm = () => {
         )}
       </div> */}
 
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
+      {/* <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           PROMOTIONS <span className="text-gray-500">(optional)</span>
         </h2>
@@ -394,7 +394,7 @@ const AddProductForm = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">

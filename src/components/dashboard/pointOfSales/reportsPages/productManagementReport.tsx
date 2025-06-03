@@ -6,13 +6,16 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useLocation } from "react-router";
 import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
 import { useEffect, useState } from "react";
+import Dropdown from "../../../General/dropdown";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+import { notifications } from "@mantine/notifications";
 
 const ProductManagementReport = () => {
   const location = useLocation();
   const { reportData, startDate, endDate } = location.state || {};
   const [data, setData] = useState<TableRowData[]>([]);
-  const { mutateAsync: exportReport, isPending: isExporting } =
-    useGenerateReportExport();
+  const { mutateAsync: exportReport } = useGenerateReportExport();
 
   function formatDate(dateStr: string | Date | undefined) {
     if (!dateStr) return "";
@@ -38,13 +41,79 @@ const ProductManagementReport = () => {
     } else {
     }
   }, [reportData]);
+
+  const exportOptions = [
+    { label: "CSV", value: "csv" },
+    { label: "PDF", value: "pdf" },
+  ];
+
+  const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | null>(null);
+
+  const generateProductsPdf = (
+    data: TableRowData[],
+    startDate: string | undefined,
+    endDate: string | undefined
+  ) => {
+    const doc = new jsPDF();
+
+    doc.setFontSize(18);
+    doc.text("Product Management Report", 14, 20);
+
+    doc.setFontSize(11);
+    doc.text(`From: ${startDate || ""} To: ${endDate || ""}`, 14, 28);
+
+    const columns = [
+      { header: "Name", dataKey: "product" },
+      { header: "Product Code", dataKey: "productCode" },
+      { header: "Location", dataKey: "location" },
+      { header: "Category", dataKey: "category" },
+      { header: "Selling Price", dataKey: "Amount" },
+      { header: "Stock Level", dataKey: "stockLevel" },
+      { header: "Discount Status", dataKey: "discountStatus" },
+    ];
+
+    // Prepare rows
+    const rows = data.map((item) => ({
+      product: item.product,
+      productCode: item.productCode,
+      location: item.location,
+      category: item.category,
+      Amount: item.Amount,
+      stockLevel: item.stockLevel,
+      discountStatus: item.discountStatus,
+    }));
+
+    autoTable(doc, {
+      startY: 35,
+      head: [columns.map((col) => col.header)],
+      //@ts-ignore
+      body: rows.map((row) => columns.map((col) => row[col.dataKey])),
+      styles: { fontSize: 8 },
+      headStyles: { fillColor: "#F16722" },
+    });
+
+    doc.save(
+      `product-report_${startDate || "start"}_to_${endDate || "end"}.pdf`
+    );
+  };
+
+  const handleExport = async (format: "csv" | "pdf") => {
+    if (format === "pdf") {
+      generateProductsPdf(data, startDate, endDate);
+      notifications.show({
+        title: "Download Successful",
+        message: "Product report exported as PDF.",
+        color: "green",
+      });
+      return;
+    }
   
-  const handleExport = async () => {
     const exportPayload = {
       start_date: startDate || "",
       end_date: endDate || "",
-      report_type: "products", // changed from 'returns'
-      export_format: "csv",
+      report_type: "products",
+      export: true,
+      export_format: format,
     };
   
     try {
@@ -52,19 +121,28 @@ const ProductManagementReport = () => {
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute(
-        "download",
-        `product-report.${exportPayload.export_format}` // proper filename
-      );
+      link.setAttribute("download", `product-report.${format}`);
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+  
+      notifications.show({
+        title: "Download Successful",
+        message: `Product report exported as ${format.toUpperCase()}.`,
+        color: "green",
+      });
     } catch (error) {
+      notifications.show({
+        title: "Export Failed",
+        message: "There was an error exporting the report.",
+        color: "red",
+      });
       console.error("Failed to export report:", error);
     }
   };
   
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -191,15 +269,21 @@ const ProductManagementReport = () => {
               <div className="border border-[#E0E0E0] rounded-lg px-4 py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
                 {formatDate(startDate)} – {formatDate(endDate)}
               </div>
-              <button
-                onClick={handleExport}
-                disabled={isExporting}
-                className={`bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm ${
-                  isExporting ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                {isExporting ? "Exporting..." : "Export"}
-              </button>
+
+              <Dropdown
+                //@ts-ignore
+                options={exportOptions}
+                value={exportFormat}
+                onChange={(val) => {
+                  setExportFormat(val as "csv" | "pdf");
+                  handleExport(val as "csv" | "pdf");
+                }}
+                placeholder="Export"
+                inputSizeClass="py-1"
+                bgColorClass="bg-[#F16722]"
+                textColorClass="text-white"
+                required={false}
+              />
             </div>
           </div>
         }

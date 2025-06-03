@@ -6,7 +6,6 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
 import { notifications } from "@mantine/notifications";
 import { useFetchSubCategory } from "../../../../hooks/backendApis/pos/categories";
-// import DeleteSubCategory from "./modals/deleteSubCategory";
 import DeleteProduct from "./modals/deleteProduct";
 import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
 import { Link } from "react-router";
