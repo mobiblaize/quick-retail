@@ -187,6 +187,7 @@ import ViewJournalPage from "./pages/financialManagement/Accounting/viewJournal"
 import ImportJournalTablePage from "./pages/financialManagement/Accounting/importJournal";
 import ReviewJournalPage from "./pages/financialManagement/Accounting/reviewJournal";
 
+
 import Login from "./pages/auth/Login";
 import IsAuthenticated from "./layout/hoc/IsAuthenticated";
 import AddCardPage from "./pages/financialManagement/Banking/addCard";
@@ -198,14 +199,18 @@ import ViewProduct from "./pages/pointOfSales/productManagement/viewProduct";
 import EditProduct from "./pages/pointOfSales/productManagement/editProduct";
 import ViewOrderDraftPage from "./pages/pointOfSales/saleProcessing/viewOrderDraftPage";
 import PreviewSalesDownloadPage from "./pages/pointOfSales/saleProcessing/previewDownload";
+import ViewTransactionPage from "./pages/pointOfSales/transaction/ViewTransaction";
+import ViewPendingTransactionPage from "./pages/pointOfSales/transaction/ViewPendingTransaction";
+import PreviewTransactionDownloadPage from "./pages/pointOfSales/transaction/PreviewDownload2";
 import DefaultLayout from "./layout/defaultLayout";
 import Home from "./pages/landingPages/home";
+
 
 export default function App() {
   return (
     <Router>
       <Routes>
-        <Route path={ROUTES.HOME} element={<DefaultLayout />}>
+      <Route path={ROUTES.HOME} element={<DefaultLayout />}>
           <Route index element={<Home />} />
         </Route>
         <Route path="/login" element={<Login />} />
@@ -229,22 +234,13 @@ export default function App() {
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
           <Route path={ROUTES.editProduct} element={<EditProduct />} />
-          <Route
-            path={ROUTES.inventoryDetails}
-            element={<InventoryDetailsPage />}
-          />
+          <Route path={ROUTES.inventoryDetails} element={<InventoryDetailsPage />} />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
-          <Route
-            path={ROUTES.viewOrderdraft}
-            element={<ViewOrderDraftPage />}
-          />
-          <Route
-            path={ROUTES.previewdownload}
-            element={<PreviewSalesDownloadPage />}
-          />
+          <Route path={ROUTES.viewOrderdraft} element={<ViewOrderDraftPage/>} />
+          <Route path={ROUTES.previewdownload} element={<PreviewSalesDownloadPage/>} />
           {/* <Route   path= '/dashboard/sales/preview-download/:orderId' element={<PreviewSalesDownloadPage/>} /> */}
           <Route
             path={ROUTES.inventory}
@@ -273,7 +269,9 @@ export default function App() {
           />
           <Route path={ROUTES.happyGiftCard} element={<GiftCardPage />} />
           <Route path={ROUTES.transaction} element={<TransactionPage />} />
-
+          <Route path={ROUTES.viewTransaction} element={<ViewTransactionPage />} />
+          <Route path={ROUTES.viewPendingTransaction} element={<ViewPendingTransactionPage />} />
+          <Route path={ROUTES.previewTransaction} element={<PreviewTransactionDownloadPage />} />
           <Route path={ROUTES.stores} element={<StoresPage />} />
           <Route path={ROUTES.viewStore} element={<View />} />
           <Route path={ROUTES.storeTarget} element={<StoreTarget />} />
@@ -422,89 +420,7 @@ export default function App() {
           />
           <Route path={ROUTES.reportPage} element={<ReportPage />} />
           <Route path={ROUTES.settingPage} element={<SettingPage />} />
-          {/* <Route
-            path={ROUTES.procurementDashboard}
-            element={<ProcurementDashboard />}
-          />
-          <Route path={ROUTES.newRequest} element={<NewRequestPage />} />
-          <Route
-            path={ROUTES.createdRequest}
-            element={<CreatedRequestPage />}
-          />
-          <Route
-            path={ROUTES.viewApproveRequest}
-            element={<ViewApproveRequestPage />}
-          />
-          <Route
-            path={ROUTES.viewPendingRequest}
-            element={<ViewPendingRequestPage />}
-          />
-          <Route
-            path={ROUTES.viewCancelledRequest}
-            element={<ViewCancelledRequestPage />}
-          />
-          <Route path={ROUTES.purchaseOrder} element={<PurchaseOrderPage />} />
-          <Route
-            path={ROUTES.createPurchaseOrder}
-            element={<CreatePurchaseOrderPage />}
-          />
-          <Route
-            path={ROUTES.purchaseInvoicePage}
-            element={<PurchaseInvoicePage />}
-          />
-          <Route
-            path={ROUTES.viewPurchaseOrderInvoicePage}
-            element={<ViewPurchaseOrderInvoicePage />}
-          />
-          <Route
-            path={ROUTES.vendorManagement}
-            element={<VendorManagement />}
-          />
-          <Route
-            path={ROUTES.tierOneVendors}
-            element={<TierOneVendorDetails />}
-          />
-          <Route
-            path={ROUTES.tierTwoVendors}
-            element={<TierTwoVendorDetails />}
-          />
-          <Route path={ROUTES.createTierOne} element={<CreateTierOne />} />
-          <Route path={ROUTES.createTierTwo} element={<CreateTierTwo />} />
-          <Route path={ROUTES.editVendor} element={<EditVendor />} />
-          <Route
-            path={ROUTES.requestDashboard}
-            element={<RequestDashboard />}
-          />
-          <Route
-            path={ROUTES.requestSummaryPage}
-            element={<RequestSummaryPage />}
-          />
-          <Route path={ROUTES.viewBudgetPage} element={<ViewBudgetPage />} />
-          <Route path={ROUTES.shipments} element={<ShipmentsDashboard />} />
-          <Route
-            path={ROUTES.shipmentsSummary}
-            element={<ShipmentSummaryPage />}
-          />
-          <Route path={ROUTES.createShipment} element={<CreateShipment />} />
-          <Route path={ROUTES.purchaseReturns} element={<PurchaseReturns />} />
-          <Route
-            path={ROUTES.approveReturns}
-            element={<ApproveReturnPurchase />}
-          />
-          <Route path={ROUTES.issuePurchase} element={<IssuePurchasePage />} />
-          <Route path={ROUTES.goodsReceived} element={<GoodsReceiveNote />} />
-          <Route
-            path={ROUTES.pendingNoteDetails}
-            element={<PendingNoteDetails />}
-          />
-          <Route
-            path={ROUTES.rejectedNoteDetails}
-            element={<RejectedNoteDetails />}
-          />
-          <Route
-            path={ROUTES.approvedNoteDetails}
-            element={<ApprovedNoteDetails />}
-          /> */}
+      
 
           {/* FINANCIAL-MANAGEMENT ROUTES */}
           <Route
@@ -781,47 +697,23 @@ export default function App() {
             <Route path="make-payment" element={<MakePaymentPage />} />
             <Route path="payment-receipt" element={<PaymentReceiptPage />} />
           </Route>
-          <Route
-            path={ROUTES.allPayment}
-            element={<AllPaymentOverviewPage />}
-          />
-          <Route path={ROUTES.viewAllPayment} element={<ViewPaymentPage />} />
-          <Route path={ROUTES.accountChart} element={<AccountChartPage />} />
-          <Route
-            path={ROUTES.viewAccountChart}
-            element={<ViewAccountChartPage />}
-          />
-          <Route
-            path={ROUTES.createAccountChart}
-            element={<CreateAccountChartPage />}
-          />
-          <Route
-            path={ROUTES.importAccountChart}
-            element={<ImportAccountChartTable />}
-          />
-          <Route
-            path={ROUTES.importChart}
-            element={<ImportAccountChartPage />}
-          />
-          <Route
-            path={ROUTES.editAccountChart}
-            element={<EditAccountChartPage />}
-          />
-          <Route path={ROUTES.allJournal} element={<AllJournalPage />} />
-          <Route path={ROUTES.createJournal} element={<CreateJournalPage />} />
-          <Route path={ROUTES.viewJournal} element={<ViewJournalPage />} />
-          <Route
-            path={ROUTES.importJournal}
-            element={<ImportJournalTablePage />}
-          />
-          <Route path={ROUTES.reviewJournal} element={<ReviewJournalPage />} />
-          <Route path={ROUTES.addCard} element={<AddCardPage />} />
-          <Route
-            path={ROUTES.allTransaction}
-            element={<AllTransactionPage />}
-          />
-          <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage />} />
-          <Route path={ROUTES.addBank} element={<AddBankPage />} />
+          <Route path={ROUTES.allPayment} element={<AllPaymentOverviewPage/>} />
+          <Route path={ROUTES.viewAllPayment} element={< ViewPaymentPage/>} />
+          <Route path={ROUTES.accountChart} element={< AccountChartPage/>} />
+          <Route path={ROUTES.viewAccountChart} element={< ViewAccountChartPage/>} />
+          <Route path={ROUTES.createAccountChart} element={< CreateAccountChartPage/>} />
+          <Route path={ROUTES.importAccountChart} element={< ImportAccountChartTable/>} />
+          <Route path={ROUTES.importChart} element={< ImportAccountChartPage/>} />
+          <Route path={ROUTES.editAccountChart} element={< EditAccountChartPage/>} />
+          <Route path={ROUTES.allJournal} element={< AllJournalPage/>} />
+          <Route path={ROUTES.createJournal} element={< CreateJournalPage/>} />
+          <Route path={ROUTES.viewJournal} element={< ViewJournalPage/>} />
+          <Route path={ROUTES.importJournal} element={< ImportJournalTablePage/>} />
+          <Route path={ROUTES.reviewJournal} element={< ReviewJournalPage/>} />
+          <Route path={ROUTES.addCard} element={< AddCardPage/>} />
+          <Route path={ROUTES.allTransaction} element={<AllTransactionPage/>} />
+          <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage/>} />
+          <Route path={ROUTES.addBank} element={< AddBankPage/>} />
         </Route>
       </Routes>
     </Router>
