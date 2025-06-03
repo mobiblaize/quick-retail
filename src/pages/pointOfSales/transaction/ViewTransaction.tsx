@@ -1,29 +1,41 @@
 import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import { useNavigate, useLocation } from "react-router";
+import { useLocation, useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import ViewOrderReceiptDraft from "../../../components/dashboard/pointOfSales/salesProcessing/viewOrderReceiptDraft";
 import { ROUTES } from "../../../constants/routes";
 import { useFetchSingleSale } from "../../../hooks/backendApis/pos/salesProcessing";
+import ViewTransactionReceipt from "../../../components/dashboard/pointOfSales/transactions/viewTransaction";
 
-const ViewOrderDraftPage = () => {
+const ViewTransactionPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const orderId = location.state?.orderID;
-
-  const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
-
+  const initialOrderId = location.state?.orderId || location.state?.orderID;
+  const { data: orderData, isLoading, } = useFetchSingleSale(initialOrderId);
+  
+  const orderId = orderData?.orderID || orderData?.orderId || initialOrderId;
   const handleBack = () => {
     navigate(-1);
   };
 
-  const handleContinue = () => {
-    navigate(ROUTES.createOrder, { state: { saleData } });
+  const handlePreview = () => {
+    if (orderData) {
+      navigate(ROUTES.previewTransaction, {
+        state: { 
+          order: orderData,
+          orderId: orderId, 
+        },
+      });
+    }
   };
-
+  
+  if (isLoading) return <div>Loading...</div>;
+  // if (isError || !orderData) return <div>Order not found.</div>;
 
   const backButton = (
-    <button onClick={handleBack} className="flex cursor-pointer gap-2 items-center">
+    <button
+      onClick={handleBack}
+      className="flex cursor-pointer gap-2 items-center"
+    >
       <ChevronLeft />
       <Text fw={500} c="black">
         Back
@@ -41,26 +53,24 @@ const ViewOrderDraftPage = () => {
           <Text c="black">View Order</Text>
         </div> */}
       </div>
+
       <div className="flex sm:hidden">{backButton}</div>
     </div>,
     <div key="2" className="justify-between flex items-center">
       <Text fw={500} size="xl" c="black">
-        View Draft Order
+        View Order
       </Text>
       <div key="customer-receipt-buttons" className="flex gap-4 justify-end">
-        <Button variant="filled-primary" onClick={handleContinue}>
-          Continue Order
-        </Button>
+        <Button variant="filled-primary"  onClick={handlePreview}>Preview Receipt</Button>
       </div>
     </div>,
   ];
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <ViewOrderReceiptDraft saleData={saleData} isLoading={isLoading} isError={isError} />
+      <ViewTransactionReceipt/>
     </PageContainer>
   );
 };
 
-export default ViewOrderDraftPage;
-
+export default ViewTransactionPage;

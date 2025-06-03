@@ -76,20 +76,20 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
         </div>
       ),
     },
-    {
-      header: "Store Size",
-      accessorKey: "store",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="black">
-            GLA: {props.row.original.gla}
-          </Text>
-          <Text fw={400} className="text-sm">
-            GSA: {props.row.original.gsa}
-          </Text>
-        </div>
-      ),
-    },
+    // {
+    //   header: "Store Size",
+    //   accessorKey: "store",
+    //   cell: (props) => (
+    //     <div className="flex flex-col">
+    //       <Text fw={500} c="black">
+    //         GLA: {props.row.original.gla}
+    //       </Text>
+    //       <Text fw={400} className="text-sm">
+    //         GSA: {props.row.original.gsa}
+    //       </Text>
+    //     </div>
+    //   ),
+    // },
     {
       header: "Store Location",
       accessorKey: "location",
@@ -205,7 +205,6 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSortFilter
           searchPlaceholder="Search orders"
           length={8}
-          hidePaging
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

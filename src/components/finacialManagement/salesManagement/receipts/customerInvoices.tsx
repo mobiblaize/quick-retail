@@ -77,8 +77,7 @@ const CustomerInvoice = () => {
       <TanTable
         columnData={columns}
         data={allCustomersInvoices}
-        hidePaging
-        length={1}
+        length={8}
         showSeeAllToggle
       />
     </main>

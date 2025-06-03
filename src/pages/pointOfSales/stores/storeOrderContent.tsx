@@ -42,6 +42,7 @@ const StoreOrderContent: React.FC = () => {
   const store = location.state?.store;
   const navigate = useNavigate();
   const { currentStep, prevStep } = useStoreOrder();
+  const [storeData, setStoreData] = useState(location.state?.store);
 
   const handleBack = () => {
     if (currentStep === StoreOverviewStep.STORE_OVERVIEW) {
@@ -50,6 +51,8 @@ const StoreOrderContent: React.FC = () => {
       prevStep();
     }
   };
+  const storeName = storeData?.name ?? "Store";
+
   const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
   const getSubHeaders = () => {
     const backButton = (
@@ -63,15 +66,14 @@ const StoreOrderContent: React.FC = () => {
         </Text>
       </button>
     );
-    const storeName = store?.name ?? "Store";
     const subHeaders = [
       <div key="1" className="py-2.5">
         <div className="flex gap-8 items-center">
           {backButton}
           <div className="md:flex hidden items-center">
-            <Text>Stores</Text>
-            <span className="mx-2">/</span>
-            <Text c={"black"}>{store.name}</Text>
+            {/* <Text>Stores</Text> */}
+            {/* <span className="mx-2">/</span> */}
+            {/* <Text c={"black"}>{store.name}</Text> */}
           </div>
         </div>
       </div>,
@@ -108,7 +110,9 @@ const StoreOrderContent: React.FC = () => {
             exit="exit"
             className="flex flex-col gap-4"
           >
-           <AllOrders store={store} />
+           {/* <AllOrders store={store} /> */}
+           <AllOrders store={storeData} />
+
           </motion.div>
         );
       case StoreOverviewStep.ORDER_DETAILS:
@@ -148,6 +152,7 @@ const StoreOrderContent: React.FC = () => {
         opened={isAddNewStoreOpen}
         onClose={() => setIsAddNewStoreOpen(false)}
         store={store} 
+        setStore={setStoreData}
       />
     <PageContainer subHeaders={getSubHeaders()}>
       <AnimatePresence mode="wait">{renderStepContent()}</AnimatePresence>

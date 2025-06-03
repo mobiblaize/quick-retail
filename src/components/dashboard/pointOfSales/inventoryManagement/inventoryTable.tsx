@@ -2,7 +2,7 @@ import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Button, Loader, Menu, Text } from "@mantine/core";
-import { LowDot, PaidDot, SoldoutDot } from "../../../../assets/svg";
+import {  PaidDot,  UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { MoreVertical } from "lucide-react";
 import { Link } from "react-router";
@@ -71,29 +71,51 @@ const InventoryTable = () => {
       header: "Date",
       accessorKey: "date",
     },
+    // {
+    //   header: "Discount Status",
+    //   accessorKey: "status",
+    //   cell: (props) => {
+    //     const status = props.row.original.status;
+    //     return (
+    //       <div
+    //         className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+    //           status === "Available"
+    //             ? "bg-[#ECFDF3] text-[#027A48]"
+    //             : status === "Sold Out"
+    //             ? "bg-[#FEE2E2] text-[#D92D20]"
+    //             : "bg-[#FFFAEB] text-[#B54708]"
+    //         }`}
+    //       >
+    //         {status === "Available" ? (
+    //           <PaidDot />
+    //         ) : status === "Sold Out" ? (
+    //           <SoldoutDot />
+    //         ) : (
+    //           <LowDot />
+    //         )}
+    //         <span className="ml-2">{status}</span>
+    //       </div>
+    //     );
+    //   },
+    // },
+
     {
       header: "Discount Status",
       accessorKey: "status",
       cell: (props) => {
         const status = props.row.original.status;
+        const isActive = typeof status === "string" && status.toLowerCase() === "active";
+    
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "Available"
+              isActive
                 ? "bg-[#ECFDF3] text-[#027A48]"
-                : status === "Sold Out"
-                ? "bg-[#FEE2E2] text-[#D92D20]"
                 : "bg-[#FFFAEB] text-[#B54708]"
             }`}
           >
-            {status === "Available" ? (
-              <PaidDot />
-            ) : status === "Sold Out" ? (
-              <SoldoutDot />
-            ) : (
-              <LowDot />
-            )}
-            <span className="ml-2">{status}</span>
+            {isActive ? <PaidDot /> : <UnpaidDot />}
+            <span className="ml-2 capitalize">{String(status)}</span>
           </div>
         );
       },

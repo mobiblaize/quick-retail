@@ -13,6 +13,12 @@ interface CustomDropdownProps {
   onChange: (val: string | number) => void;
   required?: boolean;
   textColorClass?: string;
+  inputSizeClass?: string;
+  bgColorClass?: string;
+  hoverBgColorClass?: string;
+  selectedBgColorClass?: string;
+  selectedTextColorClass?: string;
+  IconComponent?: React.ReactNode;
 }
 
 const Dropdown = ({
@@ -22,12 +28,16 @@ const Dropdown = ({
   value,
   onChange,
   required,
-  textColorClass,
+  textColorClass = "text-black",
+  inputSizeClass = "py-2 px-4",
+  bgColorClass = "bg-white",
+  hoverBgColorClass = "hover:bg-gray-300",
+  selectedBgColorClass = "bg-gray-300",
+  selectedTextColorClass = "text-white",
 }: CustomDropdownProps) => {
   const [open, setOpen] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
 
-  // Close dropdown on outside click
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (
@@ -37,7 +47,6 @@ const Dropdown = ({
         setOpen(false);
       }
     };
-
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
@@ -45,44 +54,52 @@ const Dropdown = ({
   const selectedOption = options.find((opt) => opt.value === value);
 
   return (
-    <div className={`relative w-full`} ref={dropdownRef}>
+    <div className="relative w-full" ref={dropdownRef}>
       {label && (
-        <label className={`block mb-1 font-medium text-gray-700`}>
+        <label className="block mb-1 font-medium text-gray-700">
           {label}
           {required && <span className="text-red-600 ml-1">*</span>}
         </label>
       )}
+
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`w-full text-left px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          textColorClass || "text-black"
-        }`}
+        className={`w-full p-2 text-left border border-gray-300 rounded-md shadow-sm focus:outline-none ${inputSizeClass} ${bgColorClass} ${textColorClass}`}
       >
-        {selectedOption ? selectedOption.label : <span className="text-gray-400">{placeholder}</span>}
-        <span className="float-right">▾</span>
+        {selectedOption ? (
+          selectedOption.label
+        ) : (
+          <span className="">{placeholder}</span>
+        )}
+        {/* <span className="float-right">▾</span> */}
       </button>
 
       {open && (
         <ul
-          className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
+          className="absolute z-10 mt-1 w-full border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto bg-white"
           role="listbox"
         >
-          {options.map((opt) => (
-            <li
-              key={opt.value}
-              className={`cursor-pointer select-none px-4 py-2 hover:bg-blue-600 hover:text-white ${
-                value === opt.value ? "bg-blue-500 text-white" : "text-black"
-              }`}
-              role="option"
-              onClick={() => {
-                onChange(opt.value);
-                setOpen(false);
-              }}
-            >
-              {opt.label}
-            </li>
-          ))}
+          {options.map((opt) => {
+            const isSelected = value === opt.value;
+            return (
+              <li
+                key={opt.value}
+                className={`cursor-pointer select-none px-2 py-2 ${
+                  isSelected
+                    ? `${selectedBgColorClass} ${selectedTextColorClass}`
+                    : "text-black"
+                } ${!isSelected && hoverBgColorClass}`}
+                role="option"
+                onClick={() => {
+                  onChange(opt.value);
+                  setOpen(false);
+                }}
+              >
+                {opt.label}
+              </li>
+            );
+          })}
         </ul>
       )}
     </div>

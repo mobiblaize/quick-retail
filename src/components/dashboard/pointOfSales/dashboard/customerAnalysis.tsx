@@ -1,6 +1,5 @@
 import { Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
-import { ArrowUpRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -77,7 +76,7 @@ const CustomerAnalysis = () => {
                     </Text>
                   </div>
                 </div>
-                <ArrowUpRight color="#003399" className="flex-shrink-0" />
+                {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
               </div>
 
               <Divider size="sm" className="mt-3" color="#E4E7EC" />

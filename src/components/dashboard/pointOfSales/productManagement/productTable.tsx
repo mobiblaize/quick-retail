@@ -54,7 +54,8 @@ const ProductTable = () => {
     : [];
 
   const mappedProducts: TableRowData[] = products.map((product: any) => {
-    const statusRaw = product.status?.toLowerCase?.();
+    const statusRaw = (product.status as string).toLowerCase();
+
     const isActive = statusRaw === "active";
 
     return {
@@ -145,7 +146,8 @@ const ProductTable = () => {
       accessorKey: "status",
       cell: (props) => {
         const status = props.row.original.status;
-        const isActive = status === "Active";
+        const isActive = typeof status === "string" && status.toLowerCase() === "active";
+    
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
@@ -155,11 +157,13 @@ const ProductTable = () => {
             }`}
           >
             {isActive ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2">{status}</span>
+            <span className="ml-2 capitalize">{String(status)}</span>
           </div>
         );
       },
     },
+    
+    
     {
       header: "",
       accessorKey: "action",

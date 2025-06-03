@@ -113,7 +113,6 @@ const JournalTable = () => {
         showSortFilter
         searchPlaceholder="Search orders"
         length={10}
-        hidePaging
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

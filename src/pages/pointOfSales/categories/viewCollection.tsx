@@ -24,7 +24,7 @@ const ViewCollection = () => {
         <div className="flex items-center">
           <Text>Categories</Text>
           <span className="mx-2">/</span>
-          <Text c={"black"}>Cosmetics</Text>
+          {/* <Text c={"black"}>Cosmetics</Text> */}
         </div>
       </div>
     </div>,
