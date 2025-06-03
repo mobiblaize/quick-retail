@@ -45,11 +45,10 @@ const CategoryProductDetails = ({
   const { mutate: deactivateCategory } = useDeactivateCategories(
     subCategory.id
   );
-  const { data, refetch } = useFetchSubCategory(subCategory.id);
+  const { data, } = useFetchSubCategory(subCategory.id);
   // const isoDate = "2025-05-21T10:00:13.000000Z";
   // const date = new Date(isoDate);
 
-  const needed = data?.data?.products || [];
 
   const [tableData, setTableData] = useState([{ status: "Active" }]);
   const [isActivateOpen, setIsActivateOpen] = useState(false);

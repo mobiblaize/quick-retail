@@ -9,6 +9,7 @@ import { shortenTransactionId, truncateText } from "../../../../utils/helpers";
 import Dropdown from "../../../General/dropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { notifications } from "@mantine/notifications";
 
 type ReturnsReportProps = {
   reportData: any;
@@ -105,20 +106,35 @@ const ReturnsRefundsReport = ({
 
     doc.save(`returns-report_${startDate}_to_${endDate}.pdf`);
   };
+
+
   const handleExport = async (format: "csv" | "pdf") => {
     if (format === "pdf") {
-      generateReturnsPdf(data, startDate, endDate);
+      try {
+        generateReturnsPdf(data, startDate, endDate);
+        notifications.show({
+          title: "Download Successful",
+          message: "Returns report exported as PDF.",
+          color: "green",
+        });
+      } catch (err) {
+        notifications.show({
+          title: "Export Failed",
+          message: "An error occurred while exporting PDF.",
+          color: "red",
+        });
+      }
       return;
     }
-
-    // Else, your existing backend call for CSV (or any other format)
+  
     const exportPayload = {
       start_date: startDate || "",
       end_date: endDate || "",
       report_type: "returns",
       export_format: format,
+      export: true,
     };
-
+  
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
@@ -129,10 +145,22 @@ const ReturnsRefundsReport = ({
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+  
+      notifications.show({
+        title: "Download Successful",
+        message: `Returns report exported as ${format.toUpperCase()}.`,
+        color: "green",
+      });
     } catch (error) {
       console.error("Failed to export report:", error);
+      notifications.show({
+        title: "Export Failed",
+        message: `Could not export report as ${format.toUpperCase()}.`,
+        color: "red",
+      });
     }
   };
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {

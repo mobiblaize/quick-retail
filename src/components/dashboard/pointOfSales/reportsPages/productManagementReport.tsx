@@ -9,6 +9,7 @@ import { useEffect, useState } from "react";
 import Dropdown from "../../../General/dropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { notifications } from "@mantine/notifications";
 
 const ProductManagementReport = () => {
   const location = useLocation();
@@ -98,19 +99,23 @@ const ProductManagementReport = () => {
 
   const handleExport = async (format: "csv" | "pdf") => {
     if (format === "pdf") {
-      // Use local PDF generator instead of backend export
       generateProductsPdf(data, startDate, endDate);
+      notifications.show({
+        title: "Download Successful",
+        message: "Product report exported as PDF.",
+        color: "green",
+      });
       return;
     }
-
-    // Existing backend export for CSV
+  
     const exportPayload = {
       start_date: startDate || "",
       end_date: endDate || "",
       report_type: "products",
+      export: true,
       export_format: format,
     };
-
+  
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
@@ -121,10 +126,22 @@ const ProductManagementReport = () => {
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+  
+      notifications.show({
+        title: "Download Successful",
+        message: `Product report exported as ${format.toUpperCase()}.`,
+        color: "green",
+      });
     } catch (error) {
+      notifications.show({
+        title: "Export Failed",
+        message: "There was an error exporting the report.",
+        color: "red",
+      });
       console.error("Failed to export report:", error);
     }
   };
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {

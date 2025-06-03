@@ -1,6 +1,5 @@
 import { Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
-import { ArrowUpRight } from "lucide-react";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";

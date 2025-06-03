@@ -3,19 +3,18 @@ import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
-import { useLocation, useNavigate } from "react-router";
+import { useLocation,} from "react-router";
 import { useEffect, useState } from "react";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
-import { ROUTES } from "../../../../constants/routes";
 import Dropdown from "../../../General/dropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { notifications } from "@mantine/notifications";
 
 
 const SalesProcessingReport = () => {
   const location = useLocation();
-  const navigate = useNavigate();
   const { reportData, startDate, endDate } = location.state || {};
   const [data, setData] = useState<TableRowData[]>([]);
   const { mutateAsync: exportReport,  } =
@@ -102,60 +101,51 @@ const exportToPDF = (data: TableRowData[], startDate: string, endDate: string) =
 
 
   const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | null>(null);
-
-  // const handleExport = async (format: "csv" | "pdf") => {
-  //   const exportPayload = {
-  //     start_date: startDate || "",
-  //     end_date: endDate || "",
-  //     report_type: "sales",
-  //     export_format: format,
-  //   };
-
-  //   try {
-  //     const blob = await exportReport(exportPayload);
-  //     const url = window.URL.createObjectURL(new Blob([blob]));
-  //     const link = document.createElement("a");
-  //     link.href = url;
-  //     link.setAttribute("download", `sales-report.${format}`);
-  //     document.body.appendChild(link);
-  //     link.click();
-  //     link.remove();
-  //     window.URL.revokeObjectURL(url);
-  //   } catch (error) {
-  //     console.error("Failed to export report:", error);
-  //   }
-  // };
-
-  const handleExport = async (format: "csv" | "pdf") => {
-    if (format === "pdf") {
+  
+  const handleExport = async (format: 'csv' | 'pdf') => {
+    if (format === 'pdf') {
       exportToPDF(data, formatDate(startDate), formatDate(endDate));
+      notifications.show({
+        title: 'Download Successful',
+        message: 'PDF report exported successfully!',
+        color: 'green',
+      });
       return;
     }
   
-    // For CSV, keep your current flow
     const exportPayload = {
-      start_date: startDate || "",
-      end_date: endDate || "",
-      report_type: "sales",
+      start_date: startDate || '',
+      end_date: endDate || '',
+      report_type: 'sales',
       export_format: format,
     };
   
     try {
       const blob = await exportReport(exportPayload);
       const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement("a");
+      const link = document.createElement('a');
       link.href = url;
-      link.setAttribute("download", `sales-report.${format}`);
+      link.setAttribute('download', `sales-report.${format}`);
       document.body.appendChild(link);
       link.click();
       link.remove();
       window.URL.revokeObjectURL(url);
+  
+      notifications.show({
+        title: 'Download Successful',
+        message: `${format.toUpperCase()} report exported successfully!`,
+        color: 'green',
+      });
     } catch (error) {
-      console.error("Failed to export report:", error);
+      console.error('Failed to export report:', error);
+      notifications.show({
+        title: 'Export Failed',
+        message: 'There was an error exporting the report. Please try again.',
+        color: 'red',
+      });
     }
   };
   
-
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
