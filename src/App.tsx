@@ -2,7 +2,7 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
+  // Navigate,
 } from "react-router-dom";
 import DashboardLayout from "./layout/layout";
 import ProductManagementPage from "./pages/pointOfSales/productManagement/productManagementPage";
@@ -202,14 +202,20 @@ import PreviewSalesDownloadPage from "./pages/pointOfSales/saleProcessing/previe
 import ViewTransactionPage from "./pages/pointOfSales/transaction/ViewTransaction";
 import ViewPendingTransactionPage from "./pages/pointOfSales/transaction/ViewPendingTransaction";
 import PreviewTransactionDownloadPage from "./pages/pointOfSales/transaction/PreviewDownload2";
+import DefaultLayout from "./layout/defaultLayout";
+import Home from "./pages/landingPages/home";
+import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
 
 
 export default function App() {
   return (
     <Router>
       <Routes>
+      <Route path={ROUTES.HOME} element={<DefaultLayout />}>
+          <Route index element={<Home />} />
+        </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
 
         <Route
           path="/dashboard"
@@ -228,6 +234,7 @@ export default function App() {
           />
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
+          <Route path={ROUTES.viewStoreProduct} element={<ViewStoreProduct />} />
           <Route path={ROUTES.editProduct} element={<EditProduct />} />
           <Route path={ROUTES.inventoryDetails} element={<InventoryDetailsPage />} />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />

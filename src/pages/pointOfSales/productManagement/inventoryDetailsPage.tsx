@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
@@ -11,6 +12,8 @@ const InventoryDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { form_data, resetForm } = useStore();
   const { mutate } = useCreateProduct();
+
+  const [loading, setLoading] = useState(false);
 
   const handleSave = () => {
     if (!form_data.product_name) {
@@ -40,8 +43,6 @@ const InventoryDetailsPage: React.FC = () => {
       safety_instructions: form_data.safety_instructions,
       certificates: form_data.certificates,
       image_path: form_data.image_path || [],
-     
-
       // Always use variations
       variations: form_data.variations?.map((v) => ({
         cost_price: v.cost_price,
@@ -49,22 +50,26 @@ const InventoryDetailsPage: React.FC = () => {
         quantity: v.quantity,
         reorder_level: v.reorder_level,
         size: v.size,
-        colour: v.color, 
+        colour: v.color,
         image: form_data.image,
       })),
     };
 
+    setLoading(true);
+
     mutate(payload, {
       onSuccess: () => {
+        setLoading(false); // ✅ Stop loading on success
         notifications.show({
           title: "Success",
           message: "Product added successfully",
           color: "green",
         });
-        resetForm();
+        resetForm(); // ✅ Clear form inputs
         window.scrollTo({ top: 0, behavior: "smooth" });
       },
       onError: (error: any) => {
+        setLoading(false); // ✅ Stop loading on error
         notifications.show({
           title: "Error",
           message: error?.response?.data?.message || "Failed to add product",
@@ -124,7 +129,7 @@ const InventoryDetailsPage: React.FC = () => {
         <Button variant="outline-primary" onClick={() => navigate(-1)}>
           Prev
         </Button>
-        <Button variant="filled-primary" onClick={handleSave}>
+        <Button variant="filled-primary" onClick={handleSave} loading={loading}>
           Submit
         </Button>
       </div>,

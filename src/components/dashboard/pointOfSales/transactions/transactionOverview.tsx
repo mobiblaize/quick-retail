@@ -1,5 +1,4 @@
-import { Group, Text } from "@mantine/core";
-import DateFilterMenu from "../../../General/filterMenu";
+import { Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
 import dollar from "../../../../assets/images/dollarSign.png";
 import orders from "../../../../assets/images/orders.png";
@@ -59,14 +58,14 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
           </Text>
           <Text size="sm">An overview of transaction of sales</Text>
         </div>
-        <Group>
+        {/* <Group>
           <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly="sm"
           />
-        </Group>
+        </Group> */}
       </header>
       <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
         {cards.map((card, index) => (

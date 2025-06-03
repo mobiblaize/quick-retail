@@ -90,7 +90,7 @@ export const PointOfSale: NavItem[] = [
     hasChildren: true,
     children: [
       { label: "Discounts", href: `${ROUTES.happyTime}` },
-      { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
+      // { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
     ],
   },
   {

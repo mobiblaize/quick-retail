@@ -1,4 +1,5 @@
 export const ROUTES = {
+  HOME: "/",
   dashboard: "/dashboard",
   productManagement: "/dashboard/product-management",
   sales: "/dashboard/sales",
@@ -22,6 +23,7 @@ export const ROUTES = {
   viewStore: "/dashboard/stores/view",
   storeTarget: "/dashboard/stores/store_target",
   storeBillingInformation: "/dashboard/stores/billing-information",
+  viewStoreProduct: "/dashboard/stores/view-product",
   aboutProduct: "/dashboard/stores/about_product",
   report: "/dashboard/reports",
   reportDateSelect: "/dashboard/reports/report-date-input",

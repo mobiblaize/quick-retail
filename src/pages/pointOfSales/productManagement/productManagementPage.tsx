@@ -49,7 +49,7 @@ const ProductManagementPage = () => {
               >
                 Add a product
               </Menu.Item>
-              <Menu.Item
+              {/* <Menu.Item
                 style={{
                   fontSize: "14px",
                   padding: "8px 16px",
@@ -58,7 +58,7 @@ const ProductManagementPage = () => {
                 onClick={handleAddBulkProducts}
               >
                 Add bulk products
-              </Menu.Item>
+              </Menu.Item> */}
             </Menu.Dropdown>
           </Menu>
         </div>

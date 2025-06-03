@@ -43,7 +43,7 @@ const slideVariants = {
 
 const ViewReturnsContent: React.FC = () => {
   const location = useLocation();
-  const orderId = location.state?.orderId;
+  const { returnId } = location.state || {};
 
   const navigate = useNavigate();
   const { currentStep, prevStep } = useReturns();
@@ -216,9 +216,13 @@ const ViewReturnsContent: React.FC = () => {
       <Resolve
         opened={isResolveOpen}
         onClose={() => setIsResolveOpen(false)}
-        returnID={orderId}
+        returnID={returnId}
       />
-      <Decline opened={isDeclineOpen} onClose={() => setIsDeclineOpen(false)}  returnID={orderId}/>
+      <Decline
+        opened={isDeclineOpen}
+        onClose={() => setIsDeclineOpen(false)}
+        returnID={returnId}
+      />
     </PageContainer>
   );
 };

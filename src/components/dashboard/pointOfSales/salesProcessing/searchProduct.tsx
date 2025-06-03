@@ -234,7 +234,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
                     <div className="flex flex-col items-center min-w-[70px]">
                       <span className="text-xs text-gray-500">Unit Price</span>
                       <span className="font-medium">
-                        ${unitPrice.toFixed(2)}
+                      ₦ {unitPrice.toFixed(2)}
                       </span>
                     </div>
 
@@ -269,7 +269,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
                     <div className="flex flex-col items-center min-w-[70px]">
                       <span className="text-xs text-gray-500">Total Price</span>
                       <span className="font-semibold text-[#2E90FA]">
-                        ${totalPrice.toFixed(2)}
+                      ₦ {totalPrice.toFixed(2)}
                       </span>
                     </div>
 

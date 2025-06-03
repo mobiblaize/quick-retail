@@ -5,7 +5,7 @@ export const useFetchAllTransactions = (customPayload?: Partial<typeof defaultPa
     const defaultPayload2 = {
       search: "",
       sort_by: "",
-      per_page: "",
+      per_page: "500",
       paginate: true,
     };
   

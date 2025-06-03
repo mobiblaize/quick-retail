@@ -125,14 +125,14 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
             </div>
             <div className="flex justify-between mb-1">
                               {/* @ts-ignore */}
-              <span>Tax ({fees.tax_rate ? `${fees.tax_rate}%` : ""}):</span>
+                              <span className="whitespace-nowrap">Tax ({fees.tax_rate ? `${fees.tax_rate}%` : ""}):</span>
                             {/* @ts-ignore */}
               <span>₦{fees.tax?.toLocaleString() || "0"}</span>
             </div>
                           {/* @ts-ignore */}
             {fees.service_fee && (
               <div className="flex justify-between mb-1">
-                <span>Service Fee:</span>
+                             <span className="whitespace-nowrap">Service Fee:</span>
                               {/* @ts-ignore */}
                 <span>₦{fees.service_fee.toLocaleString()}</span>
               </div>
