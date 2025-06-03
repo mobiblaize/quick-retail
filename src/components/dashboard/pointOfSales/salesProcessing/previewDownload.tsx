@@ -12,12 +12,12 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
 
   const actualOrder = order.data;
 
-//   let fees = {};
-//   try {
-//     fees = actualOrder.fees ? JSON.parse(actualOrder.fees) : {};
-//   } catch (err) {
-//     console.warn("Invalid JSON in order.fees", err);
-//   }
+  let fees = {};
+  try {
+    fees = actualOrder.fees ? JSON.parse(actualOrder.fees) : {};
+  } catch (err) {
+    console.warn("Invalid JSON in order.fees", err);
+  }
 
   return (
     <>
@@ -30,18 +30,18 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
               {actualOrder.receipt_no}
             </p>
           </div>
-          {/* <div className="text-right text-xs">
-            <p>{actualOrder.customer?.customer_address}</p>
-            <p>+234 (Phone Number)</p>
-            <p>+234 (Phone Number)</p>
-          </div> */}
+          <div className="text-right text-xs">
+            <p>{actualOrder.location?.address}</p>
+            <p>{actualOrder.location?.email}</p>
+            <p>{actualOrder.location?.phone}</p>
+          </div>
         </div>
 
         {/* Customer & Receipt Details */}
         <div className="flex justify-between mb-8">
           <div>
-            <h2 className="font-bold">Customer Details</h2>
-            <p className="font-semibold">
+            <h2 className="font-medium">Customer Details</h2>
+            <p className="font-bold">
               {actualOrder.customer?.customer_name || actualOrder.customer_name}
             </p>
 
@@ -63,81 +63,89 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
 
         {/* Table of Sale Order Details */}
         <div>
-          <h3 className="bg-gray-100 p-3 font-bold text-center">
+          {/* <h3 className="bg-gray-100 p-3 font-bold text-center">
             Breakdown of Receipt Payment
-          </h3>
+          </h3> */}
           <div className="overflow-x-auto mt-4">
-            <table className="min-w-full text-left text-xs">
-              <thead className="border-b font-bold bg-[#FCFCFC]">
+            <table className="min-w-full text-left text-md">
+              <thead className="border-b font-bold  bg-gray-100">
                 <tr>
                   <th className="p-2">Item</th>
+                  <th className="p-2">Qty</th>
                   <th className="p-2">Unit Price</th>
-                  <th className="p-2">Quantity</th>
-                  <th className="p-2">Total Price</th>
+                  <th className="p-2">Amount</th>
                 </tr>
               </thead>
               <tbody className="divide-y">
-                {actualOrder.sale_order_details?.map((detail: any) => (
-                  <tr key={detail.order_detail_id}>
-                    <td className="p-2">
-                      {detail.product_variation?.name || "N/A"}
-                    </td>
-                    <td className="p-2">
-                      ₦{Number(detail.unit_price).toLocaleString()}
-                    </td>
-                    <td className="p-2">{detail.quantity_ordered}</td>
-                    <td className="p-2">
-                      ₦{Number(detail.total_price).toLocaleString()}
-                    </td>
-                  </tr>
-                ))}
+                {actualOrder.sale_order_details?.map((detail: any) => {
+                  const variationName = detail.product_variation?.name || "N/A";
+
+                  let size = "N/A";
+                  let color = "N/A";
+
+                  if (variationName !== "N/A") {
+                    const parts = variationName.split("-");
+                    size = parts[parts.length - 2] || "N/A";
+                    color = parts[parts.length - 1] || "N/A";
+                  }
+
+                  return (
+                    <tr key={detail.order_detail_id}>
+                      <td className="p-2 text-md">
+                        <span className="font-semibold"> {variationName} </span>{" "}
+                        <br />
+                        Size: <span className="font-semibold">{size} </span>
+                        <br />
+                        Color: <span className="font-semibold">{color}</span>
+                      </td>
+                      <td className="p-2">{detail.quantity_ordered}</td>
+                      <td className="p-2">
+                        ₦{Number(detail.unit_price).toLocaleString()}
+                      </td>
+                      <td className="p-2 ">
+                        ₦{Number(detail.total_price).toLocaleString()}
+                      </td>
+                    </tr>
+                  );
+                })}
               </tbody>
             </table>
           </div>
-
-          <div className="mt-4 flex justify-between text-xs">
-            <p>
-              No. of Items:{" "}
-              <strong>{actualOrder.sale_order_details?.length}</strong>
-            </p>
-          </div>
-
-          <div className="text-center mt-4 text-base font-semibold bg-[#F2F4F7] py-[2em]">
-            <p>
-              Total:{" "}
-              <span className="text-black font-bold">
-                ₦{Number(actualOrder.order_total).toLocaleString()}
-              </span>
-            </p>
-            Balance :{" "}
-            <span className="text-green-600 font-bold">
-              ₦{Number(actualOrder.balance).toLocaleString()}
-            </span>
+          {/* Fees Breakdown */}
+          <div className="mt-6 w-full pr-[7em] pl-[1em] mx-auto text-right text-gray-700">
+            <div className="flex justify-between mb-1">
+              <span>Subtotal:</span>
+              {/* @ts-ignore */}
+              <span>₦{fees.sub_total?.toLocaleString() || "0"}</span>
+            </div>
+            <div className="flex justify-between mb-1">
+              <span>Discount:</span>
+                            {/* @ts-ignore */}
+              <span>₦{fees.discount?.toLocaleString() || "0"}</span>
+            </div>
+            <div className="flex justify-between mb-1">
+                              {/* @ts-ignore */}
+              <span>Tax ({fees.tax_rate ? `${fees.tax_rate}%` : ""}):</span>
+                            {/* @ts-ignore */}
+              <span>₦{fees.tax?.toLocaleString() || "0"}</span>
+            </div>
+                          {/* @ts-ignore */}
+            {fees.service_fee && (
+              <div className="flex justify-between mb-1">
+                <span>Service Fee:</span>
+                              {/* @ts-ignore */}
+                <span>₦{fees.service_fee.toLocaleString()}</span>
+              </div>
+            )}
           </div>
         </div>
 
         {/* Receipt Amount */}
         <div className="mt-8 bg-orange-100 text-center py-6 rounded border-dashed border-2 border-orange-200">
-          <p className="text-lg font-bold"> Amount Paid</p>
-          <p className="text-2xl text-orange-600 font-bold">
+          <p className="text-lg font-bold"> Total</p>
+          <p className="text-4xl text-orange-600 font-bold">
             ₦{Number(actualOrder.amount_paid).toLocaleString()}
           </p>
-        </div>
-
-        {/* Terms & Signature */}
-        <div className="flex justify-between items-end mt-8 text-xs">
-          <div className="flex flex-col items-start mt-8 text-xs">
-            <p className="text-[gray] font-normal">Terms and Conditions</p>
-            <p className="max-w-md">
-              Kindly note that this quote is only valid for 30days before price
-              change. Hence, the 30days validity period start right after the
-              quote has been sent to the customer.
-            </p>
-          </div>
-          <div className="text-right">
-            <p className="mb-1">Signature</p>
-            {/* <img src="/signature.png" alt="Signature" className="h-10" /> */}
-          </div>
         </div>
       </div>
     </>

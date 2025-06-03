@@ -59,9 +59,14 @@ const PreviewSalesDownloadPage = () => {
       <div className="flex sm:hidden">{backButton}</div>
     </div>,
     <div key="2" className="justify-between flex items-center">
+        <div className="flex flex-col">
       <Text fw={500} size="xl" c="black">
-        View Order
+        Receipt
       </Text>
+      <Text fw={300} size="md" c="gray">
+    See Details Below
+      </Text>
+      </div>
       <div key="customer-receipt-buttons" className="flex gap-4 justify-end">
         <Button variant="filled-primary" onClick={handleDownloadReceiptAsPDF}>
           {isDownloading ? "Generating..." : "Download Receipt"}
