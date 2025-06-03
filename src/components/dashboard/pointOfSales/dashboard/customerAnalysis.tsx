@@ -77,7 +77,7 @@ const CustomerAnalysis = () => {
                     </Text>
                   </div>
                 </div>
-                <ArrowUpRight color="#003399" className="flex-shrink-0" />
+                {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
               </div>
 
               <Divider size="sm" className="mt-3" color="#E4E7EC" />

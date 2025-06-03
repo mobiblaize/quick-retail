@@ -1,35 +1,52 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { SetStateAction, useMemo, useState } from "react";
-import { useCreateDiscount } from "../../../../../hooks/backendApis/pos/discount";
+import {
+  useCreateDiscount,
+  useFetchDiscountProduct,
+} from "../../../../../hooks/backendApis/pos/discount";
 import Dropdown from "../../../../General/dropdown";
-import { useFetchAllProducts } from "../../../../../hooks/backendApis/pos/products";
 
 interface CreateDiscountModalProps {
   opened: boolean;
   onClose: () => void;
-  onCreated: () => void; 
+  onCreated: () => void;
 }
 
-const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountModalProps) => {
+const CreateDiscountModal = ({
+  opened,
+  onClose,
+  onCreated,
+}: CreateDiscountModalProps) => {
   const [discountType, setDiscountType] = useState<string>("Amount");
 
   const [name, setName] = useState("");
   const [code, setCode] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [discountValue, ] = useState("");
-  const [percentage, ] = useState("");
+  const [discountValue, setDiscountValue] = useState("");
+  const [percentage, setPercentage] = useState("");
   const [selectedProducts, setSelectedProducts] = useState<number[]>([]);
   const [redemptionCount, setRedemptionCount] = useState("");
 
+  const resetForm = () => {
+    setName("");
+    setCode("");
+    setFrom("");
+    setTo("");
+    setSelectedProducts([]);
+    setRedemptionCount("");
+    setDiscountType("Amount");
+    setPercentage("");
+    setDiscountValue("");
+  };
+
   const createDiscount = useCreateDiscount();
-  const { data: productsData,  } =
-    useFetchAllProducts();
+  const { data: productsData } = useFetchDiscountProduct();
 
   const productOptions = useMemo(() => {
     return (
-      productsData?.data?.products?.data?.map((product: any) => ({
+      productsData?.data?.map((product: any) => ({
         label: product.name,
         value: product.id,
       })) || []
@@ -47,23 +64,27 @@ const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountMod
       to,
       redemption_count: Number(redemptionCount),
     };
-  
+
     createDiscount.mutate(payload, {
       onSuccess: (res) => {
         console.log("Success:", res);
         onCreated(); // <--- this is key
+        resetForm();
       },
       onError: (err) => {
         console.error("Error:", err);
       },
     });
   };
-  
+
   return (
     <>
       <Modal
         opened={opened}
-        onClose={onClose}
+        onClose={() => {
+          resetForm();
+          onClose();
+        }}
         title={
           <div>
             <Text size="1.5rem" c="black" fw={700}>
@@ -173,6 +194,17 @@ const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountMod
                   label="Percentage"
                   placeholder="%"
                   paddingY="6px"
+                  value={percentage}
+                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                    const val = e.target.value;
+                    if (
+                      !isNaN(Number(val)) &&
+                      Number(val) >= 0 &&
+                      Number(val) <= 100
+                    ) {
+                      setPercentage(val);
+                    }
+                  }}
                 />
               </div>
             ) : (
@@ -185,6 +217,13 @@ const CreateDiscountModal = ({ opened, onClose,   onCreated }: CreateDiscountMod
                     type="text"
                     placeholder="Enter amount"
                     className="w-full p-3 border border-gray-300 rounded"
+                    value={discountValue}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (!isNaN(Number(val))) {
+                        setDiscountValue(val);
+                      }
+                    }}
                   />
                 </div>
                 <div>

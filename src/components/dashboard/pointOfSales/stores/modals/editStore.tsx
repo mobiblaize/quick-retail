@@ -11,9 +11,10 @@ interface AddNewStoreModalProps {
   opened: boolean;
   onClose: () => void;
   store: any;
+  setStore: React.Dispatch<React.SetStateAction<any>>; 
 }
 
-const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
+const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps) => {
   // const dayjs = require('dayjs');
   // dayjs.extend(customParseFormat);
   const [isEnabled, setIsEnabled] = useState(false);
@@ -72,7 +73,7 @@ const EditStore = ({ opened, onClose, store }: AddNewStoreModalProps) => {
         });
 
         onClose();
-        // setIsActivateOpen(true);
+        setStore((prev: any) => ({ ...prev, ...payload }));
       },
       onError: (err: any) => {
         console.error("Failed to create store", err);

@@ -86,7 +86,6 @@ const FilledAdvancedPaidTable = () => {
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
-        hidePaging
         tableTitle={
           <div>
             <div className="flex gap-2.5">

@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
   useActivateCategories,
   useDeactivateCategories,
+  useFetchSubCategory,
 } from "../../../../hooks/backendApis/pos/categories";
 import ActivateCategory from "./modals/activateCategories";
 import DeactivateCategory from "./modals/deactivateCategories";
@@ -23,6 +24,12 @@ interface CategoryProductDetailsProps {
   subCategory: {
     id: number;
     name: string;
+    total_products: number;
+    in_stock: number;
+    user: {
+      firstname: string;
+      lastname: string;
+    };
     created_at: string;
     updated_at?: string;
     [key: string]: any;
@@ -38,11 +45,11 @@ const CategoryProductDetails = ({
   const { mutate: deactivateCategory } = useDeactivateCategories(
     subCategory.id
   );
+  const { data, refetch } = useFetchSubCategory(subCategory.id);
   // const isoDate = "2025-05-21T10:00:13.000000Z";
   // const date = new Date(isoDate);
 
- 
-
+  const needed = data?.data?.products || [];
 
   const [tableData, setTableData] = useState([{ status: "Active" }]);
   const [isActivateOpen, setIsActivateOpen] = useState(false);
@@ -101,6 +108,7 @@ const CategoryProductDetails = ({
       }
     );
   };
+  console.log("User Info:", subCategory.user);
 
   return (
     <>
@@ -126,13 +134,12 @@ const CategoryProductDetails = ({
             <div className="flex flex-col">
               <Text fw={"500"}>Product</Text>
               <Text size="lg" c={"black"} fw={"400"}>
-                42
+                {data?.data?.total_products}
               </Text>
             </div>
             <div className="flex flex-col">
               <Text fw={"500"}>Date Created</Text>
               <Text size="lg" c={"black"} fw={"400"}>
-  
                 {new Date(subCategory.created_at)
                   .toLocaleString("en-US", {
                     year: "numeric",
@@ -166,22 +173,23 @@ const CategoryProductDetails = ({
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full md:max-w-6xl">
-            <div className="flex flex-col">
+            {/* <div className="flex flex-col">
               <Text fw={"500"}>Product Brand</Text>
               <Text size="lg" c={"black"} fw={"400"}>
                 Puma
               </Text>
-            </div>
+            </div> */}
             <div className="flex flex-col">
               <Text fw={"500"}>In Stock</Text>
               <Text size="lg" c={"black"} fw={"400"}>
-                110 Items
+                {data?.data?.in_stock}
               </Text>
             </div>
             <div className="flex flex-col">
               <Text fw={"500"}>Created By</Text>
               <Text size="lg" c={"black"} fw={"400"}>
-                Xavier Ayeni
+                {data?.data?.user?.firstname ?? ""}{" "}
+                {data?.data?.user?.lastname ?? ""}
               </Text>
             </div>
             <div className="flex flex-col">

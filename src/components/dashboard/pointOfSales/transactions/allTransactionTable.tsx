@@ -25,7 +25,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   const handleViewClick = (orderID: string, payment_status: string) => {
     console.log("Navigating with orderID:", orderID);
     if (payment_status === "paid") {
-      navigate(ROUTES.viewOrder, { state: { orderID } });
+      navigate(ROUTES. viewTransaction, { state: { orderID } });
     } else if (payment_status === "pending") {
       navigate(ROUTES.viewOrderdraft, { state: { orderID } });
     } else {

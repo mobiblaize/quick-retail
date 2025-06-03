@@ -8,13 +8,17 @@ import { useEffect, useState } from "react";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
 import { ROUTES } from "../../../../constants/routes";
+import Dropdown from "../../../General/dropdown";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
+
 
 const SalesProcessingReport = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { reportData, startDate, endDate } = location.state || {};
   const [data, setData] = useState<TableRowData[]>([]);
-  const { mutateAsync: exportReport, isPending: isExporting } =
+  const { mutateAsync: exportReport,  } =
     useGenerateReportExport();
 
   function formatDate(dateStr: string | Date | undefined) {
@@ -40,23 +44,100 @@ const SalesProcessingReport = () => {
     }
   }, [reportData]);
 
-  const handleViewClick = (fullId: string, paymentStatus: string) => {
-    console.log("Navigating to:", fullId, paymentStatus);
+  // const handleViewClick = (fullId: string, paymentStatus: string) => {
+  //   console.log("Navigating to:", fullId, paymentStatus);
 
-    if (paymentStatus === "Completed") {
-      navigate(ROUTES.viewOrder, { state: { orderID: fullId } });
-    } else if (paymentStatus === "Draft") {
-      navigate(ROUTES.viewOrderdraft, { state: { orderID: fullId } });
-    } else {
-      console.warn("Unhandled order status:", paymentStatus);
+  //   if (paymentStatus === "Completed") {
+  //     navigate(ROUTES.viewOrder, { state: { orderID: fullId } });
+  //   } else if (paymentStatus === "Draft") {
+  //     navigate(ROUTES.viewOrderdraft, { state: { orderID: fullId } });
+  //   } else {
+  //     console.warn("Unhandled order status:", paymentStatus);
+  //   }
+  // };
+
+  const exportOptions = [
+    { label: "CSV", value: "csv" },
+    { label: "PDF", value: "pdf" },
+  ];
+
+  function shortenText(text: string, maxLength = 10) {
+    if (!text) return "";
+    return text.length > maxLength ? text.slice(0, maxLength - 3) + "..." : text;
+  }
+  
+
+const exportToPDF = (data: TableRowData[], startDate: string, endDate: string) => {
+  const doc = new jsPDF();
+
+  doc.text("Sales Processing Report", 14, 10);
+  doc.text(`Date: ${startDate} - ${endDate}`, 14, 18);
+
+  autoTable(doc, {
+    startY: 25,
+    head: [["Order ID", "Time Stamp", "Customer", "Total Amount", "Status"]],
+    //@ts-ignore
+    body: data.map((row) => [
+        //@ts-ignore
+      shortenText(row.id, 12),   
+      row.timeStamp,
+      row.customer,
+      row.Amount,
+      row.paymentStatus,
+    ]),
+    styles: {
+      fontSize: 9,
+      cellPadding: 3,
+    },
+    headStyles: {
+      fillColor: [241, 103, 34],
+      textColor: [255, 255, 255],
+    },
+    theme: "grid",
+    margin: { top: 25 },
+  });
+
+  doc.save("sales-report.pdf");
+};
+
+
+  const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | null>(null);
+
+  // const handleExport = async (format: "csv" | "pdf") => {
+  //   const exportPayload = {
+  //     start_date: startDate || "",
+  //     end_date: endDate || "",
+  //     report_type: "sales",
+  //     export_format: format,
+  //   };
+
+  //   try {
+  //     const blob = await exportReport(exportPayload);
+  //     const url = window.URL.createObjectURL(new Blob([blob]));
+  //     const link = document.createElement("a");
+  //     link.href = url;
+  //     link.setAttribute("download", `sales-report.${format}`);
+  //     document.body.appendChild(link);
+  //     link.click();
+  //     link.remove();
+  //     window.URL.revokeObjectURL(url);
+  //   } catch (error) {
+  //     console.error("Failed to export report:", error);
+  //   }
+  // };
+
+  const handleExport = async (format: "csv" | "pdf") => {
+    if (format === "pdf") {
+      exportToPDF(data, formatDate(startDate), formatDate(endDate));
+      return;
     }
-  };
-  const handleExport = async () => {
+  
+    // For CSV, keep your current flow
     const exportPayload = {
       start_date: startDate || "",
       end_date: endDate || "",
-      report_type: "sales", 
-      export_format: "csv",
+      report_type: "sales",
+      export_format: format,
     };
   
     try {
@@ -64,7 +145,7 @@ const SalesProcessingReport = () => {
       const url = window.URL.createObjectURL(new Blob([blob]));
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", `sales-report.${exportPayload.export_format}`);
+      link.setAttribute("download", `sales-report.${format}`);
       document.body.appendChild(link);
       link.click();
       link.remove();
@@ -153,37 +234,37 @@ const SalesProcessingReport = () => {
         );
       },
     },
-    {
-      header: "",
-      accessorKey: "action",
-      cell: (props) => {
-        const { fullId, paymentStatus } = props.row.original;
+    // {
+    //   header: "",
+    //   accessorKey: "action",
+    //   cell: (props) => {
+    //     const { fullId, paymentStatus } = props.row.original;
 
-        console.log("Rendering action cell with:", { fullId, paymentStatus }); // log on render
+    //     console.log("Rendering action cell with:", { fullId, paymentStatus }); // log on render
 
-        return (
-          <Text
-            fw={700}
-            c="customPrimary.10"
-            className="cursor-pointer"
-            onClick={() => {
-              console.log("Clicked View Order with:", {
-                fullId,
-                paymentStatus,
-              }); // log on click
-              if (typeof fullId === "string") {
-                // @ts-ignore
-                handleViewClick(fullId, paymentStatus);
-              } else {
-                console.warn("Invalid ID for navigation:", fullId);
-              }
-            }}
-          >
-            View Order
-          </Text>
-        );
-      },
-    },
+    //     return (
+    //       <Text
+    //         fw={700}
+    //         c="customPrimary.10"
+    //         className="cursor-pointer"
+    //         onClick={() => {
+    //           console.log("Clicked View Order with:", {
+    //             fullId,
+    //             paymentStatus,
+    //           }); // log on click
+    //           if (typeof fullId === "string") {
+    //             // @ts-ignore
+    //             handleViewClick(fullId, paymentStatus);
+    //           } else {
+    //             console.warn("Invalid ID for navigation:", fullId);
+    //           }
+    //         }}
+    //       >
+    //         View Order
+    //       </Text>
+    //     );
+    //   },
+    // },
   ];
 
   return (
@@ -206,20 +287,25 @@ const SalesProcessingReport = () => {
                 </Text>
               </div>
             </div>
-
             <div className="flex items-center gap-3">
               <div className="border border-[#E0E0E0] rounded-lg px-4 py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
                 {formatDate(startDate)} – {formatDate(endDate)}
               </div>
-              <button
-                onClick={handleExport}
-                disabled={isExporting}
-                className={`bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700 text-white px-4 py-2 rounded-md font-medium text-sm ${
-                  isExporting ? "opacity-50 cursor-not-allowed" : ""
-                }`}
-              >
-                {isExporting ? "Exporting..." : "Export"}
-              </button>
+
+              <Dropdown
+                //@ts-ignore
+                options={exportOptions}
+                value={exportFormat}
+                onChange={(val) => {
+                  setExportFormat(val as "csv" | "pdf");
+                  handleExport(val as "csv" | "pdf");
+                }}
+                placeholder="Export"
+                inputSizeClass="py-1"
+                bgColorClass="bg-[#F16722]"
+                textColorClass="text-white"
+                required={false}
+              />
             </div>
           </div>
         }
