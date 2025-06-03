@@ -1,5 +1,4 @@
 // Footer.tsx
-import { Button } from "@mantine/core";
 import { Facebook, Twitter, Instagram } from "lucide-react";
 
 const Footer = () => {
