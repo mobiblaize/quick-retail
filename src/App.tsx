@@ -2,7 +2,7 @@ import {
   BrowserRouter as Router,
   Route,
   Routes,
-  Navigate,
+  // Navigate,
 } from "react-router-dom";
 import DashboardLayout from "./layout/layout";
 import ProductManagementPage from "./pages/pointOfSales/productManagement/productManagementPage";
@@ -187,7 +187,6 @@ import ViewJournalPage from "./pages/financialManagement/Accounting/viewJournal"
 import ImportJournalTablePage from "./pages/financialManagement/Accounting/importJournal";
 import ReviewJournalPage from "./pages/financialManagement/Accounting/reviewJournal";
 
-
 import Login from "./pages/auth/Login";
 import IsAuthenticated from "./layout/hoc/IsAuthenticated";
 import AddCardPage from "./pages/financialManagement/Banking/addCard";
@@ -199,13 +198,18 @@ import ViewProduct from "./pages/pointOfSales/productManagement/viewProduct";
 import EditProduct from "./pages/pointOfSales/productManagement/editProduct";
 import ViewOrderDraftPage from "./pages/pointOfSales/saleProcessing/viewOrderDraftPage";
 import PreviewSalesDownloadPage from "./pages/pointOfSales/saleProcessing/previewDownload";
+import DefaultLayout from "./layout/defaultLayout";
+import Home from "./pages/landingPages/home";
 
 export default function App() {
   return (
     <Router>
       <Routes>
+        <Route path={ROUTES.HOME} element={<DefaultLayout />}>
+          <Route index element={<Home />} />
+        </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/" element={<Navigate to="/dashboard" replace />} />
+        {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
 
         <Route
           path="/dashboard"
@@ -225,13 +229,22 @@ export default function App() {
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
           <Route path={ROUTES.editProduct} element={<EditProduct />} />
-          <Route path={ROUTES.inventoryDetails} element={<InventoryDetailsPage />} />
+          <Route
+            path={ROUTES.inventoryDetails}
+            element={<InventoryDetailsPage />}
+          />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
-          <Route path={ROUTES.viewOrderdraft} element={<ViewOrderDraftPage/>} />
-          <Route path={ROUTES.previewdownload} element={<PreviewSalesDownloadPage/>} />
+          <Route
+            path={ROUTES.viewOrderdraft}
+            element={<ViewOrderDraftPage />}
+          />
+          <Route
+            path={ROUTES.previewdownload}
+            element={<PreviewSalesDownloadPage />}
+          />
           {/* <Route   path= '/dashboard/sales/preview-download/:orderId' element={<PreviewSalesDownloadPage/>} /> */}
           <Route
             path={ROUTES.inventory}
@@ -768,23 +781,47 @@ export default function App() {
             <Route path="make-payment" element={<MakePaymentPage />} />
             <Route path="payment-receipt" element={<PaymentReceiptPage />} />
           </Route>
-          <Route path={ROUTES.allPayment} element={<AllPaymentOverviewPage/>} />
-          <Route path={ROUTES.viewAllPayment} element={< ViewPaymentPage/>} />
-          <Route path={ROUTES.accountChart} element={< AccountChartPage/>} />
-          <Route path={ROUTES.viewAccountChart} element={< ViewAccountChartPage/>} />
-          <Route path={ROUTES.createAccountChart} element={< CreateAccountChartPage/>} />
-          <Route path={ROUTES.importAccountChart} element={< ImportAccountChartTable/>} />
-          <Route path={ROUTES.importChart} element={< ImportAccountChartPage/>} />
-          <Route path={ROUTES.editAccountChart} element={< EditAccountChartPage/>} />
-          <Route path={ROUTES.allJournal} element={< AllJournalPage/>} />
-          <Route path={ROUTES.createJournal} element={< CreateJournalPage/>} />
-          <Route path={ROUTES.viewJournal} element={< ViewJournalPage/>} />
-          <Route path={ROUTES.importJournal} element={< ImportJournalTablePage/>} />
-          <Route path={ROUTES.reviewJournal} element={< ReviewJournalPage/>} />
-          <Route path={ROUTES.addCard} element={< AddCardPage/>} />
-          <Route path={ROUTES.allTransaction} element={<AllTransactionPage/>} />
-          <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage/>} />
-          <Route path={ROUTES.addBank} element={< AddBankPage/>} />
+          <Route
+            path={ROUTES.allPayment}
+            element={<AllPaymentOverviewPage />}
+          />
+          <Route path={ROUTES.viewAllPayment} element={<ViewPaymentPage />} />
+          <Route path={ROUTES.accountChart} element={<AccountChartPage />} />
+          <Route
+            path={ROUTES.viewAccountChart}
+            element={<ViewAccountChartPage />}
+          />
+          <Route
+            path={ROUTES.createAccountChart}
+            element={<CreateAccountChartPage />}
+          />
+          <Route
+            path={ROUTES.importAccountChart}
+            element={<ImportAccountChartTable />}
+          />
+          <Route
+            path={ROUTES.importChart}
+            element={<ImportAccountChartPage />}
+          />
+          <Route
+            path={ROUTES.editAccountChart}
+            element={<EditAccountChartPage />}
+          />
+          <Route path={ROUTES.allJournal} element={<AllJournalPage />} />
+          <Route path={ROUTES.createJournal} element={<CreateJournalPage />} />
+          <Route path={ROUTES.viewJournal} element={<ViewJournalPage />} />
+          <Route
+            path={ROUTES.importJournal}
+            element={<ImportJournalTablePage />}
+          />
+          <Route path={ROUTES.reviewJournal} element={<ReviewJournalPage />} />
+          <Route path={ROUTES.addCard} element={<AddCardPage />} />
+          <Route
+            path={ROUTES.allTransaction}
+            element={<AllTransactionPage />}
+          />
+          <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage />} />
+          <Route path={ROUTES.addBank} element={<AddBankPage />} />
         </Route>
       </Routes>
     </Router>

@@ -151,3 +151,14 @@ export const useFetchPostData = (url: string, options: any) => {
 
   return { ...query, isLoading: query.isFetching || query.isLoading };
 };
+
+export const useLazyGetData = (url: string) => {
+  return useMutation({
+    mutationFn: async (params?: Record<string, any>) => {
+      const response = await axiosInstance.get(baseUrl + url, {
+        params,
+      });
+      return response.data;
+    },
+  });
+};

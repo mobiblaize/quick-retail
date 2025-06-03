@@ -20,7 +20,7 @@ interface CategoriesProductTableProps {
 const CategoriesProductTable = ({
   subCategoryId,
 }: CategoriesProductTableProps) => {
-  const { data, refetch } = useFetchSubCategory(subCategoryId);
+  const { data, refetch } = useFetchSubCategory(subCategoryId, false);
 
   const products = data?.data?.products || [];
   useEffect(() => {
