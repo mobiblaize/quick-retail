@@ -165,10 +165,10 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
               <Text fw={500}>Tax ({fees.tax_rate}%)</Text>
               <Text>₦{fees.tax}</Text>
             </div>
-            {/* <div className="flex items-center justify-between">
-              <Text fw={500}>Service Fee <CircleHelp size={16} className="inline-block ml-2 text-[#2E90FA]" /></Text>
+            <div className="flex items-center justify-between whitespace-nowrap">
+              <Text fw={500}>Service Fee ({fees.service_fee})</Text>
               <Text>₦{fees.service_fee}</Text>
-            </div> */}
+            </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
               <Text>₦{fees.discount}</Text>

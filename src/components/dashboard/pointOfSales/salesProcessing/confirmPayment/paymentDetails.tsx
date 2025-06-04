@@ -63,7 +63,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
           {method === "cash" && (
             <>
               <FormInput
-                type="text"
+                type="number"
                 label="Amount Collected"
                 placeholder="Enter the amount customer paid in cash"
                 className="w-full"

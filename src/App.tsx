@@ -204,6 +204,7 @@ import ViewPendingTransactionPage from "./pages/pointOfSales/transaction/ViewPen
 import PreviewTransactionDownloadPage from "./pages/pointOfSales/transaction/PreviewDownload2";
 import DefaultLayout from "./layout/defaultLayout";
 import Home from "./pages/landingPages/home";
+import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
 
 
 export default function App() {
@@ -233,6 +234,7 @@ export default function App() {
           />
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
+          <Route path={ROUTES.viewStoreProduct} element={<ViewStoreProduct />} />
           <Route path={ROUTES.editProduct} element={<EditProduct />} />
           <Route path={ROUTES.inventoryDetails} element={<InventoryDetailsPage />} />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />

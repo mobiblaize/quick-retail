@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
 import { Input } from "@mantine/core";
 import FormInput from "../../../General/formInput";
-import FormSelect from "../../../General/select";
 import { Plus } from "lucide-react";
 import useStore from "./addProductStore";
 import { useFetchAllLocations } from "../../../../hooks/backendApis/pos/products";
+import Dropdown from "../../../General/dropdown";
 
 interface Variant {
   id: number;
@@ -19,7 +19,6 @@ interface Variant {
   location_id?: string;
 }
 
-
 const initialVariants: Variant[] = [
   {
     id: 1,
@@ -33,16 +32,17 @@ const initialVariants: Variant[] = [
 ];
 
 export default function InventoryForm() {
- const { data, } = useFetchAllLocations();
+  const { data } = useFetchAllLocations();
 
-const locations = Array.isArray(data?.data?.stores?.data) ? data.data.stores.data : [];
+  const locations = Array.isArray(data?.data?.stores) ? data.data.stores : [];
 
-const locationOptions = locations.map((loc: { name: string; id: string }) => ({
-  label: loc?.name,
-  value: loc?.id,
-}));
 
-    
+  const locationOptions = locations.map(
+    (loc: { name: string; id: string }) => ({
+      label: loc?.name,
+      value: loc?.id,
+    })
+  );
 
   const initialFormState = {
     id: "",
@@ -59,8 +59,13 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
   const { form_data, updateForm } = useStore();
 
   useEffect(() => {
-    updateForm({ ...form_data, location_id:formData.location_id, variations: [formData] });
-  }, [formData]);
+    updateForm({
+      ...form_data,
+      location_id: formData.location_id,
+      quantity: formData.quantity,
+      variations: variants, 
+    });
+  }, [formData, variants]);
 
   // const handleChange = (id: number, field: VariantField, value: string) => {
   //   setVariants((prev) =>
@@ -77,12 +82,21 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
       image: "/product.jpg",
       name: `New Variant ${newId}`,
       quantity: "",
-      cost_price: "30000",
-      selling_price: "30000",
+      cost_price: "0",
+      selling_price: "0",
       reorder_level: "",
     };
     setVariants((prev) => [...prev, newVariant]);
   };
+
+  const handleVariantChange = (id: number, field: keyof Variant, value: string) => {
+    setVariants((prev) =>
+      prev.map((variant) =>
+        variant.id === id ? { ...variant, [field]: value } : variant
+      )
+    );
+  };
+  
 
   return (
     <div className="p-4 bg-white rounded-xl shadow-sm">
@@ -93,23 +107,24 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
           type="text"
           label="Total Stock Quantity"
           placeholder="Enter stock quantity"
-          paddingY={"0.7rem"}
+          paddingY={"0.3rem"}
           value={formData.quantity}
           onChange={(e: any) =>
             setFormData({ ...formData, quantity: e.target.value })
           }
         />
 
-        <FormSelect
+        <Dropdown
           label="Location"
-          placeholder="Select location"
           options={locationOptions}
-          name="category"
-          paddingY="4"
           value={formData.location_id}
-          onChange={(e: any) =>
-            setFormData({ ...formData, location_id: e.target.value })
+          onChange={
+            // @ts-ignore
+            (val) => setFormData({ ...formData, location_id: val }) // assuming val is number
           }
+          required
+          textColorClass="text-gray-800"
+          placeholder="Select location"
         />
       </div>
 
@@ -117,6 +132,7 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
         <div className="min-w-[1000px]">
           <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
             {/* <div className="col-span-2">Product Variant</div> */}
+            <div>Quantity</div>
             <div>Cost Price</div>
             <div>Selling Price</div>
             <div>Reorder Level</div>
@@ -145,7 +161,7 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
                   setFormData({ ...formData, quantity: e.target.value })
                 }
               /> */}
-              <Input
+              {/* <Input
                 placeholder="Enter cost price"
                 value={formData.cost_price}
                 onChange={(e: any) =>
@@ -180,7 +196,51 @@ const locationOptions = locations.map((loc: { name: string; id: string }) => ({
                 onChange={(e: any) =>
                   setFormData({ ...formData, color: e.target.value })
                 }
-              />
+              /> */}
+                <Input
+      placeholder="Quantity"
+      value={variant.quantity || ""}
+      onChange={(e) =>
+        handleVariantChange(variant.id, "quantity", e.target.value)
+      }
+    />
+              <Input
+  placeholder="Enter cost price"
+  value={variant.cost_price}
+  onChange={(e: any) =>
+    handleVariantChange(variant.id, "cost_price", e.target.value)
+  }
+/>
+<Input
+  placeholder="Enter selling price"
+  value={variant.selling_price}
+  onChange={(e: any) =>
+    handleVariantChange(variant.id, "selling_price", e.target.value)
+  }
+/>
+<Input
+  type="number"
+  placeholder="Reorder Level"
+  value={variant.reorder_level}
+  onChange={(e: any) =>
+    handleVariantChange(variant.id, "reorder_level", e.target.value)
+  }
+/>
+<Input
+  placeholder="Size"
+  value={variant.size || ""}
+  onChange={(e: any) =>
+    handleVariantChange(variant.id, "size", e.target.value)
+  }
+/>
+<Input
+  placeholder="Color"
+  value={variant.color || ""}
+  onChange={(e: any) =>
+    handleVariantChange(variant.id, "color", e.target.value)
+  }
+/>
+
             </div>
           ))}
         </div>

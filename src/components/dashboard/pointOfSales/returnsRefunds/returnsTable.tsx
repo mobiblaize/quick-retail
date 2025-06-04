@@ -7,6 +7,7 @@ import imageSrc from "../../../../assets/images/productIMG.png";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllreturns } from "../../../../hooks/backendApis/pos/returns";
+import { shortenTransactionId, truncateText } from "../../../../utils/helpers";
 
 const ReturnsTable = () => {
   const { data, isLoading } = useFetchAllreturns();
@@ -23,11 +24,30 @@ const ReturnsTable = () => {
     customer: item.customer?.customer_name || "N/A",
     returnedReason: item.return_reason || "N/A",
     complaintStatus: item.status === "approved" ? "Resolved" : "Pending",
-     returnId: item.returnID || "N/A",
+    returnId: item.returnID || "N/A",
   }));
-  
 
   const columns: ColumnDef<TableRowData>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
     {
       header: "Name",
       accessorKey: "name",
@@ -41,11 +61,14 @@ const ReturnsTable = () => {
           />
           <div className="flex flex-col">
             <Text fw={500} c="black">
-              {row.original.name}
+              {truncateText(String(row.original.name ?? ""))}
             </Text>
             <Text fw={500} className="text-sm">
               ID:{" "}
-              <span className="text-[#F16722]">{row.original.productCode}</span>
+              <span className="text-[#F16722]">
+                     {/* @ts-ignore  */}
+                {shortenTransactionId(row.original.productCode)}
+              </span>
             </Text>
           </div>
         </div>
@@ -61,7 +84,14 @@ const ReturnsTable = () => {
     {
       header: "Order ID",
       accessorKey: "orderId",
+      cell: ({ row }) => (
+        <Text c="textSecondary.7">
+          {/* @ts-ignore  */}
+          {shortenTransactionId(row.original.orderId)}
+        </Text>
+      ),
     },
+
     {
       header: "Customer",
       accessorKey: "customer",
@@ -98,12 +128,13 @@ const ReturnsTable = () => {
       header: "",
       accessorKey: "action",
       cell: ({ row }: any) => (
-        <Link 
-           to={ROUTES.viewReturns} 
-           state={{ 
-             orderId: row.original.orderId,
-             returnId: row.original.returnId
-           }}>
+        <Link
+          to={ROUTES.viewReturns}
+          state={{
+            orderId: row.original.orderId,
+            returnId: row.original.returnId,
+          }}
+        >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View Order
           </Text>

@@ -3,11 +3,11 @@ import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
 import { useDeleteData, useFetchPostData, useGetData, usePostData, usePutData,  } from "../../useApis";
 
   const defaultPayload = {
-    search: "palm city mall",
+    search: "",
     sort_by: "",
     per_date: "",
     limit: "",
-    paginate: true,
+    paginate: false,
   };
 
   const defaultsPayload = {
@@ -18,7 +18,7 @@ import { useDeleteData, useFetchPostData, useGetData, usePostData, usePutData,  
     price_from: "",
     price_to: "",
     date_range: "",
-    per_page: "",
+    per_page: "500",
     paginate: true,
   };
   const defaultSearchPayload = {
