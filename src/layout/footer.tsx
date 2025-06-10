@@ -1,35 +1,50 @@
-// Footer.tsx
-import { Facebook, Twitter, Instagram } from "lucide-react";
+import logo from "../assets/images/logo.png";
+import { Facebook, Linkedin, X } from "../assets/svg";
 
 const Footer = () => {
   return (
-    <footer className="bg-white border-t border-gray-200 text-gray-600 py-10 text-sm">
-      <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
-        <div>
-          <h4 className="text-lg font-semibold mb-4">Benta ERP</h4>
-          <p>© {new Date().getFullYear()} Benta ERP. All rights reserved.</p>
+    <main className="text-white bg-inherit pt-7">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 sm:gap-0">
+          <img src={logo} alt="logo" className="h-8 sm:h-auto" />
+          <p className="text-[#000000] tracking-widest text-base sm:text-lg font-clash-medium">
+            Follow Us
+          </p>
         </div>
 
-        <div>
-          <h4 className="text-lg font-semibold mb-4">Company</h4>
-          <ul className="space-y-2">
-            <li><a href="#" className="hover:text-orange-500">Home</a></li>
-            <li><a href="#" className="hover:text-orange-500">Products</a></li>
-            <li><a href="#" className="hover:text-orange-500">Pricing</a></li>
-            <li><a href="#" className="hover:text-orange-500">Contact</a></li>
-          </ul>
-        </div>
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 sm:mt-1 gap-4 sm:gap-0">
+          <div className="flex flex-wrap font-sans text-[#98A2B3] gap-3 sm:gap-3.5 text-sm sm:text-base">
+            <span className="hover:text-white transition-colors cursor-pointer">
+              Company
+            </span>
+            <span className="hover:text-white transition-colors cursor-pointer">
+              Pricing
+            </span>
+            <span className="hover:text-white transition-colors cursor-pointer">
+              Policy
+            </span>
+          </div>
 
-        <div>
-          <h4 className="text-lg font-semibold mb-4">Follow Us</h4>
-          <div className="flex gap-4">
-            <a href="#" aria-label="Facebook"><Facebook className="w-5 h-5 hover:text-orange-500" /></a>
-            <a href="#" aria-label="Twitter"><Twitter className="w-5 h-5 hover:text-orange-500" /></a>
-            <a href="#" aria-label="Instagram"><Instagram className="w-5 h-5 hover:text-orange-500" /></a>
+          <div className="flex gap-3 sm:gap-3.5">
+            <div className="hover:opacity-80 transition-opacity cursor-pointer">
+              <X />
+            </div>
+            <div className="hover:opacity-80 transition-opacity cursor-pointer">
+              <Linkedin />
+            </div>
+            <div className="hover:opacity-80 transition-opacity cursor-pointer">
+              <Facebook />
+            </div>
           </div>
         </div>
+
+        <div className="py-4 sm:py-5 border-t border-[#98A2B3] my-6 sm:my-9">
+          <small className="text-[#98A2B3] text-center font-sans flex items-center justify-center text-xs sm:text-sm">
+            © {new Date().getFullYear()} UK. All rights reserved.
+          </small>
+        </div>
       </div>
-    </footer>
+    </main>
   );
 };
 
