@@ -280,13 +280,22 @@ const TanTable: FC<TanTableProps> = ({
 )}
 
 
-      {!hidePaging && tableData.length > pageSize && (
+      {/* {!hidePaging && tableData.length > pageSize && (
         <Pagination
           setPageIndex={setPageIndex}
           buttons={paginationButtons}
           table={table}
         />
-      )}
+      )} */}
+
+      {!hidePaging && table.getPageCount() > 1 && (
+  <Pagination
+    setPageIndex={setPageIndex}
+    buttons={paginationButtons}
+    table={table}
+  />
+)}
+
     </Box>
   );
 };

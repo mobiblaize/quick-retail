@@ -9,8 +9,8 @@ export const useCreateSales = () => {
     const defaultPayload = {
       search: "",
       sort_by: "",
-      per_page: "",
-      paginate: true,
+      per_page: "500",
+      paginate: false,
     };
   
     const payload = { ...defaultPayload, ...customPayload };
@@ -33,7 +33,7 @@ export const useCreateSales = () => {
     const defaultPayload = {
       search: "",
       sort_by: "",
-      per_page: "",
+      per_page: "500",
       paginate: true,
     };
   

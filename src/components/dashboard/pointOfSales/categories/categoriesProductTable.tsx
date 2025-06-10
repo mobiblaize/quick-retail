@@ -22,6 +22,8 @@ const CategoriesProductTable = ({
   const { data, refetch } = useFetchSubCategory(subCategoryId, false);
 
   const products = data?.data?.products || [];
+
+
   useEffect(() => {
     if (!products) return;
 
@@ -41,7 +43,7 @@ const CategoriesProductTable = ({
         id: variation.variationID,
         productID: product.productID,
         product_name: variation.name || product.product_name || "Unnamed",
-        total_quantity: variation.total_quantity || 0,
+        total_quantity: variation.quantity_available || 0, 
         status: variation.is_active === 1 ? "Active" : "Inactive",
         updated_at: product.updated_at || "",
       }));
@@ -54,6 +56,7 @@ const CategoriesProductTable = ({
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
+  console.log(tableData);
 
   const handleToggle = (index: number) => {
     const updatedData = [...tableData];

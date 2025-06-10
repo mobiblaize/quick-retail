@@ -9,9 +9,9 @@ const InformationTab: React.FC<InformationTabProps> = ({ orderData }) => {
   if (!orderData) return null;
 
   const customer = orderData.customer || {};
-  const addressParts = (customer.customer_address || "").split(",").map(s => s.trim());
+  // const addressParts = (customer.customer_address || "").split(",").map(s => s.trim());
 
-  const state = addressParts.length > 0 ? addressParts[addressParts.length - 1] : "";
+  // const state = addressParts.length > 0 ? addressParts[addressParts.length - 1] : "";
   // const state = addressParts.length > 1 ? addressParts[addressParts.length - 2] : "";
   return (
     <main className="w-full h-auto rounded-lg bg-white px-6 py-8">
@@ -49,18 +49,18 @@ const InformationTab: React.FC<InformationTabProps> = ({ orderData }) => {
         </div>
 
         <div className="grid grid-cols-1 gap-4 md:grid-cols-4 md:gap-x-8 mt-4 md:mt-6 w-full md:max-w-6xl">
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <Text fw={"500"}>State</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {state}
             </Text>
-          </div>
-          <div className="flex flex-col">
+          </div> */}
+          {/* <div className="flex flex-col">
             <Text fw={"500"}>Country</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             Nigeria
             </Text>
-          </div>
+          </div> */}
           {/* <div className="flex flex-col">
             <Text fw={"500"}>Amount</Text>
             <Text size="lg" c={"black"} fw={"400"}>

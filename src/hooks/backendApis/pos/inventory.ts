@@ -6,7 +6,7 @@ const defaultPayload = {
   start_date: "",
   end_date: "",
   date_range: "",
-  per_page: "",
+  per_page: "500",
   paginate: true,
 };
 

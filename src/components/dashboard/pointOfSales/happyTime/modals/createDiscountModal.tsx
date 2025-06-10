@@ -217,13 +217,13 @@ const CreateDiscountModal = ({
                     type="text"
                     placeholder="Enter amount"
                     className="w-full p-3 border border-gray-300 rounded"
-                    value={discountValue}
-                    onChange={(e) => {
-                      const val = e.target.value;
-                      if (!isNaN(Number(val))) {
-                        setDiscountValue(val);
-                      }
-                    }}
+                    // value={discountValue}
+                    // onChange={(e) => {
+                    //   const val = e.target.value;
+                    //   if (!isNaN(Number(val))) {
+                    //     setDiscountValue(val);
+                    //   }
+                    // }}
                   />
                 </div>
                 <div>

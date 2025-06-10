@@ -14,7 +14,7 @@ export const useFetchAllCategories = (customPayload?: Partial<typeof defaultPayl
     start_date: "",
     end_date: "",
     date_range: "",
-    per_page: "",
+    per_page: "500",
     paginate: true,
   };
 
@@ -30,7 +30,7 @@ export const useFetchAllSubCategories = (customPayload?: Partial<typeof defaultP
     start_date: "",
     end_date: "",
     date_range: "",
-    per_page: "",
+    per_page: "500",
     paginate: true,
   };
 
@@ -50,6 +50,7 @@ export const useUpdateSubCategories   = (subCategoryId: number | string) => {
 export const useCreateSubCategory = () => {
   return usePostData("pos/subcategory/add-subcategory");
 };
+
 
 export const useFetchSubCatOfCat = (categoryId: number | string,  enabled: boolean = true) => {
   return useGetData(`pos/category/${categoryId}/subcategories`, {}, enabled);

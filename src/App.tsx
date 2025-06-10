@@ -205,6 +205,8 @@ import DefaultLayout from "./layout/defaultLayout";
 import Home from "./pages/landingPages/home";
 import Contact from "./pages/landingPages/contact";
 import Pricing from "./pages/landingPages/pricing";
+import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
+
 
 export default function App() {
   return (
@@ -239,6 +241,7 @@ export default function App() {
           />
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
+          <Route path={ROUTES.viewStoreProduct} element={<ViewStoreProduct />} />
           <Route path={ROUTES.editProduct} element={<EditProduct />} />
           <Route
             path={ROUTES.inventoryDetails}

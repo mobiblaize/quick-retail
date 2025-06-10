@@ -9,8 +9,15 @@ import { useFetchAnalysisOverview } from "../../../hooks/backendApis/pos/dashboa
 
 const OverviewBox = () => {
   const [isMobile, setIsMobile] = useState(false);
+  const [dateRange, setDateRange] = useState<{
+    start_date: string;
+    end_date: string;
+  }>({
+    start_date: "",
+    end_date: "",
+  });
 
-  const { data, isLoading, error } = useFetchAnalysisOverview();
+  const { data, isLoading, error } = useFetchAnalysisOverview(dateRange);
 
   const checkScreenSize = () => {
     setIsMobile(window.innerWidth < 640);
@@ -22,17 +29,24 @@ const OverviewBox = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
+  const currencySymbol = "₦";
+
+  const formattedValue = data?.data?.totalRevenue 
+    ? `${currencySymbol}${Number(
+      data?.data?.totalRevenue 
+      ).toLocaleString()}`
+    : `${currencySymbol}0`;
   const cards = [
     {
       title: "Total Revenue Generated",
-      value: data?.data?.totalRevenue || "₦0.00",
+      // value: data?.data?.totalRevenue || "₦0.00",
+      value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",
       textColor: "white",
       cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
-      percentageValue: 0, 
+      percentageValue: 0,
       altText: "dollar-sign",
-
     },
     {
       title: "Total Orders",
@@ -48,11 +62,11 @@ const OverviewBox = () => {
       title: "Total Customers",
       value: data?.data?.totalCustomers?.toString() || "0",
       icon: customer,
-    iconColor: "#E17036",
-    cardBgColor: "#F4F3FF",
-    percentageValue: 0,
-    borderColor: "#98A2B3",
-    altText: "customer-icon",
+      iconColor: "#E17036",
+      cardBgColor: "#F4F3FF",
+      percentageValue: 0,
+      borderColor: "#98A2B3",
+      altText: "customer-icon",
     },
   ];
 
@@ -76,6 +90,12 @@ const OverviewBox = () => {
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly="sm"
+            onDateFilterChange={({ startDate, endDate }) =>
+              setDateRange({
+                start_date: startDate.toISOString().split("T")[0],
+                end_date: endDate.toISOString().split("T")[0],
+              })
+            }
           />
         </Group>
       </header>
@@ -91,7 +111,9 @@ const OverviewBox = () => {
               key={index}
               title={card.title}
               value={card.value}
-              icon={<img src={card.icon} alt={card.title} className="w-6 h-6" />}
+              icon={
+                <img src={card.icon} alt={card.title} className="w-6 h-6" />
+              }
               iconColor={card.iconColor}
               textColor={card.textColor}
               cardBgColor={card.cardBgColor}

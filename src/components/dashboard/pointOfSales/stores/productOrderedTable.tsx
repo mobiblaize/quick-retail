@@ -1,5 +1,4 @@
 import TanTable from "../../../General/table";
-import { productOrdered } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
@@ -170,7 +169,7 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
         const variationID = row.original.variationID;
         return (
           <Link
-            to={ROUTES.aboutProduct}
+            to={ROUTES.viewStoreProduct}
             state={{ variationID }}  
           >
             <Text fw={600} c="customPrimary.10" className="cursor-pointer">
@@ -197,7 +196,7 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
               Products Ordered
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{productOrdered.length}</Text>
+              <Text c="customPrimary.10">{transformedProducts.length}</Text>
             </div>
           </div>
         }

@@ -179,14 +179,16 @@ useEffect(() => {
   }, 0);
   
   const tax = subtotal * 0.075;
+  const service_fee = 1000
   
   const paymentItems = [
     { label: `Subtotal (${paymentDetails.items.length} items)`, amount: formatCurrency(subtotal) },
     { label: "Discount", amount: "-" },
     { label: "Tax (7.5% VAT)", amount: formatCurrency(tax) },
+    { label: "Service (1000)", amount: formatCurrency(service_fee) },
   ];
   
-  const totalAmount = subtotal + tax;
+  const totalAmount = subtotal + tax + service_fee;
   const total = formatCurrency(totalAmount);
   
 

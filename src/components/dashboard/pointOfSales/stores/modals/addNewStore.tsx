@@ -21,8 +21,8 @@ const AddNewStore = ({
   // const [isActivateStoreOpen, setIsActivateOpen] = useState(false);
 
   const [name, setName] = useState("");
-  const [gla, setGla] = useState("");
-  const [gsa, setGsa] = useState("");
+  // const [gla, setGla] = useState("");
+  // const [gsa, setGsa] = useState("");
   const [staff_no, setstaff_no] = useState();
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
@@ -34,8 +34,8 @@ const AddNewStore = ({
   const handleSubmit = () => {
     const payload = {
       name,
-      gla,
-      gsa,
+      // gla,
+      // gsa,
       staff_no,
       country,
       state: stateVal,
@@ -109,7 +109,7 @@ const AddNewStore = ({
           </div>
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
+            {/* <div>
               <label className="flex items-center gap-2 mb-1.5">
                 GLA <CircleHelp color="#98A2B3" size={20} />
               </label>
@@ -121,8 +121,8 @@ const AddNewStore = ({
                   setGla(e.target.value)
                 }
               />
-            </div>
-            <div>
+            </div> */}
+            {/* <div>
               <label className="flex items-center gap-2 mb-1.5">
                 GSA <CircleHelp color="#98A2B3" size={20} />
               </label>
@@ -134,7 +134,7 @@ const AddNewStore = ({
                   setGsa(e.target.value)
                 }
               />
-            </div>
+            </div> */}
             {/* <div>
               <label className="flex items-center gap-2 mb-1.5">
                 Store ID <CircleHelp color="#98A2B3" size={20} />

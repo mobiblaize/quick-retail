@@ -7,11 +7,12 @@ const ReportDateSelect = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const { reportType, reportLabel } = location.state || {};
-  const [, setLoading] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const generateReport = useGenerateReport();
- 
+  const [loading, setLoading] = useState(false);
+
+
   const handleGenerate = async () => {
     if (!reportType || !startDate || !endDate) return;
 
@@ -33,7 +34,6 @@ const ReportDateSelect = () => {
           endDate,
         },
       });
-
     } catch (error) {
       console.error("Report generation failed", error);
     } finally {
@@ -99,15 +99,15 @@ const ReportDateSelect = () => {
           </div>
 
           <button
-            disabled={!startDate || !endDate}
+            disabled={loading || !startDate || !endDate}
             onClick={handleGenerate}
             className={`w-full py-2 sm:py-3 rounded-md font-semibold text-white transition-all cursor-pointer ${
-              startDate && endDate
+              startDate && endDate && !loading
                 ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
                 : "bg-orange-200 cursor-not-allowed"
             }`}
           >
-            Generate Report
+            {loading ? "Generating..." : "Generate Report"}
           </button>
         </div>
       </div>

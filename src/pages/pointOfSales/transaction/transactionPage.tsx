@@ -4,6 +4,7 @@ import TransactionOverview from "../../../components/dashboard/pointOfSales/tran
 import AllTransactionTable from "../../../components/dashboard/pointOfSales/transactions/allTransactionTable";
 import { useFetchAllTransactions } from "../../../hooks/backendApis/pos/transactions";
 
+
 const TransactionPage = () => {
 
   const { data, isLoading, } = useFetchAllTransactions()
@@ -17,9 +18,7 @@ const TransactionPage = () => {
       </div>
     </div>,
   ];
-  console.log('isLoading:', isLoading);
-console.log('data?.data:', data?.data);
-console.log('show empty message:', !isLoading && (!data?.data || data.data.length === 0));
+
 
   return (
     <PageContainer subHeaders={subHeaders}>

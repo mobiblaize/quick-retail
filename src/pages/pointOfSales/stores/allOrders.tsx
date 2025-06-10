@@ -12,11 +12,11 @@ const AllOrders: React.FC<AllOrdersProps> = ({ store }) => {
   const start = new Date();
   start.setMonth(start.getMonth() - 1);
 
-  const end = new Date();
+  // const end = new Date();
 
   const { data: statData } = useSingleStoreStat(store?.locationID, {
-    start_date: start.toISOString().split("T")[0],
-    end_date: end.toISOString().split("T")[0],
+    // start_date: start.toISOString().split("T")[0],
+    // end_date: end.toISOString().split("T")[0],
   });
 
 
@@ -26,8 +26,8 @@ const AllOrders: React.FC<AllOrdersProps> = ({ store }) => {
       <StoreDetails store={store} />
       <StoreOrderTable
         locationId={store?.locationID}
-        startDate={start.toISOString().split("T")[0]}
-        endDate={end.toISOString().split("T")[0]}
+        // startDate={start.toISOString().split("T")[0]}
+        // endDate={end.toISOString().split("T")[0]}
       />
     </main>
   );

@@ -1,3 +1,5 @@
+// components/DateFilterMenu.tsx
+
 import { useState, useEffect } from "react";
 import { Menu, Button, ButtonProps, Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
@@ -31,8 +33,7 @@ function DateFilterMenu({
   style,
   showIconOnly = "md",
 }: DateFilterMenuProps) {
-  const [selectedFilter, setSelectedFilter] =
-    useState<FilterOption>(defaultFilter);
+  const [selectedFilter, setSelectedFilter] = useState<FilterOption>(defaultFilter);
   const [isIconOnly, setIsIconOnly] = useState(false);
 
   useEffect(() => {
@@ -94,10 +95,9 @@ function DateFilterMenu({
   const getResponsiveClasses = (isForLargeScreen = false) => {
     if (typeof showIconOnly !== "string") return "";
 
-    if (isForLargeScreen) {
-      return `hidden ${showIconOnly}:block`;
-    }
-    return `block ${showIconOnly}:hidden`;
+    return isForLargeScreen
+      ? `hidden ${showIconOnly}:block`
+      : `block ${showIconOnly}:hidden`;
   };
 
   const buttonClasses = `${className || ""} transition-all`;
@@ -112,12 +112,12 @@ function DateFilterMenu({
       styles={(theme) => ({
         dropdown: {
           backgroundColor: "white",
-          border: `1px solid ${theme.colors.textSecondary[1] || "#D0D5DD"}`,
+          border: `1px solid ${theme.colors.textSecondary?.[1] ?? "#D0D5DD"}`,
           padding: theme.spacing.lg,
           boxShadow: "0px 2px 8px rgba(0, 0, 0, 0.05)",
         },
         item: {
-          color: theme.colors.textSecondary[7],
+          color: theme.colors.textSecondary?.[7],
           fontWeight: 400,
           "&:hover": {
             backgroundColor: theme.colors.gray[0],
@@ -153,7 +153,7 @@ function DateFilterMenu({
           }
           styles={(theme) => ({
             root: {
-              border: `1px solid ${theme.colors.textSecondary[1] || "#D0D5DD"}`,
+              border: `1px solid ${theme.colors.textSecondary?.[1] ?? "#D0D5DD"}`,
               color: "#101928",
               backgroundColor: "white",
               borderRadius: "8px",

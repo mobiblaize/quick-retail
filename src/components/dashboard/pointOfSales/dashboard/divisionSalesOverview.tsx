@@ -5,11 +5,18 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchCategorySales,  } from "../../../../hooks/backendApis/pos/dashboard";
 import DivisionSalePie from "../../../General/DivisionPie";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
+import { useState } from "react";
 
 
 const DivisionSalesOverview = () => {
-
-  const { data, } = useFetchCategorySales();
+  const [dateRange, setDateRange] = useState<{
+    start_date: string;
+    end_date: string;
+  }>({
+    start_date: "",
+    end_date: "",
+  });
+  const { data, } = useFetchCategorySales(dateRange);
   const { data: productData, isLoading: loadingProducts, error: productError } = useFetchAllProducts();
 
   const stats = data?.data;
@@ -42,6 +49,12 @@ const topProducts = [...products]
                 buttonVariant="subtle"
                 buttonSize="md"
                 showIconOnly="sm"
+                onDateFilterChange={({ startDate, endDate }) =>
+                setDateRange({
+                  start_date: startDate.toISOString().split("T")[0],
+                  end_date: endDate.toISOString().split("T")[0],
+                })
+              }
               />
             </Group>
           </div>

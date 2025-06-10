@@ -9,18 +9,18 @@ import { useStoreOrders } from "../../../../hooks/backendApis/pos/storeManagemen
 
 interface StoreOrderTableProps {
   locationId: string;
-  startDate: string;
-  endDate: string;
+  // startDate: string;
+  // endDate: string;
 }
 
 const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
   locationId,
-  startDate,
-  endDate,
+  // startDate,
+  // endDate,
 }) => {
   const { data, isLoading } = useStoreOrders(locationId, {
-    start_date: startDate,
-    end_date: endDate,
+    // start_date: startDate,
+    // end_date: endDate,
   });
 
   const orders = data?.data?.orders?.data ?? [];
