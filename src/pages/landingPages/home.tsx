@@ -1,6 +1,8 @@
 import { useEffect } from "react";
-import HeroSection from "../../components/landingComponent/heroSection/hero";
-
+import HeroSection from "../../components/landingComponent/home/hero";
+import ManageFinncial from "../../components/landingComponent/home/manageFinncial";
+import PointOfSales from "../../components/landingComponent/home/pointOfSales";
+import Consolidate from "../../components/landingComponent/home/consolidate";
 
 const Home = () => {
   useEffect(() => {
@@ -9,6 +11,9 @@ const Home = () => {
   return (
     <main>
       <HeroSection />
+      <ManageFinncial />
+      <PointOfSales />
+      <Consolidate />
     </main>
   );
 };
