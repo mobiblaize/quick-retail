@@ -7,6 +7,7 @@ import { ROUTES } from "../../../constants/routes";
 import { useState } from "react";
 import CreateDiscountModal from "../../../components/dashboard/pointOfSales/happyTime/modals/createDiscountModal";
 import { useFetchAllDiscount } from "../../../hooks/backendApis/pos/discount";
+import AnalysisOverview1 from "../../../components/dashboard/pointOfSales/happyTime/overView2";
 
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
@@ -45,7 +46,7 @@ const HappyTimePage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      {/* <DiscountTable /> */}
+      <AnalysisOverview1 />
       <DiscountTable 
         data={data}
         isLoading={isLoading}

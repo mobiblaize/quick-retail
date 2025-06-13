@@ -1,7 +1,8 @@
-import { Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
 import dollar from "../../../../assets/images/dollarSign.png";
 import orders from "../../../../assets/images/orders.png";
+import DateFilterMenu from "../../../General/filterMenu";
 
 interface TransactionData {
   total_transaction_value: string;
@@ -12,10 +13,12 @@ interface TransactionData {
 interface TransactionOverviewProps {
   data: TransactionData;
   isLoading: boolean;
+  setDateRange: (range: { startDate: string; endDate: string }) => void;
 }
 
 const TransactionOverview: React.FC<TransactionOverviewProps> = ({
   data,
+  setDateRange,
   // isLoading,
 }) => {
   const currencySymbol = "₦";
@@ -58,14 +61,16 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
           </Text>
           <Text size="sm">An overview of transaction of sales</Text>
         </div>
-        {/* <Group>
+        <Group>
           <DateFilterMenu
-            defaultFilter="This Month"
-            buttonVariant="subtle"
-            buttonSize="md"
-            showIconOnly="sm"
+             onDateFilterChange={({ startDate, endDate }) =>
+             setDateRange({
+               startDate: startDate?.toISOString().split("T")[0] || "",
+               endDate: endDate?.toISOString().split("T")[0] || "",
+             })
+           }
           />
-        </Group> */}
+        </Group>
       </header>
       <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
         {cards.map((card, index) => (

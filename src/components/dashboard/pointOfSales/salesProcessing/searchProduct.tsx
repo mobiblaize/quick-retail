@@ -3,7 +3,8 @@ import { Divider, Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 import { SqrCode } from "../../../../assets/svg";
-import { useSearchAllProducts } from "../../../../hooks/backendApis/pos/products";
+import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
+
 
 interface SelectedItemPayload {
   variationId: string;
@@ -31,7 +32,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const { data, isLoading } = useSearchAllProducts(
+  const { data, isLoading } = useSearchLocationProducts(
     { search: debouncedSearch },
     !!debouncedSearch
   );

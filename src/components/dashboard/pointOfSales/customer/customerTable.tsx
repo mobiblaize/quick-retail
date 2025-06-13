@@ -1,16 +1,20 @@
 import TanTable from "../../../General/table";
-import { productTableData } from "../../../../utils/mockData";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
 
-const CustomerTable = () => {
-  const { data } = useFetchAllCustomers();
-  const customers = Array.isArray(data?.data?.customers?.data)
-    ? data.data.customers.data
-    : [];
+interface CategoriesTableProps {
+  customers: Array<any>;
+  isLoading: boolean;
+}
+
+const CustomerTable = ({ customers, isLoading }: CategoriesTableProps) => {
+  // const { data } = useFetchAllCustomers();
+  // const customers = Array.isArray(data?.data?.customers?.data)
+  //   ? data.data.customers.data
+  //   : [];
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -118,7 +122,7 @@ const CustomerTable = () => {
               All Customers
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{productTableData.length}</Text>
+              <Text c="customPrimary.10">{mappedCustomers.length}</Text>
             </div>
           </div>
         }

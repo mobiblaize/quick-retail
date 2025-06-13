@@ -108,3 +108,13 @@ export const defaultDashboardAnalysis = {
   end_date: "",
 
 }
+
+
+export type SalesPayload = {
+  search?: string;
+  sort_by?: string;
+  per_page?: string;
+  paginate?: boolean;
+  start_date?: string;
+  end_date?: string;
+};
