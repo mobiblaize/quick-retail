@@ -1,5 +1,4 @@
-import { Group, Text } from "@mantine/core";
-import DateFilterMenu from "../../../General/filterMenu";
+import { Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
 import { useFetchDiscountStat } from "../../../../hooks/backendApis/pos/discount";
 import house from "../../../../assets/images/house.png";
@@ -53,14 +52,14 @@ const AnalysisOverview = () => {
           </Text>
           <Text size="sm">An overview sales made</Text>
         </div>
-        <Group>
+        {/* <Group>
           <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly
           />
-        </Group>
+        </Group> */}
       </header>
       <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
       {statsData.map((card, index) => (

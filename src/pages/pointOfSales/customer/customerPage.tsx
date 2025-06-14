@@ -4,6 +4,7 @@ import CustomerTable from "../../../components/dashboard/pointOfSales/customer/c
 import CreateNewCustomer from "../../../components/dashboard/pointOfSales/customer/createNewCustomer";
 import { useState } from "react";
 import { useFetchAllCustomers } from "../../../hooks/backendApis/pos/customersManagement";
+import { Plus } from "lucide-react";
 
 const CustomerPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
@@ -23,6 +24,7 @@ const CustomerPage = () => {
           onClick={() => setIsCreateCategoryOpen(true)}
         >
           New Customer
+          <Plus size={24} />
         </Button>
       </div>
     </div>,

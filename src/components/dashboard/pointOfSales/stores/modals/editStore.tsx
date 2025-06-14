@@ -21,9 +21,10 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
   // const [ setIsActivateOpen] = useState(false);
   console.log("stores", store);
   const [name, setName] = useState("");
-  const [gla, setGla] = useState("");
-  const [gsa, setGsa] = useState("");
-  const [storeID, setStoreID] = useState("");
+  // const [gla, setGla] = useState("");
+  // const [gsa, setGsa] = useState("");
+  const [staff_no, setstaff_no] = useState("");
+  // const [storeID, setStoreID] = useState("");
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
@@ -36,10 +37,11 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
   useEffect(() => {
     if (store) {
       setName(store.name || "");
-      setGla(store.gla || "");
-      setGsa(store.gsa || "");
-      setStoreID(store.storeID || "");
+      // setGla(store.gla || "");
+      // setGsa(store.gsa || "");
+      // setStoreID(store.storeID || "");
       setCountry(store.country || "");
+      setstaff_no(store.staff_no || "");
       setStateVal(store.state || "");
       setLga(store.lga || "");
       setAddress(store.address || "");
@@ -53,9 +55,9 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
   const handleSubmit = () => {
     const payload = {
       name,
-      gla,
-      gsa,
-      storeID,
+      // gla,
+      // gsa,
+      // storeID,
       country,
       state: stateVal,
       lga,
@@ -124,48 +126,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
               }
             />
           </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                GLA <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={gla}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setGla(e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                GSA <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={gsa}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setGsa(e.target.value)
-                }
-              />
-            </div>
-            <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                Store ID <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={storeID}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setStoreID(e.target.value)
-                }
-              />
-            </div>
-            <div>
+          <div>
               <label className="flex items-center gap-2 mb-1.5">
                 Country <CircleHelp color="#98A2B3" size={20} />
               </label>
@@ -178,6 +139,47 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 }
               />
             </div>
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            {/* <div>
+              <label className="flex items-center gap-2 mb-1.5">
+                GLA <CircleHelp color="#98A2B3" size={20} />
+              </label>
+              <FormInput
+                type="text"
+                paddingY="6px"
+                value={gla}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setGla(e.target.value)
+                }
+              />
+            </div> */}
+            {/* <div>
+              <label className="flex items-center gap-2 mb-1.5">
+                GSA <CircleHelp color="#98A2B3" size={20} />
+              </label>
+              <FormInput
+                type="text"
+                paddingY="6px"
+                value={gsa}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setGsa(e.target.value)
+                }
+              />
+            </div> */}
+            {/* <div>
+              <label className="flex items-center gap-2 mb-1.5">
+                Store ID <CircleHelp color="#98A2B3" size={20} />
+              </label>
+              <FormInput
+                type="text"
+                paddingY="6px"
+                value={storeID}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                  setStoreID(e.target.value)
+                }
+              />
+            </div> */}
+           
             <div>
               <label className="flex items-center gap-2 mb-1.5">
                 State <CircleHelp color="#98A2B3" size={20} />
@@ -215,6 +217,21 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 onChange={(e: { target: { value: SetStateAction<string> } }) =>
                   setAddress(e.target.value)
                 }
+              />
+            </div>
+            <div className="col-span-1 sm:col-span-2">
+              <label className="flex items-center gap-2 mb-1.5">
+                Number of Staff <CircleHelp color="#98A2B3" size={20} />
+              </label>
+              <FormInput
+                type="number"
+                paddingY="6px"
+                value={staff_no}
+                onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                 //@ts-ignore
+                setstaff_no(e.target.value)
+              }
+              
               />
             </div>
             {/* <div>

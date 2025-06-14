@@ -8,9 +8,22 @@ import LogComplaints from "../../../components/dashboard/pointOfSales/returnsRef
 import { useFetchAllreturns } from "../../../hooks/backendApis/pos/returns";
 
 const ReturnsPage = () => {
-  const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-  const { data } = useFetchAllreturns();
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: "",
+    endDate: "",
+  });
 
+  const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
+  const { data, isLoading  } = useFetchAllreturns({
+    start_date: dateRange.startDate,
+    end_date: dateRange.endDate,
+  });
+  const returns = Array.isArray(data?.data?.returns?.data)
+  ? data.data.returns.data
+  : [];
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
@@ -38,8 +51,9 @@ const ReturnsPage = () => {
           resolved_complaints: data?.data?.resolved_complaints ?? 0,
           declined_complaints: data?.data?.declined_complaints ?? 0,
         }}
+        setDateRange={setDateRange}
       />
-      <ReturnsTable />
+      <ReturnsTable returns ={returns}      isLoading={isLoading}/>
       <LogComplaints
         opened={isLogComplaintsOpen}
         onClose={() => setIsLogComplaintsOpen(false)}

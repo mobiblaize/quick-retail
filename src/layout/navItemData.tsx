@@ -59,17 +59,18 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveSalesIcon,
   },
   {
-    label: "Categories",
-    href: ROUTES.category,
-    inactiveIcon: InActiveCategory,
-    activeIcon: ActiveCategory,
-  },
-  {
     label: "Inventory",
     href: ROUTES.inventory,
     inactiveIcon: InActiveInventory,
     activeIcon: ActiveInventory,
   },
+  {
+    label: "Categories",
+    href: ROUTES.category,
+    inactiveIcon: InActiveCategory,
+    activeIcon: ActiveCategory,
+  },
+  
   {
     label: "Returns and Refunds",
     href: ROUTES.returns,

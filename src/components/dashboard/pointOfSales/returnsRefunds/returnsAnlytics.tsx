@@ -4,6 +4,7 @@ import AnalyticsCard from "../../../General/card";
 import orangeBox from "../../../../assets/images/orangeBox.png";
 import goldBox from "../../../../assets/images/goldBox.png";
 import greenBox from "../../../../assets/images/greenBox.png";
+import redBox from "../../../../assets/images/redBox.png";
 
 interface ReturnsAnalyticsData {
   totalReturns: number;
@@ -14,9 +15,10 @@ interface ReturnsAnalyticsData {
 
 interface ReturnsAnalyticsProps {
   data: ReturnsAnalyticsData;
+  setDateRange: (range: { startDate: string; endDate: string }) => void;
 }
 
-const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data }) => {
+const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data ,   setDateRange,}) => {
   const cards = [
     {
       title: "Total Returned Product",
@@ -48,6 +50,16 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data }) => {
       borderColor: "#98A2B3",
       altText: "resolved-complaints",
     },
+    {
+      title: "Complaints Resolved",
+      value: data?.declined_complaints ?? 0,
+      icon: redBox,
+      iconColor: "#E17036",
+      cardBgColor: "#FBEAE9",
+      // percentageValue: 0,
+      borderColor: "#98A2B3",
+      altText: "resolved-complaints",
+    },
   ];
 
   return (
@@ -60,11 +72,13 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data }) => {
           <Text size="sm">An overview of returns and refunds</Text>
         </div>
         <Group>
-          <DateFilterMenu
-            defaultFilter="This Month"
-            buttonVariant="subtle"
-            buttonSize="md"
-            showIconOnly="sm"
+        <DateFilterMenu
+            onDateFilterChange={({ startDate, endDate }) =>
+              setDateRange({
+                startDate: startDate?.toISOString().split("T")[0] || "",
+                endDate: endDate?.toISOString().split("T")[0] || "",
+              })
+            }
           />
         </Group>
       </header>
@@ -82,7 +96,7 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data }) => {
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-            percentageValue={card.percentageValue}
+            // percentageValue={card.percentageValue}
             borderColor={card.borderColor}
           />
         ))}

@@ -87,7 +87,7 @@ const CustomerOrdersTable = ({ salesData }: { salesData: any[] }) => {
       header: "Time stamp",
       accessorKey: "date",
       cell: (props) => (
-        <div className="text-gray-600 whitespace-normal break-words max-w-[120px]">
+        <div className="text-gray-600 whitespace-nowrap break-words ">
           {formatDate(props.row.original.date)}
         </div>
       ),

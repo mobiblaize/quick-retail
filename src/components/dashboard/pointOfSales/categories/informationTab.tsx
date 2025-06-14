@@ -41,7 +41,7 @@ const InformationTab: React.FC<InformationTabProps> = ({ orderData }) => {
             </Text>
           </div>
           <div className="flex flex-col">
-            <Text fw={"500"}>Delivery Address</Text>
+            <Text fw={"500"}>Address</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {customer.customer_address}
             </Text>
@@ -67,12 +67,12 @@ const InformationTab: React.FC<InformationTabProps> = ({ orderData }) => {
             {orderData.amount_paid}
             </Text>
           </div> */}
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <Text fw={"500"}>Payment Method</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {orderData.payment_method}
             </Text>
-          </div>
+          </div> */}
         </div>
       </section>
     </main>

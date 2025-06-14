@@ -1,5 +1,4 @@
 import { Button, Text } from "@mantine/core";
-import SearchProduct from "../../../components/dashboard/pointOfSales/updateInventory/searchProduct";
 import PageContainer from "../../../layout/pageContainer";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
@@ -8,11 +7,11 @@ import { useFetchAllLocations } from "../../../hooks/backendApis/pos/products";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import NewInventoryDetails from "./newInventoryDetails";
+import Product from "./product";
 
 const UpdateInventory = () => {
   const { state } = useLocation();
   const inventories = state?.inventories || {};
-  
 
   const activateInventory = useActivateInventory(inventories.variationID);
 
@@ -45,6 +44,7 @@ const UpdateInventory = () => {
   );
 
   const handleActivateInventory = () => {
+    const locationID = inventories?.product?.location?.locationID || "";
     activateInventory.mutate(
       {
         locationID,
@@ -56,8 +56,8 @@ const UpdateInventory = () => {
       {
         onSuccess: () => {
           notifications.show({
-            title: "Success",
-            message: "inventory activated successfully",
+            title: "Trigger Reorder Sent",
+            message: "A reorder request has been sent to procurement. You will be notified when product has been restocked. ",
             color: "green",
           });
           window.scrollTo({ top: 0, behavior: "smooth" });
@@ -92,20 +92,20 @@ const UpdateInventory = () => {
       <div key="1" className="py-2.5">
         <div className="hidden sm:flex gap-8 items-center">
           {backButton}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <Text>Inventory Management</Text>
             <span className="mx-2">/</span>
             <Text c="black" fw={500}>
-              Update Inventory
+            Trigger Reorder
             </Text>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex sm:hidden">{backButton}</div>
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-          Update Inventory
+        Trigger Reorder
         </Text>
       </div>,
     ];
@@ -118,12 +118,13 @@ const UpdateInventory = () => {
           Cancel
         </Button>
         <Button
-          variant="filled-primary"
-          style={{ width: "10rem" }}
-          onClick={handleActivateInventory}
-        >
-          Update
-        </Button>
+  variant="filled-primary"
+  style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600
+  onClick={handleActivateInventory}
+>
+  Trigger reorder
+</Button>
+
       </div>,
     ];
   };
@@ -132,10 +133,10 @@ const UpdateInventory = () => {
       subHeaders={subHeaders()}
       subHeaderButtom={subHeaderButtom()}
     >
-      <SearchProduct
-        onSelect={() => {}}
-        onItemsChange={() => {}}
-      />
+<Product product={inventories} />
+
+
+     
       <NewInventoryDetails
         current_level={current_level}
         setCurrentLevel={setCurrentLevel}

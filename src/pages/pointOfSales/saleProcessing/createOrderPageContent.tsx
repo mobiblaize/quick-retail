@@ -1,7 +1,7 @@
 import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-
+import { useRef } from "react";
 import PageContainer from "../../../layout/pageContainer";
 import { useOrderCreation } from "../../../components/General/orderContext/orderCreationContext";
 
@@ -44,23 +44,44 @@ const CreateOrderPageContent: React.FC = () => {
 const saleData = location.state?.saleData;
 const orderId = location.state?.saleData?.data?.orderID;
 
-
+console.log("✅ Fetched saleData:", saleData);
 
 
 useEffect(() => {
   if (saleData) {
     setPaymentDetails({
-      method: saleData.payment_method || "",
-      amount: saleData.amount_collected || "",
-      customerId: saleData.customerId || null,
-      items: (saleData.items || []).map((item: any) => ({
-        ...item,
+      method: saleData.data.payment_method || "",
+      amount: saleData.data.amount_collected || "",
+      customerId: saleData.data.customer_id || null,
+      items: (saleData.data.items || []).map((item: any) => ({
+        variationId: item.variationId || item.variation_id,
         quantity: item.quantity || 1,
-        price: item.selling_price || 0,
+        selling_price: item.price || item.selling_price || 0,
+        name: item.name,
+        image_path: item.image_path,
+        sku: item.sku,
+        ean: item.ean,
       })),
     });
   }
 }, [saleData]);
+
+
+
+
+const [paymentDetails, setPaymentDetails] = useState<{
+  method: string;
+  amount: string;
+  items: any[];
+  customerId: string | null;
+}>({
+  method: "",
+  amount: "",
+  items: [],
+  customerId: null,
+});
+
+
 
 
 
@@ -78,20 +99,6 @@ useEffect(() => {
   ((status: string) => void) | null
 >(null);
 
-  const [paymentDetails, setPaymentDetails] = useState<{
-    method: string;
-    amount: string;
-    items: any[];
-    customerId: string | null;
-  }>({
-    method: "",
-    amount: "",
-    items: [],
-    customerId: null,
-  });
-
-
-
 
   const createSaleMutation = useCreateSales();
 const updateDraftMutation = useUpdateDraft(orderId);
@@ -101,7 +108,7 @@ const updateDraftMutation = useUpdateDraft(orderId);
       customerId: paymentDetails.customerId,
       payment_method: paymentDetails.method,
       amount_collected: paymentDetails.amount,
-      items: paymentDetails.items.map((item) => ({
+      items: paymentDetails.items.map((item: { variationId: any; quantity: any; selling_price: any; }) => ({
         variationId: item.variationId,
         quantity: Number(item.quantity),
         price: item.selling_price,
@@ -166,7 +173,25 @@ useEffect(() => {
     }));
   };
   
-  
+
+
+// Inside component
+const handleSubmitRef = useRef(handleSubmit);
+
+useEffect(() => {
+  handleSubmitRef.current = handleSubmit;
+}, [paymentDetails]);
+
+useEffect(() => {
+  registerSubmitHandler((status: string) => {
+    if (status === "draft" || status === "completed") {
+      handleSubmitRef.current(status);
+    } else {
+      console.warn(`Invalid status: ${status}`);
+    }
+  });
+}, []); // Register once
+
   const formatCurrency = (amount: number) => {
     if (isNaN(amount)) return "₦ 0";
     return `₦ ${amount.toLocaleString()}`;
@@ -181,18 +206,54 @@ useEffect(() => {
   const tax = subtotal * 0.075;
   const service_fee = 1000
   
-  const paymentItems = [
-    { label: `Subtotal (${paymentDetails.items.length} items)`, amount: formatCurrency(subtotal) },
-    { label: "Discount", amount: "-" },
-    { label: "Tax (7.5% VAT)", amount: formatCurrency(tax) },
-    { label: "Service (1000)", amount: formatCurrency(service_fee) },
-  ];
+  // const paymentItems = [
+  //   { label: `Subtotal (${paymentDetails.items.length} items)`, amount: formatCurrency(subtotal) },
+  //   { label: "Discount", amount: "-" },
+  //   { label: "Tax (7.5% VAT)", amount: formatCurrency(tax) },
+  //   { label: "Service (1000)", amount: formatCurrency(service_fee) },
+  // ];
   
-  const totalAmount = subtotal + tax + service_fee;
-  const total = formatCurrency(totalAmount);
+  // const totalAmount = subtotal + tax + service_fee;
+  // const total = formatCurrency(totalAmount);
   
 
-  
+  const subtotalFromSaleData = saleData?.data?.fees 
+  ? JSON.parse(saleData.data.fees).sub_total 
+  : subtotal;
+
+const taxFromSaleData = saleData?.data?.fees 
+  ? JSON.parse(saleData.data.fees).tax 
+  : tax;
+
+const serviceFeeFromSaleData = saleData?.data?.fees
+  ? JSON.parse(saleData.data.fees).service_fee
+  : service_fee;
+
+const paymentItems = [
+  {
+    label: `Subtotal (${paymentDetails.items.length} items)`,
+    amount: formatCurrency(subtotalFromSaleData),
+  },
+  {
+    label: "Discount",
+    amount: "-", // or compute discount if you have one
+  },
+  {
+    label: "Tax (7.5% VAT)",
+    amount: formatCurrency(taxFromSaleData),
+  },
+  {
+    label: "Service (1000)",
+    amount: formatCurrency(serviceFeeFromSaleData),
+  },
+];
+
+const totalAmount = saleData?.data?.order_total 
+  ? Number(saleData.data.order_total)
+  : subtotalFromSaleData + taxFromSaleData + serviceFeeFromSaleData;
+
+const total = formatCurrency(totalAmount);
+
   
   const getSubHeaders = () => {
     const backButton = (
@@ -311,6 +372,8 @@ variant="outline-primary"
   
 
   const renderStepContent = () => {
+    console.log("🚀 PaymentDetails passed to PaymentDetails2:", paymentDetails);
+
     switch (currentStep) {
       case OrderCreationStep.SEARCH_PRODUCT:
         return (
@@ -329,7 +392,7 @@ variant="outline-primary"
   updatePaymentDetails={updatePaymentDetails}
   paymentItems={paymentItems}
   total={total}
-
+  orderId={orderId} 
 />
 
           </motion.div>
@@ -351,6 +414,7 @@ variant="outline-primary"
   onPaymentChange={handlePaymentChange}
   items={paymentItems}
   total={total}
+  orderId={orderId} 
 />
 
           </motion.div>
