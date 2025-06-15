@@ -101,11 +101,11 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     setSelectedMethod(method);
   }, [method]);
 
-  // useEffect(() => {
-  //   console.log("localAmount changed:", localAmount);
-  //   console.log("selectedMethod:", selectedMethod);
-  //   console.log("total:", total);
-  // }, [localAmount, selectedMethod, total]);
+  useEffect(() => {
+    console.log("localAmount changed:", localAmount);
+    console.log("selectedMethod:", selectedMethod);
+    console.log("total:", total);
+  }, [localAmount, selectedMethod, total]);
   
 
   return (

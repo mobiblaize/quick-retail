@@ -47,8 +47,6 @@ const ProductTable = () => {
     }
   };
 
-  console.log("Product Data:", data);
-
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
     : [];
@@ -77,8 +75,6 @@ const ProductTable = () => {
 
   const handleProductEdit = (product: any) => {
     updateForm(product);
-
-    console.log("Editing product:", product);
   };
 
   const columns: ColumnDef<TableRowData>[] = [

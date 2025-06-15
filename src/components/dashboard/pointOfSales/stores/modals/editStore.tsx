@@ -1,11 +1,10 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { SetStateAction, useEffect, useState } from "react";
-import storeIcon from "../../../../../assets/images/newStore.png";
 import { CircleHelp } from "lucide-react";
-// import ActivateStore from "./activateStore";
 import { useEditStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
+import { formatDate } from "../../../../../utils/helpers";
 
 interface AddNewStoreModalProps {
   opened: boolean;
@@ -15,31 +14,22 @@ interface AddNewStoreModalProps {
 }
 
 const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps) => {
-  // const dayjs = require('dayjs');
-  // dayjs.extend(customParseFormat);
   const [isEnabled, setIsEnabled] = useState(false);
-  // const [ setIsActivateOpen] = useState(false);
   console.log("stores", store);
   const [name, setName] = useState("");
-  // const [gla, setGla] = useState("");
-  // const [gsa, setGsa] = useState("");
   const [staff_no, setstaff_no] = useState("");
-  // const [storeID, setStoreID] = useState("");
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
   const [address, setAddress] = useState("");
   const storeIdForEdit = store?.locationID || "";
-  //   const { mutate: createStore, isPending } = useCreateStore();
   const { mutate: editStore, isPending } = useEditStore(storeIdForEdit);
   const [, setCreatedAt] = useState("");
 
   useEffect(() => {
     if (store) {
       setName(store.name || "");
-      // setGla(store.gla || "");
-      // setGsa(store.gsa || "");
-      // setStoreID(store.storeID || "");
+
       setCountry(store.country || "");
       setstaff_no(store.staff_no || "");
       setStateVal(store.state || "");
@@ -96,15 +86,11 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
         onClose={onClose}
         title={
           <div>
-            <img src={storeIcon} alt="store-icon" className="mb-2" />
             <Text size="1.5rem" c="black" fw={700}>
               Edit Store
             </Text>
-            <Text mt="5">Input store information below.</Text>
+            <Text mt="5">Edit store details below.</Text>
 
-            {/* <div className="bg-[#FFF4ED] text-black mt-3 p-2 rounded text-sm font-medium w-full">
-            Date Created: {formattedDate}
-            </div> */}
           </div>
         }
         centered
@@ -112,10 +98,24 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
         radius={10}
         padding="xl"
       >
+         <div className="w-full bg-[#FFF4ED] text-black mt-3 p-4 rounded text-sm font-medium flex flex-col sm:flex-row justify-between gap-4">
+    <div className="flex flex-col">
+
+      <p className="text-gray-700">      Date Created:</p>
+      <span>{formatDate(store.created_at)}</span>
+    </div>
+    <div className="flex flex-col">
+      <p className="text-gray-700">Total Staff</p>
+      <p>{store.staff_no}</p>
+    </div>
+  </div>
         <div className="flex flex-col space-y-6">
-          <div className="col-span-2">
+         
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+       
+            <div className="">
             <label className="flex items-center gap-2 mb-1.5">
-              Store Name <CircleHelp color="#98A2B3" size={20} />
+              Store Name 
             </label>
             <FormInput
               type="text"
@@ -128,7 +128,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
           </div>
           <div>
               <label className="flex items-center gap-2 mb-1.5">
-                Country <CircleHelp color="#98A2B3" size={20} />
+                Country 
               </label>
               <FormInput
                 type="text"
@@ -139,50 +139,9 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 }
               />
             </div>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                GLA <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={gla}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setGla(e.target.value)
-                }
-              />
-            </div> */}
-            {/* <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                GSA <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={gsa}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setGsa(e.target.value)
-                }
-              />
-            </div> */}
-            {/* <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                Store ID <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={storeID}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setStoreID(e.target.value)
-                }
-              />
-            </div> */}
-           
             <div>
               <label className="flex items-center gap-2 mb-1.5">
-                State <CircleHelp color="#98A2B3" size={20} />
+                State 
               </label>
               <FormInput
                 type="text"
@@ -195,7 +154,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
             </div>
             <div>
               <label className="flex items-center gap-2 mb-1.5">
-                LGA <CircleHelp color="#98A2B3" size={20} />
+                Region/LGA 
               </label>
               <FormInput
                 type="text"
@@ -208,7 +167,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
             </div>
             <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
-                Address <CircleHelp color="#98A2B3" size={20} />
+                Address 
               </label>
               <FormInput
                 type="text"
@@ -221,7 +180,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
             </div>
             <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
-                Number of Staff <CircleHelp color="#98A2B3" size={20} />
+                Number of Staff 
               </label>
               <FormInput
                 type="number"
@@ -252,7 +211,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
             <Button
               variant="outline-primary"
               onClick={onClose}
-              style={{ border: "1px solid #D0D5DD", color: "#344054" }}
+              style={{ border: "1px solid #F16722", color: "#F16722" }}
               className="order-2 sm:order-1"
             >
               Cancel
@@ -263,7 +222,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
               onClick={handleSubmit}
               className="order-1 sm:order-2"
             >
-              Submit
+           Save Changes
             </Button>
           </div>
         </div>

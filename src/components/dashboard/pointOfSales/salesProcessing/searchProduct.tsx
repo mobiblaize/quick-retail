@@ -231,7 +231,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                    /* @ts-ignore */
                 ? `custom-${item.name}`
                      /* @ts-ignore */
-                : item.variationID;
+                : item.variationId;
                      /* @ts-ignore */
               const quantity = item.quantity ?? 0; // default quantity 1
                    /* @ts-ignore */

@@ -81,11 +81,10 @@ const AddNewStore = ({
         onClose={onClose}
         title={
           <div>
-            <img src={storeIcon} alt="store-icon" className="mb-2" />
             <Text size="1.5rem" c="black" fw={700}>
-              Add New Store
+ New Store
             </Text>
-            <Text mt="5">Input store information below.</Text>
+            <Text mt="5">Fill the details below to create a new store.</Text>
           </div>
         }
         centered
@@ -94,9 +93,13 @@ const AddNewStore = ({
         padding="xl"
       >
         <div className="flex flex-col space-y-6">
-          <div className="col-span-2">
-            <label className="flex items-center gap-2 mb-1.5">
-              Store Name <CircleHelp color="#98A2B3" size={20} />
+         
+
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+           
+          <div className="">
+            <label className=" items-center gap-2 mb-1.5">
+              Store Name 
             </label>
             <FormInput
               type="text"
@@ -106,50 +109,24 @@ const AddNewStore = ({
                 setName(e.target.value)
               }
             />
-          </div>
-
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            {/* <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                GLA <CircleHelp color="#98A2B3" size={20} />
+                     </div>
+               <div className="">
+              <label className=" items-center gap-2 mb-1.5">
+                Country
               </label>
               <FormInput
                 type="text"
                 paddingY="6px"
-                value={gla}
+                value={country}
                 onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setGla(e.target.value)
+                  setCountry(e.target.value)
                 }
               />
-            </div> */}
-            {/* <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                GSA <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={gsa}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setGsa(e.target.value)
-                }
-              />
-            </div> */}
-            {/* <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                Store ID <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={storeID}
-                onChange={(e: { target: { value: SetStateAction<string>; }; }) => setStoreID(e.target.value)}
-              />
-            </div> */}
-
+            </div>
+ 
             <div>
               <label className="flex items-center gap-2 mb-1.5">
-                State <CircleHelp color="#98A2B3" size={20} />
+                State
               </label>
               <FormInput
                 type="text"
@@ -162,7 +139,7 @@ const AddNewStore = ({
             </div>
             <div>
               <label className="flex items-center gap-2 mb-1.5">
-                LGA <CircleHelp color="#98A2B3" size={20} />
+              Region/LGA 
               </label>
               <FormInput
                 type="text"
@@ -173,22 +150,10 @@ const AddNewStore = ({
                 }
               />
             </div>
+         
             <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
-                Country <CircleHelp color="#98A2B3" size={20} />
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
-                value={country}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setCountry(e.target.value)
-                }
-              />
-            </div>
-            <div className="col-span-1 sm:col-span-2">
-              <label className="flex items-center gap-2 mb-1.5">
-                Address <CircleHelp color="#98A2B3" size={20} />
+                Address 
               </label>
               <FormInput
                 type="text"
@@ -201,7 +166,7 @@ const AddNewStore = ({
             </div>
             <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
-                Number of Staff <CircleHelp color="#98A2B3" size={20} />
+                Number of Staff 
               </label>
               <FormInput
                 type="number"

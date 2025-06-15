@@ -4,6 +4,7 @@ import { useLocation, useNavigate } from "react-router";
 import OrderInformation from "../../../components/dashboard/pointOfSales/stores/orderInformation";
 import ProductOrderedTable from "../../../components/dashboard/pointOfSales/stores/productOrderedTable";
 import InformationTab from "../../../components/dashboard/pointOfSales/categories/informationTab";
+import { PaidDot } from "../../../assets/svg";
 
 const BillingInformation = () => {
   const location = useLocation();
@@ -24,26 +25,18 @@ const BillingInformation = () => {
       </div>
     </div>,
     <div key="2">
-      <div className="flex items-center justify-between">
+      <div className="flex items-center gap-3">
         <Text fw={500} size="xl" c="black">
-          {orderData.location.name}
+          {/* {orderData.location.name} */}
+          View Order
         </Text>
-        <Button
-          variant="filled"
-          style={{
-            backgroundColor: "#E7F6EC",
-            color: "#099137",
-            borderRadius: "0.4rem",
-            height: "auto",
-            padding: "0.9rem 1.5rem",
-            borderColor: "#099137",
-            fontWeight: 600,
-            fontSize: "16px",
-            // width: "100%",
-          }}
-        >
-        {orderData.status}
-        </Button>
+        <p className="bg-[#E7F6EC] text-[#099137] p-1 rounded-lg flex">
+          {" "}
+          <span className="mt-2">
+            <PaidDot />{" "}
+          </span>{" "}
+          {orderData.payment_status}
+        </p>
       </div>
     </div>,
   ];
@@ -51,14 +44,10 @@ const BillingInformation = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       <OrderInformation orderData={orderData} />
-      <InformationTab orderData={orderData} />
+      {/* <InformationTab orderData={orderData} /> */}
       <ProductOrderedTable orderId={orderData?.orderID} />
-
-
-    
     </PageContainer>
   );
-  
 };
 
 export default BillingInformation;

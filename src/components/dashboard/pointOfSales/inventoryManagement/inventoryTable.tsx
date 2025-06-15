@@ -2,12 +2,12 @@ import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Loader, Text } from "@mantine/core";
-import {  PaidDot,  UnpaidDot } from "../../../../assets/svg";
+import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
-import { formatDate } from "../../../../utils/helpers";
+import { formatDate, truncateText } from "../../../../utils/helpers";
 
 const InventoryTable = () => {
   const { data, isLoading } = useFetchAllProducts();
@@ -21,6 +21,7 @@ const InventoryTable = () => {
     sku: product.sku,
     location: product.product?.location?.name ?? "N/A",
     stockLevel: product.quantity_available ?? 0,
+    quantitySupplied: product.quantity_supplied ?? 0,
     date: product.created_at,
     status:
       product.quantity_available === 0
@@ -30,7 +31,7 @@ const InventoryTable = () => {
         : "Available",
     image: product.image_path,
     variationID: product.variationID,
-    ...product, 
+    ...product,
   }));
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -70,7 +71,8 @@ const InventoryTable = () => {
             size={40}
           />
           <Text fw={500} c="black">
-            {props.row.original.name}
+            {/* @ts-ignore  */}
+            {truncateText(String(props.row.original.name))}
           </Text>
         </div>
       ),
@@ -86,6 +88,23 @@ const InventoryTable = () => {
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
+      cell: (props) => {
+        const available = props.row.original.stockLevel;
+        const supplied = props.row.original.quantitySupplied;
+
+        // Fallback in case quantitySupplied is missing
+        const originalQty = supplied || available;
+
+        return (
+          <Text fw={500}>
+            {/* @ts-ignore  */}
+            <span className={available < 10 ? "text-red-600" : "text-black"}>
+              {available}
+            </span>
+            <span className="text-black"> of {originalQty}</span>
+          </Text>
+        );
+      },
     },
     {
       header: "Date",
@@ -97,15 +116,15 @@ const InventoryTable = () => {
         </div>
       ),
     },
-    
 
     {
       header: "Status",
       accessorKey: "status",
       cell: (props) => {
         const status = props.row.original.status;
-        const isActive = typeof status === "string" && status.toLowerCase() === "active";
-    
+        const isActive =
+          typeof status === "string" && status.toLowerCase() === "active";
+
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
@@ -124,24 +143,19 @@ const InventoryTable = () => {
       header: "",
       accessorKey: "action",
       cell: (props) => {
-    
         return (
           <Link
             to={ROUTES.updateInventory}
             state={{ inventories: props.row.original }}
           >
-            <Text
-              fw={700}
-              c="customPrimary.10"
-              className="cursor-pointer"
-            >
+            <Text fw={700} c="customPrimary.10" className="cursor-pointer">
               Reorder
             </Text>
           </Link>
         );
       },
-    }
-    
+    },
+
     //   cell: (props) => (
     //     <Menu shadow="md" width={150} position="bottom-end">
     //       <Menu.Target>
@@ -150,13 +164,13 @@ const InventoryTable = () => {
     //         </Button>
     //       </Menu.Target>
 
-          // <Menu.Dropdown>
-          //   <Link
-          //     to={ROUTES.updateInventory}
-          //     state={{ inventories: props.row.original }}
-          //   >
-          //     <Menu.Item>Update</Menu.Item>
-          //   </Link>
+    // <Menu.Dropdown>
+    //   <Link
+    //     to={ROUTES.updateInventory}
+    //     state={{ inventories: props.row.original }}
+    //   >
+    //     <Menu.Item>Update</Menu.Item>
+    //   </Link>
     //         <Link to={ROUTES.triggerOrder}>
     //           <Menu.Item color="red">Trigger Reorder</Menu.Item>
     //         </Link>

@@ -3,7 +3,9 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
+import { useState } from "react";
+import EditCustomer from "./editCustomer";
+
 
 interface CategoriesTableProps {
   customers: Array<any>;
@@ -11,11 +13,13 @@ interface CategoriesTableProps {
 }
 
 const CustomerTable = ({ customers, isLoading }: CategoriesTableProps) => {
+  const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
+
   // const { data } = useFetchAllCustomers();
   // const customers = Array.isArray(data?.data?.customers?.data)
   //   ? data.data.customers.data
   //   : [];
-
+  const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Name",
@@ -91,6 +95,28 @@ const CustomerTable = ({ customers, isLoading }: CategoriesTableProps) => {
         );
       },
     },
+
+    {
+      header: "",
+      accessorKey: "action",
+      cell: (props) => {
+    
+        return (
+          <Text
+          fw={700}
+          c="customPrimary.10"
+          className="cursor-pointer"
+          onClick={() => {
+            setSelectedCustomer(props.row.original); // set the customer data
+            setIsCreateCategoryOpen(true);
+          }}
+        >
+          Edit
+        </Text>
+        
+        );
+      },
+    },
   ];
   const mappedCustomers: TableRowData[] = customers.map((customer: any) => ({
     name: customer.customer_name,
@@ -127,6 +153,15 @@ const CustomerTable = ({ customers, isLoading }: CategoriesTableProps) => {
           </div>
         }
       />
+     <EditCustomer
+  opened={isCreateCategoryOpen}
+  onClose={() => setIsCreateCategoryOpen(false)}
+  onCreated={() => {
+    setIsCreateCategoryOpen(false);
+  }}
+  customer={selectedCustomer} // pass selected customer data
+/>
+
     </main>
   );
 };
