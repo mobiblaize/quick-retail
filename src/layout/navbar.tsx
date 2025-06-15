@@ -1,50 +1,144 @@
-import { Button, Menu as MantineMenu } from "@mantine/core";
-import { Menu, ChevronDown } from "lucide-react";
-import logo from "../../src/assets/images/logo.png";
-import { Link } from "react-router";
+import { Link, NavLink, useLocation } from "react-router-dom";
+import { Burger, Drawer, Button, Group } from "@mantine/core";
+import { useDisclosure } from "@mantine/hooks";
+import logo from "../assets/images/logo.png";
+import { ROUTES } from "../constants/routes";
 
-const Navbar = () => {
+
+
+const NavBar = () => {
+  const location = useLocation();
+  const [
+    isMobileMenuOpen,
+    { toggle: toggleMobileMenu, close: closeMobileMenu },
+  ] = useDisclosure(false);
+
+  const getLinkClassName = (href: string) => {
+    const isActive =
+      href === ROUTES.HOME
+        ? location.pathname === href
+        : location.pathname === href ||
+          location.pathname.startsWith(href + "/");
+    return `transition-colors tracking-wider hover:text-[#F16722] ${
+      isActive ? "text-[#F16722] font-semibold" : "text-[#5C6C72]"
+    }`;
+  };
+
+  const closeAll = () => {
+    closeMobileMenu();
+  };
 
   return (
-    <header className="w-full py-4 bg-white shadow-sm font-[Clash Display]">
-      <div className="max-w-7xl mx-auto px-4 flex items-center justify-between">
-        <div className="flex items-center gap-2">
-          <Menu className="md:hidden text-gray-800" />
-          <img src={logo} alt="logo" className="object-contain" />
-        </div>
-        <nav className="hidden md:flex gap-6 text-gray-700 font-[400] text-[18px] leading-[100%] tracking-[0.02em] items-center">
-          <a href="#">Home</a>
+    <div className="bg-white font-clash-regular relative shadow-sm">
+      <div className="container max-w-7xl mx-auto px-4 sm:px-6">
+        <div className="flex justify-between items-center h-16 sm:h-20">
+          {/* Logo */}
+          <NavLink to={ROUTES.HOME} onClick={closeAll}>
+            <img src={logo} alt="Logo" className="h-8 sm:h-10" />
+          </NavLink>
 
-          {/* Dropdown for Products */}
-          <MantineMenu shadow="md" width={200} position="bottom">
-            <MantineMenu.Target>
-              <div className="flex items-center gap-1 cursor-pointer hover:text-orange-500">
-                <span>Products</span>
-                <ChevronDown size={16} />
-              </div>
-            </MantineMenu.Target>
-            <MantineMenu.Dropdown>
-              <MantineMenu.Item>POS Software</MantineMenu.Item>
-              <MantineMenu.Item>Inventory</MantineMenu.Item>
-              <MantineMenu.Item>eCommerce</MantineMenu.Item>
-              <MantineMenu.Item>Reports</MantineMenu.Item>
-            </MantineMenu.Dropdown>
-          </MantineMenu>
 
-          <a href="#">Pricing</a>
-          <a href="#">Company</a>
-          <a href="#">Contact</a>
-        </nav>
-        <div key="search-product-buttons" className="flex gap-4 justify-end">
-          <Link to="/login">
-            <Button variant="outline-primary">Log in</Button>
-          </Link>
-          <Button variant="filled-primary">Sign Up</Button>
+          {/* Desktop Buttons */}
+          <div className="hidden md:flex gap-4 items-center">
+            <Link to="/login">
+              <Button
+                variant="outline"
+                color="#F16722"
+                radius="md"
+                size="md"
+                styles={{
+                  root: {
+                    padding: "8px 20px",
+                    fontSize: "14px",
+                    fontFamily: "sans-serif",
+                  },
+                }}
+              >
+                Log In
+              </Button>
+            </Link>
+
+            <NavLink
+              to={ROUTES.SIGNUP}
+              className={getLinkClassName(ROUTES.SIGNUP)}
+              // onClick={closeDropdown}
+            >
+              <Button
+                variant="filled"
+                color="#F16722"
+                radius="md"
+                size="md"
+                styles={{
+                  root: {
+                    padding: "8px 20px",
+                    fontSize: "14px",
+                    fontFamily: "sans-serif",
+                  },
+                }}
+              >
+                Sign Up
+              </Button>
+            </NavLink>
+          </div>
+
+          {/* Mobile Burger */}
+          <div className="md:hidden">
+            <Burger
+              opened={isMobileMenuOpen}
+              onClick={toggleMobileMenu}
+              color="#F16722"
+              size="md"
+              aria-label="Toggle navigation menu"
+            />
+          </div>
         </div>
-        ,
       </div>
-    </header>
+
+      {/* Mobile Drawer */}
+      <Drawer
+        opened={isMobileMenuOpen}
+        onClose={closeAll}
+        position="right"
+        size="xs"
+        withCloseButton={true}
+        closeButtonProps={{ "aria-label": "Close navigation menu" }}
+        styles={{
+          content: { backgroundColor: "#fff" },
+          header: { padding: "16px" },
+        }}
+      >
+        <div className="flex flex-col gap-4 p-4">
+
+          <Group grow className="mt-4">
+            <Button
+              component={Link}
+              to="/login"
+              variant="outline"
+              color="#F16722"
+              radius="md"
+              size="md"
+              styles={{ root: { height: "48px", fontSize: "14px" } }}
+              onClick={closeAll}
+            >
+              Log In
+            </Button>
+            <Button
+              component={Link}
+              to="/signup"
+              variant="filled"
+              color="#F16722"
+              radius="md"
+              size="md"
+              styles={{ root: { height: "48px", fontSize: "14px" } }}
+              onClick={closeAll}
+            >
+              Sign Up
+            </Button>
+          </Group>
+        </div>
+      </Drawer>
+    </div>
   );
 };
 
-export default Navbar;
+export default NavBar;
