@@ -1,6 +1,7 @@
 import { Text } from "@mantine/core";
 import product from "../../../../assets/images/Image.png";
 import { useFetchSaleOrderById } from "../../../../hooks/backendApis/pos/returns";
+import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
 
 interface OrderDetailsProps {
   orderId?: string;
@@ -27,7 +28,7 @@ const OrderDetails = ({ orderId }: OrderDetailsProps) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Order ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {order.orderID || "N/A"}
+              {shortenTransactionId(order.orderID || "N/A")}
             </Text>
           </div>
 
@@ -41,19 +42,27 @@ const OrderDetails = ({ orderId }: OrderDetailsProps) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Date Completed</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {order.date_completed || "N/A"}
+              {formatDate(order.date_completed || "N/A")}
             </Text>
           </div>
 
           <div className="flex flex-col">
+            <Text fw={"500"}>Order Date</Text>
+            <Text size="lg" c={"black"} fw={"400"}>
+              {formatDate(order.created_at || "N/A")}
+            </Text>
+          </div>
+
+         
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full gap-3 md:max-w-6xl">
+        <div className="flex flex-col">
             <Text fw={"500"}>Payment Method</Text>
             <Text size="lg" c={"black"} fw={"400"}>
               {order.payment_method || "N/A"}
             </Text>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full gap-3 md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Order Total</Text>
             <Text size="lg" c={"black"} fw={"400"}>

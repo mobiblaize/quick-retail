@@ -30,7 +30,8 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
               {actualOrder.receipt_no}
             </p>
           </div>
-          <div className="text-right text-xs">
+          <div className="text-right text-md">
+          <p className="text-xl text-left font-medium">{actualOrder.cashier ? `${actualOrder.cashier.firstname} ${actualOrder.cashier.lastname}` : ''}</p>
             <p>{actualOrder.location?.address}</p>
             <p>{actualOrder.location?.email}</p>
             <p>{actualOrder.location?.phone}</p>

@@ -1,6 +1,5 @@
 import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../components/General/formInput";
-import FormSelect from "../../../components/General/select";
 
 
 
@@ -8,18 +7,12 @@ import FormSelect from "../../../components/General/select";
 const NewInventoryDetails = ({
   current_level,
   new_stock_level,
-  new_reorder_level,
   reason_for_update,
-  locationID,
   setCurrentLevel,
   setNewStockLevel,
-  setNewReorderLevel,
   setReasonForUpdate,
-  setLocationID,
-  locationOptions
-}: any) => {
 
-  console.log("location", locationID);
+}: any) => {
   
 
   return (
@@ -38,6 +31,7 @@ const NewInventoryDetails = ({
           paddingY={"0.7rem"}
           value={current_level}
           onChange={(e: any) => setCurrentLevel(Number(e.target.value))}
+          readOnly
         />
 
         <FormInput
@@ -48,24 +42,7 @@ const NewInventoryDetails = ({
           onChange={(e: any) => setNewStockLevel(Number(e.target.value))}
         />
 
-        <FormInput
-          type="number"
-          label="New Reorder Level"
-          placeholder="Enter reorder level"
-          paddingY={"0.7rem"}
-          value={new_reorder_level}
-          onChange={(e: any) => setNewReorderLevel(Number(e.target.value))}
-        />
-
-        <FormSelect
-          options={locationOptions}
-          label="Location"
-          placeholder="Enter Location"
-          optional
-          paddingY="4"
-          value={locationID}
-          onChange={(e: any) => setLocationID(e.target.value)}
-        />
+      
 
         <FormInput
           type="text"

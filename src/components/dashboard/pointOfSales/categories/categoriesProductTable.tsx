@@ -123,14 +123,22 @@ const CategoriesProductTable = ({
     {
       header: "Quantity",
       accessorKey: "quantity",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="black">
-            {props.row.original.total_quantity} left
-          </Text>
-        </div>
-      ),
+      cell: (props) => {
+        const quantity = props.row.original.total_quantity;
+    
+        // @ts-ignore
+        const color = quantity < 10 ? "red" : "blue";
+    
+        return (
+          <div className="flex flex-col">
+            <Text fw={500} c={color}>
+              {quantity} left
+            </Text>
+          </div>
+        );
+      },
     },
+    
 
     {
       header: "Date Modified",

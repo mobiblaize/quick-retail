@@ -1,6 +1,7 @@
 import { Switch, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
+import { shortenTransactionId } from "../../../../utils/helpers";
 
 interface StoreDetailsProps {
   store: {
@@ -12,6 +13,7 @@ interface StoreDetailsProps {
     lga: string;
     address: string;
     is_active: number;
+    staff_no:number;
   };
 }
 
@@ -33,7 +35,7 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Store ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-            {store.storeID}
+            {shortenTransactionId(store.storeID)}
             </Text>
           </div>
           <div className="flex flex-col">
@@ -43,33 +45,33 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
             </Text>
           </div>
           <div className="flex flex-col">
-            <Text fw={"500"}>GLA</Text>
-            <Text size="lg" c={"black"} fw={"400"}>
-            {store.gla} Sqm
-            </Text>
-          </div>
-          <div className="flex flex-col">
-            <Text fw={"500"}>GSA</Text>
-            <Text size="lg" c={"black"} fw={"400"}>
-            {store.gsa} Sqm
-            </Text>
-          </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 gap-x-8 mt-6 w-full md:max-w-6xl">
-          <div className="flex flex-col">
             <Text fw={"500"}>Registered Customers</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              4,232
+              {/* 4,232 */}
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>Total Staff</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              247
+            {store.staff_no} 
+            </Text>
+          </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 space-y-5 md:gap-x-8 md:gap-y-10 w-full md:max-w-6xl">
+        <div className="flex flex-col ">
+            <Text fw={"500"}>Address</Text>
+            <Text
+              size="lg"
+              c={"black"}
+              fw={"400"}
+              className="whitespace-nowrap overflow-hidden text-ellipsis"
+            >
+        {store.address}
             </Text>
           </div>
           <div className="flex flex-col">
+            
             <Text fw={"500"}>State Lagos</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {store.state}
@@ -81,21 +83,8 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
             {store.lga}
             </Text>
           </div>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 max-w-6xl">
-          <div className="flex flex-col col-span-2">
-            <Text fw={"500"}>Address</Text>
-            <Text
-              size="lg"
-              c={"black"}
-              fw={"400"}
-              className="whitespace-nowrap overflow-hidden text-ellipsis"
-            >
-        {store.address}
-            </Text>
-          </div>
-          <div className="flex flex-col col-span-2">
+            
+          <div className="flex flex-col">
             <Text fw={"500"}>Status</Text>
             <div className="flex gap-2">
               <div className="inline-flex items-center px-3 py-1 rounded-full font-medium text-sm bg-[#ECFDF3] text-[#027A48]">
@@ -111,6 +100,10 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
               />
             </div>
           </div>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 max-w-6xl">
+        
         </div>
       </section>
     </main>

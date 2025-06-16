@@ -5,6 +5,7 @@ import TanTable from "../../../General/table";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useStoreOrders } from "../../../../hooks/backendApis/pos/storeManagement";
+import { formatDate } from "../../../../utils/helpers";
 
 
 interface StoreOrderTableProps {
@@ -78,6 +79,16 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
       ),
     },
     {
+      header: "Time Stamp",
+      accessorKey: "created_at",
+      cell: ({ row }) => (
+        <Text className="text-gray-900 text-sm font-medium">
+          {/* {new Date(row.original.created_at).toLocaleDateString()} */}
+          {formatDate(row.original.created_at)}
+        </Text>
+      ),
+    },
+    {
       header: "Customer Information",
       accessorKey: "customer_name",
       cell: ({ row }) => (
@@ -85,9 +96,9 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
           <Text fw={500} c="black">
             {row.original.customer?.customer_name}
           </Text>
-          <Text fw={400} className="text-sm">
+          {/* <Text fw={400} className="text-sm">
             {row.original.customer?.customer_email}
-          </Text>
+          </Text> */}
         </div>
       ),
     },
@@ -100,17 +111,9 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
         </Text>
       ),
     },
+    
     {
-      header: "Date Created",
-      accessorKey: "created_at",
-      cell: ({ row }) => (
-        <Text className="text-gray-900 text-sm font-medium">
-          {new Date(row.original.created_at).toLocaleDateString()}
-        </Text>
-      ),
-    },
-    {
-      header: "Payment Status",
+      header: "Status",
       accessorKey: "payment_status",
       cell: ({ row }) => {
         const status = row.original.payment_status;
@@ -128,25 +131,25 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
         );
       },
     },
-    {
-      header: "Order Status",
-      accessorKey: "status",
-      cell: ({ row }) => {
-        const status = row.original.status;
-        return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "completed"
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
-          >
-            {status === "completed" ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2">{status}</span>
-          </div>
-        );
-      },
-    },
+    // {
+    //   header: "Order Status",
+    //   accessorKey: "status",
+    //   cell: ({ row }) => {
+    //     const status = row.original.status;
+    //     return (
+    //       <div
+    //         className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+    //           status === "completed"
+    //             ? "bg-[#ECFDF3] text-[#027A48]"
+    //             : "bg-[#FFFAEB] text-[#B54708]"
+    //         }`}
+    //       >
+    //         {status === "completed" ? <PaidDot /> : <UnpaidDot />}
+    //         <span className="ml-2">{status}</span>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       header: "",
       accessorKey: "action",
@@ -156,7 +159,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
           state={{ orderData: row.original }}
         >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-            View
+            View Order
           </Text>
         </Link>
       ),

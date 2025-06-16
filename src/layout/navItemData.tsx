@@ -11,8 +11,8 @@ import {
   ActiveCategory,
   InActiveReturns,
   ActiveReturns,
-  InActiveHappyTime,
-  ActiveHappyTime,
+  // InActiveHappyTime,
+  // ActiveHappyTime,
   InActiveCustomer,
   ActiveCustomer,
   InActiveTransaction,
@@ -59,17 +59,18 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveSalesIcon,
   },
   {
-    label: "Categories",
-    href: ROUTES.category,
-    inactiveIcon: InActiveCategory,
-    activeIcon: ActiveCategory,
-  },
-  {
     label: "Inventory",
     href: ROUTES.inventory,
     inactiveIcon: InActiveInventory,
     activeIcon: ActiveInventory,
   },
+  {
+    label: "Categories",
+    href: ROUTES.category,
+    inactiveIcon: InActiveCategory,
+    activeIcon: ActiveCategory,
+  },
+  
   {
     label: "Returns and Refunds",
     href: ROUTES.returns,
@@ -83,16 +84,22 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveCustomer,
   },
   {
-    label: "Happy Time",
+    label: "Discounts",
     href: ROUTES.happyTime,
-    inactiveIcon: InActiveHappyTime,
-    activeIcon: ActiveHappyTime,
-    hasChildren: true,
-    children: [
-      { label: "Discounts", href: `${ROUTES.happyTime}` },
-      // { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
-    ],
+    inactiveIcon: InActiveCustomer,
+    activeIcon: ActiveCustomer,
   },
+  // {
+  //   label: "Happy Time",
+  //   href: ROUTES.happyTime,
+  //   inactiveIcon: InActiveHappyTime,
+  //   activeIcon: ActiveHappyTime,
+  //   hasChildren: true,
+  //   children: [
+  //     { label: "Discounts", href: `${ROUTES.happyTime}` },
+  //     // { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
+  //   ],
+  // },
   {
     label: "Transaction",
     href: ROUTES.transaction,

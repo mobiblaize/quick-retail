@@ -21,7 +21,7 @@ const DashboardPage = () => {
       <CustomerAnalysis />
       <DivisionSalesOverview />
       <KeyPerformance />
-      <CustomerOrdersTable />
+      <CustomerOrdersTable salesData={[]} />
     </PageContainer>
   );
 };

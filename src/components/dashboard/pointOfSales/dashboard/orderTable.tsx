@@ -4,35 +4,35 @@ import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { useFetchAllSales } from "../../../../hooks/backendApis/pos/salesProcessing";
 import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
 
-const CustomerOrdersTable = () => {
-  const { data, } = useFetchAllSales();
+const CustomerOrdersTable = ({ salesData }: { salesData: any[] }) => {
 
-  const salesData = data?.data?.sales?.data ?? [];
 
   // ✅ Mapped data
-  const tableData = salesData.map((sale: { sale_order_details: any[]; orderID: any; updated_at: any; customer_name: any; order_total: any; payment_status: any;  cashier: { firstname?: string; lastname?: string }; }) => {
-    const totalItems = sale.sale_order_details?.reduce(
-      (sum, item) => sum + (item.quantity_ordered || 0),
-      0
-    );
+  const tableData = Array.isArray(salesData)
+  ? salesData.map((sale) => {
+      const totalItems = sale.sale_order_details?.reduce(
+        //@ts-ignore
+        (sum, item) => sum + (item.quantity_ordered || 0),
+        0
+      );
 
-    const cashierFullName = sale.cashier
-    ? `${sale.cashier.firstname || ''} ${sale.cashier.lastname || ''}`.trim()
-    : 'Unknown';
+      const cashierFullName = sale.cashier
+        ? `${sale.cashier.firstname || ''} ${sale.cashier.lastname || ''}`.trim()
+        : 'Unknown';
 
-    return {
-      orderID: sale.orderID,
-      date: sale.updated_at,
-      customer: sale.customer_name,
-      amount: sale.order_total,
-      status: sale.payment_status,
-      items: totalItems,
-      cashier: cashierFullName
-    };
-  });
+      return {
+        orderID: sale.orderID,
+        date: sale.updated_at,
+        customer: sale.customer_name,
+        amount: sale.order_total,
+        status: sale.payment_status,
+        items: totalItems,
+        cashier: cashierFullName
+      };
+    })
+  : [];
 
   const navigate = useNavigate();
 
@@ -87,9 +87,12 @@ const CustomerOrdersTable = () => {
       header: "Time stamp",
       accessorKey: "date",
       cell: (props) => (
-        <Text c="textSecondary.7">{formatDate(props.row.original.date)}</Text>
+        <div className="text-gray-600 whitespace-nowrap break-words ">
+          {formatDate(props.row.original.date)}
+        </div>
       ),
     },
+    
     {
       header: "Cashier Issued",
       accessorKey: "cashier",
@@ -154,6 +157,7 @@ const CustomerOrdersTable = () => {
 
   return (
     <main className="w-full h-auto py-8 rounded-lg bg-white">
+        <div className="overflow-auto max-w-full">
       <TanTable
     // @ts-ignore
         columnData={columns}
@@ -183,7 +187,9 @@ const CustomerOrdersTable = () => {
             </div>
           </div>
         }
+        
       />
+      </div>
     </main>
   );
 };

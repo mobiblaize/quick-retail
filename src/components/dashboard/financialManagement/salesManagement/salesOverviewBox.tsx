@@ -2,7 +2,7 @@ import { Group, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { SalesMetricsOverviewData } from "../../../../utils/mockData";
 import AnalyticsCard from "../../../General/card";
-import DateFilterMenu from "../../../General/filterMenu";
+// import DateFilterMenu from "../../../General/filterMenu";
 
 const SalesOverviewBox = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -36,12 +36,12 @@ const SalesOverviewBox = () => {
           )}
         </div>
         <Group className="mt-2 sm:mt-0">
-          <DateFilterMenu
+          {/* <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly="sm"
-          />
+          /> */}
         </Group>
       </header>
       <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5">

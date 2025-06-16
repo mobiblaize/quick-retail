@@ -98,7 +98,7 @@ const StoreOrderContent2: React.FC = () => {
             exit="exit"
             className="flex flex-col gap-4"
           >
-            <AllOrders2 />
+            <AllOrders2 store={undefined} />
           </motion.div>
         );
       case StoreOverviewStep.ORDER_DETAILS:

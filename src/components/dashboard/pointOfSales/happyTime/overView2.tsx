@@ -4,13 +4,13 @@ import { useFetchDiscountStat } from "../../../../hooks/backendApis/pos/discount
 import house from "../../../../assets/images/house.png";
 import dollar from "../../../../assets/images/dollarSign.png";
 
-const AnalysisOverview = () => {
+const AnalysisOverview1 = () => {
   const { data,} = useFetchDiscountStat();
 
   const statsData = data?.data
     ? [
         {
-          title: "Total Redemption",
+          title: "TOTAL DISCOUNT VALUE",
           value: data.data.total_redemption,
           icon: house, 
           altText: "dollar-sign",
@@ -21,7 +21,7 @@ const AnalysisOverview = () => {
           borderColor: "#BAE6FD",
         },
         {
-          title: "Total Amount",
+          title: "TOTAL DISCOUNTS",
           value: `₦${data.data.total_amount.toLocaleString()}`,
           icon: dollar,
           altText: "Discount Icon",
@@ -31,7 +31,7 @@ const AnalysisOverview = () => {
           // percentageValue: 0,
         },
         {
-          title: "New Amount",
+          title: "NEW REDEMPTION (USED DISCOUNTS)",
           value: `₦${data.data.new_amount.toLocaleString()}`,
           icon: dollar,
           iconColor: "#E17036",
@@ -85,4 +85,4 @@ const AnalysisOverview = () => {
   );
 };
 
-export default AnalysisOverview;
+export default AnalysisOverview1;

@@ -3,7 +3,7 @@ import AnalyticsCard from "../../../General/card";
 import orangeBox from "../../../../assets/images/orangeBox.png";
 import goldBox from "../../../../assets/images/goldBox.png";
 import greenBox from "../../../../assets/images/greenBox.png";
-import DateFilterMenu from "../../../General/filterMenu";
+// import DateFilterMenu from "../../../General/filterMenu";
 
 type ReturnsReportAnalyticsProps = {
   reportData: any;
@@ -56,12 +56,12 @@ const ReturnsReportAnalytics = ({ reportData,  }: ReturnsReportAnalyticsProps) =
           <Text size="sm">An overview of returns and refunds</Text>
         </div>
         <Group>
-          <DateFilterMenu
+          {/* <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly="sm"
-          />
+          /> */}
         </Group>
       </header>
 

@@ -1,5 +1,5 @@
-import { Group, Text } from "@mantine/core";
-import DateFilterMenu from "../../../General/filterMenu";
+import {  Text } from "@mantine/core";
+
 
 
 interface StoreOverviewProps {
@@ -17,14 +17,14 @@ const StoreOverview: React.FC<StoreOverviewProps> = ({ statData }) => {
           </Text>
           <Text size="sm">An overview of store orders made</Text>
         </div>
-        <Group>
+        {/* <Group>
           <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly
           />
-        </Group>
+        </Group> */}
       </header>
 
       <section className="grid gap-4 md:gap-6 mt-6 grid-cols-1  md:grid-cols-3">
@@ -46,11 +46,11 @@ const StoreOverview: React.FC<StoreOverviewProps> = ({ statData }) => {
           </p>
         </div>
 
-        <div className="bg-[#FEF6E7] px-4 flex flex-col gap-3 rounded-xl py-3">
+        <div className="bg-[#EFF4FF] px-4 flex flex-col gap-3 rounded-xl py-3">
           <Text size="lg" c="black" fw={"500"}>
        Drafts
           </Text>
-          <p className="rounded-full text-white w-fit bg-[#F3A218] p-2">
+          <p className="rounded-full text-white w-fit bg-[#528BFF] p-2">
           {statData?.preOrders?? 0}
           </p>
         </div>
