@@ -27,29 +27,21 @@ import { useSignUpUser } from "../../../hooks/backendApis/authentication/signupA
 import { useFetchCompanySize } from "../../../hooks/backendApis/authentication/signupAuth";
 
 // ✅ Validation Schema
-const schema = z
-  .object({
-    firstname: z.string().min(1, "First name is required"),
-    lastname: z.string().min(1, "Last name is required"),
-    phoneno: z.string().min(7, "Phone number is too short"),
-    email: z.string().email("Invalid email address"),
-    company_name: z.string().min(1, "Company name is required"),
-    company_size_id: z.union([z.string(), z.number()]).refine(
-      (val) => {
-        const num = typeof val === "string" ? parseInt(val, 10) : val;
-        return !isNaN(num) && num > 0;
-      },
-      { message: "Company size is required" }
-    ),
-    password: z.string().min(6, "Password must be at least 6 characters"),
-    password_confirmation: z
-      .string()
-      .min(6, "Password confirmation must be at least 6 characters"),
-  })
-  .refine((data) => data.password === data.password_confirmation, {
-    message: "Passwords do not match",
-    path: ["password_confirmation"],
-  });
+const schema = z.object({
+  firstname: z.string().min(1, "First name is required"),
+  lastname: z.string().min(1, "Last name is required"),
+  phoneno: z.string().min(7, "Phone number is too short"),
+  email: z.string().email("Invalid email address"),
+  company_name: z.string().min(1, "Company name is required"),
+  company_size_id: z.union([z.string(), z.number()]).refine(
+    (val) => {
+      const num = typeof val === "string" ? parseInt(val, 10) : val;
+      return !isNaN(num) && num > 0;
+    },
+    { message: "Company size is required" }
+  ),
+});
+
 
 const Details = () => {
   const { mutateAsync: register, isPending } = useSignUpUser();
@@ -67,66 +59,61 @@ const Details = () => {
       email: "",
       company_name: "",
       company_size_id: "",
-      password: "",
-      password_confirmation: "",
     },
   });
 
- const handleSubmit = async (values: typeof form.values) => {
-  try {
-    const payload = {
-      ...values,
-      company_size_id:
-        typeof values.company_size_id === "string"
-          ? parseInt(values.company_size_id, 10)
-          : values.company_size_id,
-      billing_type: "trial", // or "monthly" / "yearly"
-      payment_method: "paystack",
-      password_url: "https://api-quick-retail.sbscuk.co.uk/public",
-      paystack_complete_callback: "https://api-quick-retail.sbscuk.co.uk/public",
-      applications: [
-        {
-          subscription_id: "3",
-          application_id: "1",
-          amount: "9000",
-          additional_seat: "1",
-        },
-        {
-          subscription_id: "4",
-          application_id: "2",
-          amount: "9000",
-          additional_seat: "2",
-        },
-        {
-          subscription_id: "5",
-          application_id: "3",
-          amount: "9000",
-          additional_seat: "3",
-        },
-      ],
-    };
+  const handleSubmit = async (values: typeof form.values) => {
+    try {
+      const payload = {
+        ...values,
+        company_size_id:
+          typeof values.company_size_id === "string"
+            ? parseInt(values.company_size_id, 10)
+            : values.company_size_id,
+        billing_type: "trial", // or "monthly", "yearly"
+        payment_method: "paystack",
+        password_url: "https://api-quick-retail.sbscuk.co.uk/public",
+        paystack_complete_callback:
+          "https://api-quick-retail.sbscuk.co.uk/public",
+        applications: [
+          {
+            subscription_id: "3",
+            application_id: "1",
+            amount: "9000",
+            additional_seat: "1",
+          },
+          {
+            subscription_id: "4",
+            application_id: "2",
+            amount: "9000",
+            additional_seat: "2",
+          },
+          {
+            subscription_id: "5",
+            application_id: "3",
+            amount: "9000",
+            additional_seat: "3",
+          },
+        ],
+      };
 
-    const res = await register(payload);
+      const res = await register(payload);
+      if (!res?.data?.auth_url) {
+        throw new Error("Could not initialize payment.");
+      }
 
-    if (!res?.data) return;
-
-    notifications.show({
-      title: "Success",
-      message: "Signup successful!",
-      color: "green",
-    });
-
-    form.reset();
-  } catch (error: any) {
-    notifications.show({
-      title: "Error",
-      message:
-        error?.response?.data?.message || "Signup failed. Try again later.",
-      color: "red",
-    });
-  }
-};
-
+      // ✅ Redirect user to Paystack checkout page
+      window.location.href = res.data.auth_url;
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message:
+          error?.response?.data?.message ||
+          "Signup or payment failed. Try again later.",
+        color: "red",
+      });
+    }
+  };
 
   return (
     <form onSubmit={form.onSubmit(handleSubmit)}>
@@ -179,19 +166,6 @@ const Details = () => {
               ))}
             </select>
           </div>
-
-          <FormInput
-            label="Password"
-            type="password"
-            placeholder="Enter your password"
-            {...form.getInputProps("password")}
-          />
-          <FormInput
-            label="Confirm Password"
-            type="password"
-            placeholder="Confirm your password"
-            {...form.getInputProps("password_confirmation")}
-          />
         </div>
 
         <div className="mt-6 flex justify-end">

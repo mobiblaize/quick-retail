@@ -188,6 +188,7 @@ import ImportJournalTablePage from "./pages/financialManagement/Accounting/impor
 import ReviewJournalPage from "./pages/financialManagement/Accounting/reviewJournal";
 
 import Login from "./pages/auth/Login";
+import Signup from "./pages/auth/Signup";
 import IsAuthenticated from "./layout/hoc/IsAuthenticated";
 import AddCardPage from "./pages/financialManagement/Banking/addCard";
 import AllTransactionPage from "./pages/financialManagement/Banking/transactionHistory";
@@ -222,6 +223,7 @@ export default function App() {
           <Route index element={<Pricing />} />
         </Route>
         <Route path="/login" element={<Login />} />
+        <Route path="/signup" element={<Signup />}/>
         {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
 
         <Route
