@@ -2,135 +2,64 @@ import { useState } from "react";
 import { Link } from "react-router";
 import { ROUTES } from "../../../constants/routes";
 import { Button } from "@mantine/core";
+import { useFetchTrialSubscriptions } from "../../../hooks/backendApis/authentication/signupAuth";
 
 const SubscriptionDetails = () => {
   const [activeTabIndex, setActiveTabIndex] = useState(0);
 
+  const { data } = useFetchTrialSubscriptions();
+
+  const formatTrialPlans = (rawData: any[]) =>
+    rawData
+      .filter((item) => item.trial_period === "true")
+      .map((item) => ({
+        name: item.application.name,
+        description: item.application.description,
+        freeDays: `${item.trial_days} Days Free`,
+        userSeats: `${item.application.free_access_users} Seats`,
+        additionalSeatsCost: `₦${item.price_per_seat} per seat`,
+        additionalSeats: 0, // can be updated based on user action
+      }));
+
+  const formatMonthlyPlans = (rawData: any[]) =>
+    rawData.map((item) => ({
+      name: item.application.name,
+      description: item.application.description,
+      price: `₦${Number(item.total_monthly_amount).toLocaleString()}`,
+      userSeats: `${item.application.free_access_users} Seats`,
+      additionalSeatsCost: `₦${item.price_per_seat} per seat`,
+      additionalSeats: 0,
+    }));
+
+  const formatYearlyPlans = (rawData: any[]) =>
+    rawData.map((item) => ({
+      name: item.application.name,
+      description: item.application.description,
+      price: `₦${Number(item.total_yearly_amount).toLocaleString()}`,
+      userSeats: `${item.application.free_access_users} Seats`,
+      additionalSeatsCost: `₦${item.price_per_seat} per seat`,
+      additionalSeats: 0,
+    }));
+
+  // const trialPlans = data?.data ? formatTrialPlans(data.data) : [];
+  const trialPlans = data?.data ? formatTrialPlans(data.data) : [];
+  const monthlyPlans = data?.data ? formatMonthlyPlans(data.data) : [];
+  const yearlyPlans = data?.data ? formatYearlyPlans(data.data) : [];
+
   const subscriptionDetails = [
     {
-      // Free Trial
-      plans: [
-        {
-          name: "Point of Sales Management System",
-          description:
-            "Manage sales transactions, Inventory tracking,\nCustomer engagement,and reporting analytics with \ninstant updates.",
-          freeDays: "60 Days Free",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "N 2500 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Finance Management System",
-          description:
-            "Manage, evaluate, and control your business finance \non the finance management system.",
-          freeDays: "60 Days Free",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "N 2500 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Procurement Management",
-          description:
-            "Track inventory and product restocking on \nthe procurement system.",
-          freeDays: "60 Days Free",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "N 2500 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Asset Management",
-          description:
-            "Track inventory and product restocking on the procurement system.",
-          freeDays: "60 Days Free",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "N 2500 per seat",
-          additionalSeats: 0,
-        },
-      ],
+      title: "Trial",
+      plans: trialPlans,
       totalPrice: "FREE",
     },
     {
-      // Billed Monthly
-      plans: [
-        {
-          name: "Point of Sales Management System",
-          description:
-            "Manage sales transactions, Inventory tracking,\nCustomer engagement,and reporting analytics with \ninstant updates.",
-          freeDays: "₦7,000 / Month",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,500 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Finance Management System",
-          description:
-            "Manage, evaluate, and control your business finance \non the finance management system.",
-          freeDays: "₦6,000 / Month",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,500 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Procurement Management",
-          description:
-            "Track inventory and product restocking on \nthe procurement system.",
-          freeDays: "₦5,000 / Month",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,500 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Asset Management",
-          description:
-            "Track inventory and product restocking on the procurement system.",
-          freeDays: "₦4,000 / Month",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,500 per seat",
-          additionalSeats: 0,
-        },
-      ],
+      title: "Monthly",
+      plans: monthlyPlans,
       totalPrice: "₦22,000 / Month",
     },
     {
-      // Billed Annually
-      plans: [
-        {
-          name: "Point of Sales Management System",
-          description:
-            "Manage sales transactions, Inventory tracking,\nCustomer engagement,and reporting analytics with \ninstant updates.",
-          freeDays: "₦70,000 / Year",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,000 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Finance Management System",
-          description:
-            "Manage, evaluate, and control your business finance \non the finance management system.",
-          freeDays: "₦60,000 / Year",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,000 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Procurement Management",
-          description:
-            "Track inventory and product restocking on \nthe procurement system.",
-          freeDays: "₦50,000 / Year",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,000 per seat",
-          additionalSeats: 0,
-        },
-        {
-          name: "Asset Management",
-          description:
-            "Track inventory and product restocking on the procurement system.",
-          freeDays: "₦40,000 / Year",
-          userSeats: "2 Seats",
-          additionalSeatsCost: "₦2,000 per seat",
-          additionalSeats: 0,
-        },
-      ],
+      title: "Yearly",
+      plans: yearlyPlans,
       totalPrice: "₦220,000 / Year",
     },
   ];
@@ -196,10 +125,25 @@ const SubscriptionDetails = () => {
             </div>
             <div className="mt-3 grid gap-3">
               <div className="flex justify-between items-center">
-                <span className="text-[#6C6975] text-xs">Billing</span>
+                {/* <span className="text-[#6C6975] text-xs">Billing</span>
                 <span className="text-[#48464E] font-medium text-sm">
                   {plan.freeDays}
-                </span>
+                </span> */}
+                {"freeDays" in plan ? (
+                  <>
+                    <p className="text-[#6C6975] text-sm">Free Trial</p>
+                    <p className="text-[#48464E] font-medium text-base">
+                      {plan.freeDays}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[#6C6975] text-sm">Billed</p>
+                    <p className="text-[#48464E] font-medium text-base">
+                      {plan.price}
+                    </p>
+                  </>
+                )}
               </div>
               <div className="flex justify-between items-center">
                 <span className="text-[#6C6975] text-xs">User Seats</span>
@@ -269,10 +213,21 @@ const SubscriptionDetails = () => {
             </div>
             <div className="flex flex-col sm:flex-row sm:gap-8 lg:gap-12 items-start">
               <div className="flex flex-col mt-2 sm:mt-0">
-                <p className="text-[#6C6975] text-sm">Billed/Month</p>
-                <p className="text-[#48464E] font-medium text-base">
-                  {plan.freeDays}
-                </p>
+                {"freeDays" in plan ? (
+                  <>
+                    <p className="text-[#6C6975] text-sm">Free Trial</p>
+                    <p className="text-[#48464E] font-medium text-base">
+                      {plan.freeDays}
+                    </p>
+                  </>
+                ) : (
+                  <>
+                    <p className="text-[#6C6975] text-sm">Billed</p>
+                    <p className="text-[#48464E] font-medium text-base">
+                      {plan.price}
+                    </p>
+                  </>
+                )}
               </div>
               <div className="flex flex-col mt-2 sm:mt-0">
                 <p className="text-[#6C6975] text-sm">User Seats</p>
