@@ -1,7 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { SetStateAction, useEffect, useState } from "react";
-import { CircleHelp } from "lucide-react";
 import { useEditStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 import { formatDate } from "../../../../../utils/helpers";

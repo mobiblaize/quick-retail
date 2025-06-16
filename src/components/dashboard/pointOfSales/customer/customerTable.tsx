@@ -12,7 +12,7 @@ interface CategoriesTableProps {
   isLoading: boolean;
 }
 
-const CustomerTable = ({ customers, isLoading }: CategoriesTableProps) => {
+const CustomerTable = ({ customers, }: CategoriesTableProps) => {
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
   // const { data } = useFetchAllCustomers();

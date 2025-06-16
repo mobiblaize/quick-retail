@@ -86,7 +86,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
     });
   };
 
-  const handleSubmit = (payload: any, status: string) => {
+  const handleSubmit = (payload: any, ) => {
     if (!payload.customerId) {
       alert("Please select a customer.");
       return;

@@ -1,5 +1,5 @@
 import { Group, Text } from "@mantine/core";
-import DateFilterMenu from "../../../General/filterMenu";
+// import DateFilterMenu from "../../../General/filterMenu";
 import { giftProductData } from "../../../../utils/mockData";
 import AnalyticsCard from "../../../General/card";
 
@@ -14,12 +14,12 @@ const AllProductData = () => {
           <Text size="sm">You're Viewing all products below.</Text>
         </div>
         <Group>
-          <DateFilterMenu
+          {/* <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
             showIconOnly="sm"
-          />
+          /> */}
         </Group>
       </header>
       <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">

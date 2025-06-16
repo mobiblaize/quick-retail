@@ -1,9 +1,9 @@
-import { Button, Text } from "@mantine/core";
+import {  Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useLocation, useNavigate } from "react-router";
 import OrderInformation from "../../../components/dashboard/pointOfSales/stores/orderInformation";
 import ProductOrderedTable from "../../../components/dashboard/pointOfSales/stores/productOrderedTable";
-import InformationTab from "../../../components/dashboard/pointOfSales/categories/informationTab";
+
 import { PaidDot } from "../../../assets/svg";
 
 const BillingInformation = () => {

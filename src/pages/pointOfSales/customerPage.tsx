@@ -14,7 +14,7 @@ const CustomerPage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CustomerTable />
+      <CustomerTable customers={[]} isLoading={false} />
     </PageContainer>
   );
 };

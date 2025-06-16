@@ -1,8 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { SetStateAction, useState } from "react";
-import storeIcon from "../../../../../assets/images/newStore.png";
-import { CircleHelp } from "lucide-react";
 import { useCreateStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 

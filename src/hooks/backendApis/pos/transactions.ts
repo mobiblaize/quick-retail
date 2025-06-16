@@ -1,4 +1,4 @@
-import { defaultPayload2, SalesPayload } from "../../../types";
+import {  SalesPayload } from "../../../types";
 import { useFetchPostData } from "../../useApis";
 
 export const useFetchAllTransactions = (customPayload?: SalesPayload) => {

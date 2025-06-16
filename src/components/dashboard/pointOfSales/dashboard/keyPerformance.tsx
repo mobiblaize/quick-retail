@@ -1,5 +1,5 @@
 import { Group, Text } from "@mantine/core";
-import DateFilterMenu from "../../../General/filterMenu";
+// import DateFilterMenu from "../../../General/filterMenu";
 
 const KeyPerformance = () => {
   const performance = [
@@ -60,12 +60,12 @@ const KeyPerformance = () => {
           </span>
         </div>
         <Group>
-          <DateFilterMenu
+          {/* <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="sm"
             showIconOnly="sm"
-          />
+          /> */}
         </Group>
       </header>
 
