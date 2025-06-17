@@ -17,7 +17,7 @@ const schema = z.object({
     .min(6, { message: "Password must be at least 6 characters" }),
 });
 
-const Signup = () => {
+const SignupPage = () => {
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
   // const { updateUser } = useSessionStorage();
   const form = useForm({
@@ -171,4 +171,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupPage;

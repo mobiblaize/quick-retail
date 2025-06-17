@@ -1,16 +1,103 @@
-const PaymentSummary = () => {
+import { notifications } from "@mantine/notifications";
+import { useSignUpUser } from "../../../hooks/backendApis/authentication/signupAuth";
+import { useSignupStore } from "./useSignupStore";
+import { useForm } from "@mantine/form";
+
+type Props = {
+  numberOfApps: number;
+  totalCost: number;
+  form: ReturnType<typeof useForm>;
+};
+
+const PaymentSummary = ({ numberOfApps, totalCost, form }: Props) => {
+  const setPayload = useSignupStore((state) => state.setPayload);
+  // const payload = useSignupStore((state) => state.payload);
+  const { mutateAsync: register, isPending } = useSignUpUser();
+
+  const handlePay = async () => {
+    const validation = form.validate();
+    if (validation.hasErrors) {
+      notifications.show({
+        title: "Validation Error",
+        message: "Please fill all required fields correctly.",
+        color: "red",
+      });
+      return;
+    }
+
+    const values = form.values;
+
+    const completePayload = {
+      firstname: values.firstname,
+      lastname: values.lastname,
+      phoneno: values.phoneno,
+      email: values.email,
+      company_name: values.company_name,
+      company_size_id:
+        typeof values.company_size_id === "string"
+          ? parseInt(values.company_size_id, 10)
+          : values.company_size_id,
+      billing_type: "trial",
+      payment_method: "paystack",
+      password_url: "https://api-quick-retail.sbscuk.co.uk/public",
+      paystack_complete_callback:
+        "https://api-quick-retail.sbscuk.co.uk/public",
+      applications: [
+        {
+          subscription_id: "3",
+          application_id: "1",
+          amount: "9000",
+          additional_seat: "1",
+        },
+        {
+          subscription_id: "4",
+          application_id: "2",
+          amount: "9000",
+          additional_seat: "2",
+        },
+        {
+          subscription_id: "5",
+          application_id: "3",
+          amount: "9000",
+          additional_seat: "3",
+        },
+      ],
+    };
+
+    setPayload(completePayload);
+
+    try {
+      const res = await register(completePayload);
+      if (!res?.data?.auth_url) {
+        throw new Error("Could not initialize payment.");
+      }
+
+      window.location.href = res.data.auth_url;
+    } catch (error: any) {
+      notifications.show({
+        title: "Error",
+        message:
+          error?.response?.data?.message ||
+          "Signup or payment failed. Try again later.",
+        color: "red",
+      });
+    }
+  };
+
+  const vat = 0;
+
   const summary = [
     {
       label: "Number of Apps",
-      description: "Three (3)",
+      description: `${numberOfApps} ${numberOfApps === 1 ? "App" : "Apps"}`,
     },
     {
       label: "Total Cost",
-      description: "₦ 30,000.00",
+      description: `₦ ${totalCost.toLocaleString()}`,
     },
     {
       label: "VAT (7.5%)",
-      description: "₦ 32,250.00",
+      description: `₦ ${vat.toLocaleString()}`,
     },
   ];
 
@@ -111,8 +198,10 @@ const PaymentSummary = () => {
           <button
             type="button"
             className="bg-[#F16722] hover:bg-[#E55A1A] rounded-md mt-4 py-3 sm:py-4 text-white font-sans font-semibold text-sm sm:text-base transition-colors duration-200 focus:ring-2 focus:ring-[#F16722] focus:ring-offset-2"
+            onClick={handlePay}
+            disabled={isPending}
           >
-            Pay ₦ 32,250.00
+            {isPending ? "Processing..." : "Pay"}
           </button>
         </div>
       </div>
