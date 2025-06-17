@@ -1,16 +1,18 @@
-import { defaultPayload2 } from "../../../types";
+import { defaultPayload2, SalesPayload  } from "../../../types";
 import { useFetchPostData, useGetData, usePostData, usePutData } from "../../useApis";
 
 export const useCreateSales = () => {
     return usePostData("pos/sales/add-sales");
   };
 
-  export const useFetchAllSales = (customPayload?: Partial<typeof defaultPayload2>) => {
-    const defaultPayload = {
+export const useFetchAllSales = (customPayload?: SalesPayload) => {
+  const defaultPayload: SalesPayload = {
       search: "",
       sort_by: "",
       per_page: "500",
-      paginate: false,
+      paginate: true,
+      start_date: "",
+      end_date:"",
     };
   
     const payload = { ...defaultPayload, ...customPayload };

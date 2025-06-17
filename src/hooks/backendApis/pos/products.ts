@@ -112,3 +112,21 @@ export const useDeleteProuct = (productId: number | string) => {
   return useDeleteData(`pos/product/delete-product/${productId}`);
 };
 
+export const useSearchLocationProducts = (
+  productPayload?: Partial<typeof defaultSearchPayload>,
+  enabled = true
+) => {
+  const payload = { ...defaultSearchPayload, ...productPayload };
+
+  return useQuery({
+    queryKey: ["pos/product/product-search", payload],
+    queryFn: async () => {
+      const response = await axiosInstance.post(
+        baseUrl + "pos/product/product-search",
+        payload
+      );
+      return response.data;
+    },
+    enabled,
+  });
+};

@@ -45,13 +45,11 @@ const topProducts = [...products]
           <div className="flex items-center gap-2 sm:gap-4">
             <Group className="w-auto">
               <DateFilterMenu
-                defaultFilter="This Month"
-                buttonVariant="subtle"
-                buttonSize="md"
-                showIconOnly="sm"
                 onDateFilterChange={({ startDate, endDate }) =>
                 setDateRange({
+                 //@ts-ignore
                   start_date: startDate.toISOString().split("T")[0],
+                  //@ts-ignore
                   end_date: endDate.toISOString().split("T")[0],
                 })
               }
@@ -99,12 +97,12 @@ const topProducts = [...products]
               <Text fw={500} size="sm">
                 {product.name}
               </Text>
-              <Text size="xs" c="gray.6">
+              {/* <Text size="xs" c="gray.6">
                 Sold: {product.quantity_sold}
-              </Text>
+              </Text> */}
             </div>
           </div>
-          <Text fw={600} size="sm" c="customPrimary.10">
+          <Text fw={600} size="sm" c="black">
             ₦{Number(product.selling_price).toLocaleString()}
           </Text>
         </div>

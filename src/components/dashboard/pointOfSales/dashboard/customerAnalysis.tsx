@@ -45,13 +45,15 @@ const CustomerAnalysis = () => {
           <div className="flex items-center gap-2 sm:gap-4">
             <Group className="w-auto">
               <DateFilterMenu
-                defaultFilter="This Month"
-                buttonVariant="subtle"
-                buttonSize="md"
-                showIconOnly="sm"
+                // defaultFilter="This Month"
+                // buttonVariant="subtle"
+                // buttonSize="md"
+                // showIconOnly="sm"
                 onDateFilterChange={({ startDate, endDate }) =>
               setDateRange({
+                // @ts-ignore
                 start_date: startDate.toISOString().split("T")[0],
+                      // @ts-ignore
                 end_date: endDate.toISOString().split("T")[0],
               })
             }

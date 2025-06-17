@@ -1,26 +1,60 @@
+
 import { useState, useEffect, SetStateAction } from "react";
 import { Divider, Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 import { SqrCode } from "../../../../assets/svg";
-import { useSearchAllProducts } from "../../../../hooks/backendApis/pos/products";
+import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
+
 
 interface SelectedItemPayload {
   variationId: string;
   quantity: number;
 }
 
+interface SelectedItem {
+  variationId?: string;
+  quantity?: number;
+  price?: number;
+  name?: string;
+  custom?: boolean;
+  [key: string]: any;
+}
+
+
 interface SearchProductProps {
   onSelect: (value: string | { custom: true; name: string }) => void;
   onItemsChange: (items: SelectedItemPayload[]) => void;
+  initialItems?: SelectedItem[];
 }
 
-const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
+const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [selectedItems, setSelectedItems] = useState([]);
+  // const [selectedItems, setSelectedItems] = useState([]);
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+  const [hasSetInitial, setHasSetInitial] = useState(false);
 
   useEffect(() => {
+    if (!hasSetInitial && initialItems.length > 0) {
+      setSelectedItems((prev) => {
+        const newItems = initialItems.filter((initial) => {
+          if (initial.custom) {
+            return !prev.some((p) => p.custom && p.name === initial.name);
+          }
+          return !prev.some((p) => p.variationId === initial.variationId);
+        });
+        return [...prev, ...newItems];
+      });
+      setHasSetInitial(true);
+    }
+  }, [initialItems, hasSetInitial]);
+  
+
+
+
+  useEffect(() => {
+  //  @ts-ignore */
     onItemsChange(selectedItems);
   }, [selectedItems, onItemsChange]);
 
@@ -31,7 +65,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const { data, isLoading } = useSearchAllProducts(
+  const { data, isLoading } = useSearchLocationProducts(
     { search: debouncedSearch },
     !!debouncedSearch
   );
@@ -42,35 +76,31 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
     ? [data.data]
     : [];
 
-  const handleSelect = (item: {
-    name: any;
-    custom: any;
-    variationID?: any;
-  }) => {
-         /* @ts-ignore */
-    setSelectedItems((prev) => {
-           /* @ts-ignore */
-      if (item.custom && prev.some((i) => i.custom && i.name === item.name)) {
-        return prev;
+    const handleSelect = (item: {
+      name: string;
+      custom: boolean;
+      variationId?: string;
+    }) => {
+      setSelectedItems((prev) => {
+        if (
+          item.custom
+            ? prev.some((i) => i.custom && i.name === item.name)
+            : prev.some((i) => i.variationId === item.variationId)
+        ) {
+          return prev;
+        }
+        return [...prev, item];
+      });
+    
+      if (item.custom) {
+        onSelect({ custom: true, name: item.name });
+      } else if (item.variationId) {
+        onSelect(item.variationId);
       }
-      if (
-        !item.custom &&
-             /* @ts-ignore */
-        prev.some((i) => i.variationID === item.variationID)
-      ) {
-        return prev;
-      }
-      return [...prev, item];
-    });
-
-    if (item?.custom) {
-      onSelect({ custom: true, name: item.name });
-    } else {
-      onSelect(item.variationID);
-    }
-
-    setSearchTerm("");
-  };
+    
+      setSearchTerm("");
+    };
+    
 
   const handleQuantityChange = (itemKey: any, value: number) => {
          /* @ts-ignore */
@@ -84,7 +114,10 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
       )
     );
   };
-
+  useEffect(() => {
+    console.log("initialItems arrived:", initialItems);
+  }, [initialItems]);
+  
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <div className="px-6 py-2">
@@ -127,7 +160,25 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
                 <li
                   key={item.variationID}
                        /* @ts-ignore */
-                  onClick={() => handleSelect(item)}
+                  // onClick={() => handleSelect(item)}
+                  onClick={() =>
+                    handleSelect({
+                    //  @ts-ignore */
+                      name: item.name,
+                      custom: false,  
+                      variationId: item.variationID,
+                      image_path: item.image_path,
+                        //  @ts-ignore */
+                      selling_price: item.selling_price,
+                      sku: item.sku,
+                        /* @ts-ignore */
+                      ean: item.ean,
+                      quantity: 1,  // default quantity
+                      ...item 
+                    })
+
+                  
+                  }
                   className="flex items-center gap-4 cursor-pointer px-4 py-3 rounded hover:bg-gray-100 border border-gray-200"
                 >
                   <img
@@ -180,7 +231,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
                    /* @ts-ignore */
                 ? `custom-${item.name}`
                      /* @ts-ignore */
-                : item.variationID;
+                : item.variationId;
                      /* @ts-ignore */
               const quantity = item.quantity ?? 0; // default quantity 1
                    /* @ts-ignore */
@@ -304,3 +355,4 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
 };
 
 export default SearchProduct;
+

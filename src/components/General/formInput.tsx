@@ -96,7 +96,7 @@ const FormInput = ({
           width: "100%",
         },
         input: {
-          backgroundColor: bgColor,
+          backgroundColor: readOnly ? "#D0D5DD" : bgColor, 
           color: error ? "#D42620" : color,
           borderWidth: borderWidthValue,
           borderStyle: "solid",

@@ -25,8 +25,8 @@ const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
       return {
         name: item.name || "Unnamed",
         discountCode: discount?.code || "-",
-        percent: `${discount?.value || "0"}%`,
-        price: item.selling_price || "-",
+        discountType: discount?.type || "-", 
+        value: discount?.value || 0,     
         dateFrom: discount?.from?.split("T")[0],
         dateTo: discount?.to?.split("T")[0],
         status: discount?.status === "active" ? "Active" : "Inactive",
@@ -83,16 +83,19 @@ const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
     {
       header: "Percent",
       accessorKey: "percent",
+      cell: ({ row }) => 
+        row.original.discountType === "percentage"
+          ? `${row.original.value}%`
+          : "-"
     },
     {
       header: "Price",
       accessorKey: "price",
-      cell: ({ row }) => (
-        <span className=" text-gray-900 text-sm font-medium">
-          {row.original.price}
-        </span>
-      ),
-    },
+      cell: ({ row }) => 
+        row.original.discountType === "amount"
+          ? `₦${row.original.value}`
+          : "-"
+    },    
     {
       header: "Date From",
       accessorKey: "dateFrom",

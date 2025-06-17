@@ -1,8 +1,11 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useRef } from "react";
 import PaymentDetails1 from "../../../components/dashboard/pointOfSales/salesProcessing/paymentDetails";
 import SearchCustomer from "../../../components/dashboard/pointOfSales/salesProcessing/searchCustomer";
 import SearchProduct from "../../../components/dashboard/pointOfSales/salesProcessing/searchProduct";
-import { useCreateSales } from "../../../hooks/backendApis/pos/salesProcessing";
+import {
+  useCreateSales,
+  useFetchSingleSale,
+} from "../../../hooks/backendApis/pos/salesProcessing";
 
 interface CreateOrderFormProps {
   registerSubmit: (handler: (status: string) => void) => void;
@@ -20,55 +23,79 @@ interface CreateOrderFormProps {
   }) => void;
   paymentItems: { label: string; amount: string }[];
   total: string;
-  
+  orderId?: string | number;
 }
+
 const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   registerSubmit,
   paymentDetails,
   updatePaymentDetails,
   paymentItems,
   total,
+  orderId,
 }) => {
-  const [selectedItemsPayload, setSelectedItemsPayload] = useState(
-    paymentDetails.items || []
-  );
-  const [selectedCustomerID, setSelectedCustomerID] = useState<string | null>(
-    paymentDetails.customerId
-  );
-  const [paymentMethod, setPaymentMethod] = useState<string>(
-    paymentDetails.method
-  );
-  const [amountCollected, setAmountCollected] = useState<string>(
-    paymentDetails.amount
-  );
+  const createSalesOrder = useCreateSales();
+  const handlerRef = useRef<(payload: any, status: string) => void>(() => {});
+
+  const safeOrderId = orderId ?? "";
+  const { data: saleData } = useFetchSingleSale(safeOrderId);
 
   useEffect(() => {
-    setPaymentMethod(paymentDetails.method);
-    setAmountCollected(paymentDetails.amount);
-  }, [paymentDetails.method, paymentDetails.amount]);
+    if (saleData) {
+      const itemsPayload = saleData.data.sale_order_details.map(
+        (item: any) => ({
+          variationId: item.product_variation?.variationID || null,
+          quantity: item.quantity_ordered,
+          price: Number(item.unit_price),
+          name: item.product_variation?.name || "Unknown Product",
+          selling_price: Number(item.unit_price),
+          image_path: item.product_variation?.image_path || "",
+          custom: false,
+        })
+      );
 
-  // Your mutation hook (assuming it returns a mutate function)
-  const createSalesOrder = useCreateSales();
-  const handlerRef = useRef<(status: string) => void>(() => {});
+      updatePaymentDetails({
+        method: saleData.data.payment_method || "",
+        amount: saleData.data.amount_collected || "",
+        items: itemsPayload,
+        customerId: saleData.data.customer?.customerID || null,
+      });
+    }
+  }, [saleData, updatePaymentDetails]);
 
-  const handleSubmit = (status: string) => {
-    if (!selectedCustomerID) {
+  // HANDLERS
+  const handleSelectedItemsChange = (items: any[]) => {
+    const payloadItems = items
+      .filter((item) => !item.custom && item.variationID && item.quantity)
+      .map((item) => ({
+        variationId: item.variationID,
+        quantity: Number(item.quantity),
+        price: Number(item.selling_price),
+      }));
+
+    updatePaymentDetails({
+      ...paymentDetails,
+      items: payloadItems,
+    });
+  };
+
+  const handleCustomerChange = (id: string | null) => {
+    updatePaymentDetails({
+      ...paymentDetails,
+      customerId: id,
+    });
+  };
+
+  const handleSubmit = (payload: any, ) => {
+    if (!payload.customerId) {
       alert("Please select a customer.");
       return;
     }
 
-    if (selectedItemsPayload.length === 0) {
+    if (!payload.items || payload.items.length === 0) {
       alert("Please select at least one item.");
       return;
     }
-
-    const payload = {
-      customerId: selectedCustomerID,
-      status,
-      payment_method: paymentMethod, 
-      amount_collected: paymentMethod === "cash" ? amountCollected : "",
-      items: selectedItemsPayload,
-    };
 
     createSalesOrder.mutate(payload, {
       onSuccess: () => {
@@ -83,59 +110,37 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
 
   useEffect(() => {
     handlerRef.current = handleSubmit;
-  }, [
-    selectedCustomerID,
-    selectedItemsPayload,
-    paymentMethod,
-    amountCollected,
-  ]);
+  }, []);
 
-  // Register the submit handler once
   useEffect(() => {
     if (registerSubmit) {
       registerSubmit((status) => {
-        if (handlerRef.current) {
-          handlerRef.current(status);
-        }
+        const payload = {
+          customerId: paymentDetails.customerId,
+          status,
+          payment_method: paymentDetails.method,
+          amount_collected:
+            paymentDetails.method === "cash" ? paymentDetails.amount : "",
+          items: paymentDetails.items,
+        };
+
+        handlerRef.current(payload, status);
       });
     }
-  }, [registerSubmit]);
-
-  useEffect(() => {
-    updatePaymentDetails({
-      method: paymentMethod,
-      amount: amountCollected,
-      items: selectedItemsPayload,
-      customerId: selectedCustomerID,
-    });
-  }, [
-    paymentMethod,
-    amountCollected,
-    selectedItemsPayload,
-    selectedCustomerID,
-    updatePaymentDetails,
-  ]);
-
-  const handleSelectedItemsChange = (items: any[]) => {
-    const payload = items
-      .filter((item) => !item.custom && item.variationID && item.quantity)
-      .map((item) => ({
-        variationId: item.variationID,
-        quantity: Number(item.quantity),
-        price: Number(item.selling_price),
-      }));
-
-    setSelectedItemsPayload(payload);
-  };
+  }, [registerSubmit, paymentDetails]);
 
   return (
     <main className="flex flex-col gap-8">
       <SearchProduct
         onSelect={() => {}}
         onItemsChange={handleSelectedItemsChange}
+        initialItems={paymentDetails.items}
       />
-      <SearchCustomer onCustomerSelect={(id) => setSelectedCustomerID(id)} />
-
+      <SearchCustomer
+        onCustomerSelect={handleCustomerChange}
+        initialCustomerId={paymentDetails.customerId}
+        initialCustomerName={saleData?.data?.customer?.customer_name || ""}
+      />
       <PaymentDetails1 items={paymentItems} total={total} />
     </main>
   );

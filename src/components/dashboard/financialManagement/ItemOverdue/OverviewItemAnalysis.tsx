@@ -1,6 +1,6 @@
 
 import { paymentOverviewItem} from "../../../../utils/mockData";
-import DateFilterMenu from "../../../General/filterMenu";
+// import DateFilterMenu from "../../../General/filterMenu";
 import { Group, } from "@mantine/core";
 import ItemAnalyticsCard from "../../../General/itemCard";
 
@@ -11,12 +11,12 @@ const ItemAnalysis = () => {
  <div className="text-[#101828] font-medium mt-[0.5em]">Item Overview</div>
  <div>
  <Group className="mt-2 sm:mt-0">
-          <DateFilterMenu
+          {/* <DateFilterMenu
             defaultFilter="This Month"
             buttonVariant="subtle"
             buttonSize="md"
              showIconOnly="sm"
-          />
+          /> */}
         </Group> 
  </div>
     </div>

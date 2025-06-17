@@ -83,16 +83,29 @@ const SalesAnalytics = () => {
             {!chartData.length ? (
               <Text>No sales data available for this year.</Text>
             ) : (
-              
               <LineChart
-                data={chartData}
-                lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
-                height={280}
-                yAxisFormatter={(value) => `${value}M`}
-                showLegend={false}
-                highlightedPoint={highlightedPoint}
+              data={chartData}
+              lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
+              height={280}
+              yAxisFormatter={(value) => {
+                if (value >= 1000000) return `${(value / 1000000).toFixed(1)}M`;
+                if (value >= 1000) return `${(value / 1000).toFixed(1)}K`;
+                return value.toString();
+              }}
+              showLegend={false}
+              highlightedPoint={highlightedPoint}
+
+            />
+             
+              // <LineChart
+              //   data={chartData}
+              //   lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
+              //   height={280}
+              //   yAxisFormatter={(value) => `${value}M`}
+              //   showLegend={false}
+              //   highlightedPoint={highlightedPoint}
             
-              />
+              // />
             )}
           </div>
         </div>

@@ -31,10 +31,8 @@ const OverviewBox = () => {
 
   const currencySymbol = "₦";
 
-  const formattedValue = data?.data?.totalRevenue 
-    ? `${currencySymbol}${Number(
-      data?.data?.totalRevenue 
-      ).toLocaleString()}`
+  const formattedValue = data?.data?.totalRevenue
+    ? `${currencySymbol}${Number(data?.data?.totalRevenue).toLocaleString()}`
     : `${currencySymbol}0`;
   const cards = [
     {
@@ -86,13 +84,12 @@ const OverviewBox = () => {
         </div>
         <Group className="mt-2 sm:mt-0">
           <DateFilterMenu
-            defaultFilter="This Month"
-            buttonVariant="subtle"
-            buttonSize="md"
-            showIconOnly="sm"
+      
             onDateFilterChange={({ startDate, endDate }) =>
               setDateRange({
+                   //@ts-ignore
                 start_date: startDate.toISOString().split("T")[0],
+                   //@ts-ignore
                 end_date: endDate.toISOString().split("T")[0],
               })
             }

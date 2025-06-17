@@ -1,13 +1,13 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Button, Loader, Menu, Text } from "@mantine/core";
-import {  PaidDot,  UnpaidDot } from "../../../../assets/svg";
+import { Avatar, Loader, Text } from "@mantine/core";
+import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import { MoreVertical } from "lucide-react";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
+import { formatDate, truncateText } from "../../../../utils/helpers";
 
 const InventoryTable = () => {
   const { data, isLoading } = useFetchAllProducts();
@@ -21,7 +21,8 @@ const InventoryTable = () => {
     sku: product.sku,
     location: product.product?.location?.name ?? "N/A",
     stockLevel: product.quantity_available ?? 0,
-    date: new Date(product.created_at).toLocaleDateString(),
+    quantitySupplied: product.quantity_supplied ?? 0,
+    date: product.created_at,
     status:
       product.quantity_available === 0
         ? "Sold Out"
@@ -30,10 +31,30 @@ const InventoryTable = () => {
         : "Available",
     image: product.image_path,
     variationID: product.variationID,
-    ...product, 
+    ...product,
   }));
 
   const columns: ColumnDef<TableRowData>[] = [
+    {
+      id: "select",
+      header: ({ table }) => (
+        <input
+          type="checkbox"
+          checked={table.getIsAllRowsSelected()}
+          onChange={table.getToggleAllRowsSelectedHandler()}
+        />
+      ),
+      cell: ({ row }) => (
+        <input
+          type="checkbox"
+          checked={row.getIsSelected()}
+          onChange={row.getToggleSelectedHandler()}
+        />
+      ),
+      enableSorting: false,
+      enableColumnFilter: false,
+      size: 10,
+    },
     {
       header: "Product",
       accessorKey: "name",
@@ -50,7 +71,8 @@ const InventoryTable = () => {
             size={40}
           />
           <Text fw={500} c="black">
-            {props.row.original.name}
+            {/* @ts-ignore  */}
+            {truncateText(String(props.row.original.name))}
           </Text>
         </div>
       ),
@@ -66,46 +88,43 @@ const InventoryTable = () => {
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
+      cell: (props) => {
+        const available = props.row.original.stockLevel;
+        const supplied = props.row.original.quantitySupplied;
+
+        // Fallback in case quantitySupplied is missing
+        const originalQty = supplied || available;
+
+        return (
+          <Text fw={500}>
+            {/* @ts-ignore  */}
+            <span className={available < 10 ? "text-red-600" : "text-black"}>
+              {available}
+            </span>
+            <span className="text-black"> of {originalQty}</span>
+          </Text>
+        );
+      },
     },
     {
       header: "Date",
       accessorKey: "date",
+      cell: (props) => (
+        <div className="text-gray-600 whitespace-nowrap break-words ">
+          {/* @ts-ignore */}
+          {formatDate(props.row.original.date)}
+        </div>
+      ),
     },
-    // {
-    //   header: "Discount Status",
-    //   accessorKey: "status",
-    //   cell: (props) => {
-    //     const status = props.row.original.status;
-    //     return (
-    //       <div
-    //         className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-    //           status === "Available"
-    //             ? "bg-[#ECFDF3] text-[#027A48]"
-    //             : status === "Sold Out"
-    //             ? "bg-[#FEE2E2] text-[#D92D20]"
-    //             : "bg-[#FFFAEB] text-[#B54708]"
-    //         }`}
-    //       >
-    //         {status === "Available" ? (
-    //           <PaidDot />
-    //         ) : status === "Sold Out" ? (
-    //           <SoldoutDot />
-    //         ) : (
-    //           <LowDot />
-    //         )}
-    //         <span className="ml-2">{status}</span>
-    //       </div>
-    //     );
-    //   },
-    // },
 
     {
-      header: "Discount Status",
+      header: "Status",
       accessorKey: "status",
       cell: (props) => {
         const status = props.row.original.status;
-        const isActive = typeof status === "string" && status.toLowerCase() === "active";
-    
+        const isActive =
+          typeof status === "string" && status.toLowerCase() === "active";
+
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
@@ -123,28 +142,42 @@ const InventoryTable = () => {
     {
       header: "",
       accessorKey: "action",
-      cell: (props) => (
-        <Menu shadow="md" width={150} position="bottom-end">
-          <Menu.Target>
-            <Button variant="subtle" size="xs" p={1}>
-              <MoreVertical size={20} className="cursor-pointer" />
-            </Button>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Link
-              to={ROUTES.updateInventory}
-              state={{ inventories: props.row.original }}
-            >
-              <Menu.Item>Update</Menu.Item>
-            </Link>
-            <Link to={ROUTES.triggerOrder}>
-              <Menu.Item color="red">Trigger Reorder</Menu.Item>
-            </Link>
-          </Menu.Dropdown>
-        </Menu>
-      ),
+      cell: (props) => {
+        return (
+          <Link
+            to={ROUTES.updateInventory}
+            state={{ inventories: props.row.original }}
+          >
+            <Text fw={700} c="customPrimary.10" className="cursor-pointer">
+              Reorder
+            </Text>
+          </Link>
+        );
+      },
     },
+
+    //   cell: (props) => (
+    //     <Menu shadow="md" width={150} position="bottom-end">
+    //       <Menu.Target>
+    //         <Button variant="subtle" size="xs" p={1}>
+    //           <MoreVertical size={20} className="cursor-pointer" />
+    //         </Button>
+    //       </Menu.Target>
+
+    // <Menu.Dropdown>
+    //   <Link
+    //     to={ROUTES.updateInventory}
+    //     state={{ inventories: props.row.original }}
+    //   >
+    //     <Menu.Item>Update</Menu.Item>
+    //   </Link>
+    //         <Link to={ROUTES.triggerOrder}>
+    //           <Menu.Item color="red">Trigger Reorder</Menu.Item>
+    //         </Link>
+    //       </Menu.Dropdown>
+    //     </Menu>
+    //   ),
+    // },
   ];
 
   return (

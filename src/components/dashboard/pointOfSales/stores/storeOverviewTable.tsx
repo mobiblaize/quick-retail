@@ -120,7 +120,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
       },
     },
     {
-      header: "Total Customers",
+      header: "Customers",
       accessorKey: "totalCustomer",
       cell: (props) => (
         <Text c="black" fw={500} className="text-sm font-medium">

@@ -1,21 +1,24 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Text, Loader } from "@mantine/core";
+import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { useFetchAllreturns } from "../../../../hooks/backendApis/pos/returns";
-import { shortenTransactionId, truncateText } from "../../../../utils/helpers";
+import {
+  formatDate,
+  shortenTransactionId,
+  truncateText,
+} from "../../../../utils/helpers";
 
-const ReturnsTable = () => {
-  const { data, isLoading } = useFetchAllreturns();
-
-  const returns = Array.isArray(data?.data?.returns?.data)
-    ? data.data.returns.data
-    : [];
-
+const ReturnsTable = ({
+  returns,
+  isLoading,
+}: {
+  returns: any[];
+  isLoading: any;
+}) => {
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
     productCode: item.product_variation?.sku || "N/A",
@@ -66,7 +69,7 @@ const ReturnsTable = () => {
             <Text fw={500} className="text-sm">
               ID:{" "}
               <span className="text-[#F16722]">
-                     {/* @ts-ignore  */}
+                {/* @ts-ignore  */}
                 {shortenTransactionId(row.original.productCode)}
               </span>
             </Text>
@@ -78,19 +81,23 @@ const ReturnsTable = () => {
       header: "Date Returned",
       accessorKey: "dateReturned",
       cell: ({ row }) => (
-        <Text c="textSecondary.7">{row.original.dateReturned}</Text>
-      ),
-    },
-    {
-      header: "Order ID",
-      accessorKey: "orderId",
-      cell: ({ row }) => (
         <Text c="textSecondary.7">
-          {/* @ts-ignore  */}
-          {shortenTransactionId(row.original.orderId)}
+          {" "}
+            {/* @ts-ignore */}
+          {formatDate(row.original.dateReturned)}
         </Text>
       ),
     },
+    // {
+    //   header: "Order ID",
+    //   accessorKey: "orderId",
+    //   cell: ({ row }) => (
+    //     <Text c="textSecondary.7">
+    //       {/* @ts-ignore  */}
+    //       {shortenTransactionId(row.original.orderId)}
+    //     </Text>
+    //   ),
+    // },
 
     {
       header: "Customer",
@@ -136,7 +143,7 @@ const ReturnsTable = () => {
           }}
         >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-            View Order
+            View
           </Text>
         </Link>
       ),

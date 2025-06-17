@@ -16,13 +16,19 @@ interface CustomerData {
 
 interface SearchCustomerProps {
   onCustomerSelect: (customerID: string | null) => void;
+  initialCustomerId?: string | null;
+  initialCustomerName?: string;
 }
 
 const SearchCustomer: React.FC<SearchCustomerProps> = ({
   onCustomerSelect,
+  initialCustomerId,
+  initialCustomerName,
 }) => {
   const [isExpanded, setIsExpanded] = useState(true);
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
+  const [searchTerm, setSearchTerm] = useState(initialCustomerName || "");
+
   const [newCustomer, setNewCustomer] = useState({
     customer_name: "",
     customer_email: "",
@@ -30,6 +36,18 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     customer_address: "",
   });
   const createCustomer = useCreateCustomer();
+  useEffect(() => {
+    if (initialCustomerId) {
+      // You could optionally pre-fetch customer data, or simply set the ID
+      onCustomerSelect(initialCustomerId);
+    }
+  }, [initialCustomerId, onCustomerSelect]);
+
+  useEffect(() => {
+    if (initialCustomerName) {
+      setSearchTerm(initialCustomerName);
+    }
+  }, [initialCustomerName])
   
   const handleCreateCustomer = () => {
     createCustomer.mutate(newCustomer, {
@@ -59,8 +77,9 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     });
   };
 
-  const [searchTerm, setSearchTerm] = useState("");
-
+  // const [searchTerm, setSearchTerm] = useState("");
+ ;
+  
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
     null
   );
