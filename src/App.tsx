@@ -223,7 +223,7 @@ export default function App() {
           <Route index element={<Pricing />} />
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />}/>
+        {/* <Route path="/signuppage" element={<SignupPage />}/> */}
         {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
 
         <Route
