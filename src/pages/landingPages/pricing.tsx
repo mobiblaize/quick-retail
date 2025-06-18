@@ -1,5 +1,5 @@
 import Solution from "../../components/landingComponent/pricing/solution";
-import SubscriptionDetails from "../../components/landingComponent/pricing/subscriptionDetails";
+import SubscriptionDetails from "../../components/landingComponent/pricing/SubscriptionDetails";
 import Banner from "./banner";
 
 const Pricing = () => {

@@ -1,7 +1,7 @@
 import { TextInput, PasswordInput, Button, Box } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
-import { LogoSvg } from "../../assets/svg/logoSvg";
+
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link } from "react-router-dom";

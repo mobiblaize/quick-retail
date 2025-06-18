@@ -8,7 +8,7 @@ import {
   selectedSubs,
   totalPrice,
   billingTypeStore,
-} from "../pricing/subscriptionDetails";
+} from "../pricing/SubscriptionDetails";
 
 import { useFetchData, usePostData } from "../../../hooks/useApis";
 

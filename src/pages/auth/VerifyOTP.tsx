@@ -8,7 +8,6 @@ import ForgotPasswordImage from "../../assets/images/forgetPassword.png";
 import { useNavigate } from "react-router-dom";
 import { useCountdown } from "../../hooks/useCountdown";
 import { useMediaQuery } from "@mantine/hooks";
-import { useState } from "react";
 
 const schema = z.object({
   otp: z.string().min(6, { message: "Invalid code" }),
@@ -22,8 +21,6 @@ const VerifyOTP = () => {
   // get token and email from url
   const token = new URLSearchParams(window.location.search).get("token");
   const email = new URLSearchParams(window.location.search).get("email");
-  // state for user input otp
-  const [userId, setUserId] = useState("");
 
   const { mutateAsync: verifyOTP, isPending } = usePostData(
     "auth/forgot-password/verify-code"
@@ -56,7 +53,6 @@ const VerifyOTP = () => {
       console.log(res);
       if (!res) return;
 
-      setUserId(res?.data?.user?.user_uuid);
       notifications.show({
         title: "Success",
         message: res?.message || "OTP sent successfully",

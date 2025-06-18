@@ -1,7 +1,7 @@
 import { Modal, Button, Text, Box, Center, Title } from "@mantine/core";
 
 import successGif from "../../../assets/gif/bookingSuccess.gif";
-import { useNavigate } from "react-router-dom";
+
 import { useFetchData } from "../../../hooks/useApis";
 import { handleOpenEmail } from "../../../utils/handleEmail";
 import { useEffect } from "react";

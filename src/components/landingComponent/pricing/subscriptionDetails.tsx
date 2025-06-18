@@ -1,9 +1,9 @@
-import { Box, Button, Card, Divider, Group, Text, Title } from "@mantine/core";
+import { Box, Button, Card, Group, Loader, Text, Title } from "@mantine/core";
 import { atom, useAtomValue, useAtom, useSetAtom } from "jotai";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import { Link } from "react-router";
 import { useFetchData } from "../../../hooks/useApis";
-import { ArrowUpRight, Loader } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { formatMoney } from "../../../utils/helpers";
 import SubscriptionPlans from "./SubscriptionPlans";
 
@@ -15,6 +15,7 @@ export const selectedSubs = atom<any[]>([]);
 export const registerData = atom<{ data: any; payment_url: string } | null>(
   null
 );
+export const selectedApp = atom<any[]>([]);
 
 const subscriptionPlan = [
   { id: 1, name: "Free Trial", slug: "trial" },
@@ -24,12 +25,10 @@ const subscriptionPlan = [
 
 const SubscriptionDetails = () => {
   const [activePlan, setActivePlan] = useAtom(billingTypeStore);
-  const [selectedApps, setSelectedApps] = useState<any[]>([]);
+  const [selectedApps, setSelectedApps] = useAtom(selectedApp);
   const totalPriceValue = useAtomValue(totalPrice);
   const setTotalPriceValue = useSetAtom(totalPrice);
-  const selectedSub = useAtomValue(selectedSubs);
-
-  console.log(selectedSub);
+  const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
 
   const { data: subscriptionPlans, isPending: subscriptionPlansLoading } =
     useFetchData(`applications/allSubscription?billing_type=${activePlan}`);
@@ -70,6 +69,13 @@ const SubscriptionDetails = () => {
       setTotalPriceValue(newTotal);
     }
   }, [activePlan, subscriptionPlans, selectedApps, setTotalPriceValue]);
+
+  useEffect(() => {
+    setSelectedApps([]);
+    setSelectedSub([]);
+
+    console.log("working");
+  }, [activePlan]);
 
   return (
     <Box
@@ -148,7 +154,7 @@ const SubscriptionDetails = () => {
             </div>
             {subscriptionPlansLoading && (
               <div className="flex justify-center items-center h-[20vh] w-full bg-white rounded-lg">
-                <Loader size={40} color="#3E1C96" />
+                <Loader size={40} />
               </div>
             )}
             {/* Subscription plans section */}
