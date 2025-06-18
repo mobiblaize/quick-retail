@@ -1,19 +1,19 @@
 import PageContainer from "../../../layout/pageContainer";
 import ProductTable from "../../../components/dashboard/pointOfSales/productManagement/productTable";
-import { Menu, Button, Text } from "@mantine/core";
-import { ChevronDown, Plus } from "lucide-react";
-import { useNavigate } from "react-router";
+import { Button, Text } from "@mantine/core";
+import AddProduct from "../../../components/dashboard/pointOfSales/productManagement/modal/addProductModal";
+import { useState } from "react";
 
 const ProductManagementPage = () => {
-  const navigate = useNavigate();
+  const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
 
-  const handleAddProduct = () => {
-    navigate("/dashboard/product-management/add-new-product");
-  };
+  // const handleAddProduct = () => {
+  //   navigate("/dashboard/product-management/add-new-product");
+  // };
 
-  const handleAddBulkProducts = () => {
-    navigate("/dashboard/product-management/add-bulk-product");
-  };
+  // const handleAddBulkProducts = () => {
+  //   navigate("/dashboard/product-management/add-bulk-product");
+  // };
 
   const subHeaders = [
     <div className="justify-between flex items-center">
@@ -23,95 +23,23 @@ const ProductManagementPage = () => {
 
       <div>
         <div className="hidden sm:block">
-          <Menu>
-            <Menu.Target>
-              <Button variant="filled-primary">
-                Add New Product
-                <ChevronDown className="ml-2" />
-              </Button>
-            </Menu.Target>
-
-            <Menu.Dropdown
-              style={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                padding: "10px",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Menu.Item
-                style={{
-                  fontSize: "14px",
-                  padding: "8px 16px",
-                  color: "#333",
-                }}
-                onClick={handleAddProduct}
-              >
-                Add a product
-              </Menu.Item>
-              {/* <Menu.Item
-                style={{
-                  fontSize: "14px",
-                  padding: "8px 16px",
-                  color: "#333",
-                }}
-                onClick={handleAddBulkProducts}
-              >
-                Add bulk products
-              </Menu.Item> */}
-            </Menu.Dropdown>
-          </Menu>
+          <Button
+            onClick={() => setIsLogComplaintsOpen(true)}
+            variant="filled-primary"
+            className="flex gap-1.5"
+          >
+            Add a product
+          </Button>
         </div>
 
         <div className="block sm:hidden">
-          <Menu>
-            <Menu.Target>
-              <Button
-                variant="filled-primary"
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  padding: "0",
-                  borderRadius: "20%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
-                }}
-              >
-                <Plus size={20} />
-              </Button>
-            </Menu.Target>
-
-            <Menu.Dropdown
-              style={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                padding: "10px",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Menu.Item
-                style={{
-                  fontSize: "14px",
-                  padding: "8px 16px",
-                  color: "#333",
-                }}
-                onClick={handleAddProduct}
-              >
-                Add a product
-              </Menu.Item>
-              <Menu.Item
-                style={{
-                  fontSize: "14px",
-                  padding: "8px 16px",
-                  color: "#333",
-                }}
-                onClick={handleAddBulkProducts}
-              >
-                Add bulk products
-              </Menu.Item>
-            </Menu.Dropdown>
-          </Menu>
+           <Button
+            onClick={() => setIsLogComplaintsOpen(true)}
+            variant="filled-primary"
+            className="flex gap-1.5"
+          >
+            Add a product
+          </Button>
         </div>
       </div>
     </div>,
@@ -120,6 +48,10 @@ const ProductManagementPage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       <ProductTable />
+      <AddProduct
+        opened={isLogComplaintsOpen}
+        onClose={() => setIsLogComplaintsOpen(false)}
+      />
     </PageContainer>
   );
 };
