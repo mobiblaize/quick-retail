@@ -11,9 +11,8 @@ import {
   selectedSubs,
   totalPrice,
   selectedApp,
+  billingType,
 } from "../../../store/subscriptionStore";
-
-export type billingType = "trial" | "monthly" | "yearly";
 
 const subscriptionPlan = [
   { id: 1, name: "Free Trial", slug: "trial" },

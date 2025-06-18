@@ -8,6 +8,7 @@ import {
   selectedSubs,
   totalPrice,
   billingTypeStore,
+  SubscriptionData,
 } from "../../../store/subscriptionStore";
 
 import { useFetchData, usePostData } from "../../../hooks/useApis";
@@ -18,6 +19,24 @@ import { formatMoney } from "../../../utils/helpers";
 import PaymentSuccessModal from "./PaymentSuccessModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  companyName: string;
+  companySize: string;
+  phoneNumber: string;
+  email: string;
+  cardName: string;
+  cardNumber: string;
+  expiration: string;
+  cvv: string;
+}
+
+interface CompanySize {
+  label: string;
+  value: string;
+}
 
 const PaymentSummary = () => {
   const selectedSub = useAtomValue(selectedSubs);
@@ -99,7 +118,7 @@ const PaymentSummary = () => {
     },
   });
 
-  const handleSubmit = async (values: any) => {
+  const handleSubmit = async (values: FormValues) => {
     const payload = {
       company_name: values.companyName,
       firstname: values.firstName,
@@ -111,7 +130,7 @@ const PaymentSummary = () => {
       payment_method: "paystack",
       password_url: windowUrl + "/create-password",
       paystack_complete_callback: windowUrl + "/payment-summary",
-      applications: selectedSub.map((sub: any) => ({
+      applications: selectedSub.map((sub: SubscriptionData) => ({
         subscription_id: sub.id,
         application_id: sub.application_id,
         amount: sub.amount,
@@ -216,7 +235,7 @@ const PaymentSummary = () => {
                     placeholder="Select your company size"
                     disabled={isCompanySizesPending}
                     data={
-                      companySizes?.data?.map((size: any) => ({
+                      companySizes?.data?.map((size: CompanySize) => ({
                         value: size?.label,
                         label: size?.label,
                       })) || []
@@ -244,7 +263,7 @@ const PaymentSummary = () => {
                 Subscription Summary
               </h4>
               <div className="flex flex-col gap-4">
-                {selectedSub.map((sub: any) => (
+                {selectedSub.map((sub: SubscriptionData) => (
                   <div
                     key={sub.id}
                     className="flex items-center justify-between border rounded-lg px-4 py-3"
@@ -294,7 +313,7 @@ const PaymentSummary = () => {
                   Payment Summary
                 </h4>
                 <div className="flex flex-col gap-2">
-                  {selectedSub.map((sub: any, index: number) => (
+                  {selectedSub.map((sub: SubscriptionData, index: number) => (
                     <div
                       key={sub.id}
                       // border should not show for the last item
@@ -315,21 +334,19 @@ const PaymentSummary = () => {
                     <span>
                       Additional User Seats (
                       {selectedSub.reduce(
-                        (sum: number, sub: any) =>
+                        (sum: number, sub: SubscriptionData) =>
                           sum + (sub.additional_user_seat_number || 0),
                         0
                       )}
                       X ₦
-                      {formatMoney(
-                        Number(selectedSub[0]?.price_per_seat?.toLocaleString())
-                      ) || 0}
+                      {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))}
                       )
                     </span>
                     <span className="text-[#F16722]">
                       ₦{" "}
                       {selectedSub
                         .reduce(
-                          (sum: number, sub: any) =>
+                          (sum: number, sub: SubscriptionData) =>
                             sum +
                             (sub.additional_user_seat_number || 0) *
                               (sub.price_per_seat || 0),
