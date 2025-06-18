@@ -6,7 +6,7 @@ import {
   billingTypeStore,
   totalPrice,
   selectedSubs,
-} from "./SubscriptionDetails";
+} from "../../../store/subscriptionStore";
 
 const SubscriptionPlans = ({ data }: any) => {
   return (

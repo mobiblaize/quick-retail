@@ -1,21 +1,19 @@
 import { Box, Button, Card, Group, Loader, Text, Title } from "@mantine/core";
-import { atom, useAtomValue, useAtom, useSetAtom } from "jotai";
+import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { Link } from "react-router";
 import { useFetchData } from "../../../hooks/useApis";
 import { ArrowUpRight } from "lucide-react";
 import { formatMoney } from "../../../utils/helpers";
 import SubscriptionPlans from "./SubscriptionPlans";
+import {
+  billingTypeStore,
+  selectedSubs,
+  totalPrice,
+  selectedApp,
+} from "../../../store/subscriptionStore";
 
 export type billingType = "trial" | "monthly" | "yearly";
-
-export const billingTypeStore = atom<billingType>("trial");
-export const totalPrice = atom<number>(0);
-export const selectedSubs = atom<any[]>([]);
-export const registerData = atom<{ data: any; payment_url: string } | null>(
-  null
-);
-export const selectedApp = atom<any[]>([]);
 
 const subscriptionPlan = [
   { id: 1, name: "Free Trial", slug: "trial" },

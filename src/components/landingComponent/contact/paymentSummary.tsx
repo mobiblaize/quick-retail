@@ -8,7 +8,7 @@ import {
   selectedSubs,
   totalPrice,
   billingTypeStore,
-} from "../pricing/SubscriptionDetails";
+} from "../../../store/subscriptionStore";
 
 import { useFetchData, usePostData } from "../../../hooks/useApis";
 
@@ -389,7 +389,6 @@ const PaymentSummary = () => {
                     <TextInput
                       className="w-1/2"
                       label="Cvv"
-                      required
                       placeholder="123"
                       {...paymentForm.getInputProps("cvv")}
                     />
