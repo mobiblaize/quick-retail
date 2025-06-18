@@ -2,8 +2,12 @@ import frame from "../../assets/images/banner.png";
 
 const Banner = () => {
   return (
-    <div className="w-full relative">
-      <img src={frame} alt="frame" className="w-full h-auto" />
+    <div className="w-full relative min-h-[500px]">
+      <img
+        src={frame}
+        alt="frame"
+        className="w-full min-h-[500px] h-full object-cover"
+      />
 
       <div className="absolute inset-0 flex flex-col items-center justify-center text-center px-4">
         <h1 className="text-5xl font-clash-regular text-gray-800 mb-4 max-w-4xl">
@@ -17,4 +21,4 @@ const Banner = () => {
   );
 };
 
-export default Banner;
+export default Banner;

@@ -1,7 +1,9 @@
 import hero from "../../../assets/images/hero.png";
 import heroBg from "../../../assets/images/herobg.png";
+import { useNavigate } from "react-router-dom";
 
 export default function HeroSection() {
+  const navigate = useNavigate();
   return (
     <section className="container max-w-7xl mt-4 sm:mt-6 mx-auto">
       <div className="px-4 pt-6 sm:pt-8">
@@ -26,7 +28,10 @@ export default function HeroSection() {
                 statements, including balance sheets, general ledger, and
                 banking transactions at ease.
               </p>
-              <button className="bg-[#F16722] mb-12 sm:mb-18 rounded-xl px-4 sm:px-5 py-2.5 sm:py-2 text-white text-sm sm:text-base hover:bg-[#e55a1f] transition-colors">
+              <button
+                onClick={() => navigate("/signup")}
+                className="bg-[#F16722] mb-12 cursor-pointer sm:mb-18 rounded-xl px-4 sm:px-5 py-2.5 sm:py-2 text-white text-sm sm:text-base hover:bg-[#e55a1f] transition-colors"
+              >
                 Get Started Now
               </button>
               <div className="mt-auto shadow-lg max-w-4xl mx-auto rounded-lg sm:rounded-xl overflow-hidden">

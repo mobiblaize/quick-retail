@@ -17,24 +17,24 @@ export const formatDate = (dateString: string) => {
   return `${datePart} ${timePart}`; // 👈 no "at", no seconds
 };
 
+export function shortenTransactionId(id: string, length = 8): string {
+  if (!id) return "";
+  // Remove dashes to get a clean substring, optional
+  const cleanId = id.replace(/-/g, "");
+  return cleanId.length > length ? cleanId.slice(0, length) : cleanId;
+}
+export function toSentenceCase(str: string) {
+  if (!str) return "";
+  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+}
+export const formatCurrency = (amount: number) => {
+  if (isNaN(amount)) return "₦ 0";
+  return `₦ ${amount.toLocaleString()}`;
+};
+export function truncateText(text: string, length = 10) {
+  return text.length > length ? text.slice(0, length) + "..." : text;
+}
 
-  
-  export function shortenTransactionId(id: string, length = 8): string {
-    if (!id) return "";
-    // Remove dashes to get a clean substring, optional
-    const cleanId = id.replace(/-/g, "");
-    return cleanId.length > length ? cleanId.slice(0, length) : cleanId;
-  }
-  export function toSentenceCase(str: string) {
-    if (!str) return "";
-    return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
-  }
-  export const formatCurrency = (amount: number) => {
-    if (isNaN(amount)) return "₦ 0";
-    return `₦ ${amount.toLocaleString()}`;
-  };
-  export function truncateText(text: string, length = 10) {
-    return text.length > length ? text.slice(0, length) + "..." : text;
-  }
-  
-  
+export function formatMoney(amount: number, decimals: number = 2): string {
+  return amount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+}

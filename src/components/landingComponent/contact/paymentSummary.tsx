@@ -1,212 +1,440 @@
+import { ArrowUpRight, ChevronDown } from "lucide-react";
+
+import { Card, Button, TextInput, Text, Select } from "@mantine/core";
+
+import { isEmail, isNotEmpty, useForm } from "@mantine/form";
+import { useAtomValue } from "jotai";
+import {
+  selectedSubs,
+  totalPrice,
+  billingTypeStore,
+  SubscriptionData,
+} from "../../../store/subscriptionStore";
+
+import { useFetchData, usePostData } from "../../../hooks/useApis";
+
 import { notifications } from "@mantine/notifications";
-import { useSignUpUser } from "../../../hooks/backendApis/authentication/signupAuth";
-import { useSignupStore } from "./useSignupStore";
-import { useForm } from "@mantine/form";
+import NoSubCard from "./NoSubCard";
+import { formatMoney } from "../../../utils/helpers";
+import PaymentSuccessModal from "./PaymentSuccessModal";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
-type Props = {
-  numberOfApps: number;
-  totalCost: number;
-  form: ReturnType<typeof useForm>;
-};
+interface FormValues {
+  firstName: string;
+  lastName: string;
+  companyName: string;
+  companySize: string;
+  phoneNumber: string;
+  email: string;
+  cardName: string;
+  cardNumber: string;
+  expiration: string;
+  cvv: string;
+}
 
-const PaymentSummary = ({ numberOfApps, totalCost, form }: Props) => {
-  const setPayload = useSignupStore((state) => state.setPayload);
-  // const payload = useSignupStore((state) => state.payload);
-  const { mutateAsync: register, isPending } = useSignUpUser();
+interface CompanySize {
+  label: string;
+  value: string;
+}
 
-  const handlePay = async () => {
-    const validation = form.validate();
-    if (validation.hasErrors) {
-      notifications.show({
-        title: "Validation Error",
-        message: "Please fill all required fields correctly.",
-        color: "red",
-      });
-      return;
-    }
+const PaymentSummary = () => {
+  const selectedSub = useAtomValue(selectedSubs);
+  const totalPriceValue = useAtomValue(totalPrice);
+  const billingType = useAtomValue(billingTypeStore);
+  const navigate = useNavigate();
+  const reference = new URLSearchParams(window.location.search).get(
+    "reference"
+  );
+  const [opened, setOpened] = useState(!!reference);
 
-    const values = form.values;
+  const windowUrl = window.location.origin;
 
-    const completePayload = {
-      firstname: values.firstname,
-      lastname: values.lastname,
-      phoneno: values.phoneno,
+  const { data: companySizes, isPending: isCompanySizesPending } = useFetchData(
+    "applications/company-sizes"
+  );
+
+  console.log(companySizes?.data);
+
+  const { mutateAsync: createPayment, isPending } = usePostData(
+    "auth/signup/register"
+  );
+
+  const paymentForm = useForm({
+    initialValues: {
+      firstName: "",
+      lastName: "",
+      companyName: "",
+      companySize: "",
+      phoneNumber: "",
+      email: "",
+      cardName: "",
+      cardNumber: "",
+      expiration: "",
+      cvv: "",
+    },
+    validate: {
+      firstName: isNotEmpty("First Name is required"),
+      lastName: isNotEmpty("Last Name is required"),
+      companySize: isNotEmpty("Company Size is required"),
+      companyName: isNotEmpty("Company Name is required"),
+      phoneNumber: (value) => {
+        if (!value) return "Phone number is required";
+        if (!/^\+?[0-9]{6,15}$/.test(value))
+          return "Invalid phone number format";
+        return null;
+      },
+      email: isEmail("Invalid email"),
+      cardName: (value) => {
+        //  only validate when the cardName is not empty
+        if (value) {
+          if (!/^[a-zA-Z\s]+$/.test(value)) return "Invalid card name";
+        }
+        return null;
+      },
+      cardNumber: (value) => {
+        //  only validate when the cardNumber is not empty
+        if (value) {
+          if (!/^[0-9]{16}$/.test(value.replace(/\s/g, "")))
+            return "Invalid card number";
+        }
+        return null;
+      },
+      expiration: (value) => {
+        //  only validate when the expiration is not empty
+        if (value) {
+          if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(value))
+            return "Invalid expiration date (MM/YY)";
+        }
+        return null;
+      },
+      cvv: (value) => {
+        //  only validate when the cvv is not empty
+        if (value) {
+          if (!/^[0-9]{3,4}$/.test(value)) return "Invalid CVV";
+        }
+        return null;
+      },
+    },
+  });
+
+  const handleSubmit = async (values: FormValues) => {
+    const payload = {
+      company_name: values.companyName,
+      firstname: values.firstName,
+      lastname: values.lastName,
+      company_size_id: 1,
+      phoneno: values.phoneNumber,
       email: values.email,
-      company_name: values.company_name,
-      company_size_id:
-        typeof values.company_size_id === "string"
-          ? parseInt(values.company_size_id, 10)
-          : values.company_size_id,
-      billing_type: "trial",
+      billing_type: billingType,
       payment_method: "paystack",
-      password_url: "https://api-quick-retail.sbscuk.co.uk/public",
-      paystack_complete_callback:
-        "https://api-quick-retail.sbscuk.co.uk/public",
-      applications: [
-        {
-          subscription_id: "3",
-          application_id: "1",
-          amount: "9000",
-          additional_seat: "1",
-        },
-        {
-          subscription_id: "4",
-          application_id: "2",
-          amount: "9000",
-          additional_seat: "2",
-        },
-        {
-          subscription_id: "5",
-          application_id: "3",
-          amount: "9000",
-          additional_seat: "3",
-        },
-      ],
+      password_url: windowUrl + "/create-password",
+      paystack_complete_callback: windowUrl + "/payment-summary",
+      applications: selectedSub.map((sub: SubscriptionData) => ({
+        subscription_id: sub.id,
+        application_id: sub.application_id,
+        amount: sub.amount,
+        additional_seat: sub.additional_user_seat_number,
+      })),
     };
 
-    setPayload(completePayload);
-
     try {
-      const res = await register(completePayload);
-      if (!res?.data?.auth_url) {
-        throw new Error("Could not initialize payment.");
-      }
+      const response = await createPayment(payload);
+      console.log(response);
+      sessionStorage.setItem("registerEmail", values.email);
+      sessionStorage.setItem("registerData", response?.data);
 
-      window.location.href = res.data.auth_url;
-    } catch (error: any) {
+      window.location.href = response?.data?.auth_url;
+    } catch (error) {
       notifications.show({
-        title: "Error",
-        message:
-          error?.response?.data?.message ||
-          "Signup or payment failed. Try again later.",
+        title: "Payment Error",
+        message: "Failed to initialize payment. Please try again.",
         color: "red",
       });
+      console.error(error);
     }
   };
 
-  const vat = 0;
+  // if selectedSub is empty, show a message
+  if (selectedSub.length === 0 && !reference) {
+    return <NoSubCard />;
+  }
 
-  const summary = [
-    {
-      label: "Number of Apps",
-      description: `${numberOfApps} ${numberOfApps === 1 ? "App" : "Apps"}`,
-    },
-    {
-      label: "Total Cost",
-      description: `₦ ${totalCost.toLocaleString()}`,
-    },
-    {
-      label: "VAT (7.5%)",
-      description: `₦ ${vat.toLocaleString()}`,
-    },
-  ];
+  if (reference) {
+    return (
+      <PaymentSuccessModal
+        opened={opened}
+        onClose={() => setOpened(false)}
+        onCompleteSetup={() => {
+          // handle setup completion (e.g., navigate)
+          setOpened(false);
+          navigate("/login");
+        }}
+      />
+    );
+  }
 
   return (
-    <div className="bg-white border border-[#D0D5DD] rounded-lg p-4 sm:p-6 lg:p-8 h-fit">
-      <p className="text-base sm:text-lg font-semibold tracking-wider text-[#48464E] leading-6">
-        Payment Summary
-      </p>
+    <div className="flex flex-col min-h-screen mt-6">
+      {/* Main Content */}
 
-      <div className="mt-4 sm:mt-6 flex flex-col gap-4 sm:gap-6">
-        {summary.map((item, index) => (
-          <div
-            key={index}
-            className="flex justify-between items-center py-3 border-b border-[#E4E7EC]"
-          >
-            <span className="text-sm sm:text-base text-[#48464E] font-normal">
-              {item.label}
-            </span>
-            <span className="text-sm sm:text-base text-[#F16722] font-semibold">
-              {item.description}
-            </span>
-          </div>
-        ))}
-      </div>
-
-      <div className="mt-6 sm:mt-8">
-        <h2 className="text-base sm:text-lg mb-4 font-semibold tracking-wider text-[#48464E] leading-6">
-          Add Your Card
-        </h2>
-        <p className="font-sans text-[#48464E] text-sm sm:text-base leading-relaxed">
-          You will be charged when you exceed your 60 days free trial period.
-          You can choose to cancel or upgrade your plan before the free trial
-          expires.
-        </p>
-
-        <div className="mt-5 sm:mt-6 flex flex-col gap-4 sm:gap-6">
-          <div className="flex flex-col">
-            <label
-              htmlFor="cardName"
-              className="text-[#48464E] font-normal mb-2 text-sm sm:text-base"
+      <main className="flex-grow ">
+        <form
+          onSubmit={paymentForm.onSubmit(handleSubmit)}
+          className="space-y-8"
+        >
+          {/* Left: User Details & Subscription Summary */}
+          <div className="flex flex-col gap-8">
+            <Card
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+              className="!bg-white"
             >
-              Card Name <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="cardName"
-              type="text"
-              placeholder="Enter cardholder name"
-              className="border px-3 sm:px-4 shadow-sm rounded-md py-2 sm:py-3 border-[#D0D5DD] text-sm sm:text-base focus:ring-2 focus:ring-[#F16722] focus:border-[#F16722] transition-colors"
-            />
-          </div>
+              <h4 className="text-xl font-bold text-[#48464E] mb-4">
+                Your Details
+              </h4>
+              <div className="flex flex-col gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <TextInput
+                    label="First Name"
+                    placeholder="Enter your first name"
+                    {...paymentForm.getInputProps("firstName")}
+                  />
+                  <TextInput
+                    label="Last Name"
+                    placeholder="Enter your last name"
+                    {...paymentForm.getInputProps("lastName")}
+                  />
+                </div>
 
-          <div className="flex flex-col">
-            <label
-              htmlFor="cardNumber"
-              className="text-[#48464E] font-normal mb-2 text-sm sm:text-base"
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <TextInput
+                    label="Phone Number"
+                    type="tel"
+                    placeholder="+234"
+                    {...paymentForm.getInputProps("phoneNumber")}
+                  />
+
+                  <TextInput
+                    label="Email"
+                    type="email"
+                    placeholder="example@company.com"
+                    {...paymentForm.getInputProps("email")}
+                  />
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <TextInput
+                    label="Company Name"
+                    placeholder="Enter your company name"
+                    {...paymentForm.getInputProps("companyName")}
+                  />
+                  <Select
+                    label="Company Size"
+                    placeholder="Select your company size"
+                    disabled={isCompanySizesPending}
+                    data={
+                      companySizes?.data?.map((size: CompanySize) => ({
+                        value: size?.label,
+                        label: size?.label,
+                      })) || []
+                    }
+                    {...paymentForm.getInputProps("companySize")}
+                    rightSection={<ChevronDown size={16} />}
+                    rightSectionProps={{
+                      className: "text-[#F56630] text-sm",
+                    }}
+                  />
+                </div>
+              </div>
+            </Card>
+          </div>
+          {/* Right: Payment Summary & Card Form */}
+          <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-8 ">
+            <Card
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+              className="!bg-white"
             >
-              Card Number <span className="text-red-500">*</span>
-            </label>
-            <input
-              id="cardNumber"
-              type="text"
-              placeholder="1234 5678 9012 3456"
-              className="border px-3 sm:px-4 shadow-sm rounded-md py-2 sm:py-3 border-[#D0D5DD] text-sm sm:text-base focus:ring-2 focus:ring-[#F16722] focus:border-[#F16722] transition-colors"
-            />
+              <h4 className="text-lg font-bold text-[#48464E] mb-4">
+                Subscription Summary
+              </h4>
+              <div className="flex flex-col gap-4">
+                {selectedSub.map((sub: SubscriptionData) => (
+                  <div
+                    key={sub.id}
+                    className="flex items-center justify-between border rounded-lg px-4 py-3"
+                  >
+                    <div>
+                      <div className="font-semibold text-[#48464E]">
+                        {sub?.application?.name}
+                      </div>
+                      <div className="text-xs text-[#6C6975]">
+                        {sub?.application?.free_user_access} Admin Seat (Free) |{" "}
+                        {sub?.additional_user_seat_number} Additional Seat
+                      </div>
+                    </div>
+                    <div className="font-bold text-[#F16722]">
+                      ₦ {formatMoney(Number(sub?.amount))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="mt-6 border-t pt-4">
+                <h4 className="text-[#48464E] text-lg font-bold pb-4">
+                  Other Details
+                </h4>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="font-medium">Billing Type</span>
+                  <span>Monthly (1 Month)</span>
+                </div>
+                <div className="flex justify-between text-sm mb-2">
+                  <span className="font-medium">Billing Start</span>
+                  <span>April 11, 2025</span>
+                </div>
+                <div className="flex justify-between text-sm">
+                  <span className="font-medium">Billing Ends</span>
+                  <span>May 11, 2025</span>
+                </div>
+              </div>
+            </Card>
+            <Card
+              className="flex flex-col gap-8 h-fit "
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+            >
+              <div className="">
+                <h4 className="text-lg font-bold text-[#48464E] mb-4">
+                  Payment Summary
+                </h4>
+                <div className="flex flex-col gap-2">
+                  {selectedSub.map((sub: SubscriptionData, index: number) => (
+                    <div
+                      key={sub.id}
+                      // border should not show for the last item
+                      className={`flex justify-between text-sm py-2 border-b border-[#EAECF0] ${
+                        index === selectedSub.length - 1
+                          ? "border-b-0"
+                          : "border-b"
+                      }`}
+                    >
+                      <span>{sub?.application?.name}</span>
+                      <span className=" text-[#F16722]">
+                        ₦ {formatMoney(Number(sub?.amount)).toLocaleString()}
+                      </span>
+                    </div>
+                  ))}
+                  {/* Additional User Seats */}
+                  <div className="flex justify-between text-sm py-2 border-b border-[#EAECF0]">
+                    <span>
+                      Additional User Seats (
+                      {selectedSub.reduce(
+                        (sum: number, sub: SubscriptionData) =>
+                          sum + (sub.additional_user_seat_number || 0),
+                        0
+                      )}
+                      X ₦
+                      {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))}
+                      )
+                    </span>
+                    <span className="text-[#F16722]">
+                      ₦{" "}
+                      {selectedSub
+                        .reduce(
+                          (sum: number, sub: SubscriptionData) =>
+                            sum +
+                            (sub.additional_user_seat_number || 0) *
+                              (sub.price_per_seat || 0),
+                          0
+                        )
+                        .toLocaleString()}
+                    </span>
+                  </div>
+                  {/* VAT and Total */}
+                  <div className="flex justify-between text-sm py-2 border-b border-[#EAECF0]">
+                    <span>V.A.T (7.5%)</span>
+                    <span className="text-[#F16722]">
+                      ₦{" "}
+                      {formatMoney(
+                        Math.round(totalPriceValue * 1.075)
+                      ).toLocaleString()}
+                    </span>
+                  </div>
+                  <div className="flex justify-between  text-sm   pb-2 mt-2 border-b border-[#EAECF0]">
+                    <span>Total Cost</span>
+                    <span className="text-[#F16722]">
+                      ₦{" "}
+                      {formatMoney(
+                        Math.round(totalPriceValue * 1.075)
+                      ).toLocaleString()}
+                    </span>
+                  </div>
+                </div>
+              </div>
+              <div className="">
+                <h4 className=" font-bold text-[#48464E] mb-4">
+                  Add Your Card
+                </h4>
+                <Text size="sm" c="#6C6975" className="mb-4">
+                  Add Your Card You will be charged when you exceed your 60 days
+                  free trial period. You can choose to cancel or upgrade your
+                  plan before the free trial expires.
+                </Text>
+                <div className="flex flex-col gap-4 mt-4">
+                  <TextInput
+                    label="Card Name"
+                    placeholder="Name on card"
+                    {...paymentForm.getInputProps("cardName")}
+                  />
+                  <TextInput
+                    label="Card Number"
+                    placeholder="1234 5678 9012 3456"
+                    {...paymentForm.getInputProps("cardNumber")}
+                  />
+                  <div className="flex gap-4">
+                    <TextInput
+                      className="w-1/2"
+                      label="Expiration"
+                      placeholder="MM/YY"
+                      {...paymentForm.getInputProps("expiration")}
+                    />
+                    <TextInput
+                      className="w-1/2"
+                      label="Cvv"
+                      placeholder="123"
+                      {...paymentForm.getInputProps("cvv")}
+                    />
+                  </div>
+                  <Button
+                    color="#F56630"
+                    radius="xl"
+                    size="md"
+                    className="w-full mt-4"
+                    rightSection={<ArrowUpRight size={16} />}
+                    type="submit"
+                    loading={isPending}
+                  >
+                    Pay ₦{" "}
+                    {formatMoney(
+                      Math.round(totalPriceValue * 1.075)
+                    ).toLocaleString()}{" "}
+                    Now
+                  </Button>
+                </div>
+              </div>
+            </Card>
           </div>
-
-          <div className="grid grid-cols-2 gap-3 sm:gap-4">
-            <div className="flex flex-col">
-              <label
-                htmlFor="expiration"
-                className="text-[#48464E] font-normal mb-2 text-sm sm:text-base"
-              >
-                Expiration <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="expiration"
-                type="text"
-                placeholder="MM/YY"
-                className="border px-3 sm:px-4 shadow-sm rounded-md py-2 sm:py-3 border-[#D0D5DD] text-sm sm:text-base focus:ring-2 focus:ring-[#F16722] focus:border-[#F16722] transition-colors"
-              />
-            </div>
-            <div className="flex flex-col">
-              <label
-                htmlFor="cvv"
-                className="text-[#48464E] font-normal mb-2 text-sm sm:text-base"
-              >
-                CVV <span className="text-red-500">*</span>
-              </label>
-              <input
-                id="cvv"
-                type="text"
-                placeholder="123"
-                className="border px-3 sm:px-4 shadow-sm rounded-md py-2 sm:py-3 border-[#D0D5DD] text-sm sm:text-base focus:ring-2 focus:ring-[#F16722] focus:border-[#F16722] transition-colors"
-              />
-            </div>
-          </div>
-
-          <button
-            type="button"
-            className="bg-[#F16722] hover:bg-[#E55A1A] rounded-md mt-4 py-3 sm:py-4 text-white font-sans font-semibold text-sm sm:text-base transition-colors duration-200 focus:ring-2 focus:ring-[#F16722] focus:ring-offset-2"
-            onClick={handlePay}
-            disabled={isPending}
-          >
-            {isPending ? "Processing..." : "Pay"}
-          </button>
-        </div>
-      </div>
+        </form>
+      </main>
     </div>
   );
 };
 
 export default PaymentSummary;
+
+// http://localhost:5173/payment-successful?trxref=dnnmfyby4j&reference=dnnmfyby4j
