@@ -1,5 +1,5 @@
 import Solution from "../../components/landingComponent/pricing/solution";
-import SubscriptionDetails from "../../components/landingComponent/pricing/SubscriptionDetails";
+import SubDetails from "../../components/landingComponent/pricing/SubDetails";
 import Banner from "./banner";
 
 const Pricing = () => {
@@ -7,7 +7,7 @@ const Pricing = () => {
     <main>
       <Banner />
       <Solution />
-      <SubscriptionDetails />
+      <SubDetails />
     </main>
   );
 };

@@ -20,7 +20,7 @@ const subscriptionPlan = [
   { id: 3, name: "Billed Annually", slug: "yearly" },
 ];
 
-const SubscriptionDetails = () => {
+const SubDetails = () => {
   const [activePlan, setActivePlan] = useAtom(billingTypeStore);
   const [selectedApps, setSelectedApps] = useAtom(selectedApp);
   const totalPriceValue = useAtomValue(totalPrice);
@@ -195,4 +195,4 @@ const SubscriptionDetails = () => {
   );
 };
 
-export default SubscriptionDetails;
+export default SubDetails;
