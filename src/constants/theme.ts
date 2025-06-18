@@ -20,7 +20,7 @@ export const theme: MantineThemeOverride = createTheme({
   },
 
   primaryColor: "customPrimary",
-  primaryShade: 9,
+  primaryShade: 6,
 
   components: {
     Button: Button.extend({

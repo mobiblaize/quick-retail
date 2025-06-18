@@ -64,18 +64,18 @@ const Login = () => {
 
   return (
     <AuthLayout image={placeholderImage}>
-      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10">
+      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10 border border-gray-200">
         {/* Logo */}
 
         {/* Title */}
-        <div className="mb-2">
+        {/* <div className="mb-2">
           <div className="text-gray-400 text-sm font-normal mb-1">
             Let's get Started
           </div>
           <div className="flex items-center font-bold text-2xl tracking-tight">
             Victoria Store LLC
           </div>
-        </div>
+        </div> */}
         {/* Form */}
         <form
           onSubmit={form.onSubmit(handleLogin)}
@@ -116,7 +116,7 @@ const Login = () => {
           <div className="text-right -mt-2 mb-2">
             <Link
               to="/forgot-password"
-              className="text-gray-300 text-sm font-medium no-underline"
+              className=" text-sm font-medium no-underline text-[#F16722]"
             >
               Forgot Password?
             </Link>
@@ -128,7 +128,6 @@ const Login = () => {
             size="md"
             radius="md"
             className="font-bold text-lg mt-2 shadow-md"
-            color="#F16722"
             style={{ boxShadow: "0 2px 8px rgba(249, 115, 22, 0.08)" }}
           >
             Log In
