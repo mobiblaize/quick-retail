@@ -1,4 +1,7 @@
+import { useNavigate } from "react-router-dom";
+
 const Consolidate = () => {
+  const navigate = useNavigate();
   return (
     <main className="bg-[#4D1D05] mt-8 sm:mt-14 text-white py-8 sm:py-14">
       <div className="max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
@@ -23,7 +26,10 @@ const Consolidate = () => {
           </div>
 
           <div className="flex-shrink-0">
-            <button className="bg-[#F16722] rounded-xl text-white px-4 sm:px-5 py-2.5 sm:py-2 text-base sm:text-lg font-medium font-clash-light hover:bg-[#e55a1f] transition-colors duration-300 w-full sm:w-auto sm:whitespace-nowrap">
+            <button
+              onClick={() => navigate("/signup")}
+              className="bg-[#F16722] z-20 cursor-pointer rounded-xl text-white px-4 sm:px-5 py-2.5 sm:py-2 text-base sm:text-lg font-medium font-clash-light hover:bg-[#e55a1f] transition-colors duration-300 w-full sm:w-auto sm:whitespace-nowrap"
+            >
               Get your 60 Days Free Trial
             </button>
           </div>
