@@ -4,7 +4,7 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import { Link } from "react-router";
+import { Link } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
 import {
   formatDate,
@@ -28,6 +28,7 @@ const ReturnsTable = ({
     returnedReason: item.return_reason || "N/A",
     complaintStatus: item.status === "approved" ? "Resolved" : "Pending",
     returnId: item.returnID || "N/A",
+    
   }));
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -137,9 +138,13 @@ const ReturnsTable = ({
       cell: ({ row }: any) => (
         <Link
           to={ROUTES.viewReturns}
+          // state={{
+          //   orderId: row.original.orderId,
+          //   returnId: row.original.returnId,
+          //   complaintStatus:row.original.complaintStatus,
+          // }}
           state={{
-            orderId: row.original.orderId,
-            returnId: row.original.returnId,
+            ...row.original, 
           }}
         >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">

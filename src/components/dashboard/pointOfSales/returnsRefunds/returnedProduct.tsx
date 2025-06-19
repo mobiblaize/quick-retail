@@ -5,22 +5,22 @@ import OrderSummary from "./orderSummary";
 
 interface ReturnedProductProps {
   onNext?: () => void;
+  onSendMail?: (order: any) => void;
 }
 
-const ReturnedProduct: React.FC<ReturnedProductProps> = () => {
+const ReturnedProduct: React.FC<ReturnedProductProps> = ({ onSendMail }) => {
   const location = useLocation();
-  const orderId = location.state?.orderId;
+  const returnData = location.state || {};
 
-
-  if (!orderId) {
+  if (!returnData.orderId) {
     return <div>No order selected</div>;
   }
 
   return (
     <>
-      <OrderDetails orderId={orderId} />
-      <OrderSummary orderId={orderId} />
-      <CustomerDetails orderId={orderId}/>
+      <OrderDetails orderId={returnData.orderId} returnData={returnData} returnId={returnData.returnId} />
+      <OrderSummary orderId={returnData.orderId} onSendMail={onSendMail}/>
+      <CustomerDetails returnId={returnData.returnId} />
     </>
   );
 };

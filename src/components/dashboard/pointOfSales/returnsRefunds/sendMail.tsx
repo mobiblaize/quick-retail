@@ -1,32 +1,55 @@
 import {
   forwardRef,
   useImperativeHandle,
+  useRef,
   useState,
   ForwardRefRenderFunction,
+  useEffect,
 } from "react";
 import { Text } from "@mantine/core";
-import FormInput from "../../../General/formInput";
-import product from "../../../../assets/images/Image.png";
-import { useSendMail } from "../../../../hooks/backendApis/pos/returns";
 import { notifications } from "@mantine/notifications";
-// import { useFetchSaleOrderById } from "../../../../hooks/backendApis/pos/returns";
+import FormInput from "../../../General/formInput";
+import { useSendMail } from "../../../../hooks/backendApis/pos/returns";
+import { shortenTransactionId } from "../../../../utils/helpers";
+import AttachIcon from "../../../../assets/svg";
+
+
 
 export interface SendMailRef {
   handleSave: () => void;
 }
 
-const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
+interface SendMailProps {
+  initialOrderID: string;
+  initialProductID: string;
+}
+
+const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
+  { initialOrderID, initialProductID },
+  ref
+) => {
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
-  const [orderID, setOrderID] = useState("");
-  const [productID, setProductID] = useState("");
+  const [orderID, setOrderID] = useState(initialOrderID || "");
+  const [productID, setProductID] = useState(initialProductID || "");
   const [subject, setSubject] = useState("");
   const [description, setDescription] = useState("");
   const [attachments, setAttachments] = useState<File[]>([]);
 
-  // const { data, error } = useFetchSaleOrderById(orderId || "");
+
+  useEffect(() => {
+    setOrderID(initialOrderID || "");
+  }, [initialOrderID]);
+  
+  useEffect(() => {
+    setProductID(initialProductID || "");
+  }, [initialProductID]);
+
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   const { mutate } = useSendMail();
+
+  
 
   const handleSave = () => {
     if (!from || !to || !orderID || !productID || !subject || !description) {
@@ -37,17 +60,19 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
       });
       return;
     }
-
-    const payload = {
-      from,
-      to,
-      orderID: orderID,
-      productID: productID,
-      subject,
-      description,
-      attachments,
-    };
-
+  
+    const payload = new FormData();
+    payload.append("from", from);
+    payload.append("to", to);
+    payload.append("orderID", orderID);
+    payload.append("productID", productID);
+    payload.append("subject", subject);
+    payload.append("description", description);
+  
+    attachments.forEach((file) => {
+      payload.append("attachments", file); // Note: use "attachments" not "attachments[]"
+    });
+  
     mutate(payload, {
       onSuccess: () => {
         notifications.show({
@@ -55,8 +80,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
           message: "Mail successfully sent.",
           color: "green",
         });
-
-        // Reset form
+  
         setFrom("");
         setTo("");
         setOrderID("");
@@ -74,11 +98,25 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
       },
     });
   };
-
-  // Expose handleSave to parent
+  
+  
   useImperativeHandle(ref, () => ({
     handleSave,
   }));
+
+  
+  const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files && e.target.files.length > 0) {
+      const files = Array.from(e.target.files);
+      setAttachments(files);
+    } else {
+    }
+  };
+  
+  const handleTriggerFileInput = () => {
+    fileInputRef.current?.click();
+  };
+  ;
 
   return (
     <main className="w-full h-auto rounded-lg bg-white px-4 sm:px-6 py-6 sm:py-8">
@@ -107,33 +145,25 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
         </div>
         <div className="flex flex-col sm:flex-row w-full sm:space-x-6 space-y-6 sm:space-y-0">
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-10 space-y-2 sm:space-y-0 flex-1">
-            <Text
-              c="black"
-              fw={500}
-              className="sm:w-24 sm:shrink-0 whitespace-nowrap"
-            >
+            <Text c="black" fw={500} className="sm:w-24 sm:shrink-0">
               Order ID:
             </Text>
             <FormInput
-              placeholder="#22543 3783"
               className="flex-1"
-              value={orderID}
+              value={shortenTransactionId(orderID)}
               onChange={(e: any) => setOrderID(e.target.value)}
+              readOnly
             />
           </div>
           <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-10 space-y-2 sm:space-y-0 flex-1">
-            <Text
-              c="black"
-              fw={500}
-              className="sm:w-24 sm:shrink-0 whitespace-nowrap"
-            >
+            <Text c="black" fw={500} className="sm:w-24 sm:shrink-0">
               Product ID:
             </Text>
             <FormInput
-              placeholder="BSD27836427LL"
               className="flex-1"
-              value={productID}
+              value={shortenTransactionId(productID)}
               onChange={(e: any) => setProductID(e.target.value)}
+              readOnly
             />
           </div>
         </div>
@@ -149,35 +179,54 @@ const SendMail: ForwardRefRenderFunction<SendMailRef> = (_, ref) => {
           />
         </div>
       </div>
+
       <section className="mt-6 sm:mt-8">
-        <Text c="black" size="lg" fw={"500"}>
+        <Text c="black" size="lg" fw={500}>
           Description
         </Text>
-        <FormInput
+        <textarea
           placeholder="Description of the issue or request"
-          className="flex-1"
+          className="flex-1 w-full mt-2 p-2 border rounded"
+          rows={4}
           value={description}
-          onChange={(e: any) => setDescription(e.target.value)}
+          onChange={(e) => setDescription(e.target.value)}
         />
-        <hr className="mt-6 sm:mt-8 text-[#EAECF0]" />
-        <div className="flex flex-col sm:flex-row mt-2 gap-3">
-          <Text c="black" fw={500} className="sm:w-24 sm:shrink-0">
-            Attachments:
-          </Text>
-          <div className="flex items-center gap-3">
-            <img
-              src={product}
-              alt="Product"
-              className="w-12 h-12 object-cover rounded-md"
-            />
-            <Text c="black" size="sm">
-              product.png
-            </Text>
+
+        {attachments.length > 0 && (
+          <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
+            {attachments.map((file, idx) => (
+              <img
+                key={idx}
+                src={URL.createObjectURL(file)}
+                alt={`attachment-${idx}`}
+                className="w-full h-32 object-cover rounded"
+              />
+            ))}
           </div>
+        )}
+
+        <div className="mt-4">
+          <Text
+            c="black"
+            fw={500}
+            className="cursor-pointer underline flex"
+            onClick={handleTriggerFileInput}
+          >
+     <span className=" pr-3"> <AttachIcon size={20} color="black" /></span> 
+            Attach File
+          </Text>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            multiple
+            onChange={handleFileChange}
+            className="hidden"
+          />
         </div>
       </section>
     </main>
   );
 };
 
-export default forwardRef(SendMail);
+export default forwardRef<SendMailRef, SendMailProps>(SendMail);

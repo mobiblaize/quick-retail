@@ -5,57 +5,28 @@ import AnalysisOverview from "../../../components/dashboard/pointOfSales/stores/
 import StoreOverviewTable from "../../../components/dashboard/pointOfSales/stores/storeOverviewTable";
 import AddNewStore from "../../../components/dashboard/pointOfSales/stores/modals/addNewStore";
 import { useState } from "react";
-import { useFetchStat, useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
-import house from "../../../assets/images/house.png";
-import activeStore from "../../../assets/images/activeStore.png";
-import inactiveStore from "../../../assets/images/inactiveStore.png";
+import {  useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
+
 
 const StoreTarget = () => {
-  const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
-  const { data, isPending, refetch: refetchStores } = useFetchStore({ paginate: true });
+  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+    startDate: "",
+    endDate: "",
+  });
 
-  const { data: statData, refetch: refetchStats } = useFetchStat();
+  const { data, isLoading } = useFetchStore(dateRange.startDate && dateRange.endDate ? {
+    start_date: dateRange.startDate,
+    end_date: dateRange.endDate
+  } : undefined);
 
   const stores = Array.isArray(data?.data?.stores?.data) ? data.data.stores.data : [];
 
-  const stats = statData?.data
-    ? [
-        {
-          title: "Total Stores",
-          value: statData.data.totalStores,
-          icon: house,
-          altText: "Total Stores",
-          iconColor: "#E17036",
-          textColor: "#000",
-          cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
-          percentageValue: 0.5,
-          borderColor: "#b3d8ff",
-        },
-        {
-          title: "Active Stores",
-          value: statData.data.activeStores,
-          icon: activeStore,
-          altText: "Active Stores",
-          iconColor: "#E17036",
-          textColor: "#000",
-          cardBgColor: "#EFF8FF",
-          percentageValue: 0.5,
-          borderColor: "#98A2B3",
-        },
-        {
-          title: "Inactive Stores",
-          value: statData.data.inActiveStores,
-          icon: inactiveStore,
-          altText: "Inactive Stores",
-          iconColor: "#E17036",
-          textColor: "#000",
-          cardBgColor: "#F4F3FF",
-          percentageValue: 0.5,
-          borderColor: "#98A2B3",
-        },
-      ]
-    : [];
+  console.log("Fetched data:", data);
 
+  const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
+  console.log("Total stores:", data?.data?.stats?.total_stores);
+  console.log("Active stores:", data?.data?.stats?.active_stores);
+  console.log("Inactive stores:", data?.data?.stats?.inactive_stores);
   const subHeaders = [
     <div key="1" className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
@@ -79,14 +50,18 @@ const StoreTarget = () => {
 
   // Unified refetch handler (optional)
   const handleRefetchAll = async () => {
-    await refetchStores();
-    await refetchStats();
+    // await refetchStores();
+    // await refetchStats();
   };
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <AnalysisOverview stats={stats} />
-      <StoreOverviewTable stores={stores} loading={isPending} refetchStores={handleRefetchAll} />
+    <AnalysisOverview
+        data={data?.data?.stats}
+        isLoading={isLoading}
+        setDateRange={setDateRange}
+      />
+      <StoreOverviewTable stores={stores} loading={isLoading} refetchStores={handleRefetchAll} />
       <AddNewStore
         opened={isAddNewStoreOpen}
         onClose={() => setIsAddNewStoreOpen(false)}

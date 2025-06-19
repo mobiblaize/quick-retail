@@ -50,25 +50,25 @@ const SalesCustomerAnalysis = () => {
   );
   // Same logic for topProducts
   const topProducts = Object.values(variationMap)
-    // ts-ignore
+    // @ts-ignore
     .sort((a, b) => b.quantity_sold - a.quantity_sold)
     .slice(0, 4);
 
   // Get variationIDs of top products
-    // ts-ignore
+    // @ts-ignore
   const topProductIDs = new Set(topProducts.map((p) => p.variationID));
 
   // Compute other products summary
   const otherProducts = Object.values(variationMap).filter(
-      // ts-ignore
+      // @ts-ignore
     (p) => !topProductIDs.has(p.variationID)
   );
 
   const otherSummary = otherProducts.reduce(
     (acc: OtherSummary, p) => {
-        // ts-ignore
+        // @ts-ignore
       acc.quantity_sold += p.quantity_sold;
-        // ts-ignore
+        // @ts-ignore
       acc.total_price += p.quantity_sold * Number(p.selling_price || 0);
       return acc;
     },
@@ -111,37 +111,37 @@ const SalesCustomerAnalysis = () => {
           <div className="mt-6 flex flex-col gap-4">
             {topProducts.map((product) => (
               <div
-                // ts-ignore
+          //@ts-ignore
                 key={product.variationID}
                 className="flex justify-between items-center px-2 py-2 hover:bg-gray-100 rounded"
               >
                 <div className="flex gap-2 items-center">
                   <img
-                    // ts-ignore
+               //@ts-ignore
                     src={product.image_path || "/placeholder.png"}
-                      // ts-ignore
+                    //@ts-ignore
                     alt={product.name || "Product image"}
                     className="w-10 h-10 rounded object-cover"
                   />
                   <div className="flex flex-col">
                     <Text fw={500} size="sm" c="black">
-                       {/* ts-ignore */}
+                    {/* @ts-ignore */}
                       {shortenTransactionId(product.name || "Unnamed Product")}
                 
                     </Text>
                     <Text fw={500} size="sm">
-                       {/* ts-ignore */}
+                    {/* @ts-ignore */}
           
                       {product.sku || "Unnamed Product"}
                     </Text>
                   </div>
                 </div>
                 <Text fw={400} size="sm" c="black">
-               {/* ts-ignore */}
+               {/* @ts-ignore */}
                   ₦{Number(product.selling_price || 0).toLocaleString()}
                 </Text>
                 <Text fw={400} size="sm" c="black">
-               {/* ts-ignore */}
+               {/* @ts-ignore */}
                   {Number(product.quantity_sold).toLocaleString()} sold
                 </Text>
               </div>

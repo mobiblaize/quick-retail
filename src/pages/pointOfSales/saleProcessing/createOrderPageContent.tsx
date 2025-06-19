@@ -150,14 +150,36 @@ const CreateOrderPageContent: React.FC = () => {
     setSubmitHandler(() => handler);
   };
 
-  const updatePaymentDetails = (details: {
-    method: string;
-    amount: string;
-    items: any[];
-    customerId: string | null;
-  }) => {
-    setPaymentDetails(details);
+  // const updatePaymentDetails = (details: {
+  //   method: string;
+  //   amount: string;
+  //   items: any[];
+  //   customerId: string | null;
+  // }) => {
+  //   setPaymentDetails(details);
+  // };
+
+  // const updatePaymentDetails = (
+  //   updater: (prev: {
+  //     method: string;
+  //     amount: string;
+  //     items: any[];
+  //     customerId: string | null;
+  //   }) => any
+  // ) => {
+  //   setPaymentDetails((prev) => {
+  //     const next = typeof updater === 'function' ? updater(prev) : updater;
+  //     return next;
+  //   });
+  // };
+  
+  const updatePaymentDetails = (updater: (arg0: { method: string; amount: string; items: any[]; customerId: string | null; }) => any) => {
+    setPaymentDetails((prev) => {
+      const next = typeof updater === 'function' ? updater(prev) : updater;
+      return next;
+    });
   };
+  
 
   const handlePaymentChange = (method: string, amount: string) => {
     setPaymentDetails((prev) => ({
@@ -345,7 +367,6 @@ const CreateOrderPageContent: React.FC = () => {
   };
 
   const renderStepContent = () => {
-    console.log("🚀 PaymentDetails passed to PaymentDetails2:", paymentDetails);
 
     switch (currentStep) {
       case OrderCreationStep.SEARCH_PRODUCT:

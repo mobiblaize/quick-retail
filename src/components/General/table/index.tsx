@@ -17,6 +17,7 @@ import SearchComp from "./searchComp";
 import SortFilter from "./sortFilter";
 import { SortOption, TableRowData } from "../../../types";
 import { Table as ReactTable } from "@tanstack/react-table";
+import ReusableFilterComponent, { FilterValues } from "./reuseableFilter";
 
 export type TableInstance = ReactTable<TableRowData>;
 
@@ -39,7 +40,9 @@ interface TanTableProps {
   dateField?: string;
   tableTitle?: ReactNode;
   showSeeAllToggle?: boolean;
-
+  onFilterChange?: (filters: FilterValues) => void;
+  locations?: string[];
+  tableType: "inventory" | "sales" | "product";
 }
 
 const TanTable: FC<TanTableProps> = ({
@@ -57,7 +60,10 @@ const TanTable: FC<TanTableProps> = ({
   showBorder = false,
   tableTitle = "Recent Orders",
   showSeeAllToggle = false,
-  
+  showFilter = false,
+  onFilterChange,
+  locations,
+  tableType,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -65,6 +71,7 @@ const TanTable: FC<TanTableProps> = ({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [filteredData, setFilteredData] = useState<TableRowData[]>(data);
   const [showAll, setShowAll] = useState<boolean>(false);
+  const [showFilterDropdown, setShowFilterDropdown] = useState(false);
 
   const tableData = useMemo(() => filteredData, [filteredData]);
   const columns = useMemo(() => columnData, [columnData]);
@@ -157,14 +164,14 @@ const TanTable: FC<TanTableProps> = ({
   }, [startPage, endPage, currentPage, table]);
 
   const handleFilterChange = (selectedFilter: string) => {
-    if (selectedFilter === "") {
+    if (!selectedFilter || typeof selectedFilter !== "string") {
       setFilteredData(data);
       return;
     }
 
     const filtered = data.filter((item) =>
       Object.values(item).some((value) =>
-        String(value)?.toLowerCase()?.includes(selectedFilter?.toLowerCase())
+        String(value)?.toLowerCase()?.includes(selectedFilter.toLowerCase())
       )
     );
 
@@ -201,7 +208,7 @@ const TanTable: FC<TanTableProps> = ({
           </div>
 
           <div className="lg:hidden flex md:flex-row  md:gap-[2rem] md:w-[600px] w-[300px] md:items-center gap-4 justify-between whitespace-nowrap">
-          {showSearch && (
+            {showSearch && (
               <SearchComp
                 setSearchTerm={setSearchTerm}
                 setPageIndex={setPageIndex}
@@ -216,22 +223,117 @@ const TanTable: FC<TanTableProps> = ({
             {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
           </div>
           <div className="hidden md:block ">
-          <div className="flex md:flex-row  md:gap-[2rem] md:w-[600px] w-full md:items-center">
-            {showSearch && (
-              <SearchComp
-                setSearchTerm={setSearchTerm}
-                setPageIndex={setPageIndex}
-                searchTerm={searchTerm}
-                handleFilterChange={handleFilterChange}
-                filterList={filterList}
-                placeholder={searchPlaceholder}
-                maxWidth={searchMaxWidth}
-              />
-            )}
+            <div className="flex md:flex-row  md:gap-[2rem] md:w-[600px] w-full md:items-center">
+              {showSearch && (
+                <SearchComp
+                  setSearchTerm={setSearchTerm}
+                  setPageIndex={setPageIndex}
+                  searchTerm={searchTerm}
+                  handleFilterChange={handleFilterChange}
+                  filterList={filterList}
+                  placeholder={searchPlaceholder}
+                  maxWidth={searchMaxWidth}
+                />
+              )}
 
-            {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+              {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+
+              {showFilter && (
+                <div style={{ position: "relative" }}>
+                  <button
+                    onClick={() => setShowFilterDropdown((prev) => !prev)}
+                    style={{
+                      backgroundColor: "orange",
+                      color: "white",
+                      padding: "0.5rem",
+                      borderRadius: "4px",
+                      border: "none",
+                      cursor: "pointer",
+                      display: "flex",
+                      alignItems: "center",
+                      justifyContent: "center",
+                    }}
+                  >
+                    {/* Simple 3-line icon */}
+                    <div
+                      style={{
+                        display: "flex",
+                        flexDirection: "column",
+                        gap: "2px",
+                      }}
+                    >
+                      <span
+                        style={{
+                          display: "block",
+                          width: "16px",
+                          height: "2px",
+                          background: "white",
+                        }}
+                      />
+                      <span
+                        style={{
+                          display: "block",
+                          width: "16px",
+                          height: "2px",
+                          background: "white",
+                        }}
+                      />
+                      <span
+                        style={{
+                          display: "block",
+                          width: "16px",
+                          height: "2px",
+                          background: "white",
+                        }}
+                      />
+                    </div>
+                  </button>
+
+                  {showFilterDropdown && (
+                    <div
+                      style={{
+                        position: "absolute",
+                        top: "110%",
+                        right: 0,
+                        backgroundColor: "#fff",
+                        boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+                        borderRadius: "4px",
+                        zIndex: 1000,
+                        padding: "1rem",
+                      }}
+                    >
+                      {tableType === "inventory" && (
+                        <ReusableFilterComponent
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                          }}
+                          locations={locations}
+                          showLocation={true}
+                          showStockLevel={true}
+                          showOrderStatus={true}
+                          filterType={"inventory"}
+                        />
+                      )}
+
+                      {tableType === "sales" && (
+                        <ReusableFilterComponent
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                          }}
+                          showPrice={true}
+                          showPaymentStatus={true}
+                          filterType="sales"
+                        />
+                      )}
+                    </div>
+                  )}
+                </div>
+              )}
             </div>
           </div>
+          <div className="mb-4"></div>
         </div>
       </Box>
       <Box
@@ -265,20 +367,19 @@ const TanTable: FC<TanTableProps> = ({
         )}
       </Box>
       {showSeeAllToggle && !showAll && data.length > length && (
-  <Box
-    style={{
-      textAlign: "center",
-      marginTop: "1rem",
-      cursor: "pointer",
-    }}
-    onClick={() => setShowAll(true)}
-  >
-    <Text color="red" fw={500}>
-      See all
-    </Text>
-  </Box>
-)}
-
+        <Box
+          style={{
+            textAlign: "center",
+            marginTop: "1rem",
+            cursor: "pointer",
+          }}
+          onClick={() => setShowAll(true)}
+        >
+          <Text color="red" fw={500}>
+            See all
+          </Text>
+        </Box>
+      )}
 
       {/* {!hidePaging && tableData.length > pageSize && (
         <Pagination
@@ -289,13 +390,12 @@ const TanTable: FC<TanTableProps> = ({
       )} */}
 
       {!hidePaging && table.getPageCount() > 1 && (
-  <Pagination
-    setPageIndex={setPageIndex}
-    buttons={paginationButtons}
-    table={table}
-  />
-)}
-
+        <Pagination
+          setPageIndex={setPageIndex}
+          buttons={paginationButtons}
+          table={table}
+        />
+      )}
     </Box>
   );
 };
