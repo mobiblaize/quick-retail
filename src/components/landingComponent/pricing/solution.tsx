@@ -75,7 +75,7 @@
 
 // export default Solution;
 
-import { ChevronRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { Point } from "../../../assets/svg";
 
 const Solution = () => {
@@ -122,7 +122,7 @@ const Solution = () => {
   ];
 
   return (
-    <section className="mt-4 max-w-7xl  mx-auto  px-4 sm:px-6 sm:mt-6">
+    <section className="mt-4 max-w-[1008px] mx-auto px-5 w-full sm:mt-6">
       <p className="font-sans text-base sm:text-lg font-medium my-4 sm:my-6 text-[#344054]">
         Learn about our wide range of retail business software solutions.
       </p>
@@ -130,10 +130,10 @@ const Solution = () => {
         {softwareSolution.map((item, index) => (
           <div
             key={index}
-            className="bg-[#FCFCFD] border flex flex-col gap-2 rounded-md border-gray-200 p-4 sm:p-5"
+            className={`p-4 rounded-lg border border-[#D0D5DD] max-w-[488px] shadow `}
           >
             <item.icon />
-            <p className="font-clash-medium text-sm sm:text-base">
+            <p className="font-clash-medium text-sm sm:text-base my-3">
               {item.label}
             </p>
             <span className="text-[#667085] font-normal font-sans text-xs sm:text-sm">
@@ -143,8 +143,8 @@ const Solution = () => {
               href={item.to}
               className="text-[#667085] font-sans mt-1 sm:mt-2 flex items-center text-xs sm:text-sm hover:text-[#F16722] transition-colors"
             >
-              Learn More
-              <ChevronRight className="ml-1 w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="text-sm">Learn More</span>
+              <ArrowUpRight className="w-4 h-4 ml-1" />
             </a>
           </div>
         ))}

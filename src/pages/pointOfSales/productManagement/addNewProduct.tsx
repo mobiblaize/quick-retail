@@ -1,9 +1,8 @@
-import { Button, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import AddProductForm from "../../../components/dashboard/pointOfSales/productManagement/addProductForm";
-import { ROUTES } from "../../../constants/routes";
 
 const AddNewProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -34,7 +33,7 @@ const AddNewProduct: React.FC = () => {
             <>
               <span className="mx-2">/</span>
               <Text c="black" fw={500}>
-                Add Product
+                Add Simple Product
               </Text>
             </>
           </div>
@@ -44,7 +43,7 @@ const AddNewProduct: React.FC = () => {
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-          Add Product
+          Add Simple Product
         </Text>
       </div>,
     ];
@@ -52,24 +51,24 @@ const AddNewProduct: React.FC = () => {
     return subHeaders;
   };
 
-  const getBottomButtons = () => {
-    return [
-      <div key="search-product-buttons" className="flex gap-4 justify-end">
-        <Button variant="outline-primary" onClick={() => navigate(-1)}>
-          Cancel
-        </Button>
+  // const getBottomButtons = () => {
+  //   return [
+  //     <div key="search-product-buttons" className="flex gap-4 justify-end">
+  //       <Button variant="outline-primary" onClick={() => navigate(-1)}>
+  //         Cancel
+  //       </Button>
 
-        <Link to={ROUTES.inventoryDetails}>
-          <Button variant="filled-primary">Next</Button>
-        </Link>
-      </div>,
-    ];
-  };
+  //       <Link to={ROUTES.inventoryDetails}>
+  //         <Button variant="filled-primary">Submit</Button>
+  //       </Link>
+  //     </div>,
+  //   ];
+  // };
 
   return (
     <PageContainer
       subHeaders={getSubHeaders()}
-      subHeaderButtom={getBottomButtons()}
+      // subHeaderButtom={getBottomButtons()}
     >
       <AddProductForm />
     </PageContainer>

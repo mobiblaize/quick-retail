@@ -1,4 +1,4 @@
-import { useQuery, useMutation} from "@tanstack/react-query";
+import { useQuery, useMutation } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../utils/axios-instance";
 
 // Create Data
@@ -132,7 +132,7 @@ export const useGetDataWithNoQuery = (url: string) => {
 };
 
 // Fetch Data (GET with Query)
-export const useGetData = (url: string, options?: any,enabled?: boolean, ) => {
+export const useGetData = (url: string, options?: any, enabled?: boolean) => {
   const query = useQuery({
     queryKey: [url, options],
     queryFn: async () => {
@@ -143,12 +143,32 @@ export const useGetData = (url: string, options?: any,enabled?: boolean, ) => {
     },
     staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
     refetchOnWindowFocus: false,
-    enabled: enabled
+    enabled: enabled,
   });
 
   return {
     ...query,
     // enabled,
+    isLoading: query.isLoading && !query.isFetching,
+  };
+};
+
+// Fetch Data (GET with Query)
+export const useFetchData = (url: string, options?: any) => {
+  const query = useQuery({
+    queryKey: [url, options],
+    queryFn: async () => {
+      const response = await axiosInstance.get(baseUrl + url, {
+        params: options,
+      });
+      return response.data;
+    },
+    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    refetchOnWindowFocus: false,
+  });
+
+  return {
+    ...query,
     isLoading: query.isLoading && !query.isFetching,
   };
 };
@@ -173,6 +193,6 @@ export const useLazyGetData = (url: string) => {
         params,
       });
       return response.data;
-    },
-  });
+    },
+  });
 };

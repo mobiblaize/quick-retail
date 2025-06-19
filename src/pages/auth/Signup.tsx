@@ -6,7 +6,6 @@ import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link } from "react-router-dom";
 
-
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
 
@@ -17,7 +16,7 @@ const schema = z.object({
     .min(6, { message: "Password must be at least 6 characters" }),
 });
 
-const Signup = () => {
+const SignupPage = () => {
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
   // const { updateUser } = useSessionStorage();
   const form = useForm({
@@ -33,25 +32,25 @@ const Signup = () => {
       email: form.values.email,
       password: form.values.password,
     };
-  
+
     try {
       const res = await login(payload);
       if (!res?.data) return;
-  
+
       const { accessToken, user } = res.data;
       const tenant_uuid = user.tenants?.[0]?.uuid;
-  
+
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));
-  
+
       if (tenant_uuid) {
         sessionStorage.setItem("tenant_uuid", tenant_uuid);
       } else {
         console.warn("Tenant UUID not found in login response.");
       }
-  
+
       window.location.replace("/dashboard");
-  
+
       notifications.show({
         title: "Success",
         message: "Login successful",
@@ -61,7 +60,7 @@ const Signup = () => {
       console.log(error);
     }
   };
-  
+
   return (
     <div className="flex min-h-screen  bg-white">
       {/* Left Side - Login Form */}
@@ -171,4 +170,4 @@ const Signup = () => {
   );
 };
 
-export default Signup;
+export default SignupPage;

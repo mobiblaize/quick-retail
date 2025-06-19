@@ -187,8 +187,6 @@ import ViewJournalPage from "./pages/financialManagement/Accounting/viewJournal"
 import ImportJournalTablePage from "./pages/financialManagement/Accounting/importJournal";
 import ReviewJournalPage from "./pages/financialManagement/Accounting/reviewJournal";
 
-import Login from "./pages/auth/Login";
-import Signup from "./pages/auth/Signup";
 import IsAuthenticated from "./layout/hoc/IsAuthenticated";
 import AddCardPage from "./pages/financialManagement/Banking/addCard";
 import AllTransactionPage from "./pages/financialManagement/Banking/transactionHistory";
@@ -208,7 +206,12 @@ import Contact from "./pages/landingPages/contact";
 import Pricing from "./pages/landingPages/pricing";
 import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
 import LogPage from "./pages/pointOfSales/returns/logPage";
-
+import SignupPage from "./pages/auth/Signup";
+import Login from "./pages/auth/Login";
+import CreatePassword from "./pages/auth/CreatePassword";
+import ForgotPassword from "./pages/auth/ForgotPassword";
+import VerifyOTP from "./pages/auth/VerifyOTP";
+import ResetPassword from "./pages/auth/ResetPassword";
 
 export default function App() {
   return (
@@ -224,7 +227,11 @@ export default function App() {
           <Route index element={<Pricing />} />
         </Route>
         <Route path="/login" element={<Login />} />
-        <Route path="/signup" element={<Signup />}/>
+        <Route path="/signupapp" element={<SignupPage />} />
+        <Route path="/create-password" element={<CreatePassword />} />
+        <Route path="/forgot-password" element={<ForgotPassword />} />
+        <Route path="/verify-otp" element={<VerifyOTP />} />
+        <Route path="/reset-password" element={<ResetPassword />} />
         {/* <Route path="/" element={<Navigate to="/dashboard" replace />} /> */}
 
         <Route
@@ -244,7 +251,10 @@ export default function App() {
           />
           <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
           <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
-          <Route path={ROUTES.viewStoreProduct} element={<ViewStoreProduct />} />
+          <Route
+            path={ROUTES.viewStoreProduct}
+            element={<ViewStoreProduct />}
+          />
           <Route path={ROUTES.editProduct} element={<EditProduct />} />
           <Route
             path={ROUTES.inventoryDetails}

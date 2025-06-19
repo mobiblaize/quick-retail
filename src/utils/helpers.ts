@@ -17,7 +17,6 @@ export const formatDate = (dateString: string) => {
   return `${datePart} ${timePart}`; // 👈 no "at", no seconds
 };
 
-
   
   export function shortenTransactionId(id: string, length = 8): string {
     if (!id) return "";

@@ -1,11 +1,17 @@
 import { ArrowLeft } from "lucide-react";
-import Details from "../../components/landingComponent/contact/details";
-import Summary from "../../components/landingComponent/contact/summary";
+
+import PaymentSummary from "../../components/landingComponent/contact/paymentSummary";
+import { useNavigate } from "react-router-dom";
 
 const Contact = () => {
+  const navigate = useNavigate();
   return (
-    <main className="max-w-7xl mx-auto font-sans mt-6 px-4 sm:mt-8 sm:px-6">
-      <ArrowLeft className="mb-8" />
+    <main className="container mx-auto max-w-[1008px] font-sans mt-6 px-4 sm:mt-8 sm:px-6">
+      {/* Back Button */}
+      <ArrowLeft
+        className="mb-8 hover:opacity-70 cursor-pointer"
+        onClick={() => navigate("/signup")}
+      />
       <h3 className="text-[#48464E] text-xl sm:text-2xl font-semibold">
         Complete Your Subscription Plan
       </h3>
@@ -14,10 +20,7 @@ const Contact = () => {
         <br className="hidden sm:block" />
         tools to streamline your workforce and business operations effortlessly!
       </p>
-      <section className="flex flex-col gap-6 sm:gap-8 mt-4">
-        <Details />
-        <Summary />
-      </section>
+      <PaymentSummary />
     </main>
   );
 };
