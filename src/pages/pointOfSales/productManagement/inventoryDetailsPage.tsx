@@ -8,6 +8,7 @@ import useStore from "../../../components/dashboard/pointOfSales/productManageme
 import { notifications } from "@mantine/notifications";
 import { useCreateProduct } from "../../../hooks/backendApis/pos/products";
 
+
 const InventoryDetailsPage: React.FC = () => {
   const navigate = useNavigate();
   const { form_data, resetForm } = useStore();
