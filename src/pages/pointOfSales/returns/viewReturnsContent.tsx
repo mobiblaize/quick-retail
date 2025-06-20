@@ -2,21 +2,21 @@ import { useRef, useState } from "react";
 import { Button, Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
-
 import PageContainer from "../../../layout/pageContainer";
-
 import { motion, AnimatePresence } from "framer-motion";
 import {
   ReturnsStep,
   useReturns,
 } from "../../../components/General/orderContext/orderCreationContext";
 import ReturnedProduct from "../../../components/dashboard/pointOfSales/returnsRefunds/returnedProduct";
-import SendMail, {
-  SendMailRef,
-} from "../../../components/dashboard/pointOfSales/returnsRefunds/sendMail";
 import Resolve from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/resolve";
 import Decline from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/decline";
 import { Attachment } from "../../../assets/svg";
+import { shortenTransactionId } from "../../../utils/helpers";
+import SendMail, {
+  SendMailRef,
+} from "../../../components/dashboard/pointOfSales/returnsRefunds/sendMail";
+import { useFetchRetrun } from "../../../hooks/backendApis/pos/returns";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -43,7 +43,14 @@ const slideVariants = {
 
 const ViewReturnsContent: React.FC = () => {
   const location = useLocation();
-  const { returnId } = location.state || {};
+  const data = location.state || {};
+  const returnId = data.returnId;
+
+  const { data: returnedData } = useFetchRetrun(returnId || "");
+  const [salesOrderData, setSalesOrderData] = useState(null);
+  
+
+  console.log(returnedData);
 
   const navigate = useNavigate();
   const { currentStep, prevStep } = useReturns();
@@ -93,13 +100,24 @@ const ViewReturnsContent: React.FC = () => {
           ) : (
             <>
               <div className="flex justify-between items-center">
-                <Text fw={400} size="xl" c="black" className="hidden md:block">
-                  Returned Product
-                </Text>
+                <div className="flex gap-3">
+                  <Text
+                    fw={400}
+                    size="xl"
+                    c="black"
+                    className="hidden md:block"
+                  >
+                    Returns: {shortenTransactionId(data.returnId)}
+                  </Text>
+                  <div className="inline-flex items-center px-3 py-1 rounded-full font-medium text-sm bg-[#FFFAEB]  text-[#B54708]">
+                    {data.complaintStatus}
+                  </div>
+                </div>
                 <div className="flex gap-3.5 items-center">
                   <Button
                     variant="filled"
                     onClick={() => setIsResolveOpen(true)}
+                    disabled={data.complaintStatus !== "pending"}
                     style={{
                       backgroundColor: "#099137",
                       color: "#E7F6EC",
@@ -108,6 +126,11 @@ const ViewReturnsContent: React.FC = () => {
                       padding: "0.9rem 1.5rem",
                       fontWeight: 600,
                       fontSize: "16px",
+                      opacity: data.complaintStatus !== "pending" ? 0.5 : 1,
+                      cursor:
+                        data.complaintStatus !== "pending"
+                          ? "not-allowed"
+                          : "pointer",
                     }}
                   >
                     Resolve
@@ -115,6 +138,7 @@ const ViewReturnsContent: React.FC = () => {
 
                   <Button
                     onClick={() => setIsDeclineOpen(true)}
+                    disabled={data.complaintStatus !== "pending"}
                     style={{
                       backgroundColor: "#CB1A14",
                       color: "#FBEAE9",
@@ -123,6 +147,11 @@ const ViewReturnsContent: React.FC = () => {
                       padding: "0.9rem 1.5rem",
                       fontWeight: 600,
                       fontSize: "16px",
+                      opacity: data.complaintStatus !== "pending" ? 0.5 : 1,
+                      cursor:
+                        data.complaintStatus !== "pending"
+                          ? "not-allowed"
+                          : "pointer",
                     }}
                   >
                     Decline
@@ -184,7 +213,7 @@ const ViewReturnsContent: React.FC = () => {
             exit="exit"
             className="flex flex-col gap-4"
           >
-            <ReturnedProduct />
+            <ReturnedProduct    onSendMail={(order) => setSalesOrderData(order)}/>
           </motion.div>
         );
       case ReturnsStep.SEND_MAIL:
@@ -197,7 +226,13 @@ const ViewReturnsContent: React.FC = () => {
             animate="animate"
             exit="exit"
           >
-            <SendMail ref={sendMailRef} />
+          <SendMail
+        key={returnedData.returnID}
+        ref={sendMailRef}
+        // @ts-ignore
+        initialOrderID={salesOrderData?.orderID || ""}
+        initialProductID={returnedData.data.product_variation?.variationID || ""}
+      />
           </motion.div>
         );
 
@@ -216,12 +251,12 @@ const ViewReturnsContent: React.FC = () => {
       <Resolve
         opened={isResolveOpen}
         onClose={() => setIsResolveOpen(false)}
-        returnID={returnId}
+        returnID={data.returnId}
       />
       <Decline
         opened={isDeclineOpen}
         onClose={() => setIsDeclineOpen(false)}
-        returnID={returnId}
+        returnID={data.returnId}
       />
     </PageContainer>
   );

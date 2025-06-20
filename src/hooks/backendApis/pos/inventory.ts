@@ -6,15 +6,17 @@ const defaultPayload = {
   start_date: "",
   end_date: "",
   date_range: "",
+  location_name: "",
+  price_from: "",
+  price_to: "",
+  order_status: "",
   per_page: "500",
   paginate: true,
 };
 
-
 export const useFetchAllProducts = (
   productPayload?: Partial<typeof defaultPayload>
 ) => {
-
   const payload = { ...defaultPayload, ...productPayload };
 
   return useFetchPostData("pos/product/all", payload);

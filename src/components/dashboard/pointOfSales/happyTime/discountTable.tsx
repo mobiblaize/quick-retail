@@ -31,6 +31,7 @@ const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
         dateTo: discount?.to?.split("T")[0],
         status: discount?.status === "active" ? "Active" : "Inactive",
         image: item.image_path,
+        // redemption_count:
       };
     });
 
@@ -81,7 +82,7 @@ const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
       ),
     },
     {
-      header: "Percent",
+      header: "Percent Off",
       accessorKey: "percent",
       cell: ({ row }) => 
         row.original.discountType === "percentage"
@@ -89,7 +90,7 @@ const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
           : "-"
     },
     {
-      header: "Price",
+      header: "Price Off",
       accessorKey: "price",
       cell: ({ row }) => 
         row.original.discountType === "amount"

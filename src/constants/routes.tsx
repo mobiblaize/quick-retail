@@ -16,6 +16,7 @@ export const ROUTES = {
   subCategoryBusinessUnit: "/dashboard/categories/sub-categories",
   categoryCollection: "/dashboard/categories/collection",
   returns: "/dashboard/returns",
+  logReturns: "/dashboard/returns/log_return",
   viewReturns: "/dashboard/returns/view_returns",
   customer: "/dashboard/customer",
   happyTime: "/dashboard/happy-time",

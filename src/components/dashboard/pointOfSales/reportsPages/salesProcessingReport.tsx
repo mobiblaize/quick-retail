@@ -69,7 +69,7 @@ const SalesProcessingReport = () => {
 const exportToPDF = (data: TableRowData[], startDate: string, endDate: string) => {
   const doc = new jsPDF();
 
-  doc.text("Sales Processing Report", 14, 10);
+  doc.text("Showing Report for", 14, 10);
   doc.text(`Date: ${startDate} - ${endDate}`, 14, 18);
 
   autoTable(doc, {

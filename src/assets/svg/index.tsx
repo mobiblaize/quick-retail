@@ -1605,3 +1605,20 @@ export const Barchat = ({ height, width }: IconProps) => (
     />
   </svg>
 );
+const AttachIcon = ({ size = 24, color = "currentColor" }) => (
+  <svg
+    xmlns="http://www.w3.org/2000/svg"
+    fill="none"
+    stroke={color}
+    strokeWidth="2"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    viewBox="0 0 24 24"
+    width={size}
+    height={size}
+  >
+    <path d="M21.44 11.05l-9.19 9.19a5 5 0 0 1-7.07-7.07l8.59-8.59a3 3 0 0 1 4.24 4.24l-7.17 7.17a1 1 0 0 1-1.41-1.41l6.37-6.37" />
+  </svg>
+);
+
+export default AttachIcon;

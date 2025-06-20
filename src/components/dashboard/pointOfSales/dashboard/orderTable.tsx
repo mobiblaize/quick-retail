@@ -5,8 +5,9 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
+import { FilterValues } from "../../../General/table/reuseableFilter";
 
-const CustomerOrdersTable = ({ salesData }: { salesData: any[] }) => {
+const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void; }) => {
 
 
   // ✅ Mapped data
@@ -37,7 +38,6 @@ const CustomerOrdersTable = ({ salesData }: { salesData: any[] }) => {
   const navigate = useNavigate();
 
   const handleViewClick = (orderID: string, status: string) => {
-    console.log("Navigating with orderID:", orderID);
     if (status === "paid") {
       navigate(ROUTES.viewOrder, { state: { orderID } });
     } else if (status === "pending") {
@@ -167,6 +167,8 @@ const CustomerOrdersTable = ({ salesData }: { salesData: any[] }) => {
         searchPlaceholder="Search orders"
         length={8}
         showFilter
+        tableType="sales"
+        onFilterChange={onFilterChange}
         sortOptions={[
           {
             key: "products",

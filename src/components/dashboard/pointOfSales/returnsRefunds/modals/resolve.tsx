@@ -25,7 +25,7 @@ const Resolve = ({ opened, onClose, returnID }: ResolveProps) => {
         onSuccess: () => {
           showNotification({
             title: "Success",
-            message: "Complaint resolved successfully",
+            message: "The refund for this customer has been resolved",
             color: "green",
           });
           onClose(); // if you’re closing a modal or something similar
@@ -72,14 +72,14 @@ const Resolve = ({ opened, onClose, returnID }: ResolveProps) => {
         <Button
           variant="outline"
           style={{
-            color: "#475367",
+            color: "#F16722",
             borderRadius: "0.4rem",
             height: "auto",
             padding: "0.9rem 1.5rem",
             fontWeight: 600,
             fontSize: "16px",
             width: "100%",
-            border: "1px solid #475367",
+            border: "1px solid #F16722",
           }}
           onClick={onClose}
         >
@@ -89,7 +89,7 @@ const Resolve = ({ opened, onClose, returnID }: ResolveProps) => {
           variant="filled"
           onClick={handleResolveComplaint}
           style={{
-            backgroundColor: "#099137",
+            backgroundColor: "#F16722",
             color: "white",
             borderRadius: "0.4rem",
             height: "auto",

@@ -8,9 +8,41 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
 import { formatDate, truncateText } from "../../../../utils/helpers";
+import  { FilterValues } from "../../../General/table/reuseableFilter";
+import { useEffect, useState } from "react";
 
 const InventoryTable = () => {
-  const { data, isLoading } = useFetchAllProducts();
+  // const { data, isLoading } = useFetchAllProducts();
+
+  const mapOrderStatus = (status: string | undefined) => {
+    if (!status) return undefined;
+    if (status === "Paid") return "paid";
+    if (status === "Unpaid") return "unpaid";
+    return status.toLowerCase();
+  };
+  
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    start_date: filters.startDate,
+    end_date: filters.endDate,
+    location_name: filters.location,
+    price_from: filters.stockFrom,
+    price_to: filters.stockTo,
+    order_status: mapOrderStatus(filters.orderStatus),
+         //@ts-ignore
+    search: filters.search ?? "",
+         //@ts-ignore
+    sort_by: filters.sortBy ?? "",
+    paginate: true,
+    per_page: "500",
+  });
+  
+  const [, setShowFilter] = useState(false);
+
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+
+const { data, isLoading, refetch } = useFetchAllProducts(
+  appliedFilters ? mapFiltersToPayload(appliedFilters) : undefined
+);
 
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
@@ -33,6 +65,28 @@ const InventoryTable = () => {
     variationID: product.variationID,
     ...product,
   }));
+
+
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters); // keep as FilterValues
+    setShowFilter(false);
+  };
+  
+  useEffect(() => {
+    if (appliedFilters) {
+      refetch();
+    }
+  }, [appliedFilters, refetch]);
+  
+  const locations = Array.from(
+    new Set(
+      data?.data?.products?.data
+        ?.map((p: any) => p.product?.location?.name)
+        ?.filter((name: any) => typeof name === "string")
+    )
+  );
+  
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -155,29 +209,6 @@ const InventoryTable = () => {
         );
       },
     },
-
-    //   cell: (props) => (
-    //     <Menu shadow="md" width={150} position="bottom-end">
-    //       <Menu.Target>
-    //         <Button variant="subtle" size="xs" p={1}>
-    //           <MoreVertical size={20} className="cursor-pointer" />
-    //         </Button>
-    //       </Menu.Target>
-
-    // <Menu.Dropdown>
-    //   <Link
-    //     to={ROUTES.updateInventory}
-    //     state={{ inventories: props.row.original }}
-    //   >
-    //     <Menu.Item>Update</Menu.Item>
-    //   </Link>
-    //         <Link to={ROUTES.triggerOrder}>
-    //           <Menu.Item color="red">Trigger Reorder</Menu.Item>
-    //         </Link>
-    //       </Menu.Dropdown>
-    //     </Menu>
-    //   ),
-    // },
   ];
 
   return (
@@ -192,9 +223,14 @@ const InventoryTable = () => {
         columnData={columns}
         data={mappedProducts}
         showSearch
+        showFilter
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        onFilterChange={handleFilterChange}
+        tableType="inventory"
+        //@ts-ignore
+        locations={locations}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Button, Modal, Text } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useResolveComplaint } from "../../../../../hooks/backendApis/pos/returns";
+import FormInput from "../../../../General/formInput";
 
 interface DeclineProps {
   opened: boolean;
@@ -10,24 +12,36 @@ interface DeclineProps {
 
 const Decline = ({ opened, onClose, returnID }: DeclineProps) => {
   const { mutate: resolveComplaint } = useResolveComplaint();
+  const [declineReason, setDeclineReason] = useState("");
 
   const handleResolveComplaint = () => {
+    if (!declineReason.trim()) {
+      showNotification({
+        title: "Error",
+        message: "Please provide a reason for declining.",
+        color: "red",
+      });
+      return;
+    }
+
     resolveComplaint(
       {
         returnID: returnID,
         payload: {
           status: "declined",
           refund_type: "cashback",
+          decline_reason: declineReason,  
         },
       },
       {
         onSuccess: () => {
           showNotification({
-            title: "Success",
-            message: "Complaint resolved successfully",
+            title: "Complaint Declined!",
+            message: "The refund for this customer has been declined",
             color: "green",
           });
-          onClose(); // if you’re closing a modal or something similar
+          onClose();
+          setDeclineReason(""); // reset input after success
         },
         onError: (error: any) => {
           const errMsg =
@@ -45,72 +59,82 @@ const Decline = ({ opened, onClose, returnID }: DeclineProps) => {
   };
 
   return (
-    <>
-      <Modal
-        opened={opened}
-        onClose={onClose}
-        title={
-          <div style={{ wordBreak: "break-word" }}>
-            <Text
-              c="black"
-              fw={700}
-              style={{
-                fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
-              }}
-            >
-              Complaints Declined
-            </Text>
-            <Text
-              mt="5"
-              style={{
-                fontSize: "clamp(0.875rem, 2vw, 1rem)",
-              }}
-            >
-              Are you sure you want to Decline this complaints
-            </Text>
-          </div>
-        }
-        centered
-        size="md"
-        radius={20}
-        padding="xl"
-      >
-        <div className="space-y-4 grid grid-cols-1"></div>
-        <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
-          <Button
-            variant="outline"
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={
+        <div style={{ wordBreak: "break-word" }}>
+          <Text
+            c="black"
+            fw={700}
             style={{
-              color: "#475367",
-              borderRadius: "0.4rem",
-              height: "auto",
-              padding: "0.9rem 1.5rem",
-              fontWeight: 600,
-              fontSize: "16px",
-              width: "100%",
-              border: "1px solid #475367",
+              fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
             }}
           >
-            No
-          </Button>
-          <Button
-            variant="filled"
-            onClick={handleResolveComplaint}
+            Complaints Declined
+          </Text>
+          <Text
+            mt="5"
             style={{
-              backgroundColor: "#CB1A14",
-              color: "white",
-              borderRadius: "0.4rem",
-              height: "auto",
-              padding: "0.9rem 1.5rem",
-              fontWeight: 600,
-              fontSize: "16px",
-              width: "100%",
+              fontSize: "clamp(0.875rem, 2vw, 1rem)",
             }}
           >
-            Yes, Decline
-          </Button>
+            Are you sure you want to Decline this complaints
+          </Text>
         </div>
-      </Modal>
-    </>
+      }
+      centered
+      size="md"
+      radius={20}
+      padding="xl"
+    >
+      <div className="space-y-4">
+        <FormInput
+          type="text"
+          label="Reason for declining"
+          placeholder="Enter reason"
+          paddingY="0.3rem"
+          value={declineReason}
+          onChange={(e: any) => setDeclineReason(e.target.value)} // 👈 bind input
+        />
+      </div>
+
+      <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
+        <Button
+          variant="outline"
+          onClick={onClose}
+          style={{
+            color: "#475367",
+            borderRadius: "0.4rem",
+            height: "auto",
+            padding: "0.9rem 1.5rem",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            border: "1px solid #475367",
+          }}
+        >
+          No
+        </Button>
+
+        <Button
+          variant="filled"
+          onClick={handleResolveComplaint}
+          style={{
+            backgroundColor: "#CB1A14",
+            color: "white",
+            borderRadius: "0.4rem",
+            height: "auto",
+            padding: "0.9rem 1.5rem",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+          }}
+        >
+          Yes, Decline
+        </Button>
+      </div>
+    </Modal>
   );
 };
 
