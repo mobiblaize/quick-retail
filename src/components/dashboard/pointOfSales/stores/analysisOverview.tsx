@@ -25,7 +25,7 @@ const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
   const cards = [
     {
       title: "Total Stores",
-      value: data.total_stores,
+      value: data?.total_stores,
       icon: house,
       altText: "Total Stores",
       iconColor: "#E17036",
@@ -36,7 +36,7 @@ const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
     },
     {
       title: "Active Stores",
-      value: data.active_stores,
+      value: data?.active_stores,
       icon: activeStore,
       altText: "Active Stores",
       iconColor: "#E17036",
@@ -47,7 +47,7 @@ const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
     },
     {
       title: "Inactive Stores",
-      value: data.inactive_stores,
+      value: data?.inactive_stores,
       icon: inactiveStore,
       altText: "Inactive Stores",
       iconColor: "#E17036",

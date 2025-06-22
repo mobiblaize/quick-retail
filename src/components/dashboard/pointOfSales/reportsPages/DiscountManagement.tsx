@@ -1,48 +1,44 @@
 import { Text } from "@mantine/core";
-import DivisionSaleChartReport from "../../../General/table/divisionSalesChartReport";
 import { truncateText } from "../../../../utils/helpers";
 import others from "../../../../assets/images/others.png";
+import DivisionDiscountChartReport from "../../../General/table/divisonDiscountChart";
 
 interface SalesCustomerAnalysisProps {
   reportInfo: {
     reportData: {
       data: {
-        customer_sales?: {
-          customer_name: string;
-          total_order_value: string;
-          total_orders: number;
-        }[];
-        product_sales?: {
+        top_discounted_products?: {
           product_name: string;
-          price: string;
-          total_sold: string;
+
+          selling_price: number;
+
+          total_discount_value: string;
+
+          total_redemptions: number;
         }[];
       };
     };
   };
 }
 
-const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
-  const customerSales = reportInfo?.reportData?.data?.customer_sales ?? [];
-  const productSales = reportInfo?.reportData?.data?.product_sales ?? [];
+const DiscountAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
+  const rawProducts = reportInfo?.reportData?.data?.top_discounted_products;
+  const productSales =
+    rawProducts && typeof rawProducts === "object"
+      ? Object.values(rawProducts)
+      : [];
 
-  // Top products
+  // Separate "Others" product
+  const otherProduct = productSales.find((p) => p.product_name === "Others");
+
+  // Filter out Others + sort by redemptions
   const topProducts = productSales
     .filter((p) => p.product_name !== "Others")
-    .sort((a, b) => Number(b.total_sold) - Number(a.total_sold))
+    .sort((a, b) => Number(b.total_redemptions) - Number(a.total_redemptions))
     .slice(0, 4);
 
-  // Other products
-  const otherProducts = productSales.filter((p) => p.product_name === "Others");
 
-  const otherSummary = otherProducts.reduce(
-    (acc, p) => {
-      acc.quantity_sold += Number(p.total_sold);
-      acc.total_price += p.price !== "Multiple" ? Number(p.price) * Number(p.total_sold) : 0;
-      return acc;
-    },
-    { quantity_sold: 0, total_price: 0 }
-  );
+
 
   return (
     <main className="flex flex-col lg:flex-row gap-6">
@@ -50,22 +46,21 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
         <div className="flex justify-between items-center">
           <div className="flex-col">
             <Text size="xl" fw={600} c="textSecondary.9">
-           Sales by Customers
+              Top Discounted Product
             </Text>
           </div>
         </div>
 
-        <DivisionSaleChartReport customers={reportInfo?.reportData?.data?.customer_sales ?? []} />
-
+        <DivisionDiscountChartReport discounts={productSales} />
       </div>
 
       <section className="w-full lg:w-[50%] h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Sales by Product
+            Product by Sales
           </Text>
           <Text className="secondary font-normal">
-            See how your products are selling.
+            See how your customers are buying
           </Text>
         </div>
 
@@ -78,7 +73,6 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
               <div className="flex gap-2 items-center">
                 <img
                   src={"/placeholder.png"}
-                  // src={product.image_path || "/placeholder.png"}
                   alt={product.product_name}
                   className="w-10 h-10 rounded object-cover"
                 />
@@ -86,23 +80,22 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
                   <Text fw={500} size="sm" c="black">
                     {truncateText(product.product_name || "Unnamed Product")}
                   </Text>
-             
-                  <Text fw={500} size="sm">                   {/* @ts-ignore */}
-          
-                      {product.sku || "Unnamed Product"}
-                     </Text>
+                  <Text fw={500} size="sm">
+                    {/* @ts-ignore */}
+                    {product.sku || "Unnamed Product"}
+                  </Text>
                 </div>
               </div>
               <Text fw={400} size="sm" c="black">
-                ₦{Number(product.price || 0).toLocaleString()}
+                ₦{Number(product.selling_price || 0).toLocaleString()}
               </Text>
               <Text fw={400} size="sm" c="black">
-                {Number(product.total_sold).toLocaleString()} sold
+                {Number(product.total_redemptions || 0).toLocaleString()} sold
               </Text>
             </div>
           ))}
 
-          {otherSummary.quantity_sold > 0 && (
+          {otherProduct && (
             <div className="flex justify-between items-center px-2 py-2 bg-gray-50 rounded">
               <div className="flex gap-2 items-center">
                 <img
@@ -117,10 +110,11 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
                 </div>
               </div>
               <Text fw={400} size="sm" c="black">
-                ₦{otherSummary.total_price.toLocaleString()}
+                ₦{Number(otherProduct.selling_price || 0).toLocaleString()}
               </Text>
               <Text fw={400} size="sm" c="black">
-                {otherSummary.quantity_sold.toLocaleString()} sold
+                {Number(otherProduct.total_redemptions || 0).toLocaleString()}{" "}
+                sold
               </Text>
             </div>
           )}
@@ -130,5 +124,4 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
   );
 };
 
-export default SalesCustomerAnalysis;
-
+export default DiscountAnalysis;

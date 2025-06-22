@@ -1,16 +1,17 @@
 import { Text } from "@mantine/core";
-import DivisionSaleChartReport from "../../../General/table/divisionSalesChartReport";
 import { truncateText } from "../../../../utils/helpers";
 import others from "../../../../assets/images/others.png";
+import DivisionProductChartReport from "../../../General/table/divisionProductChartReport";
 
 interface SalesCustomerAnalysisProps {
   reportInfo: {
     reportData: {
       data: {
-        customer_sales?: {
-          customer_name: string;
-          total_order_value: string;
-          total_orders: number;
+        category_sales?: {
+          category_name: string;
+          total_quantity_sold: number;
+          total_revenue: string;
+          percentage: number;
         }[];
         product_sales?: {
           product_name: string;
@@ -22,8 +23,9 @@ interface SalesCustomerAnalysisProps {
   };
 }
 
-const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
-  const customerSales = reportInfo?.reportData?.data?.customer_sales ?? [];
+
+
+const ProductCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
   const productSales = reportInfo?.reportData?.data?.product_sales ?? [];
 
   // Top products
@@ -50,19 +52,20 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
         <div className="flex justify-between items-center">
           <div className="flex-col">
             <Text size="xl" fw={600} c="textSecondary.9">
-           Sales by Customers
+   Product by Category
             </Text>
           </div>
         </div>
 
-        <DivisionSaleChartReport customers={reportInfo?.reportData?.data?.customer_sales ?? []} />
+        <DivisionProductChartReport categories={reportInfo?.reportData?.data?.category_sales
+ ?? []} />
 
       </div>
 
       <section className="w-full lg:w-[50%] h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Sales by Product
+      Product by Sales
           </Text>
           <Text className="secondary font-normal">
             See how your products are selling.
@@ -130,5 +133,5 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
   );
 };
 
-export default SalesCustomerAnalysis;
+export default ProductCustomerAnalysis;
 

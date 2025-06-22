@@ -48,7 +48,6 @@ const ViewReturnsContent: React.FC = () => {
 
   const { data: returnedData } = useFetchRetrun(returnId || "");
   const [salesOrderData, setSalesOrderData] = useState(null);
-  
 
   console.log(returnedData);
 
@@ -66,7 +65,9 @@ const ViewReturnsContent: React.FC = () => {
       prevStep();
     }
   };
-
+  const complaintStatus = (data.complaintStatus || "").toLowerCase();
+  const isPending = complaintStatus === "pending";
+  
   const getSubHeaders = () => {
     const backButton = (
       <button
@@ -115,9 +116,8 @@ const ViewReturnsContent: React.FC = () => {
                 </div>
                 <div className="flex gap-3.5 items-center">
                   <Button
-                    variant="filled"
                     onClick={() => setIsResolveOpen(true)}
-                    disabled={data.complaintStatus !== "pending"}
+                    disabled={!isPending}
                     style={{
                       backgroundColor: "#099137",
                       color: "#E7F6EC",
@@ -126,11 +126,8 @@ const ViewReturnsContent: React.FC = () => {
                       padding: "0.9rem 1.5rem",
                       fontWeight: 600,
                       fontSize: "16px",
-                      opacity: data.complaintStatus !== "pending" ? 0.5 : 1,
-                      cursor:
-                        data.complaintStatus !== "pending"
-                          ? "not-allowed"
-                          : "pointer",
+                      opacity: isPending ? 1 : 0.5,
+                      cursor: isPending ? "pointer" : "not-allowed",
                     }}
                   >
                     Resolve
@@ -138,7 +135,7 @@ const ViewReturnsContent: React.FC = () => {
 
                   <Button
                     onClick={() => setIsDeclineOpen(true)}
-                    disabled={data.complaintStatus !== "pending"}
+                    disabled={!isPending}
                     style={{
                       backgroundColor: "#CB1A14",
                       color: "#FBEAE9",
@@ -147,11 +144,8 @@ const ViewReturnsContent: React.FC = () => {
                       padding: "0.9rem 1.5rem",
                       fontWeight: 600,
                       fontSize: "16px",
-                      opacity: data.complaintStatus !== "pending" ? 0.5 : 1,
-                      cursor:
-                        data.complaintStatus !== "pending"
-                          ? "not-allowed"
-                          : "pointer",
+                      opacity: isPending ? 1 : 0.5,
+                      cursor: isPending ? "pointer" : "not-allowed",
                     }}
                   >
                     Decline
@@ -213,7 +207,7 @@ const ViewReturnsContent: React.FC = () => {
             exit="exit"
             className="flex flex-col gap-4"
           >
-            <ReturnedProduct    onSendMail={(order) => setSalesOrderData(order)}/>
+            <ReturnedProduct onSendMail={(order) => setSalesOrderData(order)} />
           </motion.div>
         );
       case ReturnsStep.SEND_MAIL:
@@ -226,13 +220,15 @@ const ViewReturnsContent: React.FC = () => {
             animate="animate"
             exit="exit"
           >
-          <SendMail
-        key={returnedData.returnID}
-        ref={sendMailRef}
-        // @ts-ignore
-        initialOrderID={salesOrderData?.orderID || ""}
-        initialProductID={returnedData.data.product_variation?.variationID || ""}
-      />
+            <SendMail
+              key={returnedData.returnID}
+              ref={sendMailRef}
+              // @ts-ignore
+              initialOrderID={salesOrderData?.orderID || ""}
+              initialProductID={
+                returnedData.data.product_variation?.variationID || ""
+              }
+            />
           </motion.div>
         );
 

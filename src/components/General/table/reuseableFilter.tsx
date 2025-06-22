@@ -140,7 +140,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
                 placeholder="From"
                 value={filters.priceFrom}
                 onChange={(e) => setFilters({ ...filters, priceFrom: e.target.value })}
-                className="w-39 border rounded p-2 text-sm"
+                className="w-39 border rounded p-2 text-sm pl"
               />
             </div>
             <div className="relative w-24">
@@ -150,7 +150,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
                 placeholder="To"
                 value={filters.priceTo}
                 onChange={(e) => setFilters({ ...filters, priceTo: e.target.value })}
-                className="w-39 border rounded p-2 text-sm"
+                className="w-39 border rounded p-2 text-sm pl-4"
               />
             </div>
           </div>
