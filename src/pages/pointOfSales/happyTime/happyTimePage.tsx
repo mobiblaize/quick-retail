@@ -1,5 +1,5 @@
 import { Button, Text } from "@mantine/core";
-import { ChevronRight, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import PageContainer from "../../../layout/pageContainer";
 import DiscountTable from "../../../components/dashboard/pointOfSales/happyTime/discountTable";
 import { Link } from "react-router";
@@ -21,7 +21,7 @@ const HappyTimePage = () => {
           Discount Promotion
         </Text>
         <div className="flex flex-row gap-2 md:gap-4">
-          <Link to={ROUTES.happyDiscountAnalytics}>
+          {/* <Link to={ROUTES.happyDiscountAnalytics}>
             <Button
               variant="outline-primary"
               className="flex gap-1.5 items-center justify-center"
@@ -30,16 +30,19 @@ const HappyTimePage = () => {
               <span className="whitespace-nowrap">Discount Analytics</span>
               <ChevronRight />
             </Button>
-          </Link>
+          </Link> */}
+
+          <Link to={ROUTES.createDiscounts}>
           <Button
             variant="filled-primary"
             className="flex gap-1.5 items-center justify-center"
             style={{ padding: "0.8rem 0.5rem" }}
-            onClick={() => setIsLogComplaintsOpen(true)}
+            // onClick={() => setIsLogComplaintsOpen(true)}
           >
             <span className="whitespace-nowrap">Create Discount</span>
             <Plus size={24} />
           </Button>
+          </Link>
         </div>
       </div>
     </div>,

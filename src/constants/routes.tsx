@@ -19,6 +19,7 @@ export const ROUTES = {
   viewReturns: "/dashboard/returns/view_returns",
   customer: "/dashboard/customer",
   happyTime: "/dashboard/happy-time",
+  createDiscounts: "/dashboard/happy-time/create-discounts",
   happyDiscountAnalytics: "/dashboard/happy-time/analytics",
   happyGiftCard: "/dashboard/happy-time/gift_card",
   transaction: "/dashboard/transaction",

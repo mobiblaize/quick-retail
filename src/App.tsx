@@ -211,6 +211,7 @@ import CreatePassword from "./pages/auth/CreatePassword";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
+import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
 
 export default function App() {
   return (
@@ -297,6 +298,7 @@ export default function App() {
             path={ROUTES.happyDiscountAnalytics}
             element={<DiscountAnalysisPage />}
           />
+          <Route path={ROUTES.createDiscounts} element={<CreateDiscounts/>}/>
           <Route path={ROUTES.happyGiftCard} element={<GiftCardPage />} />
           <Route path={ROUTES.transaction} element={<TransactionPage />} />
           <Route
