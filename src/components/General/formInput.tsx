@@ -7,7 +7,7 @@ interface FlexibleInputField
   paddingY?: number | string;
   borderWidth?: number | string;
   leftPrefix?: string; 
-  
+  onBlur?: () => void;
 }
 
 const FormInput = ({

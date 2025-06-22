@@ -1,69 +1,77 @@
 import { Text } from "@mantine/core";
-import { useReturns } from "../../../General/orderContext/orderCreationContext";
-import { useFetchSaleOrderById } from "../../../../hooks/backendApis/pos/returns";
+import { useFetchRetrun, } from "../../../../hooks/backendApis/pos/returns";
 
 interface CustomerDetailsProps {
-  orderId: string;
+  returnId: string;
 }
 
-const CustomerDetails = ({ orderId }: CustomerDetailsProps) => {
-  const { nextStep } = useReturns();
-  const { data, error, isLoading } = useFetchSaleOrderById(orderId || "");
+const CustomerDetails = ({ returnId }: CustomerDetailsProps) => {
 
-  const customerInfo = data?.data?.customer || {};
+  const { data: returnedData } = useFetchRetrun(returnId || "");
 
-  if (error) return <Text>Error loading customer details.</Text>;
-  if (isLoading) return <Text>Loading customer details...</Text>;
-
+  const product = returnedData?.data?.product_variation;
+  const salesOrder = returnedData?.data?.sales_order_detail;
   return (
     <main className="w-full h-auto rounded-lg bg-white px-6 py-8">
       <div className="flex justify-between items-center">
-        <Text c="black" size="xl" fw={"500"}>
-          Customer Details
-        </Text>
-        <Text
-          onClick={nextStep}
-          fw={"600"}
-          c="customPrimary.10"
-          className="cursor-pointer"
-        >
-          Email Customer
+        <Text c="black" size="xl" fw={500}>
+          SELECTED PRODUCTS TO RETURN
         </Text>
       </div>
 
-      <section className="mt-6">
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-3 md:gap-x-8 w-full md:max-w-6xl">
-          {/* Customer Name */}
-          <div className="flex flex-col">
-            <Text fw={"500"}>Name</Text>
-            <Text size="lg" c={"black"} fw={"400"}>
-              {customerInfo.customer_name || "N/A"}
-            </Text>
-          </div>
+      <section className="mt-6 w-full">
+        <div className="grid grid-cols-1 gap-4 w-full max-w-6xl mx-auto">
+          <ul className="space-y-3">
+            <li className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-lg bg-gray-50 shadow-sm">
+              {/* Product image */}
+              <img
+                src={product?.image_path || "/placeholder.png"}
+                alt={product?.name || "Product Image"}
+                className="w-20 h-20 object-cover rounded border"
+              />
 
-          {/* Customer Email */}
-          <div className="flex flex-col">
-            <Text fw={"500"}>Email</Text>
-            <Text size="lg" c={"black"} fw={"400"}>
-              {customerInfo.customer_email || "N/A"}
-            </Text>
-          </div>
+              <div className="flex flex-1 flex-col md:flex-row justify-between w-full gap-4">
+                {/* Product info */}
+                <div>
+                  <span className="font-semibold text-gray-900">
+                    {product?.name || "Product Name"}
+                  </span>
+                  <div className="text-sm text-black-600">
+                    <div>EAN: {product?.ean || "N/A"}</div>
+                    <div>SKU: {product?.sku || "N/A"}</div>
+                  </div>
+                </div>
 
-          {/* Customer Phone */}
-          <div className="flex flex-col">
-            <Text fw={"500"}>Phone Number</Text>
-            <Text size="lg" c={"black"} fw={"400"}>
-              {customerInfo.customer_phone || "N/A"}
-            </Text>
-          </div>
+                {/* Unit price */}
+                <div className="flex flex-col items-center min-w-[90px]">
+                  <span className="text-xs text-black-500">Unit Price</span>
+                  <span className="font-medium text-black-500">
+                    ₦ {Number(product?.selling_price || 0).toLocaleString()}
+                  </span>
+                </div>
 
-          {/* Customer Address */}
-          <div className="flex flex-col">
-            <Text fw={"500"}>Address</Text>
-            <Text size="lg" c={"black"} fw={"400"}>
-              {customerInfo.customer_address || "N/A"}
-            </Text>
-          </div>
+                {/* Quantity */}
+                <div className="flex flex-col items-center min-w-[90px]">
+                  <span className="text-xs text-black-500">Quantity</span>
+                  <input
+                    type="number"
+                    min={1}
+                    value={salesOrder?.quantity_returned }
+                    className="w-16 border rounded px-1 text-center text-black-500"
+                    disabled
+                  />
+                </div>
+
+                {/* Total price */}
+                <div className="flex flex-col items-center min-w-[90px]">
+                  <span className="text-xs text-black-500">Total Price</span>
+                  <span className="font-semibold text-[#2E90FA]">
+                    ₦ {Number(salesOrder?.total_price || 0).toLocaleString()}
+                  </span>
+                </div>
+              </div>
+            </li>
+          </ul>
         </div>
       </section>
     </main>

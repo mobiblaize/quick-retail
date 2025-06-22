@@ -1,6 +1,6 @@
 import { useMutation } from "@tanstack/react-query";
 import { defaultPayload } from "../../../types";
-import {  useFetchPostData, useGetData, useGetDataWithNoQuery, usePostData  } from "../../useApis";
+import {  useFetchPostData, useGetData, useGetDataWithNoQuery, usePostData, usePostDataAttach  } from "../../useApis";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
 
 type ResolveComplaintArgs = {
@@ -8,6 +8,7 @@ type ResolveComplaintArgs = {
   payload: {
     status: string;
     refund_type?: string;
+    decline_reason?: string;
     // Add more fields if needed
   };
 };
@@ -41,7 +42,7 @@ export const useFetchSaleOrderById = (orderID: string) => {
 };
 
 export const useSendMail = () => {
-  return usePostData("pos/returns/send-mail");
+  return usePostDataAttach("pos/returns/send-mail");
 };
 
 // export const useResolveComplaint = (returnID: string) => {
@@ -58,4 +59,9 @@ export const useResolveComplaint = () => {
       return response.data;
     },
   });
+};
+
+
+export const useFetchRetrun = (returnID: string) => {
+  return useGetData(`pos/returns/view-complaint/${returnID}`);
 };

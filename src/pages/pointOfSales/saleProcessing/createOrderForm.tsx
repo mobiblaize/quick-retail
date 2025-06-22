@@ -80,6 +80,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   };
 
   const handleCustomerChange = (id: string | null) => {
+    console.log("Customer ID selected:", id);
     updatePaymentDetails({
       ...paymentDetails,
       customerId: id,

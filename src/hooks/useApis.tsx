@@ -13,6 +13,21 @@ export const usePostData = (url: string) => {
   return mutation;
 };
 
+export const usePostDataAttach = (url: string) => {
+  const mutation = useMutation({
+    mutationFn: async (arg: any) => {
+      const isFormData = arg instanceof FormData;
+      const response = await axiosInstance.post(baseUrl + url, arg, {
+        headers: !isFormData ? { "Content-Type": "application/json" } : undefined,
+      });
+      return response.data;
+    },
+  });
+
+  return mutation;
+};
+
+
 export const useCreateExportData = (url: string) => {
   const mutation = useMutation({
     mutationFn: async (arg: any) => {

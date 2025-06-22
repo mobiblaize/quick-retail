@@ -205,6 +205,7 @@ import Home from "./pages/landingPages/home";
 import Contact from "./pages/landingPages/contact";
 import Pricing from "./pages/landingPages/pricing";
 import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
+import LogPage from "./pages/pointOfSales/returns/logPage";
 import SignupPage from "./pages/auth/Signup";
 import Login from "./pages/auth/Login";
 import CreatePassword from "./pages/auth/CreatePassword";
@@ -292,6 +293,7 @@ export default function App() {
           <Route path={ROUTES.aboutProduct} element={<AboutProduct />} />
           <Route path={ROUTES.returns} element={<ReturnsPage />} />
           <Route path={ROUTES.viewReturns} element={<ViewReturnsPage />} />
+          <Route path={ROUTES.logReturns} element={<LogPage />} />
           <Route path={ROUTES.customer} element={<CustomerPage />} />
           <Route path={ROUTES.happyTime} element={<HappyTimePage />} />
           <Route

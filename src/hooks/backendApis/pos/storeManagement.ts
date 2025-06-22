@@ -1,5 +1,4 @@
 
-import { defaultPayload2 } from "../../../types";
 import { useFetchPostData, useGetData, usePostData, usePutData, } from "../../useApis";
 
 
@@ -7,15 +6,17 @@ export const useCreateStore = () => {
   return usePostData("pos/location/add-location");
 };
 
-export const useFetchStore = (customPayload?: Partial<typeof defaultPayload2>) => {
-  const defaultPayload2 = {
+export const useFetchStore = (customPayload?: Partial<typeof defaultPayload>) => {
+  const defaultPayload = {
     search: "",
     sort_by: "",
     per_page: "",
     paginate: true,
+    start_date: "",
+    end_date: "",
   };
 
-  const payload = { ...defaultPayload2, ...customPayload };
+  const payload = { ...defaultPayload, ...customPayload };
 
   return useFetchPostData("pos/location/all", payload);
 };

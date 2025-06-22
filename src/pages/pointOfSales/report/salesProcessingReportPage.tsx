@@ -3,6 +3,8 @@ import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import SalesProcessingReport from "../../../components/dashboard/pointOfSales/reportsPages/salesProcessingReport";
+import SalesOverviewReport from "../../../components/dashboard/pointOfSales/reportsPages/overviewSales";
+import SalesCustomerAnalysis from "../../../components/dashboard/pointOfSales/reportsPages/salesCustomerAnalysis";
 
 const SalesProcessingReportPage = () => {
     const navigate = useNavigate();
@@ -10,6 +12,7 @@ const SalesProcessingReportPage = () => {
      const handleBack = () => {
        navigate(-2);
      };
+    
    
      const getSubHeaders = () => {
        const backButton = (
@@ -41,7 +44,7 @@ const SalesProcessingReportPage = () => {
          </div>,
          <div key="2">
            <Text fw={500} size="xl" c="black">
-             Reports: Sales Processing
+             Sales Report
            </Text>
          </div>,
        ];
@@ -55,6 +58,8 @@ const SalesProcessingReportPage = () => {
        <PageContainer
          subHeaders={getSubHeaders()}
        >
+          <SalesOverviewReport/>
+          < SalesCustomerAnalysis/>
          <SalesProcessingReport />
        </PageContainer>
      );
