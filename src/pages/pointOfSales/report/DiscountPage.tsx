@@ -2,7 +2,7 @@ import { Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
@@ -17,14 +17,16 @@ const DiscountReportPage = () => {
   const location = useLocation();
   const { startDate, endDate, locationId, reportData } = location.state || {};
 
-  const [reportInfo, setReportInfo] = useState({
+  const [reportInfo, ] = useState({
     startDate,
     endDate,
     locationId,
     reportData,
   });
 
-
+//   useEffect(() => {
+//     console.log("Current reportInfo:", reportInfo);
+//   }, [reportInfo]);
 
   const exportOptions = [
     { label: "CSV", value: "csv" },

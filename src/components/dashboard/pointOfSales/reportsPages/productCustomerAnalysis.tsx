@@ -14,6 +14,8 @@ interface SalesCustomerAnalysisProps {
           percentage: number;
         }[];
         product_sales?: {
+            image_path: string;
+            sku: string;
           product_name: string;
           price: string;
           total_sold: string;
@@ -80,9 +82,7 @@ const ProductCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => 
             >
               <div className="flex gap-2 items-center">
                 <img
-                  src={"/placeholder.png"}
-                  // src={product.image_path || "/placeholder.png"}
-                  alt={product.product_name}
+                  src={product.image_path || "/placeholder.png"}
                   className="w-10 h-10 rounded object-cover"
                 />
                 <div className="flex flex-col">

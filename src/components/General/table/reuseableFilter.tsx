@@ -31,7 +31,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showOrderStatus,
   showPrice = false,
   showPaymentStatus = false,
-  filterType,
+
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
     startDate: '',

@@ -1,7 +1,7 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Text } from "@mantine/core";
+import {  Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
 

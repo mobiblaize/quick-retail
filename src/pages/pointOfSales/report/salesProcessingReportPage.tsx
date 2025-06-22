@@ -5,7 +5,7 @@ import PageContainer from "../../../layout/pageContainer";
 import SalesProcessingReport from "../../../components/dashboard/pointOfSales/reportsPages/salesProcessingReport";
 import SalesOverviewReport from "../../../components/dashboard/pointOfSales/reportsPages/overviewSales";
 import SalesCustomerAnalysis from "../../../components/dashboard/pointOfSales/reportsPages/salesCustomerAnalysis";
-import {  useEffect, useState } from "react";
+import {   useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { notifications } from "@mantine/notifications";
@@ -17,7 +17,7 @@ const SalesProcessingReportPage = () => {
   const location = useLocation();
   const { startDate, endDate, locationId, reportData } = location.state || {};
 
-  const [reportInfo, setReportInfo] = useState({
+  const [reportInfo,] = useState({
     startDate,
     endDate,
     locationId,

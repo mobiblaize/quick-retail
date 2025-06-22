@@ -89,7 +89,7 @@ const DivisionProductChartReport = ({ categories }: Props) => {
                   ))}
                 </Pie>
                 <Tooltip
-                  formatter={(value: any, name: any, props: any) => [
+                  formatter={(value: any,  props: any) => [
                     `${value} products`, 
                     props.payload.name
                   ]}

@@ -3,7 +3,7 @@ import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import ProductManagementReport from "../../../components/dashboard/pointOfSales/reportsPages/productManagementReport";
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import ProductOverviewReport from "../../../components/dashboard/pointOfSales/reportsPages/productOverview";
 import ProductCustomerAnalysis from "../../../components/dashboard/pointOfSales/reportsPages/productCustomerAnalysis";
 import { notifications } from "@mantine/notifications";
@@ -18,7 +18,7 @@ const ProductReportPage = () => {
     const location = useLocation();
   const { startDate, endDate, locationId, reportData } = location.state || {};
 
-  const [reportInfo, setReportInfo] = useState({
+  const [reportInfo, ] = useState({
     startDate,
     endDate,
     locationId,

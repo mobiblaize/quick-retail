@@ -8,6 +8,8 @@ interface SalesCustomerAnalysisProps {
     reportData: {
       data: {
         top_discounted_products?: {
+            image_path: string;
+            sku: string;
           product_name: string;
 
           selling_price: number;
@@ -72,7 +74,7 @@ const DiscountAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
             >
               <div className="flex gap-2 items-center">
                 <img
-                  src={"/placeholder.png"}
+                   src={product.image_path || "/placeholder.png"}
                   alt={product.product_name}
                   className="w-10 h-10 rounded object-cover"
                 />

@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Text, Button } from "@mantine/core";
 import { Link } from "react-router";
 import PageContainer from "../../../layout/pageContainer";

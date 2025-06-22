@@ -76,10 +76,7 @@ const pieData = [
     );
   };
   
-  const colorMap = pieData.reduce((acc, cur) => {
-    acc[cur.name] = cur.color;
-    return acc;
-  }, {} as Record<string, string>);
+
   
   return (
     <main className="flex flex-col md:flex-row mt-6">

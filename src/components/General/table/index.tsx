@@ -42,7 +42,7 @@ interface TanTableProps {
   showSeeAllToggle?: boolean;
   onFilterChange?: (filters: FilterValues) => void;
   locations?: string[];
-  tableType: "inventory" | "sales" | "product" | "returns" | "discount";
+  tableType?: "inventory" | "sales" | "product" | "returns" | "discount";
 }
 
 const TanTable: FC<TanTableProps> = ({

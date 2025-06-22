@@ -13,6 +13,8 @@ interface SalesCustomerAnalysisProps {
           total_orders: number;
         }[];
         product_sales?: {
+          image_path: string;
+          sku: string;
           product_name: string;
           price: string;
           total_sold: string;
@@ -22,8 +24,7 @@ interface SalesCustomerAnalysisProps {
   };
 }
 
-const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
-  const customerSales = reportInfo?.reportData?.data?.customer_sales ?? [];
+const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {;
   const productSales = reportInfo?.reportData?.data?.product_sales ?? [];
 
   // Top products
@@ -38,7 +39,8 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
   const otherSummary = otherProducts.reduce(
     (acc, p) => {
       acc.quantity_sold += Number(p.total_sold);
-      acc.total_price += p.price !== "Multiple" ? Number(p.price) * Number(p.total_sold) : 0;
+      acc.total_price +=
+        p.price !== "Multiple" ? Number(p.price) * Number(p.total_sold) : 0;
       return acc;
     },
     { quantity_sold: 0, total_price: 0 }
@@ -50,13 +52,14 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
         <div className="flex justify-between items-center">
           <div className="flex-col">
             <Text size="xl" fw={600} c="textSecondary.9">
-           Sales by Customers
+              Sales by Customers
             </Text>
           </div>
         </div>
 
-        <DivisionSaleChartReport customers={reportInfo?.reportData?.data?.customer_sales ?? []} />
-
+        <DivisionSaleChartReport
+          customers={reportInfo?.reportData?.data?.customer_sales ?? []}
+        />
       </div>
 
       <section className="w-full lg:w-[50%] h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
@@ -77,8 +80,7 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
             >
               <div className="flex gap-2 items-center">
                 <img
-                  src={"/placeholder.png"}
-                  // src={product.image_path || "/placeholder.png"}
+                  src={product.image_path || "/placeholder.png"}
                   alt={product.product_name}
                   className="w-10 h-10 rounded object-cover"
                 />
@@ -86,11 +88,12 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
                   <Text fw={500} size="sm" c="black">
                     {truncateText(product.product_name || "Unnamed Product")}
                   </Text>
-             
-                  <Text fw={500} size="sm">                   {/* @ts-ignore */}
-          
-                      {product.sku || "Unnamed Product"}
-                     </Text>
+
+                  <Text fw={500} size="sm">
+                    {" "}
+                    {/* @ts-ignore */}
+                    {product.sku || "Unnamed Product"}
+                  </Text>
                 </div>
               </div>
               <Text fw={400} size="sm" c="black">
@@ -131,4 +134,3 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
 };
 
 export default SalesCustomerAnalysis;
-

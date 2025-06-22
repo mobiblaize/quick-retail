@@ -32,7 +32,7 @@ const RefundAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
   const resolvedCount = Number(stats.total_resolved_complaints || 0);
   const declinedCount = Number(stats.total_declined_complaints || 0);
   
-  const total = pendingCount + resolvedCount + declinedCount;
+
   
   return (
     <main className="flex flex-col lg:flex-row gap-6">

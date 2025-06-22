@@ -95,17 +95,14 @@ const PurchaseInvoiceHistoryTable = () => {
             label: "Sort by Date Added",
           },
         ]}
-        tableTitle={
-          <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">
-              Version History
-            </Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{invoiceVersionHistory.length}</Text>
-            </div>
+        tableTitle={<div className="flex gap-2.5">
+          <Text fw={500} size="xl" c="textSecondary.9">
+            Version History
+          </Text>
+          <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+            <Text c="customPrimary.10">{invoiceVersionHistory.length}</Text>
           </div>
-        }
-      />
+        </div>}    />
     </main>
   );
 };

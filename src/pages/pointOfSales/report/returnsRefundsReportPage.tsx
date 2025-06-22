@@ -4,7 +4,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import ReturnsRefundsReport from "../../../components/dashboard/pointOfSales/reportsPages/returnsRefundsReport";
 import ReturnsReportAnalytics from "../../../components/dashboard/pointOfSales/reportsPages/returnsReportAnlytics";
-import { useEffect, useState } from "react";
+import { useState } from "react";
 import RefundAnalysis from "../../../components/dashboard/pointOfSales/reportsPages/returnsAnalysis";
 import { notifications } from "@mantine/notifications";
 import Dropdown from "../../../components/General/dropdown";
@@ -20,16 +20,14 @@ const RetunsRefundsReportPage = () => {
     const location = useLocation();
     const { startDate, endDate, locationId, reportData } = location.state || {};
 
-    const [reportInfo, setReportInfo] = useState({
+    const [reportInfo, ] = useState({
       startDate,
       endDate,
       locationId,
       reportData,
     });
   
-    useEffect(() => {
-      console.log("Current reportInfo:", reportInfo);
-    }, [reportInfo]);
+
   
     const exportOptions = [
       { label: "CSV", value: "csv" },

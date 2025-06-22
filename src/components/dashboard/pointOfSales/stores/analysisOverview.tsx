@@ -1,7 +1,6 @@
-import { Group, Text } from "@mantine/core";
+import {  Text } from "@mantine/core";
 import { Key } from "react";
 import AnalyticsCard from "../../../General/card";
-import DateFilterMenu from "../../../General/filterMenu";
 import house from "../../../../assets/images/house.png";
 import activeStore from "../../../../assets/images/activeStore.png";
 import inactiveStore from "../../../../assets/images/inactiveStore.png";
@@ -20,7 +19,7 @@ interface TransactionOverviewProps {
 
 const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
   data,
-  setDateRange,
+
 }) => {
   const cards = [
     {
