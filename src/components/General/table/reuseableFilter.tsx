@@ -134,7 +134,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           <label className="block text-sm font-medium mb-1">Price (₦)</label>
           <div className="flex gap-2">
             <div className="relative ">
-              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">₦</span>
+              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
               <input
                 type="number"
                 placeholder="From"
@@ -144,7 +144,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
               />
             </div>
             <div className="relative w-24">
-              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500">₦</span>
+              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
               <input
                 type="number"
                 placeholder="To"
