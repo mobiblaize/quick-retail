@@ -1,6 +1,6 @@
 
 import { useState, useEffect, SetStateAction } from "react";
-import { Divider, Loader, Text } from "@mantine/core";
+import { Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 import { SqrCode } from "../../../../assets/svg";
@@ -58,6 +58,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
     onItemsChange(selectedItems);
   }, [selectedItems, onItemsChange]);
 
+  
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -115,7 +116,6 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
     );
   };
   useEffect(() => {
-    console.log("initialItems arrived:", initialItems);
   }, [initialItems]);
   
   return (
@@ -125,8 +125,8 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
           Search Product
         </Text>
       </div>
-      <Divider size="sm" className="mt-3" color="#E4E7EC" />
-      <div className="pt-8 pb-4 max-w-md px-6">
+      {/* <Divider size="sm" className="mt-3" color="#E4E7EC" /> */}
+      <div className="pt-4 pb-4 max-w-md px-6">
         <FormInput
           placeholder="Search by Name."
           value={searchTerm}

@@ -3,7 +3,7 @@ import { useFetchPostData, useGetData, usePostData } from "../../useApis";
 
 export const useCreateDiscount = () => {
     return usePostData("pos/discount/add-discount");
-  };
+};
 
 
   export const useFetchAllDiscount = (customPayload?: Partial<typeof defaultPayload2>) => {
