@@ -212,6 +212,7 @@ import CreatePassword from "./pages/auth/CreatePassword";
 import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
+import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
 
 export default function App() {
   return (
@@ -332,6 +333,10 @@ export default function App() {
           <Route
             path={ROUTES.returnsRefundsReport}
             element={<RetunsRefundsReportPage />}
+          />
+           <Route
+            path={ROUTES.discountReport}
+            element={<DiscountReportPage />}
           />
 
           {/* PROCUREMENT ROUTES */}

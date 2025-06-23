@@ -1,7 +1,6 @@
-import { Group, Text } from "@mantine/core";
+import {  Text } from "@mantine/core";
 import { Key } from "react";
 import AnalyticsCard from "../../../General/card";
-import DateFilterMenu from "../../../General/filterMenu";
 import house from "../../../../assets/images/house.png";
 import activeStore from "../../../../assets/images/activeStore.png";
 import inactiveStore from "../../../../assets/images/inactiveStore.png";
@@ -20,12 +19,12 @@ interface TransactionOverviewProps {
 
 const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
   data,
-  setDateRange,
+
 }) => {
   const cards = [
     {
       title: "Total Stores",
-      value: data.total_stores,
+      value: data?.total_stores,
       icon: house,
       altText: "Total Stores",
       iconColor: "#E17036",
@@ -36,7 +35,7 @@ const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
     },
     {
       title: "Active Stores",
-      value: data.active_stores,
+      value: data?.active_stores,
       icon: activeStore,
       altText: "Active Stores",
       iconColor: "#E17036",
@@ -47,7 +46,7 @@ const AnalysisOverview: React.FC<TransactionOverviewProps> = ({
     },
     {
       title: "Inactive Stores",
-      value: data.inactive_stores,
+      value: data?.inactive_stores,
       icon: inactiveStore,
       altText: "Inactive Stores",
       iconColor: "#E17036",

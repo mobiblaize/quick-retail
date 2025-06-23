@@ -383,6 +383,7 @@ const CreateOrderPageContent: React.FC = () => {
             <CreateOrderForm
               registerSubmit={registerSubmitHandler}
               paymentDetails={paymentDetails}
+              //@ts-ignore
               updatePaymentDetails={updatePaymentDetails}
               paymentItems={paymentItems}
               total={total}

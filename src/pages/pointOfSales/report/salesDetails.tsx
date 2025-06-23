@@ -8,7 +8,14 @@ const SalesDetails = () => {
  
   return (
     <div>
-       < SalesCustomerAnalysis/>
+       < SalesCustomerAnalysis reportInfo={{
+        reportData: {
+          data: {
+            customer_sales: undefined,
+            product_sales: undefined
+          }
+        }
+      }}/>
     </div>
   );
 }

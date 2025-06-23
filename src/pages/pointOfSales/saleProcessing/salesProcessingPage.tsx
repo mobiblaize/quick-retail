@@ -1,5 +1,5 @@
 
-import { useEffect, useState } from "react";
+import {  useState } from "react";
 import { Text, Button } from "@mantine/core";
 import { Link } from "react-router";
 import PageContainer from "../../../layout/pageContainer";
@@ -40,24 +40,22 @@ const mapFiltersToPayload = (filters: FilterValues) => ({
   price_to: filters.priceTo ?? ""
 });
 
-  const shouldFetch = dateRange.startDate && dateRange.endDate;
 
-  const { data, isLoading, refetch } = useFetchAllSales(
-    shouldFetch
-      ? {
-          ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-          start_date: dateRange.startDate,
-          end_date: dateRange.endDate,
-        }
-      : undefined
-  );
-  
+  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
+const endDate = dateRange.endDate || appliedFilters?.endDate || "";
 
-  useEffect(() => {
-    if (shouldFetch) {
-      refetch();
+const shouldFetch = startDate && endDate; 
+
+const payload = shouldFetch
+  ? {
+      ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+      start_date: startDate,
+      end_date: endDate,
     }
-  }, [appliedFilters, dateRange, refetch, shouldFetch])
+  : undefined;
+
+  const { data = {}, isLoading = false } = useFetchAllSales(payload) || {};
+  
 
   const salesData = data?.data?.sales?.data ?? [];
 

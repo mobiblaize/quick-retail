@@ -1,7 +1,10 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { useState } from "react";
+import { SetStateAction, useState } from "react";
 import { Text } from "@mantine/core";
 import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
+import Dropdown2 from "../../../General/dropdown2";
+import { useFetchStore } from "../../../../hooks/backendApis/pos/storeManagement";
+import { notifications } from "@mantine/notifications";
 
 const ReportDateSelect = () => {
   const location = useLocation();
@@ -11,37 +14,15 @@ const ReportDateSelect = () => {
   const [endDate, setEndDate] = useState("");
   const generateReport = useGenerateReport();
   const [loading, setLoading] = useState(false);
+  const [locationId, setLocationId] = useState<string | null>(null);
 
+  const {
+    data: storeData,
+    isLoading: isLoadingStores,
+    error: storeError,
+  } = useFetchStore();
 
-  const handleGenerate = async () => {
-    if (!reportType || !startDate || !endDate) return;
-
-    setLoading(true);
-    try {
-      const payload = {
-        start_date: startDate,
-        end_date: endDate,
-        report_type: mapReportType(reportType),
-      };
-
-      const response = await generateReport.mutateAsync(payload);
-
-      // Option 1: Navigate to report view page with data in state
-      navigate(`/dashboard/reports/${reportType}`, {
-        state: {
-          reportData: response.data,
-          startDate,
-          endDate,
-        },
-      });
-    } catch (error) {
-      console.error("Report generation failed", error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const mapReportType = (path: any) => {
+  const mapReportType = (path: string) => {
     switch (path) {
       case "sales-processing":
         return "sales";
@@ -49,10 +30,81 @@ const ReportDateSelect = () => {
         return "products";
       case "returns-refunds":
         return "returns";
+        case "discounts":
+          return "discounts";
       default:
         return path;
     }
   };
+
+  const handleGenerate = async () => {
+    if (!reportType) {
+      notifications.show({
+        title: "Missing Report Type",
+        message: "Please select a report type.",
+        color: "red",
+      });
+      return;
+    }
+
+    if (!startDate || !endDate) {
+      notifications.show({
+        title: "Missing Dates",
+        message: "Please select both start and end dates.",
+        color: "red",
+      });
+      return;
+    }
+
+
+    setLoading(true);
+
+    try {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        report_type: mapReportType(reportType),
+        locationId,
+      };
+
+      const response = await generateReport.mutateAsync(payload);
+
+      navigate(`/dashboard/reports/${reportType}`, {
+        state: {
+          reportData: response.data,
+          startDate,
+          endDate,
+          locationId,
+        },
+      });
+
+      notifications.show({
+        title: "Success",
+        message: "Report generated successfully!",
+        color: "green",
+      });
+    } catch (error) {
+      console.error("Report generation failed", error);
+      notifications.show({
+        title: "Error",
+        message: "Failed to generate report. Please try again.",
+        color: "red",
+      });
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const storeOptions = [
+    { label: "All Stores", value: null },
+    ...(Array.isArray(storeData?.data?.stores?.data)
+      ? storeData.data.stores.data.map((store: any) => ({
+          label: store.name,
+          value: store.locationID,
+        }))
+      : [])
+  ];
+  
 
   if (!reportType) {
     return (
@@ -66,7 +118,7 @@ const ReportDateSelect = () => {
     <>
       <div className="flex items-center justify-between bg-white p-4 sm:p-6 shadow-md">
         <Text fw={500} size="lg" c="black">
-          Reports Module
+          Enter the details below to create your report
         </Text>
       </div>
 
@@ -75,6 +127,24 @@ const ReportDateSelect = () => {
           <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4 text-center">
             {reportLabel || "Enter the details below to create your report"}
           </h2>
+
+          <div className="mb-4">
+            <Dropdown2
+              options={storeOptions}
+              label="Stores Filter"
+              placeholder={
+                isLoadingStores ? "Loading stores..." : "Select a store"
+              }
+              value={locationId}
+              onChange={(val: SetStateAction<string | null>) =>
+                setLocationId(val)
+              }
+              required={false}
+            />
+            {storeError && (
+              <p className="text-sm text-red-600 mt-1">Failed to load stores</p>
+            )}
+          </div>
 
           <div className="mb-4">
             <label className="block text-sm text-gray-600 mb-1">

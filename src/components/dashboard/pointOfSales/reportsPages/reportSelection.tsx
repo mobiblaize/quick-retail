@@ -4,6 +4,7 @@ const reports = [
   { label: "Sales Processing Report", path: "sales-processing" },
   { label: "Product Management Report", path: "product-management" },
   { label: "Returns & Refunds Report", path: "returns-refunds" },
+  { label: "Discounts Report", path: "discounts" },
 ];
 
 const ReportSelection = () => {
