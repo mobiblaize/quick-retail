@@ -47,6 +47,7 @@ const ProductManagementPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+      
       <ProductTable />
       <AddProduct
         opened={isLogComplaintsOpen}
