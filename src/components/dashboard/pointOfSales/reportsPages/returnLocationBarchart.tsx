@@ -1,8 +1,8 @@
 import {
     BarChart,
     Bar,
-    XAxis,
-    YAxis,
+    // XAxis,
+    // YAxis,
     Tooltip,
     ResponsiveContainer,
     CartesianGrid,
@@ -40,8 +40,8 @@ import {
                   margin={{ top: 20, right: 30, left: 0, bottom: 5 }}
                 >
                   <CartesianGrid strokeDasharray="3 3" />
-                  <XAxis dataKey="store" tick={{ fontSize: 12 }} />
-                  <YAxis />
+                  {/* <XAxis dataKey="store" tick={{ fontSize: 12 }} />
+                  <YAxis /> */}
                   <Tooltip />
                   <Bar dataKey="resolved" stackId="a" fill="#2A9D90" name="Resolved" />
                   <Bar dataKey="declined" stackId="a" fill="#E76E50" name="Declined" />

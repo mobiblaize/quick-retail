@@ -2,10 +2,13 @@ import { Button, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 
 import { useLoggedOut } from "../hooks/useCustomSession";
-import { LockIcon } from "lucide-react";
+import { LogOut } from "lucide-react";
+import { useEffect, useState } from "react";
 
 const LogoutModal = () => {
   const [opened, { open, close }] = useDisclosure(false);
+  const [customerName, setCustomerName] = useState("");
+  const [customerEmail, setCustomerEmail] = useState("");
 
   const logout = useLoggedOut();
 
@@ -13,6 +16,15 @@ const LogoutModal = () => {
     logout();
     close();
   };
+
+  useEffect(() => {
+    const name = sessionStorage.getItem("customer_name");
+    const email = sessionStorage.getItem("customer_email");
+
+    if (name) setCustomerName(name);
+    if (email) setCustomerEmail(email);
+  }, []);
+
 
   return (
     <>
@@ -46,10 +58,13 @@ const LogoutModal = () => {
         </div>
       </Modal>
 
-      <Button unstyled onClick={open} className="w-full">
-        <div className="flex items-center gap-[14px]  text-sm bg-[#FCE7DD] rounded-lg px-6 p-4 cursor-pointer">
-          <LockIcon className="w-4 h-4" />
-          <p>Log Out</p>
+      <Button unstyled onClick={open} className="w-full ">
+        <div className="flex items-center justify-between gap-[14px]  text-sm bg-[#F0F2F5] rounded-[10em] px-6 py-5 cursor-pointer">
+          <div className="text-left">
+            <p className="font-[600] text-[14px] text-[#101928]">{customerName}</p>
+            <p className="font-[400] text-[14px] text-[#475367]">{customerEmail}</p>
+          </div>
+          <LogOut className="w-4 h-4" />
         </div>
       </Button>
     </>
