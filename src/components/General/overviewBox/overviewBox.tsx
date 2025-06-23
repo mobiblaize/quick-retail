@@ -72,7 +72,7 @@ const OverviewBox = () => {
     <main className="w-full h-auto overflow-auto px-3 sm:px-6 py-4 sm:py-8 rounded-lg bg-white">
       <header className="flex flex-row justify-between sm:items-center">
         <div className="flex flex-col mb-3 sm:mb-0">
-          <Text size="xl" fw={600}>
+          <Text size="xl" fw={600} c="textSecondary.9">
             Analysis overview
           </Text>
 

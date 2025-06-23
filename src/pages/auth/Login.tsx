@@ -4,7 +4,7 @@ import { z } from "zod";
 
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
 
 const placeholderImage =
@@ -18,6 +18,7 @@ const schema = z.object({
 });
 
 const Login = () => {
+  const navigate = useNavigate();
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
   // const { updateUser } = useSessionStorage();
   const form = useForm({
@@ -27,6 +28,44 @@ const Login = () => {
       password: "",
     },
   });
+
+  // const handleLogin = async () => {
+  //   const payload = {
+  //     email: form.values.email,
+  //     password: form.values.password,
+  //   };
+
+  //   try {
+  //     const res = await login(payload);
+
+  //      console.log("✅ Login response:", res);
+
+  //     if (!res?.data) return;
+
+  //     const { accessToken, user } = res.data;
+  //     const tenant_uuid = user.tenants?.[0]?.uuid;
+
+  //     sessionStorage.setItem("access_token", accessToken);
+  //     sessionStorage.setItem("user", JSON.stringify(user));
+
+  //     if (tenant_uuid) {
+  //       sessionStorage.setItem("tenant_uuid", tenant_uuid);
+  //     } else {
+  //       console.warn("Tenant UUID not found in login response.");
+  //     }
+
+  //     // window.location.replace("/dashboard");
+  //      navigate("/dashboard");
+
+  //     notifications.show({
+  //       title: "Success",
+  //       message: "Login successful",
+  //       color: "green",
+  //     });
+  //   } catch (error) {
+  //     console.log(error);
+  //   }
+  // };
 
   const handleLogin = async () => {
     const payload = {
@@ -40,25 +79,23 @@ const Login = () => {
 
       const { accessToken, user } = res.data;
       const tenant_uuid = user.tenants?.[0]?.uuid;
-
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));
-
-      if (tenant_uuid) {
-        sessionStorage.setItem("tenant_uuid", tenant_uuid);
-      } else {
-        console.warn("Tenant UUID not found in login response.");
-      }
-
-      window.location.replace("/dashboard");
+      sessionStorage.setItem("customer_name", `${user.firstname} ${user.lastname}`);
+      sessionStorage.setItem("customer_email", user.email);
+      if (tenant_uuid) sessionStorage.setItem("tenant_uuid", tenant_uuid);
 
       notifications.show({
         title: "Success",
         message: "Login successful",
         color: "green",
       });
+
+      // navigate("/dashboard"); 
+      window.location.replace("/dashboard");
+      
     } catch (error) {
-      console.log(error);
+      console.error("Login error:", error);
     }
   };
 
@@ -68,14 +105,14 @@ const Login = () => {
         {/* Logo */}
 
         {/* Title */}
-        {/* <div className="mb-2">
+        <div className="mb-2">
           <div className="text-gray-400 text-sm font-normal mb-1">
-            Let's get Started
+            Welcome Back,
           </div>
           <div className="flex items-center font-bold text-2xl tracking-tight">
             Victoria Store LLC
           </div>
-        </div> */}
+        </div>
         {/* Form */}
         <form
           onSubmit={form.onSubmit(handleLogin)}
@@ -127,12 +164,18 @@ const Login = () => {
             loading={isPending}
             size="md"
             radius="md"
-            className="font-bold text-lg mt-2 shadow-md"
+            className="font-bold text-lg mt-1 shadow-md"
             style={{ boxShadow: "0 2px 8px rgba(249, 115, 22, 0.08)" }}
           >
             Log In
           </Button>
         </form>
+        <div className="text-[#000] text-sm font-normal mb-1 item-center m-auto">
+          Don't have an account?
+          <span className="ml-1 text-sm font-semibold no-underline text-[#F16722] cursor-pointer" onClick={() => navigate("/signup")}>
+            Create Account
+          </span>
+        </div>
       </Box>
     </AuthLayout>
   );
