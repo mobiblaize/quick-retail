@@ -3,38 +3,21 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { useGenerateReportExport } from "../../../../hooks/backendApis/pos/reports";
 import { useEffect, useState } from "react";
 import { shortenTransactionId, truncateText } from "../../../../utils/helpers";
-import Dropdown from "../../../General/dropdown";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import { notifications } from "@mantine/notifications";
 
-type ReturnsReportProps = {
-  reportData: any;
-  startDate: string;
-  endDate: string;
-};
 
-const ReturnsRefundsReport = ({
-  reportData,
-  startDate,
-  endDate,
-}: ReturnsReportProps) => {
+const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
+
+  const { reportData} = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
-  const { mutateAsync: exportReport } = useGenerateReportExport();
 
-  function formatDate(dateStr: string | Date | undefined) {
-    if (!dateStr) return "";
-    const date = typeof dateStr === "string" ? new Date(dateStr) : dateStr;
-    if (isNaN(date.getTime())) return "";
-    return date.toLocaleDateString("en-GB");
-  }
 
   useEffect(() => {
-    if (Array.isArray(reportData?.data)) {
-      const formattedData = reportData.data.map((item: any) => ({
+    const returnsArray = reportData?.data?.returns?.data;
+
+    if (Array.isArray(returnsArray)) {
+      const formattedData = returnsArray.map((item: any) => ({
         fullOrderId: item["Order ID"],
         id: shortenTransactionId(item["Order ID"]),
         productId: shortenTransactionId(item["Product ID"]),
@@ -52,114 +35,10 @@ const ReturnsRefundsReport = ({
             : "Declined",
       }));
       setData(formattedData);
-    } else {
     }
-  }, [reportData]);
-
-  const exportOptions = [
-    { label: "CSV", value: "csv" },
-    { label: "PDF", value: "pdf" },
-  ];
-
-  const [exportFormat, setExportFormat] = useState<"csv" | "pdf" | null>(null);
-
-  const generateReturnsPdf = (
-    data: TableRowData[],
-    startDate: string,
-    endDate: string
-  ) => {
-    const doc = new jsPDF();
-
-    doc.text("Returns Report", 14, 20);
-    doc.text(`From: ${startDate} To: ${endDate}`, 14, 28);
-
-    // Define columns for the PDF table (exclude imageUrl)
-    const columns = [
-      { header: "Order ID", dataKey: "id" },
-      { header: "Product ID", dataKey: "productId" },
-      { header: "Product", dataKey: "product" },
-      { header: "Date Returned", dataKey: "dateReturned" },
-      { header: "Customer", dataKey: "customer" },
-      { header: "Returned Reason", dataKey: "returnedReason" },
-      { header: "Complaint Status", dataKey: "complaintStatus" },
-    ];
-
-    // Prepare rows — make sure no imageUrl is included
-    const rows = data.map((item) => ({
-      id: item.id,
-      productId: item.productId,
-      product: item.product,
-      dateReturned: item.dateReturned,
-      customer: item.customer,
-      returnedReason: item.returnedReason,
-      complaintStatus: item.complaintStatus,
-    }));
-
-    autoTable(doc, {
-      startY: 35,
-      head: [columns.map((col) => col.header)],
-      //@ts-ignore
-      body: rows.map((row) => columns.map((col) => row[col.dataKey])),
-      styles: { fontSize: 8 },
-      headStyles: { fillColor: "#F16722" },
-    });
-
-    doc.save(`returns-report_${startDate}_to_${endDate}.pdf`);
-  };
+  }, [reportData]);  
 
 
-  const handleExport = async (format: "csv" | "pdf") => {
-    if (format === "pdf") {
-      try {
-        generateReturnsPdf(data, startDate, endDate);
-        notifications.show({
-          title: "Download Successful",
-          message: "Returns report exported as PDF.",
-          color: "green",
-        });
-      } catch (err) {
-        notifications.show({
-          title: "Export Failed",
-          message: "An error occurred while exporting PDF.",
-          color: "red",
-        });
-      }
-      return;
-    }
-  
-    const exportPayload = {
-      start_date: startDate || "",
-      end_date: endDate || "",
-      report_type: "returns",
-      export_format: format,
-      export: true,
-    };
-  
-    try {
-      const blob = await exportReport(exportPayload);
-      const url = window.URL.createObjectURL(new Blob([blob]));
-      const link = document.createElement("a");
-      link.href = url;
-      link.setAttribute("download", `returns-report.${format}`);
-      document.body.appendChild(link);
-      link.click();
-      link.remove();
-      window.URL.revokeObjectURL(url);
-  
-      notifications.show({
-        title: "Download Successful",
-        message: `Returns report exported as ${format.toUpperCase()}.`,
-        color: "green",
-      });
-    } catch (error) {
-      console.error("Failed to export report:", error);
-      notifications.show({
-        title: "Export Failed",
-        message: `Could not export report as ${format.toUpperCase()}.`,
-        color: "red",
-      });
-    }
-  };
   
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -290,40 +169,18 @@ const ReturnsRefundsReport = ({
         showSearch={false}
         showSortFilter={false}
         length={8}
-        tableTitle={
-          <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="flex gap-2.5 items-center">
-              <Text fw={500} size="xl" c="textSecondary.9">
-                Logged Returns
-              </Text>
-              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{data.length}</Text>
-              </div>
-            </div>
-
-            <div className="flex items-center gap-3">
-              <div className="border border-[#E0E0E0] rounded-lg px-4 py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
-                {formatDate(startDate)} – {formatDate(endDate)}
-              </div>
-
-              <Dropdown
-                //@ts-ignore
-                options={exportOptions}
-                value={exportFormat}
-                onChange={(val) => {
-                  setExportFormat(val as "csv" | "pdf");
-                  handleExport(val as "csv" | "pdf");
-                }}
-                placeholder="Export"
-                inputSizeClass="py-1"
-                bgColorClass="bg-[#F16722]"
-                textColorClass="text-white"
-                required={false}
-              />
+        tableTitle={<div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+          <div className="flex gap-2.5 items-center">
+            <Text fw={500} size="xl" c="textSecondary.9">
+              Logged Returns
+            </Text>
+            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+              <Text c="customPrimary.10">{data.length}</Text>
             </div>
           </div>
-        }
-      />
+
+
+        </div>} tableType={"returns"}      />
     </main>
   );
 };

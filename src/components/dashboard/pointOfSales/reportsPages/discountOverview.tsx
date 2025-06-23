@@ -10,32 +10,31 @@ interface SalesOverviewReportProps {
     endDate: string;
     locationId: string;
     reportData: {
-      data: {  
+      data: {
         stats: {
-          completedOrders: number;
-          pendingOrders: number;
-          totalSalesValue: string;
+            total_actual_discount_value: string;
+            total_discounts: number;
+            total_redemptions: number;
         };
       };
     };
-  }
+  };
 }
 
-const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
-  const stats = reportInfo?.reportData?.data?.stats;
 
+
+const DiscountOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
+  const stats = reportInfo?.reportData?.data?.stats;
 
   const currencySymbol = "₦";
 
-
-  
-  const formattedValue = stats?.totalSalesValue
-    ? `${currencySymbol}${Number(stats.totalSalesValue).toLocaleString()}`
+  const formattedValue = stats?.total_actual_discount_value
+    ? `${currencySymbol}${Number(stats.total_actual_discount_value).toLocaleString()}`
     : `${currencySymbol}0`;
 
   const cards = [
     {
-      title: "TOTAL SALES VALUE",
+      title: "TOTAL DISCOUNT VALUE",
       value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",
@@ -44,8 +43,8 @@ const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
       altText: "dollar-sign",
     },
     {
-      title: "TOTAL COMPLETED ORDERS",
-      value: stats?.completedOrders ?? "0",
+      title: "TOTAL DISCOUNTS",
+      value: stats?.total_discounts ?? "0",
       icon: greenOrders,
       iconColor: "#E17036",
       cardBgColor: "#E7F6EC",
@@ -53,8 +52,8 @@ const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
       altText: "orders-icon",
     },
     {
-      title: "TOTAL DRAFTS (PENDING)",
-      value: stats?.pendingOrders ?? "0",
+      title: "REDEMPTION (USED DISCOUNTS)",
+      value: stats?.total_redemptions ?? "0",
       icon: orangePeople,
       iconColor: "#E17036",
       cardBgColor: "#FEF6E7",
@@ -68,9 +67,9 @@ const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Sales overview
+            Discount overview
           </Text>
-          <Text size="sm">This is an overview summarizing sales</Text>
+          <Text size="sm">An overview of discounts on your stores.</Text>
         </div>
       </header>
 
@@ -92,4 +91,4 @@ const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
   );
 };
 
-export default SalesOverviewReport;
+export default DiscountOverviewReport;

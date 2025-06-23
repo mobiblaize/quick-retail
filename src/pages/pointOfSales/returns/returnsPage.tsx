@@ -4,7 +4,6 @@ import { useState } from "react";
 import PageContainer from "../../../layout/pageContainer";
 import ReturnsAnalytics from "../../../components/dashboard/pointOfSales/returnsRefunds/returnsAnlytics";
 import ReturnsTable from "../../../components/dashboard/pointOfSales/returnsRefunds/returnsTable";
-import LogComplaints from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/logComplaints";
 import { useFetchAllreturns } from "../../../hooks/backendApis/pos/returns";
 import { ROUTES } from "../../../constants/routes";
 import { useNavigate } from "react-router";
@@ -18,7 +17,7 @@ const ReturnsPage = () => {
     endDate: "",
   });
 
-  const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
+  // const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
   const navigate = useNavigate();
   // Only pass params if both dates are selected
   const fetchParams =
