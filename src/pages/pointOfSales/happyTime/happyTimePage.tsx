@@ -13,7 +13,7 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [dateRange, ] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
   });
@@ -98,9 +98,7 @@ const payload = shouldFetch
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      <AnalysisOverview1    data={data?.data}
-        isLoading={isLoading}
-        setDateRange={setDateRange}/>
+      <AnalysisOverview1 />   
       <DiscountTable 
         rawDiscounts={rawDiscounts}
         isLoading={isLoading}

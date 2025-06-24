@@ -46,7 +46,6 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   onFilterChange,
   locations = [],
   categories =[],
-  reasons =[],
   showLocation,
   showCategory,
   showStockLevel,
