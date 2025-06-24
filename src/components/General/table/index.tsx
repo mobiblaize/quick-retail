@@ -42,6 +42,8 @@ interface TanTableProps {
   showSeeAllToggle?: boolean;
   onFilterChange?: (filters: FilterValues) => void;
   locations?: string[];
+  categories?: string[];
+  reasons?: [];
   tableType?: "inventory" | "sales" | "product" | "returns" | "discount";
 }
 
@@ -63,6 +65,7 @@ const TanTable: FC<TanTableProps> = ({
   showFilter = false,
   onFilterChange,
   locations,
+  categories,
   tableType,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -72,6 +75,7 @@ const TanTable: FC<TanTableProps> = ({
   const [filteredData, setFilteredData] = useState<TableRowData[]>(data);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
+  const [filtersApplied, setFiltersApplied] = useState(false);
 
   const tableData = useMemo(() => filteredData, [filteredData]);
   const columns = useMemo(() => columnData, [columnData]);
@@ -223,7 +227,9 @@ const TanTable: FC<TanTableProps> = ({
             {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
           </div>
           <div className="hidden md:block ">
-            <div className="flex md:flex-row  md:gap-[2rem] md:w-[600px] w-full md:items-center">
+          <div className="hidden lg:flex w-full pl-[25em] pr-[20px] mb-[1rem] items-center justify-end gap-4">
+
+
               {showSearch && (
                 <SearchComp
                   setSearchTerm={setSearchTerm}
@@ -241,7 +247,32 @@ const TanTable: FC<TanTableProps> = ({
               {showFilter && (
                 <div style={{ position: "relative" }}>
                   <button
-                    onClick={() => setShowFilterDropdown((prev) => !prev)}
+                    onClick={() => {
+                      if (filtersApplied) {
+                        // Reset filters
+                        onFilterChange?.({
+                          startDate: "",
+                          endDate: "",
+                          location: "",
+                          category: "",
+                          stockFrom: "",
+                          stockTo: "",
+                          orderStatus: "All",
+                          priceFrom: "",
+                          priceTo: "",
+                          paymentStatus: "All",
+                          productStatus: "All",
+                          reason: "all",
+                          type: "all",
+                          discountStatus: "All",
+                          returnStatus: "All",
+                        });
+                        setFiltersApplied(false);
+                        setShowFilterDropdown(false);
+                      } else {
+                        setShowFilterDropdown((prev) => !prev);
+                      }
+                    }}
                     style={{
                       backgroundColor: "orange",
                       color: "white",
@@ -254,39 +285,42 @@ const TanTable: FC<TanTableProps> = ({
                       justifyContent: "center",
                     }}
                   >
-                    {/* Simple 3-line icon */}
-                    <div
-                      style={{
-                        display: "flex",
-                        flexDirection: "column",
-                        gap: "2px",
-                      }}
-                    >
-                      <span
+                    {filtersApplied ? (
+                      <span className="whitespace-nowrap">Reset Filter</span>
+                    ) : (
+                      <div
                         style={{
-                          display: "block",
-                          width: "16px",
-                          height: "2px",
-                          background: "white",
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "2px",
                         }}
-                      />
-                      <span
-                        style={{
-                          display: "block",
-                          width: "16px",
-                          height: "2px",
-                          background: "white",
-                        }}
-                      />
-                      <span
-                        style={{
-                          display: "block",
-                          width: "16px",
-                          height: "2px",
-                          background: "white",
-                        }}
-                      />
-                    </div>
+                      >
+                        <span
+                          style={{
+                            display: "block",
+                            width: "16px",
+                            height: "2px",
+                            background: "white",
+                          }}
+                        />
+                        <span
+                          style={{
+                            display: "block",
+                            width: "16px",
+                            height: "2px",
+                            background: "white",
+                          }}
+                        />
+                        <span
+                          style={{
+                            display: "block",
+                            width: "16px",
+                            height: "2px",
+                            background: "white",
+                          }}
+                        />
+                      </div>
+                    )}
                   </button>
 
                   {showFilterDropdown && (
@@ -307,6 +341,7 @@ const TanTable: FC<TanTableProps> = ({
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
+                            setFiltersApplied(true);
                           }}
                           locations={locations}
                           showLocation={true}
@@ -316,11 +351,43 @@ const TanTable: FC<TanTableProps> = ({
                         />
                       )}
 
+                      {tableType === "product" && (
+                        <ReusableFilterComponent
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                            setFiltersApplied(true);
+                          }}
+                          locations={locations}
+                          categories={categories}
+                          showCategory={true}
+                          showLocation={true}
+                          showPrice={true}
+                          showProductStatus={true}
+                          filterType={"product"}
+                        />
+                      )}
+
+                      {tableType === "discount" && (
+                        <ReusableFilterComponent
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                            setFiltersApplied(true);
+                          }}
+                          locations={locations}
+                          showDiscountType={true}
+                          showDiscountStatus={true}
+                          filterType={"discount"}
+                        />
+                      )}
+
                       {tableType === "sales" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
+                            setFiltersApplied(true);
                           }}
                           showPrice={true}
                           showPaymentStatus={true}

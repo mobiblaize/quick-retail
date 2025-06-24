@@ -3,6 +3,9 @@ import ProductTable from "../../../components/dashboard/pointOfSales/productMana
 import { Button, Text } from "@mantine/core";
 import AddProduct from "../../../components/dashboard/pointOfSales/productManagement/modal/addProductModal";
 import { useState } from "react";
+import ProductOverview from "../../../components/dashboard/pointOfSales/productManagement/productOverview";
+import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { useFetchAllProducts } from "../../../hooks/backendApis/pos/inventory";
 
 const ProductManagementPage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
@@ -14,6 +17,63 @@ const ProductManagementPage = () => {
   // const handleAddBulkProducts = () => {
   //   navigate("/dashboard/product-management/add-bulk-product");
   // };
+
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
+    null
+  );
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
+    startDate: "",
+    endDate: "",
+  });
+
+  const mapOrderStatus = (status: string | undefined) => {
+    if (!status || status.toLowerCase() === "all") return "";
+    if (status.toLowerCase() === "active") return "active";
+    if (status.toLowerCase() === "inactive") return "inactive";
+    return status.toLowerCase();
+  };
+
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    // @ts-ignore
+    search: filters.search ?? "",
+    // @ts-ignore
+    sort_by: filters.sortBy ?? "",
+    per_page: "500",
+    paginate: true,
+    location_name: filters.location,
+    category_name: filters.category,
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+    status: mapOrderStatus(filters.productStatus),
+    price_from: filters.priceFrom ?? 100,
+    price_to: filters.priceTo ?? "",
+  });
+
+  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
+  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+
+  const shouldFetch = startDate && endDate;
+
+  const payload = shouldFetch
+    ? {
+        ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+        start_date: startDate,
+        end_date: endDate,
+      }
+    : undefined;
+// @ts-ignore
+  const { data = {}, isLoading = false } = useFetchAllProducts(payload) || {};
+
+  const products = Array.isArray(data?.data?.products?.data)
+    ? data.data.products.data
+    : [];
+
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters);
+  };
 
   const subHeaders = [
     <div className="justify-between flex items-center">
@@ -33,7 +93,7 @@ const ProductManagementPage = () => {
         </div>
 
         <div className="block sm:hidden">
-           <Button
+          <Button
             onClick={() => setIsLogComplaintsOpen(true)}
             variant="filled-primary"
             className="flex gap-1.5"
@@ -47,8 +107,16 @@ const ProductManagementPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      
-      <ProductTable />
+      <ProductOverview
+        data={data?.data}
+        isLoading={isLoading}
+        setDateRange={setDateRange}
+      />
+      <ProductTable
+        products={products}
+        onFilterChange={handleFilterChange}
+        isLoading={isLoading}
+      />
       <AddProduct
         opened={isLogComplaintsOpen}
         onClose={() => setIsLogComplaintsOpen(false)}

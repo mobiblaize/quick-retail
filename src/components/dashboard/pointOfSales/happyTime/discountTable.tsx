@@ -4,36 +4,33 @@ import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable from "../../../General/table";
-
-type DiscountTableProps = {
-  data: any;
-  isLoading: boolean;
-  refresh: () => void;
-};
+import { FilterValues } from "../../../General/table/reuseableFilter";
 
 
-const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
+// type DiscountTableProps = {
+//   data: any;
+//   isLoading: boolean;
+//   refresh: () => void;
+//   onFilterChange: (filters: FilterValues) => void;
+// };
 
-  const rawDiscounts = data?.data?.discountedProducts?.data || [];
-  const discounts = rawDiscounts
-  // @ts-ignore
-    .filter((item) => item.discounted_products?.length)
-     // @ts-ignore
-    .map((item) => {
-      const discount = item.discounted_products[0].discount;
 
-      return {
-        name: item.name || "Unnamed",
-        discountCode: discount?.code || "-",
-        discountType: discount?.type || "-", 
-        value: discount?.value || 0,     
-        dateFrom: discount?.from?.split("T")[0],
-        dateTo: discount?.to?.split("T")[0],
-        status: discount?.status === "active" ? "Active" : "Inactive",
-        image: item.image_path,
-        // redemption_count:
-      };
-    });
+const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; }) => {
+
+
+
+console.log (rawDiscounts)
+  const discounts = rawDiscounts.map((item: any) => ({
+    name: item.name || "Unnamed",
+    discountCode: item.code || "-",
+    discountType: item.type || "-",
+    value: item.value || 0,
+    dateFrom: item.from?.split("T")[0] || "-",
+    dateTo: item.to?.split("T")[0] || "-",
+    status: item.status === "active" ? "Active" : "Inactive",
+    image: imageSrc,  
+  }));
+  
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -143,9 +140,14 @@ const DiscountTable = ({ data, isLoading, }: DiscountTableProps) => {
         columnData={columns}
         data={discounts}
         showSearch
+        showFilter
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+           //@ts-ignore
+        tableType="discount"
+        // types={types}
+        onFilterChange={onFilterChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
