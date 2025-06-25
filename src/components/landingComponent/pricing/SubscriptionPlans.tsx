@@ -9,6 +9,35 @@
 // } from "../../../store/subscriptionStore";
 
 // const SubscriptionPlans = ({ data }: any) => {
+//   const setSelectedSub = useSetAtom(selectedSubs);
+//   const setTotal = useSetAtom(totalPrice);
+//   const selected = useAtomValue(selectedSubs);
+
+//   // 👉 Auto-select POS on mount if available
+//   useEffect(() => {
+//     if (!data) return;
+
+//     const posApp = data.find(
+//       (item: any) =>
+//         item?.application?.name === "Point of Sales Management System"
+//     );
+
+//     if (posApp && !selected.some((s) => s.id === posApp.id)) {
+//       const updated = [...selected, { ...posApp, additional_user_seat_number: 0 }];
+//       setSelectedSub(updated);
+
+//       const total = updated.reduce(
+//         (sum, item) =>
+//           sum +
+//           (Number(item.amount || 0) +
+//             Number(item.additional_user_seat_number || 0) *
+//               Number(item.price_per_seat || 0)),
+//         0
+//       );
+//       setTotal(total);
+//     }
+//   }, [data]);
+
 //   return (
 //     <Box
 //       w="100%"
@@ -43,7 +72,6 @@
 //   const billingType = useAtomValue(billingTypeStore);
 //   const isChecked = selectedSub.some((item: any) => item.id === data.id);
 
-//   // Helper to recalculate total price
 //   const recalcTotal = (subs: any[]) => {
 //     const total = subs.reduce(
 //       (sum, item) =>
@@ -83,7 +111,6 @@
 //     recalcTotal(updated);
 //   };
 
-//   // any time the billing type changes, recalculate the total price
 //   useEffect(() => {
 //     recalcTotal(selectedSub);
 //   }, [billingType]);
@@ -109,7 +136,8 @@
 //             </Text>
 //           </Box>
 //         </div>
-//         {/* Center: Billing Info */}
+
+//         {/* Billing Info */}
 //         <Box style={{ minWidth: 120, textAlign: "center" }}>
 //           <Text size="sm" c="#6C6975" mb={2}>
 //             Billed /{" "}
@@ -133,7 +161,8 @@
 //             </Text>
 //           )}
 //         </Box>
-//         {/* Center: Free Seats */}
+
+//         {/* Free Seats */}
 //         <Box style={{ minWidth: 120, textAlign: "center" }}>
 //           <Text size="sm" c="#6C6975" mb={2}>
 //             User Seat (Free){" "}
@@ -146,7 +175,8 @@
 //             {data?.application?.free_user_access} Seats
 //           </Text>
 //         </Box>
-//         {/* Right: Additional Seat Controls */}
+
+//         {/* Additional Seats */}
 //         <Box
 //           style={{ minWidth: 180, textAlign: "center" }}
 //           className="space-y-2"
@@ -205,6 +235,9 @@
 //   );
 // };
 
+
+
+
 import { Checkbox, Card, Group, Text, Box, Button } from "@mantine/core";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { HelpCircle } from "lucide-react";
@@ -262,7 +295,7 @@ const SubscriptionPlans = ({ data }: any) => {
       >
         {data?.map((item: any) => (
           <Box key={item?.id} w="100%">
-            <SubscriptionPlanCard data={item} />
+            <SubscriptionPlanCard data={item} allPlans={data} />
           </Box>
         ))}
       </Group>
@@ -277,7 +310,13 @@ const SubscriptionPlanCard = ({ data }: any) => {
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
   const setTotalPrice = useSetAtom(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
+
   const isChecked = selectedSub.some((item: any) => item.id === data.id);
+  const posIsSelected = selectedSub.some(
+    (item: any) => item?.application?.name === "Point of Sales Management System"
+  );
+  const thisIsPOS = data?.application?.name === "Point of Sales Management System";
+  const shouldBeDisabled = posIsSelected && !thisIsPOS;
 
   const recalcTotal = (subs: any[]) => {
     const total = subs.reduce(
@@ -323,7 +362,16 @@ const SubscriptionPlanCard = ({ data }: any) => {
   }, [billingType]);
 
   return (
-    <Card radius="md" p="lg" mb="md" shadow="0">
+    <Card
+      radius="md"
+      p="lg"
+      mb="md"
+      shadow="0"
+      style={{
+        opacity: shouldBeDisabled ? 0.5 : 1,
+        pointerEvents: shouldBeDisabled ? "none" : "auto",
+      }}
+    >
       <div className="flex items-center py-5 lg:justify-between flex-wrap gap-5 justify-center">
         {/* Left: Checkbox and App Info */}
         <div className="min-w-[220px] flex items-center gap-5">
@@ -333,6 +381,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
             variant="outline"
             onChange={handleCheckboxChange}
             mt={2}
+            disabled={shouldBeDisabled}
           />
           <Box>
             <Text fw={600} size="md" c="#48464E" mb={2}>
@@ -408,6 +457,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
                 handleSeatChange(adminSeat > 0 ? adminSeat - 1 : 0)
               }
               style={{ width: 32, height: 32, padding: 0 }}
+              disabled={shouldBeDisabled}
             >
               -
             </Button>
@@ -432,6 +482,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
               size="xs"
               onClick={() => handleSeatChange(adminSeat + 1)}
               style={{ width: 32, height: 32, padding: 0 }}
+              disabled={shouldBeDisabled}
             >
               +
             </Button>
