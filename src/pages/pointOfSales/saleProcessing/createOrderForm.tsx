@@ -66,18 +66,25 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         price: Number(item.selling_price),
       }));
 
-    updatePaymentDetails({
-      ...paymentDetails,
-      items: payloadItems,
-    });
+    // updatePaymentDetails({
+    //   ...paymentDetails,
+    //   items: payloadItems,
+    // });
+    // @ts-ignore
+    updatePaymentDetails((prev) => ({
+  ...prev,
+  items: payloadItems,
+}));
+
   };
 
   const handleCustomerChange = (id: string | null) => {
     console.log("Customer ID selected:", id);
-    updatePaymentDetails({
-      ...paymentDetails,
-      customerId: id,
-    });
+     // @ts-ignore
+    updatePaymentDetails((prev) => ({
+      ...prev,
+      customerId: id, // ✅ Only update customerId
+    }));
   };
 
   useEffect(() => {

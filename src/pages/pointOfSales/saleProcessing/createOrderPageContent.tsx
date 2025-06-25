@@ -97,18 +97,30 @@ const CreateOrderPageContent: React.FC = () => {
   const createSaleMutation = useCreateSales();
   const updateDraftMutation = useUpdateDraft(orderId);
   const handleSubmit = async (status: "draft" | "completed") => {
+    // const payload = {
+    //   status,
+    //   customerId: paymentDetails.customerId,
+    //   payment_method: paymentDetails.method,
+    //   amount_collected: paymentDetails.amount,
+    //   items: paymentDetails.items.map(
+    //     (item: { variationId: any; quantity: any; selling_price: any }) => ({
+    //       variationId: item.variationId,
+    //       quantity: Number(item.quantity),
+    //       price: item.selling_price,
+    //     })
+    //   ),
+    // };
+    const currentDetails = paymentDetails; // always use latest
     const payload = {
       status,
-      customerId: paymentDetails.customerId,
-      payment_method: paymentDetails.method,
-      amount_collected: paymentDetails.amount,
-      items: paymentDetails.items.map(
-        (item: { variationId: any; quantity: any; selling_price: any }) => ({
-          variationId: item.variationId,
-          quantity: Number(item.quantity),
-          price: item.selling_price,
-        })
-      ),
+      customerId: currentDetails.customerId,
+      payment_method: currentDetails.method,
+      amount_collected: currentDetails.amount,
+      items: currentDetails.items.map(item => ({
+        variationId: item.variationId,
+        quantity: Number(item.quantity),
+        price: item.selling_price,
+      })),
     };
     try {
       if (orderId) {
@@ -135,6 +147,11 @@ const CreateOrderPageContent: React.FC = () => {
       });
     }
   };
+
+  useEffect(() => {
+    console.log("🟢 Updated paymentDetails:", paymentDetails);
+  }, [paymentDetails]);
+  
 
   useEffect(() => {
     registerSubmitHandler((status: string) => {
