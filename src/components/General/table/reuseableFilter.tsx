@@ -1,48 +1,80 @@
 import { useState } from 'react';
 
+
+export type DiscountType = 'all' | 'amount' | 'percentage';
+export type Reason = 'all' | 'damaged' | 'mistaken' | 'size issue' | 'others';
+
 export interface FilterValues {
   startDate: string;
   endDate: string;
   location: string;
+  category?: string;
   stockFrom: string;
   stockTo: string;
   orderStatus: string;
   priceFrom?: string;
   priceTo?: string;
   paymentStatus?: string;
+  productStatus?:string;
+  reason?: Reason ;
+  type?: DiscountType;
+   discountStatus?: string
+   returnStatus?: string;
 }
 
 interface ReusableFilterComponentProps {
   onFilterChange: (filters: FilterValues) => void;
   locations?: string[];
-  filterType: 'inventory' | 'product' | 'sales'; 
+  categories?: string[];
+  reasons?:string[];
+  types?: string[];
+  filterType: 'inventory' | 'product' | 'sales' | 'returns' | 'discount' ;
   showLocation?: boolean;
+  showCategory?:boolean;
   showStockLevel?: boolean;
   showOrderStatus?: boolean;
   showPrice?: boolean;         
   showPaymentStatus?: boolean;
+  showProductStatus?: boolean;
+  showReason?:boolean;
+  showDiscountType?:boolean;
+  showDiscountStatus ?:boolean;
+  showReturnStatus?: boolean;
 }
 
 const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   onFilterChange,
   locations = [],
+  categories =[],
   showLocation,
+  showCategory,
   showStockLevel,
   showOrderStatus,
   showPrice = false,
   showPaymentStatus = false,
+  showProductStatus = false,
+  showReason = false,
+  showDiscountType  = false,
+  showDiscountStatus  = false,
+  showReturnStatus = false,
 
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
     startDate: '',
     endDate: '',
     location: '',
+    category: '',
+    reason:'all',
     stockFrom: '',
     stockTo: '',
     orderStatus: 'All',
     priceFrom: '',
     priceTo: '',
     paymentStatus: 'All',
+    productStatus: 'All',
+    type: 'all',
+    discountStatus: 'All',
+    returnStatus: 'All',
   });
 
   const handleClear = () => {
@@ -50,12 +82,18 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       startDate: '',
       endDate: '',
       location: '',
+      category: '',
+      reason: 'all',
       stockFrom: '',
       stockTo: '',
       orderStatus: 'All',
       paymentStatus: 'All',
       priceFrom: '',
       priceTo: '',
+      productStatus: '',
+      type: 'all',
+      discountStatus: 'All',
+      returnStatus: 'All',
     };
     setFilters(cleared);
     onFilterChange(cleared); 
@@ -88,7 +126,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       {/* Location */}
       {showLocation && (
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Location/Store</label>
+          <label className="block text-sm font-medium mb-1">Store</label>
           <select
             value={filters.location}
             onChange={(e) => setFilters({ ...filters, location: e.target.value })}
@@ -103,6 +141,59 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           </select>
         </div>
       )}
+
+       {/* Category */}
+       {showCategory && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Category</label>
+          <select
+            value={filters.category}
+            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+            className="w-full border rounded p-2 text-sm"
+          >
+            <option value="">Choose category</option>
+            {categories.map((cat) => (
+              <option key={cat} value={cat}>
+                {cat}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+           {/* Reason */}
+           {showReason && (
+                <div className="mb-4">
+                  <label className="block text-sm font-medium mb-1">Reason</label>
+                  <select
+                    value={filters.reason}
+                    onChange={(e) => setFilters({ ...filters, reason: e.target.value as Reason })}
+                    className="w-full border rounded p-2 text-sm"
+                  >
+                    <option value="all">All</option>
+                    <option value="amount">Damaged</option>
+                    <option value="percentage">Mistaken</option>
+                    <option value="percentage">Size Issue</option>
+                    <option value="percentage">Others</option>
+                  </select>
+                </div>
+              )}
+
+       {/* Discount Type */}
+       {showDiscountType && (
+  <div className="mb-4">
+    <label className="block text-sm font-medium mb-1">Discount Type</label>
+    <select
+      value={filters.type}
+      onChange={(e) => setFilters({ ...filters, type: e.target.value as DiscountType })}
+      className="w-full border rounded p-2 text-sm"
+    >
+      <option value="all">All</option>
+      <option value="amount">Amount</option>
+      <option value="percentage">Percentage</option>
+    </select>
+  </div>
+)}
 
       {/* Stock level */}
       {showStockLevel && (
@@ -161,7 +252,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       {showOrderStatus && (
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Order Status</label>
-          <div className="flex flex-wrap gap-x-2 gap-y-2">
+          <div className="flex justify-around  gap-x-2 gap-y-2">
             {['All', 'Available', 'Low stock', 'Sold out'].map((status) => (
               <label key={status} className="flex items-center gap-1 text-sm">
                 <input
@@ -178,11 +269,72 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
         </div>
       )}
 
+      {showProductStatus && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Discount Status</label>
+          <div className="flex justify-around gap-x-2 gap-y-2">
+            {['All', 'Active', 'Inactive', ].map((status) => (
+              <label key={status} className="flex items-center gap-1 text-sm">
+                <input
+                  type="radio"
+                  name="productStatus"
+                  value={status}
+                  checked={filters.productStatus === status}
+                  onChange={() => setFilters({ ...filters, productStatus: status })}
+                />
+                {status}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+{showDiscountStatus && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Order Status</label>
+          <div className="flex justify-around gap-x-2 gap-y-2">
+            {['All', 'Active', 'Inactive', 'Expired', ].map((status) => (
+              <label key={status} className="flex items-center gap-1 text-sm">
+                <input
+                  type="radio"
+                  name="discountStatus"
+                  value={status}
+                  checked={filters.discountStatus === status}
+                  onChange={() => setFilters({ ...filters, discountStatus: status })}
+                />
+                {status}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
+
+{showReturnStatus && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Return Status</label>
+          <div className="flex justify-around gap-x-2 gap-y-2">
+            {['All', 'Resolved', 'Pending', 'Declined', ].map((status) => (
+              <label key={status} className="flex items-center gap-1 text-sm">
+                <input
+                  type="radio"
+                  name="returnStatus"
+                  value={status}
+                  checked={filters.returnStatus === status}
+                  onChange={() => setFilters({ ...filters, returnStatus: status })}
+                />
+                {status}
+              </label>
+            ))}
+          </div>
+        </div>
+      )}
+
       {/* Payment Status */}
       {showPaymentStatus && (
         <div className="mb-4">
           <label className="block text-sm font-medium mb-1">Payment Status</label>
-          <div className="flex flex-wrap gap-x-2 gap-y-2">
+          <div className="flex justify-around  gap-x-2 gap-y-2">
             {['All', 'Pending', 'Paid'].map((status) => (
               <label key={status} className="flex items-center gap-1 text-sm">
                 <input

@@ -7,7 +7,6 @@ import imageSrc from "../../../../assets/images/productIMG.png";
 import { MoreVertical } from "lucide-react";
 import {
   useDeleteProuct,
-  useFetchAllProducts,
 } from "../../../../hooks/backendApis/pos/products";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -15,12 +14,32 @@ import useStore from "./addProductStore";
 import DeleteProduct from "../categories/modals/deleteProduct";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
+import { FilterValues } from "../../../General/table/reuseableFilter";
 
-const ProductTable = () => {
-  const { data, isLoading, refetch } = useFetchAllProducts();
+const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[], isLoading:any,   onFilterChange: (filters: FilterValues) => void; }) => {
+  // const { data, isLoading, refetch } = useFetchAllProducts();
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
+
+  console.log(products)
+  const locations = Array.from(
+    new Set(
+      products
+        ?.map((p: any) => p.product?.location?.name)
+        ?.filter((name: any) => typeof name === "string")
+    )
+  );
+  
+
+  const categories = Array.from(
+    new Set(
+      products
+        ?.map((p: any) => p.product?.category?.name)
+        ?.filter((name: any) => typeof name === "string")
+    )
+  );
+  
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -34,7 +53,7 @@ const ProductTable = () => {
       });
       setIsDeleteOpen(false);
       setSelectedId(null);
-      refetch(); // <--- Refresh data
+      // refetch(); // <--- Refresh data
     } catch (error) {
       notifications.show({
         title: "Error",
@@ -47,14 +66,16 @@ const ProductTable = () => {
     }
   };
 
-  const products = Array.isArray(data?.data?.products?.data)
-    ? data.data.products.data
-    : [];
+  // const products = Array.isArray(data?.data?.products?.data)
+  //   ? data.data.products.data
+  //   : [];
+
 
   const mappedProducts: TableRowData[] = products.map((product: any) => {
     const statusRaw = (product.status as string).toLowerCase();
 
     const isActive = statusRaw === "active";
+
 
     return {
       name: product.name,
@@ -218,8 +239,15 @@ const ProductTable = () => {
         data={mappedProducts}
         showSearch
         showSortFilter
+        showFilter
         searchPlaceholder="Search orders"
         length={8}
+        //@ts-ignore
+        locations={locations}
+        //@ts-ignore
+        categories={categories}
+        tableType="product"
+        onFilterChange={onFilterChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
