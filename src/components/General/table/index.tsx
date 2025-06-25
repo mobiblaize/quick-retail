@@ -204,7 +204,7 @@ const TanTable: FC<TanTableProps> = ({
           }),
         }}
       >
-        <div className="flex md:flex-row flex-col md:justify-between md:items-center mb-[1rem] w-full pl-[20px] pr-[20px]">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between mb-[1rem] w-full px-[20px] gap-4">
           <div>
             <Text fw={500} c="textSecondary.9">
               {tableTitle}
@@ -226,11 +226,11 @@ const TanTable: FC<TanTableProps> = ({
 
             {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
           </div>
-          <div className="hidden md:block ">
-          <div className="hidden lg:flex w-full pl-[25em] pr-[20px] mb-[1rem] items-center justify-end gap-4">
-
+          <div className="hidden md:flex ml-auto ">
+            <div className="flex flex-row items-center gap-4 flex-wrap">
 
               {showSearch && (
+                <div className="min-w-[250px]">
                 <SearchComp
                   setSearchTerm={setSearchTerm}
                   setPageIndex={setPageIndex}
@@ -240,9 +240,10 @@ const TanTable: FC<TanTableProps> = ({
                   placeholder={searchPlaceholder}
                   maxWidth={searchMaxWidth}
                 />
+                </div>
               )}
 
-              {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+              {showSortFilter && <div className="min-w-[150px]"><SortFilter data={data} onSort={handleSort} /></div>}
 
               {showFilter && (
                 <div style={{ position: "relative" }}>
