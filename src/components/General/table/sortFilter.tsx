@@ -53,7 +53,7 @@ const SortFilter: FC<SortFilterProps> = ({ data, onSort }) => {
 
   return (
     <Box style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
-      <Text size="md" fw={500} c="black">
+      <Text size="md" fw={500} c="black" className="whitespace-nowrap">
         Sort By:
       </Text>
       <Menu position="bottom-end">

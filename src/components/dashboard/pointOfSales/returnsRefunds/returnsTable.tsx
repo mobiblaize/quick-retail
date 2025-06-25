@@ -11,13 +11,16 @@ import {
   shortenTransactionId,
   truncateText,
 } from "../../../../utils/helpers";
+import { FilterValues } from "../../../General/table/reuseableFilter";
 
 const ReturnsTable = ({
   returns,
   isLoading,
+  onFilterChange ,
 }: {
   returns: any[];
   isLoading: any;
+  onFilterChange: (filters: FilterValues) => void; 
 }) => {
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
@@ -169,6 +172,9 @@ const ReturnsTable = ({
           showSortFilter
           searchPlaceholder="Search orders"
           length={5}
+          showFilter
+          tableType="returns"
+          onFilterChange={onFilterChange}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

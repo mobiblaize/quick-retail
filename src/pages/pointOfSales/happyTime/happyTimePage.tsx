@@ -8,11 +8,60 @@ import { useState } from "react";
 import CreateDiscountModal from "../../../components/dashboard/pointOfSales/happyTime/modals/createDiscountModal";
 import { useFetchAllDiscount } from "../../../hooks/backendApis/pos/discount";
 import AnalysisOverview1 from "../../../components/dashboard/pointOfSales/happyTime/overView2";
+import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+  const [dateRange, ] = useState<{ startDate: string; endDate: string }>({
+    startDate: "",
+    endDate: "",
+  });
 
-  const { data, isLoading, refetch } = useFetchAllDiscount();
+  const mapOrderStatus = (status: string | undefined) => {
+    if (!status || status.toLowerCase() === "all") return "";
+    if (status.toLowerCase() === "active") return "active";
+    if (status.toLowerCase() === "inactive") return "inactive";
+    if (status.toLowerCase() === "expired") return "expired";
+    return status.toLowerCase();
+  };
+  
+
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    // @ts-ignore
+    search: filters.search ?? "",
+       // @ts-ignore
+    sort_by: filters.sortBy ?? "",
+    per_page: "500",
+    paginate: true,
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+    status: mapOrderStatus(filters.discountStatus),
+    types: filters.type === 'all' || !filters.type ? "" : filters.type,  
+  });
+  
+
+const startDate = dateRange.startDate || appliedFilters?.startDate || "";
+const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+
+const shouldFetch = startDate && endDate; 
+
+const payload = shouldFetch
+  ? {
+      ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+      start_date: startDate,
+      end_date: endDate,
+    }
+  : undefined;
+
+  const { data = {}, isLoading = false } =  useFetchAllDiscount(payload) || {};
+
+  const rawDiscounts = data?.data?.discounts?.data || [];
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters);
+  };
+
+
   
   const subHeaders = [
     <div key="1">
@@ -49,18 +98,18 @@ const HappyTimePage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      <AnalysisOverview1 />
+      <AnalysisOverview1 />   
       <DiscountTable 
-        data={data}
+        rawDiscounts={rawDiscounts}
         isLoading={isLoading}
-        refresh={refetch} 
+        onFilterChange={handleFilterChange}
       />
       <CreateDiscountModal
         opened={isLogComplaintsOpen}
         onClose={() => setIsLogComplaintsOpen(false)}
         onCreated={() => {
           setIsLogComplaintsOpen(false);
-          refetch();
+          // refetch();
         }}
       />
     </PageContainer>
