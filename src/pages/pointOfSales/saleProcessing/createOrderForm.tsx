@@ -83,7 +83,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
      // @ts-ignore
     updatePaymentDetails((prev) => ({
       ...prev,
-      customerId: id, // ✅ Only update customerId
+      customerId: id, 
     }));
   };
 
