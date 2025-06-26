@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
-import { useDeleteData, useFetchPostData, useGetData, usePostData, usePutData,  } from "../../useApis";
+import { useDeleteData, useFetchPostData, useGetData, useGetExportData, usePostData, usePutData, useUploadData,  } from "../../useApis";
 
   const defaultPayload = {
     search: "",
@@ -35,7 +35,7 @@ export const useCreateProduct = () => {
 };
 
 export const useCreateBulkProduct = () => {
-  return usePostData("pos/product/bulk-upload");
+  return useUploadData("pos/product/bulk-upload");
 }
 
 export const useFetchAllProducts = (
@@ -129,4 +129,8 @@ export const useSearchLocationProducts = (
     },
     enabled,
   });
+};
+
+export const useDownloadProductTemplate = (type: string = "variant") => {
+  return useGetExportData(`pos/product/download-import-template?type=${type}`);
 };

@@ -214,6 +214,7 @@ import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
 import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
+import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
 
 export default function App() {
   return (
@@ -263,6 +264,7 @@ export default function App() {
             element={<InventoryDetailsPage />}
           />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
+          <Route path={ROUTES.addVariableProduct} element={<AddVariableProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />

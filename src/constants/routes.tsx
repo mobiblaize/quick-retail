@@ -40,6 +40,7 @@ export const ROUTES = {
   test: "#",
   addNewProduct: "/dashboard/product-management/add-new-product",
   addBulkProduct: "/dashboard/product-management/add-bulk-product",
+  addVariableProduct: "/dashboard/product-management/add-variable-product",
   viewProduct: "/dashboard/product-management/view-product",
   editProduct: "/dashboard/product-management/edit-product",
   inventoryDetails: "/dashboard/product-management/inventory-details",

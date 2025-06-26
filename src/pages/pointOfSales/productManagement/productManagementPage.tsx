@@ -1,22 +1,25 @@
 import PageContainer from "../../../layout/pageContainer";
 import ProductTable from "../../../components/dashboard/pointOfSales/productManagement/productTable";
-import { Button, Text } from "@mantine/core";
 import AddProduct from "../../../components/dashboard/pointOfSales/productManagement/modal/addProductModal";
 import { useState } from "react";
 import ProductOverview from "../../../components/dashboard/pointOfSales/productManagement/productOverview";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 import { useFetchAllProducts } from "../../../hooks/backendApis/pos/inventory";
+import { Menu, Button, Text } from "@mantine/core";
+import { ChevronDown, Plus } from "lucide-react";
+import { useNavigate } from "react-router";
 
 const ProductManagementPage = () => {
+  const navigate = useNavigate();
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
 
   // const handleAddProduct = () => {
   //   navigate("/dashboard/product-management/add-new-product");
   // };
 
-  // const handleAddBulkProducts = () => {
-  //   navigate("/dashboard/product-management/add-bulk-product");
-  // };
+  const handleAddBulkProducts = () => {
+    navigate("/dashboard/product-management/add-bulk-product");
+  };
 
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
     null
@@ -59,12 +62,12 @@ const ProductManagementPage = () => {
 
   const payload = shouldFetch
     ? {
-        ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-        start_date: startDate,
-        end_date: endDate,
-      }
+      ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+      start_date: startDate,
+      end_date: endDate,
+    }
     : undefined;
-// @ts-ignore
+  // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllProducts(payload) || {};
 
   const products = Array.isArray(data?.data?.products?.data)
@@ -81,7 +84,7 @@ const ProductManagementPage = () => {
         Product Management
       </Text>
 
-      <div>
+      {/* <div>
         <div className="hidden sm:block">
           <Button
             onClick={() => setIsLogComplaintsOpen(true)}
@@ -100,6 +103,100 @@ const ProductManagementPage = () => {
           >
             Add a product
           </Button>
+        </div>
+      </div> */}
+
+      <div>
+        <div className="hidden sm:block">
+          <Menu>
+            <Menu.Target>
+              <Button variant="filled-primary">
+                Add New Product
+                <ChevronDown className="ml-2" />
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "10px",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Menu.Item
+                style={{
+                  fontSize: "14px",
+                  padding: "8px 16px",
+                  color: "#333",
+                }}
+                onClick={() => setIsLogComplaintsOpen(true)}
+              >
+                Add a product
+              </Menu.Item>
+              <Menu.Item
+                style={{
+                  fontSize: "14px",
+                  padding: "8px 16px",
+                  color: "#333",
+                }}
+                onClick={handleAddBulkProducts}
+              >
+                Add bulk products
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
+
+        <div className="block sm:hidden">
+          <Menu>
+            <Menu.Target>
+              <Button
+                variant="filled-primary"
+                style={{
+                  width: "40px",
+                  height: "40px",
+                  padding: "0",
+                  borderRadius: "20%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "center",
+                }}
+              >
+                <Plus size={20} />
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "10px",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Menu.Item
+                style={{
+                  fontSize: "14px",
+                  padding: "8px 16px",
+                  color: "#333",
+                }}
+                onClick={() => setIsLogComplaintsOpen(true)}
+              >
+                Add a product
+              </Menu.Item>
+              <Menu.Item
+                style={{
+                  fontSize: "14px",
+                  padding: "8px 16px",
+                  color: "#333",
+                }}
+                onClick={handleAddBulkProducts}
+              >
+                Add bulk products
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </div>
       </div>
     </div>,
@@ -126,3 +223,131 @@ const ProductManagementPage = () => {
 };
 
 export default ProductManagementPage;
+
+// import PageContainer from "../../../layout/pageContainer";
+// import ProductTable from "../../../components/dashboard/pointOfSales/productManagement/productTable";
+// import { Menu, Button, Text } from "@mantine/core";
+// import { ChevronDown, Plus } from "lucide-react";
+// import { useNavigate } from "react-router";
+
+// const ProductManagementPage = () => {
+//   const navigate = useNavigate();
+
+//   const handleAddProduct = () => {
+//     navigate("/dashboard/product-management/add-new-product");
+//   };
+
+//   const handleAddBulkProducts = () => {
+//     navigate("/dashboard/product-management/add-bulk-product");
+//   };
+
+//   const subHeaders = [
+//     <div className="justify-between flex items-center">
+//       <Text fw={500} size="xl" c="black">
+//         Product Management
+//       </Text>
+
+//       <div>
+//         <div className="hidden sm:block">
+//           <Menu>
+//             <Menu.Target>
+//               <Button variant="filled-primary">
+//                 Add New Product
+//                 <ChevronDown className="ml-2" />
+//               </Button>
+//             </Menu.Target>
+
+//             <Menu.Dropdown
+//               style={{
+//                 backgroundColor: "white",
+//                 borderRadius: "8px",
+//                 padding: "10px",
+//                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+//               }}
+//             >
+//               <Menu.Item
+//                 style={{
+//                   fontSize: "14px",
+//                   padding: "8px 16px",
+//                   color: "#333",
+//                 }}
+//                 onClick={handleAddProduct}
+//               >
+//                 Add a product
+//               </Menu.Item>
+//               <Menu.Item
+//                 style={{
+//                   fontSize: "14px",
+//                   padding: "8px 16px",
+//                   color: "#333",
+//                 }}
+//                 onClick={handleAddBulkProducts}
+//               >
+//                 Add bulk products
+//               </Menu.Item>
+//             </Menu.Dropdown>
+//           </Menu>
+//         </div>
+
+//         <div className="block sm:hidden">
+//           <Menu>
+//             <Menu.Target>
+//               <Button
+//                 variant="filled-primary"
+//                 style={{
+//                   width: "40px",
+//                   height: "40px",
+//                   padding: "0",
+//                   borderRadius: "20%",
+//                   display: "flex",
+//                   alignItems: "center",
+//                   justifyContent: "center",
+//                 }}
+//               >
+//                 <Plus size={20} />
+//               </Button>
+//             </Menu.Target>
+
+//             <Menu.Dropdown
+//               style={{
+//                 backgroundColor: "white",
+//                 borderRadius: "8px",
+//                 padding: "10px",
+//                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+//               }}
+//             >
+//               <Menu.Item
+//                 style={{
+//                   fontSize: "14px",
+//                   padding: "8px 16px",
+//                   color: "#333",
+//                 }}
+//                 onClick={handleAddProduct}
+//               >
+//                 Add a product
+//               </Menu.Item>
+//               <Menu.Item
+//                 style={{
+//                   fontSize: "14px",
+//                   padding: "8px 16px",
+//                   color: "#333",
+//                 }}
+//                 onClick={handleAddBulkProducts}
+//               >
+//                 Add bulk products
+//               </Menu.Item>
+//             </Menu.Dropdown>
+//           </Menu>
+//         </div>
+//       </div>
+//     </div>,
+//   ];
+
+//   return (
+//     <PageContainer subHeaders={subHeaders}>
+//       <ProductTable />
+//     </PageContainer>
+//   );
+// };
+
+// export default ProductManagementPage;

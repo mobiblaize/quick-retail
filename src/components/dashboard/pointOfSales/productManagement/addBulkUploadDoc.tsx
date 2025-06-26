@@ -1,6 +1,9 @@
 import { useRef, useState, useEffect } from "react";
 import { CheckCircle, FileText, UploadCloud } from "lucide-react";
 import csv from "../../../../assets/images/excelimg.png";
+import { showNotification } from "@mantine/notifications";
+import { useDownloadProductTemplate } from "../../../../hooks/backendApis/pos/products";
+import { IconX } from "@tabler/icons-react";
 
 type Props = {
   file: File | null;
@@ -11,6 +14,32 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
   const fileInputRef = useRef<HTMLInputElement>(null);
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
+
+  const { mutate: downloadTemplate } = useDownloadProductTemplate("variant");
+
+  const handleDownload = () => {
+    downloadTemplate(undefined, {
+      onSuccess: (blob: Blob) => {
+        const url = window.URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = "product-import-template.csv";
+        document.body.appendChild(a);
+        a.click();
+        a.remove();
+        window.URL.revokeObjectURL(url);
+      },
+      onError: () => {
+        showNotification({
+          title: "Download Failed",
+          message: "Unable to download CSV template.",
+          color: "red",
+          icon: <IconX />,
+        });
+      },
+    });
+  };
+
 
   useEffect(() => {
     if (file) simulateUpload();
@@ -73,9 +102,9 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
           <li>
             Download the product template CSV file{" "}
             <a
-              href="/csv/bulk_product_template.csv"
               download
-              className="text-blue-600 font-medium underline"
+              className="text-blue-600 font-medium underline cursor-pointer"
+              onClick={handleDownload}
             >
               Download here
             </a>
