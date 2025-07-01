@@ -215,6 +215,7 @@ import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
 import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
 import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
+import UserManagement from "./pages/adminPages/userManagement/userManagement";
 
 export default function App() {
   return (
@@ -787,6 +788,9 @@ export default function App() {
           />
           <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage />} />
           <Route path={ROUTES.addBank} element={<AddBankPage />} />
+
+          {/* ADMIN ROUTES */}
+          <Route path={ROUTES.userManagement} element={<UserManagement />} />
         </Route>
       </Routes>
     </Router>

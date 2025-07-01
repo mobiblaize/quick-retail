@@ -233,4 +233,7 @@ export const ROUTES = {
   allTransaction: "/dashboard/banking/all-transactions",
   viewCardTransaction: "/dashboard/banking/view-card-transactions",
   addBank: "/dashboard/banking/add-bank",
+
+  // ADMIN SECTION
+  userManagement: "/dashboard/adminPage/user-management",
 };
