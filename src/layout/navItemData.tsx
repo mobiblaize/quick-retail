@@ -89,17 +89,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveCustomer,
     activeIcon: ActiveCustomer,
   },
-  // {
-  //   label: "Happy Time",
-  //   href: ROUTES.happyTime,
-  //   inactiveIcon: InActiveHappyTime,
-  //   activeIcon: ActiveHappyTime,
-  //   hasChildren: true,
-  //   children: [
-  //     { label: "Discounts", href: `${ROUTES.happyTime}` },
-  //     // { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
-  //   ],
-  // },
+  
   {
     label: "Transaction",
     href: ROUTES.transaction,
@@ -115,6 +105,12 @@ export const PointOfSale: NavItem[] = [
   {
     label: "Report",
     href: ROUTES.report,
+    inactiveIcon: InActiveReport,
+    activeIcon: ActiveReport,
+  },
+  {
+    label: "Vendor",
+    href: ROUTES.vendorpage,
     inactiveIcon: InActiveReport,
     activeIcon: ActiveReport,
   },

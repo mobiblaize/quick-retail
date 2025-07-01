@@ -89,7 +89,7 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-            borderColor={card.borderColor}
+            // borderColor={card.borderColor}
           />
         ))}
       </section>

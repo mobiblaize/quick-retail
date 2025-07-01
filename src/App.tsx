@@ -214,6 +214,10 @@ import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
 import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
+import VendorPage from "./pages/pointOfSales/vendor/vendor";
+import SubscriptionHistoryPage from "./pages/pointOfSales/vendor/SubscriptionHistory";
+import SubscriptionPage from "./pages/pointOfSales/vendor/SubscriptionPge";
+import SubscriptionChangePage from "./pages/pointOfSales/vendor/SubscriptionChnge";
 
 export default function App() {
   return (
@@ -426,6 +430,10 @@ export default function App() {
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
           />
+           <Route path={ROUTES.vendorpage} element={<VendorPage />} />
+           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
+           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
+           <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
 
           {/* ASSET MANAGEMENT ROUTES */}
 

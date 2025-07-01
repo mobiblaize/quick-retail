@@ -182,7 +182,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              Recent Orders
+              Orders
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">{tableData.length}</Text>

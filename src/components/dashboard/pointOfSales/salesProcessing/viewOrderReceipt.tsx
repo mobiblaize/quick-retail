@@ -3,6 +3,7 @@ import { PaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png"; // fallback
 import { useLocation } from "react-router";
 import { useFetchSingleSale } from "../../../../hooks/backendApis/pos/salesProcessing";
+import { formatMoney } from "../../../../utils/helpers";
 
 const ViewOrderReceipt = () => {
   const location = useLocation();
@@ -104,7 +105,7 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
               </div>
               <div className="flex gap-2 flex-col">
                 <Text c="#101928" size="lg" fw={500}>Unit Price</Text>
-                <Text c="#344054" size="lg">₦{item.unit_price}</Text>
+                <Text c="#344054" size="lg">₦{formatMoney(item.unit_price)}</Text>
               </div>
               <div className="flex gap-2 flex-col">
                 <Text c="#101928" size="lg" fw={500}>Quantity</Text>
@@ -112,7 +113,7 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
               </div>
               <div className="flex gap-2 flex-col">
                 <Text c="#101928" size="lg" fw={500}>Total Price</Text>
-                <Text c="#2E90FA" size="lg">₦{item.total_price}</Text>
+                <Text c="#2E90FA" size="lg">₦{formatMoney(item.total_price)}</Text>
               </div>
             </div>
           ))}
@@ -122,28 +123,21 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <Text fw={500}>Subtotal</Text>
-              <Text>₦{order.order_total}</Text>
+              <Text>₦{formatMoney(order.order_total)}</Text>
             </div>
               <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
-              <Text>₦{fees.discount}</Text>
+              <Text>₦{formatMoney(fees.discount)}</Text>
             </div>
             <div className="flex items-center justify-between">
-              <Text fw={500}>Tax ({fees.tax_rate}%)</Text>
+              <Text fw={500}>Tax {formatMoney(fees.tax_rate)}%</Text>
               <Text>₦{fees.tax}</Text>
             </div>
-            <div className="flex items-center justify-between whitespace-nowrap">
-              <Text fw={500}>Service Fee ({fees.service_fee})</Text>
-              <Text>₦{fees.service_fee}</Text>
-            </div>
-            {/* <div className="flex items-center justify-between">
-              <Text fw={500}>Service Fee <CircleHelp size={16} className="inline-block ml-2 text-[#2E90FA]" /></Text>
-              <Text>₦{fees.service_fee}</Text>
-            </div> */}
+   
           
-            <div className="flex items-center justify-between font-bold text-lg mt-[2em]">
-              <Text  fw={700}>Total</Text>
-              <Text>₦{order.amount_paid}</Text>
+            <div className="flex items-center justify-between text-black font-bold text-xl mt-[1em]">
+              <Text  fw={700} c="black" >Total</Text>
+              <Text  fw={700} c="black" >₦{formatMoney(order.amount_paid)}</Text>
             </div>
             <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
               <Text>Cashier</Text>

@@ -46,8 +46,11 @@ export const formatDate = (dateString: string) => {
     });
   };
   
-export function formatMoney(amount: number, decimals: number = 2): string {
-  return amount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+  export function formatMoney(amount: number | string, decimals: number = 2): string {
+    const num = typeof amount === 'number' ? amount : parseFloat(amount);
+    if (isNaN(num)) return "0.00";
+    return num.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  
 export const getPercent = (val: number, total: number) =>
 total > 0 ? `${((val / total) * 100).toFixed(1)}%` : "0%";
