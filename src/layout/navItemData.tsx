@@ -28,6 +28,13 @@ import {
   InActiveVendorManagementIcon,
   InActiveShipmentIcon,
   procurementInActiveIcon,
+  InActiveVendorProfile,
+  ActiveVendorProfile,
+  InActiveAuditTrail,
+  ActiveAuditTrail,
+  InActiveHelp,
+  ActiveHelp,
+  ActiveVendorManagementIcon,
 } from "../assets/svg";
 import { ROUTES } from "../constants/routes";
 
@@ -299,11 +306,35 @@ export const Reports: NavItem[] = [
 ];
 
 export const Admin: NavItem[] = [
-  {
-    label: "Customer",
+   {
+    label: "Dashboard",
     href: ROUTES.test,
-    inactiveIcon: InActiveReturns,
-    activeIcon: ActiveReturns,
+    inactiveIcon: InActiveDashboardIcon,
+    activeIcon: ActiveDashboardIcon,
+  },
+  {
+    label: "Vendor Profile",
+    href: ROUTES.procurementDashboard,
+    inactiveIcon: InActiveVendorProfile,
+    activeIcon: ActiveVendorProfile,
+  },
+  {
+    label: "User & Role Management",
+    href: ROUTES.userManagement,
+    inactiveIcon: InActiveVendorManagementIcon,
+    activeIcon: ActiveVendorManagementIcon,
+  },
+  {
+    label: "Audit Trail",
+    href: ROUTES.test,
+    inactiveIcon: InActiveAuditTrail,
+    activeIcon: ActiveAuditTrail,
+  },
+  {
+    label: "Help",
+    href: ROUTES.test,
+    inactiveIcon: InActiveHelp,
+    activeIcon: ActiveHelp,
   },
 ];
 
