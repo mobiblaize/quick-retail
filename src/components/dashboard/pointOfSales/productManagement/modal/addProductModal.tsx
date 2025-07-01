@@ -15,7 +15,7 @@ export default function AddProduct({ opened, onClose }: Props) {
     if (selected === "simple") {
       navigate("/dashboard/product-management/add-new-product");
     } else if (selected === "variable") {
-      navigate("/dashboard/product-management/add-bulk-product");
+      navigate("/dashboard/product-management/add-variable-product");
     }
   };
 

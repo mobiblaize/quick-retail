@@ -214,10 +214,12 @@ import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
 import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
-import VendorPage from "./pages/pointOfSales/vendor/vendor";
-import SubscriptionHistoryPage from "./pages/pointOfSales/vendor/SubscriptionHistory";
-import SubscriptionPage from "./pages/pointOfSales/vendor/SubscriptionPge";
-import SubscriptionChangePage from "./pages/pointOfSales/vendor/SubscriptionChnge";
+import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
+import UserManagement from "./pages/adminPages/userManagement/userManagement";
+import VendorPage from "./pages/adminPages/vendor/vendor";
+import SubscriptionHistoryPage from "./pages/adminPages/vendor/SubscriptionHistory";
+import SubscriptionChangePage from "./pages/adminPages/vendor/SubscriptionChnge";
+import SubscriptionPage from "./pages/adminPages/vendor/SubscriptionPge";
 
 export default function App() {
   return (
@@ -267,6 +269,7 @@ export default function App() {
             element={<InventoryDetailsPage />}
           />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
+          <Route path={ROUTES.addVariableProduct} element={<AddVariableProduct />} />
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
@@ -430,10 +433,7 @@ export default function App() {
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
           />
-           <Route path={ROUTES.vendorpage} element={<VendorPage />} />
-           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
-           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
-           <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
+          
 
           {/* ASSET MANAGEMENT ROUTES */}
 
@@ -793,6 +793,13 @@ export default function App() {
           />
           <Route path={ROUTES.viewCardTransaction} element={<ViewCardPage />} />
           <Route path={ROUTES.addBank} element={<AddBankPage />} />
+
+          {/* ADMIN ROUTES */}
+          <Route path={ROUTES.userManagement} element={<UserManagement />} />
+          <Route path={ROUTES.vendorpage} element={<VendorPage />} />
+           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
+           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
+           <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
         </Route>
       </Routes>
     </Router>

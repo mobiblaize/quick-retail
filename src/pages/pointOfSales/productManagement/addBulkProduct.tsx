@@ -1,10 +1,62 @@
-import { Text } from "@mantine/core";
-import { ChevronLeft } from "lucide-react";
+import { Button } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
-import AddVariableForm from "../../../components/dashboard/pointOfSales/productManagement/addVariableProduct";
+import AddBulkUploadDoc from "../../../components/dashboard/pointOfSales/productManagement/addBulkUploadDoc";
+import { useCreateBulkProduct } from "../../../hooks/backendApis/pos/products";
+import { useState } from "react";
+import { IconCheck, IconX } from "@tabler/icons-react";
+import { Text } from "@mantine/core";
+import { ChevronLeft } from "lucide-react";
 
 const AddBulkProduct: React.FC = () => {
+  const [file, setFile] = useState<File | null>(null);
+
+  const { mutate: createBulkProduct, isPending } = useCreateBulkProduct();
+
+  const handleSubmit = () => {
+    if (!file) {
+      showNotification({
+        title: "Missing file",
+        message: "Please upload a file first.",
+        color: "red",
+        icon: <IconX />,
+      });
+      return;
+    }
+
+    const formData = new FormData();
+    formData.append("file", file);
+    formData.append("type", "variant");
+
+    createBulkProduct(formData, {
+      onSuccess: () => {
+        showNotification({
+          title: "Success",
+          message: "Upload successful!",
+          color: "green",
+          icon: <IconCheck />,
+        });
+        navigate(-1);
+      },
+      onError: (err: any) => {
+        console.error("Upload failed", err);
+        const errorMsg =
+          err?.response?.data?.errors?.file?.[0] ||
+          err?.response?.data?.message ||
+          "Upload failed. Please try again.";
+
+        showNotification({
+          title: "Upload Failed",
+          message: errorMsg,
+          color: "red",
+          icon: <IconX />,
+        });
+      },
+    });
+  };
+
+
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -33,7 +85,7 @@ const AddBulkProduct: React.FC = () => {
             <>
               <span className="mx-2">/</span>
               <Text c="black" fw={500}>
-                Add Variable Product
+                Add Bulk Product
               </Text>
             </>
           </div>
@@ -43,7 +95,7 @@ const AddBulkProduct: React.FC = () => {
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-          Add Variable Product
+          Add Bulk Product
         </Text>
       </div>,
     ];
@@ -51,26 +103,29 @@ const AddBulkProduct: React.FC = () => {
     return subHeaders;
   };
 
-  // const getBottomButtons = () => {
-  //   return [
-  //     <div key="search-product-buttons" className="flex gap-4 justify-end">
-  //       <Button variant="outline-primary" onClick={() => navigate(-1)}>
-  //         Cancel
-  //       </Button>
-
-  //       <Link to={ROUTES.inventoryDetails}>
-  //         <Button variant="filled-primary">Submit</Button>
-  //       </Link>
-  //     </div>,
-  //   ];
-  // };
+  const getBottomButtons = () => {
+    return [
+      <div key="bulk-upload-buttons" className="flex gap-4 justify-end">
+        <Button variant="outline-primary" onClick={() => navigate(-1)}>
+          Cancel
+        </Button>
+        <Button
+          variant="filled-primary"
+          onClick={handleSubmit}
+          loading={isPending}
+        >
+          Next
+        </Button>
+      </div>,
+    ];
+  };
 
   return (
     <PageContainer
       subHeaders={getSubHeaders()}
-      // subHeaderButtom={getBottomButtons()}
+      subHeaderButtom={getBottomButtons()}
     >
-      <AddVariableForm />
+      <AddBulkUploadDoc file={file} setFile={setFile} />
     </PageContainer>
   );
 };
