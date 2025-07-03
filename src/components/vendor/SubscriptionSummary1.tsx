@@ -23,7 +23,7 @@ interface SubscriptionSummaryProps {
     return (
       <div className="p-6 space-y-6 mt-[2em] bg-white">
         <div>
-          <h2 className="text-lg font-medium text-gray-900">Subscription Summary</h2>
+          <h2 className="text-lg font-medium text-gray-700">Subscription Summary</h2>
           <p className="text-sm text-gray-500 mt-1">
             Manage sales transactions, inventory tracking, customer engagement, and reporting analytics with instant updates.
           </p>
@@ -50,7 +50,7 @@ interface SubscriptionSummaryProps {
           </div>
   
           {/* Other Details */}
-          <div className="border-l border-gray-300 pl-6">
+          <div className="border-l border-gray-300 pl-[3em]">
             <h4 className="font-medium text-gray-800 mb-4">Other Details</h4>
             <div className="space-y-4 text-sm">
               <div className="flex justify-between ">

@@ -54,3 +54,25 @@ export const formatDate = (dateString: string) => {
   
 export const getPercent = (val: number, total: number) =>
 total > 0 ? `${((val / total) * 100).toFixed(1)}%` : "0%";
+
+export type BillingType = "free" | "monthly" | "yearly";
+
+export function getSubscriptionEndDate(startDateStr: string, billingType: BillingType): string {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(startDate);
+
+  const durationMap: Record<BillingType, number> = {
+    free: 60,
+    monthly: 30,
+    yearly: 365,
+  };
+
+  const daysToAdd = durationMap[billingType];
+  endDate.setDate(startDate.getDate() + daysToAdd);
+
+  return endDate.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}

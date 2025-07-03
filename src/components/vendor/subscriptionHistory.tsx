@@ -1,15 +1,14 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
-import { Link } from "react-router";
-import { TableRowData } from "../../types";
-import { PaidDot, UnpaidDot,  } from "../../assets/svg";
-import { ROUTES } from "../../constants/routes";
 import TanTable from "../General/table";
-import { allJournal, productTableData } from "../../utils/mockData";
-
+import { useFetchAllSub } from "../../hooks/backendApis/admin/profile";
 
 const HistoryTable = () => {
-  const columns: ColumnDef<TableRowData>[] = [
+  const { data, isLoading, error } = useFetchAllSub();
+
+  const subscriptions = data?.data?.data || [];
+
+  const columns: ColumnDef<any>[] = [
     {
       id: "select",
       header: ({ table }) => (
@@ -31,100 +30,116 @@ const HistoryTable = () => {
       size: 10,
     },
     {
-      header: "Invoice ID",
-      accessorKey: "name",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={400} className="text-sm" c="#667185">
-            {""} {props.row.original.id}
-          </Text>
-        </div>
+      header: "Transaction ID",
+      accessorKey: "subscriptionID",
+      cell: ({ row }) => (
+        <Text fw={400} className="text-sm" c="#667185">
+          {row.original.subscriptionID}
+        </Text>
       ),
     },
     {
-        header: "Date",
-        accessorKey: "name",
-        cell: (props) => (
-          <div className="flex flex-col">
-            <Text fw={400} className="text-sm" c="#667185">
-              {""} {props.row.original.date}
-            </Text>
-          </div>
+        header: "Plan",
+        accessorKey: "billing_type",
+        cell: ({ row }) => (
+          <Text fw={400} c="#667185">
+            {row.original.billing_type} Plan
+          </Text>
+        ),
+      },
+      {
+        header: "Amount",
+        accessorKey: "total_amount",
+        cell: ({ row }) => (
+          <Text fw={500} c="#667185">
+            ₦{Number(row.original.total_amount).toLocaleString()}
+          </Text>
         ),
       },
     {
-      header: "Total Debit",
-      accessorKey: "contact",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="#667185">
-            {props.row.original.balancePY}
-          </Text>
-        </div>
+      header: "Date",
+      accessorKey: "billing_start",
+      cell: ({ row }) => (
+        <Text fw={400} className="text-sm" c="#667185">
+          {new Date(row.original.billing_start).toLocaleDateString()}
+        </Text>
       ),
     },
-    {
-      header: "Description",
-      accessorKey: "name",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={400} c="#667185">
-            {props.row.original.description}
-          </Text>
-        </div>
-      ),
-    },
+   
+   
     {
         header: "Status",
-        accessorKey: "customer",
+        accessorKey: "status",
         cell: ({ row }) => {
           const status = row.original.status;
+      
+          const statusMap: Record<
+            string,
+            { bg: string; text: string; dot: string }
+          > = {
+            Active: {
+              bg: "bg-[#ECFDF3]",
+              text: "text-[#027A48]",
+              dot: "bg-[#12B76A]", 
+            },
+            Cancelled: {
+              bg: "bg-[#FEF3F2]",
+              text: "text-[#B42318]",
+              dot: "bg-[#F04438]", 
+            },
+            Expired: {
+              bg: "bg-[#F2F4F7]",
+              text: "text-[#667085]",
+              dot: "bg-[#D0D5DD]", 
+            },
+          };
+      
+          const { bg, text, dot } = statusMap[status] || {
+            bg: "bg-gray-100",
+            text: "text-gray-500",
+            dot: "bg-gray-400",
+          };
+      
           return (
-            <div
-              className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-                status === "Successful"
-                  ? "bg-[#ECFDF3] text-[#027A48]"
-                  : "bg-[#FFFAEB] text-[#B54708]"
-              }`}
-            >
-              {status === "Successful" ? <PaidDot /> : <UnpaidDot />}
-              <span className="ml-2">{status}</span>
+            <div className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bg} ${text}`}>
+              <span className={`w-2 h-2 rounded-full mr-2 ${dot}`} />
+              {status}
             </div>
           );
         },
-      },
-    {
-      header: "",
-      accessorKey: "action",
-      cell: () => (
-        <Link to={ROUTES.viewAccountChart}>
-          <Text fw={600} c="customPrimary.10" className="cursor-pointer">
-            View
-          </Text>
-        </Link>
-      ),
-    },
+      }
+      
+      
+    
   ];
+
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
-      <TanTable
-        columnData={columns}
-        data={allJournal }
-        showSearch
-        showSortFilter
-        searchPlaceholder="Search orders"
-        length={10}
-        tableTitle={
-          <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">
-          All Subscriptions
-            </Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{productTableData.length}</Text>
+      {isLoading ? (
+        <Text>Loading...</Text>
+      ) : error ? (
+        <Text c="red">Failed to load subscriptions.</Text>
+      ) : (
+        <TanTable
+        // @ts-ignore
+          columnData={columns}
+          data={subscriptions}
+          showSearch
+          showSortFilter
+          searchPlaceholder="Search orders"
+          length={10}
+          tableTitle={
+            <div className="flex gap-2.5">
+              <Text fw={500} size="xl" c="textSecondary.9">
+                All Subscriptions
+              </Text>
+              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+                <Text c="customPrimary.10">{subscriptions.length}</Text>
+              </div>
             </div>
-          </div>
-        }
-      />
+          }
+        />
+      )}
     </main>
   );
 };

@@ -213,7 +213,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
-import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
+import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage"
 import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
 import UserManagement from "./pages/adminPages/userManagement/userManagement";
 import VendorPage from "./pages/adminPages/vendor/vendor";

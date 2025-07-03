@@ -1,6 +1,7 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { RedQuestionMark } from "../../assets/svg";
+import { useFetchCancelSub } from "../../hooks/backendApis/admin/profile";
+
 
 interface ResolveProps {
   opened: boolean;
@@ -8,95 +9,107 @@ interface ResolveProps {
 }
 
 const CancelSubscriptionModal = ({ opened, onClose }: ResolveProps) => {
-  const handleToast = () => {
-    notifications.show({
-      title: "Success",
-      message: "Account has been successfully created",
-      color: "green",
-      autoClose: 3000,
-    });
+// @ts-ignore
+  const { mutate, isLoading } = useFetchCancelSub();
 
-    onClose();
+  const handleCancel = () => {
+    mutate(
+      {}, 
+      {
+        onSuccess: (res: any) => {
+          notifications.show({
+            title: "Success",
+            message: res?.message || "Subscription cancelled successfully",
+            color: "green",
+            autoClose: 3000,
+          });
+          onClose();
+        },
+        onError: (err: any) => {
+          notifications.show({
+            title: "Error",
+            message:
+              err?.response?.data?.message ||
+              "Failed to cancel subscription. Please try again.",
+            color: "red",
+            autoClose: 3000,
+          });
+        },
+      }
+    );
   };
 
   return (
-    <>
-      <Modal
-        opened={opened}
-        onClose={onClose}
-        title={
-          <div style={{ wordBreak: "break-word" }}>
-            <Text
-              c="black"
-              fw={600}
-              size="sm"
-              style={{
-                fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
-                whiteSpace: "nowrap",
-              }}
-            >
-              Cancel Subscription
-            </Text>
-
-            <div className="mt-[1em]"></div>
-          </div>
-        }
-        centered
-        size="lg"
-        radius={20}
-        padding="xl"
-      >
-        <div className="space-y-4 grid grid-cols-1"></div>
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      title={
         <Text
-          mt="5"
+          c="black"
+          fw={600}
+          size="sm"
           style={{
-            fontSize: "clamp(0.875rem, 2vw, 1rem)",
+            fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
+            whiteSpace: "nowrap",
           }}
         >
-          Are you sure you want to cancel this subscription? By cancelling this
-          subscription you will no longer access features linked with this
-          subscription.
+          Cancel Subscription
         </Text>
+      }
+      centered
+      size="lg"
+      radius={20}
+      padding="xl"
+    >
+      <Text
+        mt="5"
+        style={{
+          fontSize: "clamp(0.875rem, 2vw, 1rem)",
+        }}
+      >
+        Are you sure you want to cancel this subscription? By cancelling, you
+        will no longer access features linked to it.
+      </Text>
 
-        <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
-          <div className="">
-            <Button
-              variant="outline"
-              style={{
-                color: "#475367",
-                borderRadius: "0.4rem",
-                height: "auto",
-                padding: "0.9rem 1.5rem",
-                fontWeight: 600,
-                fontSize: "16px",
-                width: "100%",
-                border: "1px solid #475367",
-              }}
-            >
-              No 
-            </Button>
-          </div>
-          <div className="" onClick={handleToast}>
-            <Button
-              variant="filled"
-              style={{
-                backgroundColor: "#BA110B",
-                color: "white",
-                borderRadius: "0.4rem",
-                height: "auto",
-                padding: "0.9rem 0.1rem",
-                fontWeight: 600,
-                fontSize: "16px",
-                width: "100%",
-              }}
-            >
-              Yes, Cancel
-            </Button>
-          </div>
-        </div>
-      </Modal>
-    </>
+      <div className="grid md:grid-cols-2 grid-cols-1 md:mt-7 gap-3 md:gap-14">
+        <Button
+          onClick={onClose}
+          variant="outline"
+          style={{
+            color: "#475367",
+            height: "auto",
+            borderRadius: "0.4rem",
+            padding: "0.9rem 1.5rem",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+            border: "1px solid #475367",
+          }}
+        >
+          No
+        </Button>
+
+        <Button
+          onClick={handleCancel}
+          variant="filled"
+          disabled={isLoading}
+          style={{
+            backgroundColor: "#BA110B",
+            color: "white",
+            height: "auto",
+            borderRadius: "0.4rem",
+            padding: "0.9rem 0.1rem",
+            fontWeight: 600,
+            fontSize: "16px",
+            width: "100%",
+          }}
+        >
+          {isLoading ? "Cancelling..." : "Yes, Cancel"}
+        </Button>
+      </div>
+    </Modal>
   );
 };
 
 export default CancelSubscriptionModal;
+

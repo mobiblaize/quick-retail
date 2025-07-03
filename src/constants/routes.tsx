@@ -81,10 +81,7 @@ export const ROUTES = {
   pendingNoteDetails: "/dashboard/goods-received/pending-note-details",
   rejectedNoteDetails: "/dashboard/goods-received/rejected-note-details",
   approvedNoteDetails: "/dashboard/goods-received/approved-note-details",
-  vendorpage: "/dashboard/admin/vendorPage",
-  history: "/dashboard/admin/subscriptionHistory",
-  subplan: "/dashboard/admin/subscriptionPlan",
-  changeplan: "/dashboard/admin/changepPlan",
+ 
 
   // ASSET MANAGEMENT SECTION
 
@@ -240,4 +237,8 @@ export const ROUTES = {
 
   // ADMIN SECTION
   userManagement: "/dashboard/adminPage/user-management",
+  vendorpage: "/dashboard/admin/vendorPage",
+  history: "/dashboard/admin/subscriptionHistory",
+  subplan: "/dashboard/admin/subscriptionPlan",
+  changeplan: "/dashboard/admin/changePlan",
 };
