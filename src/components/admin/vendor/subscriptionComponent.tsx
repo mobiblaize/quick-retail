@@ -1,7 +1,8 @@
 import { CheckCircle } from "lucide-react";
-import { useFetchCurrentSub } from "../../hooks/backendApis/admin/profile";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../constants/routes";
+import { ROUTES } from "../../../constants/routes";
+import { useFetchCurrentSub } from "../../../hooks/backendApis/admin/profile";
+
 
 
 const defaultFeatures = [
@@ -69,12 +70,13 @@ export default function SubscriptionComponent() {
       <div className="mt-4">
         <h3 className="text-sm font-medium mb-2 text-gray-600">Subscription Features</h3>
         <ul className="space-y-2">
-          {features.map((feature: string, index: number) => (
-            <li key={index} className="flex items-center text-sm text-gray-700">
-              <CheckCircle className="text-gray-300 mr-2" size={16} />
-              {feature}
-            </li>
-          ))}
+        {features.map((feature: any, index: number) => (
+  <li key={index} className="flex items-center text-sm text-gray-700">
+    <CheckCircle className="text-gray-300 mr-2" size={16} />
+    {typeof feature === "string" ? feature : feature?.name || "Unnamed Feature"}
+  </li>
+))}
+
         </ul>
       </div>
     </div>

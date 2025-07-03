@@ -220,6 +220,8 @@ import VendorPage from "./pages/adminPages/vendor/vendor";
 import SubscriptionHistoryPage from "./pages/adminPages/vendor/SubscriptionHistory";
 import SubscriptionChangePage from "./pages/adminPages/vendor/SubscriptionChnge";
 import SubscriptionPage from "./pages/adminPages/vendor/SubscriptionPge";
+import AuditTrailPage from "./pages/adminPages/audit/allAudit";
+import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
 
 export default function App() {
   return (
@@ -800,6 +802,8 @@ export default function App() {
            <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
            <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
            <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
+           <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
+           <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
         </Route>
       </Routes>
     </Router>

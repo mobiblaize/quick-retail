@@ -317,7 +317,7 @@ export const Admin: NavItem[] = [
   },
   {
     label: "Audit Trail",
-    href: ROUTES.test,
+    href: ROUTES.auditTrail,
     inactiveIcon: InActiveAuditTrail,
     activeIcon: ActiveAuditTrail,
   },

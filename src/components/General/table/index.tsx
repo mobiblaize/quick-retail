@@ -44,7 +44,7 @@ interface TanTableProps {
   locations?: string[];
   categories?: string[];
   reasons?: [];
-  tableType?: "inventory" | "sales" | "product" | "returns" | "discount";
+  tableType?: "inventory" | "sales" | "product" | "returns" | "discount" | "audit";
 }
 
 const TanTable: FC<TanTableProps> = ({
@@ -267,6 +267,8 @@ const TanTable: FC<TanTableProps> = ({
                           type: "all",
                           discountStatus: "All",
                           returnStatus: "All",
+                          role: '',
+                          module: '',
                         });
                         setFiltersApplied(false);
                         setShowFilterDropdown(false);
@@ -393,6 +395,18 @@ const TanTable: FC<TanTableProps> = ({
                           showPrice={true}
                           showPaymentStatus={true}
                           filterType="sales"
+                        />
+                      )}
+                        {tableType === "audit" && (
+                        <ReusableFilterComponent
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                            setFiltersApplied(true);
+                          }}
+                          showRole={true}
+                          showModule={true}
+                          filterType="audit"
                         />
                       )}
                     </div>

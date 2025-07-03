@@ -241,4 +241,6 @@ export const ROUTES = {
   history: "/dashboard/admin/subscriptionHistory",
   subplan: "/dashboard/admin/subscriptionPlan",
   changeplan: "/dashboard/admin/changePlan",
+auditTrail: "/dashboard/admin/auditTrail",
+viewTrail: "/dashboard/admin/viewTrail",
 };

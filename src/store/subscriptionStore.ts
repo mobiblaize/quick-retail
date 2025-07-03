@@ -15,6 +15,7 @@ export interface SubscriptionData {
 }
 
 export const billingTypeStore = atom<billingType>("trial");
+export const billingTypeStore2 = atom<billingType>("monthly");
 export const totalPrice = atom<number>(0);
 export const selectedSubs = atom<SubscriptionData[]>([]);
 export const registerData = atom<{ data: unknown; payment_url: string } | null>(
