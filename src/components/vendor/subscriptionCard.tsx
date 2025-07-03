@@ -1,4 +1,4 @@
-import { CheckCircle } from "lucide-react"
+
 
 export default function SubscriptionCard() {
   return (
