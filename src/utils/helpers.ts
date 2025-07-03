@@ -46,8 +46,33 @@ export const formatDate = (dateString: string) => {
     });
   };
   
-export function formatMoney(amount: number, decimals: number = 2): string {
-  return amount.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-}
+  export function formatMoney(amount: number | string, decimals: number = 2): string {
+    const num = typeof amount === 'number' ? amount : parseFloat(amount);
+    if (isNaN(num)) return "0.00";
+    return num.toFixed(decimals).replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+  }
+  
 export const getPercent = (val: number, total: number) =>
 total > 0 ? `${((val / total) * 100).toFixed(1)}%` : "0%";
+
+export type BillingType = "free" | "monthly" | "yearly";
+
+export function getSubscriptionEndDate(startDateStr: string, billingType: BillingType): string {
+  const startDate = new Date(startDateStr);
+  const endDate = new Date(startDate);
+
+  const durationMap: Record<BillingType, number> = {
+    free: 60,
+    monthly: 30,
+    yearly: 365,
+  };
+
+  const daysToAdd = durationMap[billingType];
+  endDate.setDate(startDate.getDate() + daysToAdd);
+
+  return endDate.toLocaleDateString("en-GB", {
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+  });
+}

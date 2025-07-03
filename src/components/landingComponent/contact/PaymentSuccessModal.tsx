@@ -16,25 +16,22 @@ const PaymentSuccessModal = ({
   opened,
   onClose,
   onCompleteSetup,
+  // @ts-ignore
+  reference,
+   // @ts-ignore
+  email,
 }: PaymentSuccessModalProps) => {
-  const registerEmail = sessionStorage.getItem("registerEmail");
-
-  // get reference from url
-  const reference = new URLSearchParams(window.location.search).get(
-    "reference"
-  );
-
-  const isValid = registerEmail && reference;
+  const isValid = email && reference;
 
   const { refetch, isPending } = useFetchData(
     isValid ? `auth/payment/verify-payment?reference=${reference}` : ""
   );
 
   useEffect(() => {
-    if (opened) {
+    if (opened && isValid) {
       refetch();
     }
-  }, [opened, refetch]);
+  }, [opened, refetch, isValid]);
 
   return (
     <Modal
@@ -71,8 +68,8 @@ const PaymentSuccessModal = ({
         Payment Success
       </Title>
       <Text ta="center" c="dimmed" mb="xl">
-        Congratulation, you have successfully paid for your subscription. Go and
-        Onboard and Log in to your system, we have sent you an email.
+        Congratulations! You have successfully paid for your subscription. Go and
+        onboard and log in to your system. We’ve also sent you an email.
       </Text>
       <Button
         fullWidth
@@ -83,7 +80,7 @@ const PaymentSuccessModal = ({
         disabled={!isValid}
         loading={isPending}
         onClick={() => {
-          handleOpenEmail(registerEmail ?? "");
+          handleOpenEmail(email ?? "");
           onCompleteSetup?.();
         }}
       >
@@ -92,5 +89,6 @@ const PaymentSuccessModal = ({
     </Modal>
   );
 };
+
 
 export default PaymentSuccessModal;

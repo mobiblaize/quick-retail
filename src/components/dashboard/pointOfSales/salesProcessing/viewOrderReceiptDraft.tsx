@@ -1,6 +1,7 @@
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
+import { formatMoney } from "../../../../utils/helpers";
 
 type SaleOrderDetails = {
   product_variation?: {
@@ -33,6 +34,10 @@ export interface SaleData {
     order_total: number;
     amount_paid: number;
     fees: string; // JSON string you parse
+    cashier: {
+      firstname: string;
+      lastname: string;
+    }
   };
 }
 
@@ -141,7 +146,7 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
               </div>
               <div className="flex gap-2 flex-col">
                 <Text c="#101928" size="lg" fw={500}>Unit Price</Text>
-                <Text c="#344054" size="lg">₦{item.unit_price}</Text>
+                <Text c="#344054" size="lg">₦{formatMoney(item.unit_price)}</Text>
               </div>
               <div className="flex gap-2 flex-col">
                 <Text c="#101928" size="lg" fw={500}>Quantity</Text>
@@ -149,7 +154,7 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
               </div>
               <div className="flex gap-2 flex-col">
                 <Text c="#101928" size="lg" fw={500}>Total Price</Text>
-                <Text c="#2E90FA" size="lg">₦{item.total_price}</Text>
+                <Text c="#2E90FA" size="lg">₦{formatMoney(item.total_price)}</Text>
               </div>
             </div>
           ))}
@@ -159,23 +164,24 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <Text fw={500}>Subtotal</Text>
-              <Text>₦{order.order_total}</Text>
+              <Text>₦{formatMoney(order.order_total)}</Text>
             </div>
             <div className="flex items-center justify-between">
-              <Text fw={500}>Tax ({fees.tax_rate}%)</Text>
+              <Text fw={500}>Tax ({formatMoney(fees.tax_rate)})%</Text>
               <Text>₦{fees.tax}</Text>
-            </div>
-            <div className="flex items-center justify-between whitespace-nowrap">
-              <Text fw={500}>Service Fee ({fees.service_fee})</Text>
-              <Text>₦{fees.service_fee}</Text>
             </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
-              <Text>₦{fees.discount}</Text>
+              <Text>{formatMoney(fees.discount)}</Text>
             </div>
             <div className="flex items-center justify-between font-bold text-lg mt-4">
-              <Text>Total Paid</Text>
-              <Text>₦{order.amount_paid}</Text>
+              <Text c="black"  fw={700} >Total Paid</Text>
+              <Text c="black"  fw={700}  >₦{formatMoney(order.amount_paid)}</Text>
+            </div>
+            <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
+              <Text>Cashier</Text>
+              <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
+
             </div>
           </div>
         </section>

@@ -96,17 +96,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveCustomer,
     activeIcon: ActiveCustomer,
   },
-  // {
-  //   label: "Happy Time",
-  //   href: ROUTES.happyTime,
-  //   inactiveIcon: InActiveHappyTime,
-  //   activeIcon: ActiveHappyTime,
-  //   hasChildren: true,
-  //   children: [
-  //     { label: "Discounts", href: `${ROUTES.happyTime}` },
-  //     // { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
-  //   ],
-  // },
+  
   {
     label: "Transaction",
     href: ROUTES.transaction,
@@ -125,6 +115,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveReport,
     activeIcon: ActiveReport,
   },
+  
 ];
 
 export const FinancialManagement: NavItem[] = [
@@ -314,7 +305,7 @@ export const Admin: NavItem[] = [
   },
   {
     label: "Vendor Profile",
-    href: ROUTES.procurementDashboard,
+    href: ROUTES.vendorpage,
     inactiveIcon: InActiveVendorProfile,
     activeIcon: ActiveVendorProfile,
   },

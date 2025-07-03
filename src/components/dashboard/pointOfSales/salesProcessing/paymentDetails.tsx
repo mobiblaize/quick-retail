@@ -38,12 +38,12 @@ const PaymentDetails1: React.FC<PaymentDetailsProps> = ({ items, total }) => {
                   <div className="flex items-center gap-2">
                     <Text fw={500}>
                       {item.label}
-                      {item.label === "Service fee" && (
+                      {/* {item.label === "Service fee" && (
                         <CircleHelp
                           size={16}
                           className="inline-block ml-2 text-[#2E90FA]"
                         />
-                      )}
+                      )} */}
                     </Text>
                   </div>
                   <Text fw={500}>{item.amount}</Text>

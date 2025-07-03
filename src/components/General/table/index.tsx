@@ -275,7 +275,7 @@ const TanTable: FC<TanTableProps> = ({
                       }
                     }}
                     style={{
-                      backgroundColor: "orange",
+                      backgroundColor: "#F16722",
                       color: "white",
                       padding: "0.5rem",
                       borderRadius: "4px",

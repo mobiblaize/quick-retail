@@ -213,9 +213,13 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
-import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
+import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage"
 import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
 import UserManagement from "./pages/adminPages/userManagement/userManagement";
+import VendorPage from "./pages/adminPages/vendor/vendor";
+import SubscriptionHistoryPage from "./pages/adminPages/vendor/SubscriptionHistory";
+import SubscriptionChangePage from "./pages/adminPages/vendor/SubscriptionChnge";
+import SubscriptionPage from "./pages/adminPages/vendor/SubscriptionPge";
 
 export default function App() {
   return (
@@ -429,6 +433,7 @@ export default function App() {
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
           />
+          
 
           {/* ASSET MANAGEMENT ROUTES */}
 
@@ -791,6 +796,10 @@ export default function App() {
 
           {/* ADMIN ROUTES */}
           <Route path={ROUTES.userManagement} element={<UserManagement />} />
+          <Route path={ROUTES.vendorpage} element={<VendorPage />} />
+           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
+           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
+           <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
         </Route>
       </Routes>
     </Router>
