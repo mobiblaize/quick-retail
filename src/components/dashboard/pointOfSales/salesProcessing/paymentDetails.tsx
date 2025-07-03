@@ -1,5 +1,5 @@
 import { Divider, Text } from "@mantine/core";
-import { ChevronDown, ChevronUp, CircleHelp } from "lucide-react";
+import { ChevronDown, ChevronUp,  } from "lucide-react";
 import { useState } from "react";
 
 

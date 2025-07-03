@@ -1,5 +1,6 @@
-import SubscriptionCard from "./SubscriptionCard"
+
 import { CheckCircle } from "lucide-react"
+import SubscriptionCard from "./subscriptionCard"
 
 const features = [
   "Point of sales management system",
