@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import HistoryTable from "../../../components/vendor/subscriptionHistory";
+import HistoryTable from "../../../components/admin/vendor/subscriptionHistory";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
 

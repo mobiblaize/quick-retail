@@ -2,7 +2,7 @@ import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import SubscriptionPlan from "../../../components/vendor/SubscriptionPlan";
+import SubscriptionPlan from "../../../components/admin/vendor/SubscriptionPlan";
 
 const SubscriptionPage = () => {
   const navigate = useNavigate();

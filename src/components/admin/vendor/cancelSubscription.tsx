@@ -1,6 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useFetchCancelSub } from "../../hooks/backendApis/admin/profile";
+import { useFetchCancelSub } from "../../../hooks/backendApis/admin/profile";
 
 
 interface ResolveProps {

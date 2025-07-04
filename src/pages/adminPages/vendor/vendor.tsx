@@ -1,9 +1,9 @@
 import { useState } from "react";
-import { Text } from "@mantine/core";
-import ProfileHeader from "../../../components/vendor/profileHeader";
-import ProfileDetails from "../../../components/vendor/vendorDetails";
+import { Text, Loader } from "@mantine/core";
+import ProfileHeader from "../../../components/admin/vendor/profileHeader";
+import ProfileDetails from "../../../components/admin/vendor/vendorDetails";
 import PageContainer from "../../../layout/pageContainer";
-import SubscriptionPage from "../../../components/vendor/subcriptionPge";
+import SubscriptionPage from "../../../components/admin/vendor/subcriptionPge";
 import { useFetchProfile } from "../../../hooks/backendApis/admin/profile";
 
 const VendorPage = () => {
@@ -11,8 +11,23 @@ const VendorPage = () => {
     "profile"
   );
   const { data, isLoading, error } = useFetchProfile();
-  if (isLoading) return <div>Loading profile...</div>;
-  if (error || !data || !data.data) return <div>Loading profile.</div>;
+
+  // ✅ Centralized loader
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <Loader color="orange" size="lg" />
+      </div>
+    );
+  }
+
+  if (error || !data || !data.data) {
+    return (
+      <div className="flex justify-center items-center h-[60vh]">
+        <Loader color="orange" size="lg" />
+      </div>
+    );
+  }
 
   const subHeaders = [
     <div key="1" className="flex items-center gap-6">
@@ -45,9 +60,6 @@ const VendorPage = () => {
       </Text>
     </div>,
   ];
-
-  if (isLoading) return <div>Loading profile...</div>;
-  if (error) return <div>Loading profile.</div>;
 
   return (
     <PageContainer subHeaders={subHeaders}>

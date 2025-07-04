@@ -2,29 +2,43 @@ import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useLocation, useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import SubscriptionSummary1 from "../../../components/vendor/SubscriptionSummary1";
-import PaymentSummaryModal from "../../../components/vendor/paymentSummaryModal";
-import PaymentSuccessModal from "../../../components/vendor/paymentSuccessfulModal";
-import { useState } from "react";
+import SubscriptionSummary1 from "../../../components/admin/vendor/SubscriptionSummary1";
+import PaymentSummaryModal from "../../../components/admin/vendor/paymentSummaryModal";
+import PaymentSuccessModal from "../../../components/admin/vendor/paymentSuccessfulModal";
+import { useEffect, useRef, useState } from "react";
 import { useFetchPaymentSummary } from "../../../hooks/backendApis/authentication/signupAuth";
 import {
   useSubmitSubscription,
-  // useFetchVerifyPayment,
+  useFetchVerifyPayment,
 } from "../../../hooks/backendApis/admin/profile";
+import { ROUTES } from "../../../constants/routes";
 
 const SubscriptionChangePage = () => {
   const location = useLocation();
   const navigate = useNavigate();
+  const searchParams = new URLSearchParams(location.search);
+  const paymentRef = searchParams.get("reference");
+  let storedData: any = {};
+  try {
+    storedData = JSON.parse(sessionStorage.getItem("subscriptionData") || "{}");
+  } catch (e) {
+    storedData = {};
+  }
 
-  const { items, billingType, totalPrice, billingStart, billingEnd } =
-    location.state || {};
+  const {
+    items,
+    billingType,
+    totalPrice,
+    billingStart,
+    billingEnd,
+  } = location.state || storedData;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [paymentSummary, setPaymentSummary] = useState();
   const { mutate: fetchPaymentSummary } = useFetchPaymentSummary();
   const { mutate: renewSubscription } = useSubmitSubscription();
-  // const verifyPayment = useFetchVerifyPayment();
+  const verifyPayment = useFetchVerifyPayment(); 
   const [verifiedRef, setVerifiedRef] = useState<string>();
 
   const handleBack = () => navigate(-1);
@@ -40,6 +54,18 @@ const SubscriptionChangePage = () => {
       })),
     };
 
+    // ✅ Save data to sessionStorage before redirection
+    sessionStorage.setItem(
+      "subscriptionData",
+      JSON.stringify({
+        items,
+        billingType,
+        totalPrice,
+        billingStart,
+        billingEnd,
+      })
+    );
+
     fetchPaymentSummary(payload, {
       onSuccess: (res: any) => {
         if (!res.error) {
@@ -50,12 +76,10 @@ const SubscriptionChangePage = () => {
     });
   };
 
-
-  
   const handlePaySuccess = async (ref: string) => {
     const payload = {
       billing_type: billingType?.toLowerCase(),
-      paystack_complete_callback: "https://api-quick-retail.sbscuk.co.uk/public",
+      paystack_complete_callback: "http://localhost:5173/dashboard/admin/vendorPage",
       paystack_reference: ref,
       applications: items.map((item: any) => ({
         subscription_id: item.subscription_id,
@@ -64,30 +88,58 @@ const SubscriptionChangePage = () => {
         additional_seat: String(item.additionalSeats || 0),
       })),
     };
-  
+
     renewSubscription(payload, {
-      // onSuccess: async () => {
-      //   try {
-      //     const data = await verifyPayment(ref);
-      //     if (data?.success) {
-      //       setModalOpen(false);
-      //       sessionStorage.setItem("registerEmail", data?.email || ""); // save if needed
-      //       setSuccessOpen(true);
-      //       setVerifiedRef(ref); // optional
-      //     }
-      //   } catch (err) {
-      //     console.error("Verification failed:", err);
-      //   }
-      // },
-      onSuccess: () => {
-        setModalOpen(false);
-        setSuccessOpen(true);
-        setVerifiedRef(ref); // just save the ref for display
+      onSuccess: (res: any) => {
+        if (!res.error && res.data?.auth_url) {
+          // ✅ Redirect to Paystack
+          window.location.href = res.data.auth_url;
+        } else {
+          console.error("No auth_url returned:", res);
+        }
       },
-      
-      onError: (err) => console.error("Renew failed:", err),
+      onError: (err) => {
+        console.error("Renew failed:", err);
+      },
     });
   };
+
+
+  const [isVerifying, setIsVerifying] = useState(false);
+
+  const hasVerifiedRef = useRef(false);
+
+  useEffect(() => {
+    if (!paymentRef || hasVerifiedRef.current) return;
+  
+    const verify = async () => {
+      setIsVerifying(true);
+      setSuccessOpen(true); 
+      hasVerifiedRef.current = true; 
+  
+      try {
+        const res = await verifyPayment(paymentRef);
+        setIsVerifying(false);
+  
+        if (res.success) {
+          setVerifiedRef(paymentRef);
+          sessionStorage.setItem("registerEmail", res.email || "");
+          sessionStorage.removeItem("subscriptionData");
+        } else {
+          console.error("Payment verification failed:", res);
+          setSuccessOpen(false); // Hide modal on failure
+        }
+      } catch (err) {
+        setIsVerifying(false);
+        console.error("Verification error:", err);
+        setSuccessOpen(false);
+      }
+    };
+  
+    verify();
+  }, [paymentRef]);
+  
+
   
 
   const subHeaders = [
@@ -106,14 +158,20 @@ const SubscriptionChangePage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <SubscriptionSummary1
-        items={items}
-        billingType={billingType}
-        billingStart={billingStart}
-        billingEnd={billingEnd}
-        totalPrice={totalPrice}
-        onContinue={handleContinue}
-      />
+      {items ? (
+        <SubscriptionSummary1
+          items={items}
+          billingType={billingType}
+          billingStart={billingStart}
+          billingEnd={billingEnd}
+          totalPrice={totalPrice}
+          onContinue={handleContinue}
+        />
+      ) : (
+        <p className="text-center text-sm text-gray-500 mt-10">
+          No subscription details found.
+        </p>
+      )}
 
       <PaymentSummaryModal
         opened={modalOpen}
@@ -121,20 +179,17 @@ const SubscriptionChangePage = () => {
         onPaymentSuccess={handlePaySuccess}
         summaryData={paymentSummary}
       />
-
-      {/* <PaymentSuccessModal
-        opened={successOpen}
-        onClose={() => setSuccessOpen(false)}
-      /> */}
-
-<PaymentSuccessModal
+      <PaymentSuccessModal
   opened={successOpen}
-  onClose={() => setSuccessOpen(false)}
-     // @ts-ignore
+  onClose={() => {
+    setSuccessOpen(false);
+    navigate(ROUTES.vendorpage); 
+  }}
+  // @ts-ignore
   reference={verifiedRef}
   email={sessionStorage.getItem("registerEmail") || undefined}
+  loading={isVerifying}
 />
-
 
     </PageContainer>
   );

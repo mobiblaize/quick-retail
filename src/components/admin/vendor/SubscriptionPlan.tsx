@@ -5,18 +5,19 @@ import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import {
   billingType,
-  billingTypeStore,
+  billingTypeStore2,
   selectedApp,
   selectedSubs,
   totalPrice,
-} from "../../store/subscriptionStore";
-import { useFetchData } from "../../hooks/useApis";
-import SubscriptionPlans from "../landingComponent/pricing/SubscriptionPlans";
+} from "../../../store/subscriptionStore";
+import { useFetchData } from "../../../hooks/useApis";
+import SubscriptionPlans from "../../landingComponent/pricing/SubscriptionPlans";
 import {
   BillingType,
   formatMoney,
   getSubscriptionEndDate,
-} from "../../utils/helpers";
+} from "../../../utils/helpers";
+
 
 const subscriptionPlan = [
   // { id: 1, name: "Free Trial", slug: "trial" },
@@ -25,7 +26,7 @@ const subscriptionPlan = [
 ];
 
 const SubscriptionPlan = () => {
-  const [activePlan, setActivePlan] = useAtom(billingTypeStore);
+  const [activePlan, setActivePlan] = useAtom(billingTypeStore2);
   const [selectedApps, setSelectedApps] = useAtom(selectedApp);
   const totalPriceValue = useAtomValue(totalPrice);
   const setTotalPriceValue = useSetAtom(totalPrice);

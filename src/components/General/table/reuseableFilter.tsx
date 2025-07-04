@@ -20,6 +20,8 @@ export interface FilterValues {
   type?: DiscountType;
    discountStatus?: string
    returnStatus?: string;
+   role: string;
+   module: string;
 }
 
 interface ReusableFilterComponentProps {
@@ -27,8 +29,10 @@ interface ReusableFilterComponentProps {
   locations?: string[];
   categories?: string[];
   reasons?:string[];
+  roles?: string[];
+  modules?: string[];
   types?: string[];
-  filterType: 'inventory' | 'product' | 'sales' | 'returns' | 'discount' ;
+  filterType: 'inventory' | 'product' | 'sales' | 'returns' | 'discount' | 'audit' ;
   showLocation?: boolean;
   showCategory?:boolean;
   showStockLevel?: boolean;
@@ -40,12 +44,16 @@ interface ReusableFilterComponentProps {
   showDiscountType?:boolean;
   showDiscountStatus ?:boolean;
   showReturnStatus?: boolean;
+  showRole?: boolean;
+  showModule?: boolean;
 }
 
 const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   onFilterChange,
   locations = [],
   categories =[],
+  roles = [],
+  modules = [],
   showLocation,
   showCategory,
   showStockLevel,
@@ -57,6 +65,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showDiscountType  = false,
   showDiscountStatus  = false,
   showReturnStatus = false,
+  showRole = false,
+  showModule = false,
 
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
@@ -75,6 +85,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     type: 'all',
     discountStatus: 'All',
     returnStatus: 'All',
+    role: '',
+    module: '',
   });
 
   const handleClear = () => {
@@ -94,7 +106,10 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       type: 'all',
       discountStatus: 'All',
       returnStatus: 'All',
+      role: '',
+      module: '',
     };
+  
     setFilters(cleared);
     onFilterChange(cleared); 
   };
@@ -247,6 +262,46 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           </div>
         </div>
       )}
+
+       {/* Role */}
+       {showRole && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Role</label>
+          <select
+            value={filters.role}
+            onChange={(e) => setFilters({ ...filters, role: e.target.value })}
+            className="w-full border rounded p-2 text-sm"
+          >
+            <option value="">Select Role</option>
+            {roles.map((rol) => (
+              <option key={rol} value={rol}>
+                {rol}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
+
+       {/* Module*/}
+       {showModule && (
+        <div className="mb-4">
+          <label className="block text-sm font-medium mb-1">Role</label>
+          <select
+            value={filters.module}
+            onChange={(e) => setFilters({ ...filters, module: e.target.value })}
+            className="w-full border rounded p-2 text-sm"
+          >
+            <option value="">Select Module</option>
+            {modules.map((mod) => (
+              <option key={mod} value={mod}>
+                {mod}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+
 
       {/* Order Status */}
       {showOrderStatus && (
