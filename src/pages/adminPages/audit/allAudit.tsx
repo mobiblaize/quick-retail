@@ -16,7 +16,7 @@ import { useSearchParams } from "react-router";
 
 
 const AuditTrailPage = () => {
-const [filters, setFilters] = useState<FilterValues | null>(null);
+const [, setFilters] = useState<FilterValues | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handleFilterChange = (newFilters: FilterValues) => {

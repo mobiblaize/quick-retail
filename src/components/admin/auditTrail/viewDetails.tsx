@@ -20,7 +20,6 @@ export default function ViewDetails({ profile }: ProfileHeaderProps) {
  
     store_name,
     id,
-    roles,
     created_at,
     log_name,
     action_module,

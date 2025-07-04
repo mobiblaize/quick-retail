@@ -2,7 +2,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
 import TanTable from "../../General/table";
-import { formatDate } from "../../../utils/helpers";
 import { FilterValues } from "../../General/table/reuseableFilter";
 import { ROUTES } from "../../../constants/routes";
 import { useNavigate } from "react-router-dom";
