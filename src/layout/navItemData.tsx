@@ -332,7 +332,7 @@ export const Admin: NavItem[] = [
   },
   {
     label: "Help",
-    href: ROUTES.test,
+    href: ROUTES.helpPage,
     inactiveIcon: InActiveHelp,
     activeIcon: ActiveHelp,
   },

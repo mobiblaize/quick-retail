@@ -4,8 +4,8 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-// import { Link } from "react-router";
-// import { ROUTES } from "../../../../constants/routes";
+import { Link } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
 
 const UserManagementTable = () => {
   const columns: ColumnDef<TableRowData>[] = [
@@ -70,11 +70,11 @@ const UserManagementTable = () => {
       header: "",
       accessorKey: "action",
       cell: () => (
-        // <Link to={ROUTES.tierOneVendors}>
+        <Link to={ROUTES.viewUser}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View User
           </Text>
-        // </Link>
+        </Link>
       ),
     },
   ];

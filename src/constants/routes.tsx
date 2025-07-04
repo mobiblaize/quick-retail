@@ -236,4 +236,8 @@ export const ROUTES = {
 
   // ADMIN SECTION
   userManagement: "/dashboard/adminPage/user-management",
+  viewUser: "/dashboard/adminPage/user-management/view-user",
+  addNewRole: "/dashboard/adminPage/user-management/add-new-role",
+  helpPage: "/dashboard/adminPage/help-page",
+  learnMore: "/dashboard/adminPage/help-page/learn-more",
 };

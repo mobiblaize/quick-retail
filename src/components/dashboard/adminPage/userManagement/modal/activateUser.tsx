@@ -1,0 +1,42 @@
+import { Modal, Button } from "@mantine/core";
+
+type Props = {
+  opened: boolean;
+  onClose: () => void;
+};
+
+export default function ActivateUserModal({ opened, onClose }: Props) {
+  return (
+    <Modal
+      opened={opened}
+      onClose={onClose}
+      centered
+      withCloseButton={false}
+      size="md"
+      classNames={{ body: "p-6" }}
+    >
+      <div className="space-y-4">
+        <div className="items-left gap-2">
+          <h2 className="text-[20px] font-bold text-[#344054]">
+            Activate User
+          </h2>
+        </div>
+
+        <p className="text-[#667085] text-[15px]">
+         Are you sure you want to activate this user? Once activated this user gains access to features assigned to their role.
+        </p>
+
+        <div
+          key="search-product-buttons"
+          className="flex gap-4 mt-[2em] justify-center"
+        >
+          <Button variant="outline-primary" onClick={onClose}>
+            No
+          </Button>
+
+          <Button variant="filled-primary">Yes, Activate</Button>
+        </div>
+      </div>
+    </Modal>
+  );
+}

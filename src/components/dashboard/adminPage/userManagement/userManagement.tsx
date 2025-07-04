@@ -1,10 +1,12 @@
-import { useState } from "react";
-import TierTwoVendors from "../../procurement/vendorManagement/tierTwoVendor";
 import UserManagementTable from "./userManagementTable";
+import RoleGrid from "./roleGrid";
 
-const UserManagementComp = () => {
-  const [activeTab, setActiveTab] = useState<"userManage" | "tierTwo">("userManage");
+type Props = {
+  activeTab: "userManage" | "roleGrid";
+  onTabChange: (tab: "userManage" | "roleGrid") => void;
+};
 
+const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
   return (
     <div className="w-full bg-white p-8">
       {/* Tabs with border-bottom */}
@@ -15,17 +17,17 @@ const UserManagementComp = () => {
               ? "bg-[#FFECE5] text-[#D14900]"
               : "text-[#344054]"
           }`}
-          onClick={() => setActiveTab("userManage")}
+          onClick={() => onTabChange("userManage")}
         >
           User Management 
         </button>
         <button
           className={`text-sm px-4 py-2 rounded-md font-medium ${
-            activeTab === "tierTwo"
+            activeTab === "roleGrid"
               ? "bg-[#FFECE5] text-[#D14900]"
               : "text-[#344054]"
           }`}
-          onClick={() => setActiveTab("tierTwo")}
+          onClick={() => onTabChange("roleGrid")}
         >
           User Role
         </button>
@@ -33,7 +35,7 @@ const UserManagementComp = () => {
 
       {/* Tab content */}
       {activeTab === "userManage" && <UserManagementTable />}
-      {activeTab === "tierTwo" && <TierTwoVendors />}
+      {activeTab === "roleGrid" && <RoleGrid />}
     </div>
   );
 };
