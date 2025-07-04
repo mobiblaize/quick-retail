@@ -27,13 +27,32 @@ const TrailTable = ({
         navigate(ROUTES.viewTrail, { state: { uuid } }); 
       };
 
+
+      const roles = Array.from(
+        new Set(
+          logs
+            ?.map((log) => log.causer?.roles)
+            ?.filter((role) => typeof role === "string")
+        )
+      );
+
+      function formatTime(dateStr: string) {
+        if (!dateStr) return "";
+        const date = new Date(dateStr);
+        return new Intl.DateTimeFormat("en-US", {
+          dateStyle: "long",
+          timeStyle: "short",
+        }).format(date);
+      }
+      
+      
   const columns: ColumnDef<any>[] = [
     {
       header: "Time stamp",
       accessorKey: "date",
       cell: (props) => (
-        <div className="text-gray-900 whitespace-nowrap break-words ">
-          {formatDate(props.row.original.created_at)}
+        <div className="text-gray-900 whitespace-normal text-sm">
+          {formatTime(props.row.original.created_at)}
         </div>
       ),
     },
@@ -46,8 +65,8 @@ const TrailTable = ({
         const email = causer?.email || "N/A";
         return (
           <div className="flex flex-col">
-            <Text fw={900}>{name}</Text>
-            <Text size="sm" c="dimmed">
+            <Text fw={900} size="sm">{name}</Text>
+            <Text size="sm" c="dimmed" className="whitespace-normal">
               {email}
             </Text>
           </div>
@@ -74,25 +93,31 @@ const TrailTable = ({
       header: "Activity",
       accessorKey: "description",
       cell: ({ row }) => (
-        <Text fw={400} className="text-sm" c="#667185">
+        // <Text fw={400} className="text-sm whitespace-normal" c="#667185">
+                   <Text fw={300} size="sm" className="text-sm " c="#667185">
           {row.original.log_name}
         </Text>
       ),
     },
     {
-      header: "Module",
-      accessorKey: "action_module",
-      cell: ({ row }) => (
-        <Text fw={400} className="text-sm" c="#667185">
-          {row.original.action_module}
-        </Text>
-      ),
-    },
+        header: "Module",
+        accessorKey: "action_type",
+        cell: ({ row }) => {
+          const modulePath = row.original.action_type || "";
+          const moduleName = modulePath.split("\\").pop(); 
+          return (
+            <Text fw={400} size="sm" className="text-sm" c="#667185">
+              {moduleName}
+            </Text>
+          );
+        },
+      },
+      
     {
       header: "IP Address",
       accessorKey: "description",
       cell: ({ row }) => (
-        <Text fw={400} className="text-sm" c="#667185">
+        <Text fw={400} size="sm" className="text-sm" c="#667185">
           {row.original.ip_address}
         </Text>
       ),
@@ -105,7 +130,7 @@ const TrailTable = ({
           return (
             <button
               onClick={() => handleViewClick(uuid)}
-              className="text-[#F16722] hover:underline cursor-pointer"
+              className="text-[#F16722] hover:underline cursor-pointer text-sm"
             >
               View
             </button>
@@ -129,8 +154,9 @@ const TrailTable = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search logs"
-          length={10}
+          length={8}
           showFilter
+          roles={roles}
           tableType="audit"
           onFilterChange={onFilterChange}
           tableTitle={

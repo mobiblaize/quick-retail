@@ -22,7 +22,7 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
 
-  console.log(products)
+  // console.log(products)
   const locations = Array.from(
     new Set(
       products

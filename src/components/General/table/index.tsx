@@ -43,6 +43,7 @@ interface TanTableProps {
   onFilterChange?: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
+  roles?:string[];
   reasons?: [];
   tableType?: "inventory" | "sales" | "product" | "returns" | "discount" | "audit";
 }
@@ -66,6 +67,7 @@ const TanTable: FC<TanTableProps> = ({
   onFilterChange,
   locations,
   categories,
+  roles,
   tableType,
 }) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -404,6 +406,7 @@ const TanTable: FC<TanTableProps> = ({
                             setShowFilterDropdown(false);
                             setFiltersApplied(true);
                           }}
+                          roles={roles}
                           showRole={true}
                           showModule={true}
                           filterType="audit"

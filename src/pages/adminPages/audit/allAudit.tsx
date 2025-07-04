@@ -4,46 +4,44 @@ import PageContainer from "../../../layout/pageContainer";
 import TrailTable from "../../../components/admin/auditTrail/trailTable";
 import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
-// import { useState } from "react";
+import { useState } from "react";
 import Dropdown from "../../../components/General/dropdown";
 // @ts-ignore
 import Papa from "papaparse";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
+import { useMemo } from "react";
+import { useSearchParams } from "react-router";
 
 
 
 const AuditTrailPage = () => {
-//   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
-//   const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
-//     startDate: "",
-//     endDate: "",
-//   });
+const [filters, setFilters] = useState<FilterValues | null>(null);
+  const [searchParams, setSearchParams] = useSearchParams();
 
-//   const mapOrderStatus = (status: string | undefined) => {
-//     if (!status || status.toLowerCase() === "all") return "";
-//     if (status.toLowerCase() === "paid") return "paid";
-//     if (status.toLowerCase() === "pending") return "pending";
-//     return status.toLowerCase();
-//   };
-  
+  const handleFilterChange = (newFilters: FilterValues) => {
+    setFilters(newFilters);
 
-// const mapFiltersToPayload = (filters: FilterValues) => ({
-//   // @ts-ignore
-//   search: filters.search ?? "",
-//   // @ts-ignore
-//   sort_by: filters.sortBy ?? "",
-//   per_page: "500",
-//   paginate: true,
-//   start_date: filters.startDate ?? "",
-//   end_date: filters.endDate ?? "",
-//   status: mapOrderStatus(filters.paymentStatus),
-//   price_from: filters.priceFrom ?? 100,
-//   price_to: filters.priceTo ?? ""
-// });
-const handleFilterChange = (filters: FilterValues) => {
-    // setAppliedFilters(filters);
+    const queryObj: Record<string, string> = {
+      ...(newFilters.startDate && { start_date: newFilters.startDate }),
+      ...(newFilters.endDate && { end_date: newFilters.endDate }),
+      ...(newFilters.role && { role: newFilters.role }),
+      ...(newFilters.module && { module: newFilters.module }),
+      paginate: "true",
+    };
+
+    setSearchParams(queryObj);
   };
+
+  const queryParams = useMemo(() => {
+    const entries = Object.fromEntries(searchParams.entries());
+    return {
+      ...entries,
+      paginate: "true",
+    };
+  }, [searchParams]);
+
+  const { data, isLoading, error } = useFetchAuditTrails(queryParams);
 
 
 const exportOptions = [
@@ -52,7 +50,7 @@ const exportOptions = [
   ];
 
 
-  const { data, isLoading, error } = useFetchAuditTrails();
+//   const { data, isLoading, error } = useFetchAuditTrails();
   const handleExport = (format: string) => {
     const logs = data?.data?.data || [];
   

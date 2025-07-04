@@ -63,9 +63,9 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-         Sales overview
+         Product overview
           </Text>
-          <Text size="sm">This is an overview summarizing sales</Text>
+          <Text size="sm">This is an overview your products</Text>
         </div>
         <Group>
           <DateFilterMenu
