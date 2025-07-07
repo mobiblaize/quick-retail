@@ -30,7 +30,7 @@ export default function ProfileDetails({ profile }: ProfileDetailsProps) {
 
   return (
     <div className="bg-white rounded-lg shadow mt-6">
-      <div className="border-b px-6 py-3">
+      <div className="border-b px-6 py-3 border-gray-200">
         <h3 className="text-sm font-medium text-gray-700">PROFILE DETAILS</h3>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 text-sm">

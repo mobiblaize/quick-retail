@@ -238,7 +238,6 @@ export const ROUTES = {
   // ADMIN SECTION
   adminDashboard: "/dashboard/adminPage",
   userManagement: "/dashboard/user-management",
-  // viewUser: "/dashboard/user-management/view-user",
   viewUser: (userId: string) => `/dashboard/user-management/view-user/${userId}`,
   addNewRole: "/dashboard/user-management/add-new-role",
   helpPage: "/dashboard/help-page",

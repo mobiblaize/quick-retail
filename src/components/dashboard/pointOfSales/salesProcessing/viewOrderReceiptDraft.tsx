@@ -160,28 +160,31 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
           ))}
         </section>
 
-        <section className="pt-8 pb-6 md:max-w-6xl w-full">
+        <section className="pt-8 pb-6 md:max-w-6xl w-full border-b border-[#E4E7EC]">
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <Text fw={500}>Subtotal</Text>
-              <Text>₦{formatMoney(order.order_total)}</Text>
+              <Text  c="#101928">₦{formatMoney(fees.sub_total)}</Text>
             </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Tax ({formatMoney(fees.tax_rate)})%</Text>
-              <Text>₦{fees.tax}</Text>
+              <Text  c="#101928">₦{fees.tax}</Text>
             </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
-              <Text>{formatMoney(fees.discount)}</Text>
+              <Text  c="#101928">₦{formatMoney(fees.discount)}</Text>
             </div>
+            <div className=" border-t border-[#E4E7EC]">
             <div className="flex items-center justify-between font-bold text-lg mt-4">
-              <Text c="black"  fw={700} >Total Paid</Text>
-              <Text c="black"  fw={700}  >₦{formatMoney(order.amount_paid)}</Text>
+              <Text  c="#101928"  fw={700} >Total Paid</Text>
+              <Text  c="#101928" fw={500}  >₦{formatMoney(order.order_total)}</Text>
             </div>
+            </div>
+            <div className="border-t border-[#E4E7EC]">
             <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
               <Text>Cashier</Text>
               <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
-
+              </div>
             </div>
           </div>
         </section>
