@@ -333,7 +333,7 @@ export const otherMenu = [
   { label: "Log Out", href: ROUTES.test, icon: Logout },
 ];
 
-export const MobileOtherMenu = [
+export const mobileOtherMenu = [
   { label: "Norification", href: ROUTES.test, icon: NotificationIcon },
   { label: "Settings", icon: Settings, href: ROUTES.test },
 ];

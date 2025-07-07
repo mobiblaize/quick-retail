@@ -173,7 +173,6 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({
         //@ts-ignore
           columnData={columns}
           data={orders}
-          isLoading={isLoading}
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
