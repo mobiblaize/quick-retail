@@ -68,8 +68,8 @@ const payload = shouldFetch
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
-        <Text fw={500} size="xl" c="black">
-          Sale Processing
+        <Text fw={500} size="xl" c="#1D2739">
+          Sales Processing
         </Text>
         <Link to={ROUTES.createOrder}>
           <Button variant="filled-primary">Create Order</Button>

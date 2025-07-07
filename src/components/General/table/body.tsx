@@ -3,17 +3,17 @@ import { Table } from "@mantine/core";
 import TanHeader from "./header";
 import TanRows from "./rows";
 import { Table as ReactTable } from "@tanstack/react-table";
-import { TableRowData } from "../../../types";
 
-export type TableInstance = ReactTable<TableRowData>;
-
-interface TanBodyProps {
-  table: TableInstance;
+interface TanBodyProps<T extends Record<string, any>> {
+  table: ReactTable<T>;
   loadingState?: boolean;
   onClick?: () => void;
 }
 
-const TanBody = ({ table, onClick }: TanBodyProps) => {
+const TanBody = <T extends Record<string, any>>({
+  table,
+  onClick,
+}: TanBodyProps<T>) => {
   const scrollContainerRef = useRef<HTMLDivElement>(null);
   const [isDragging, setIsDragging] = useState(false);
   const [startX, setStartX] = useState(0);

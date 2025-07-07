@@ -1,16 +1,11 @@
-import { FC } from "react";
 import { TableThead, TableTr, TableTh } from "@mantine/core";
-import { flexRender, HeaderGroup } from "@tanstack/react-table";
-import { Table as ReactTable } from "@tanstack/react-table";
-import { TableRowData } from "../../../types";
+import { flexRender, HeaderGroup, Table as ReactTable } from "@tanstack/react-table";
 
-export type TableInstance = ReactTable<TableRowData>;
-
-interface HeaderProps {
-  table: TableInstance;
+interface HeaderProps<T extends Record<string, any>> {
+  table: ReactTable<T>;
 }
 
-const TanHeader: FC<HeaderProps> = ({ table }) => {
+const TanHeader = <T extends Record<string, any>>({ table }: HeaderProps<T>) => {
   return (
     <TableThead
       style={{
@@ -21,7 +16,7 @@ const TanHeader: FC<HeaderProps> = ({ table }) => {
     >
       {table
         ?.getHeaderGroups()
-        .map((headerGroup: HeaderGroup<TableRowData>) => (
+        .map((headerGroup: HeaderGroup<T>) => (
           <TableTr key={headerGroup?.id}>
             {headerGroup?.headers?.map((header) => (
               <TableTh

@@ -1,5 +1,12 @@
 import { Button } from "@mantine/core";
 import { X } from "lucide-react";
+import { useState } from "react";
+import {
+    useCreateUser,
+    useFetchAllRoles,
+} from "../../../../../hooks/backendApis/admin/userManagement";
+import { showNotification } from "@mantine/notifications";
+import { useFetchAllLocations } from "../../../../../hooks/backendApis/pos/products";
 
 type Props = {
     opened: boolean;
@@ -7,38 +14,110 @@ type Props = {
 };
 
 export default function AddUserModal({ opened, onClose }: Props) {
+    const [formValues, setFormValues] = useState({
+        firstname: "",
+        lastname: "",
+        email: "",
+        phone_number: "",
+        role_id: "",
+        locationId: "",
+    });
+
+    const { mutate: createUser, isPending } = useCreateUser();
+    const { data: locationData } = useFetchAllLocations();
+    const { data: roleData } = useFetchAllRoles();
+
+    const roleOptions = Array.isArray(roleData?.data)
+        ? roleData.data.map((role: { display_name: string; id: string }) => ({
+            label: role.display_name,
+            value: role.id,
+        }))
+        : [];
+
+
+    const locationOptions = Array.isArray(locationData?.data?.stores)
+        ? locationData.data.stores.map((store: { id: string; name: string }) => ({
+            label: store.name,
+            value: store.id,
+        }))
+        : [];
+
+    console.log("Location Options:", locationOptions);
+
+
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+        const { name, value } = e.target;
+        setFormValues((prev) => ({ ...prev, [name]: value }));
+    };
+
+    const handleSubmit = () => {
+        const payload = {
+            firstname: formValues.firstname,
+            lastname: formValues.lastname,
+            email: formValues.email,
+            phone_number: formValues.phone_number,
+            role_id: formValues.role_id,
+            locationId: formValues.locationId,
+        };
+
+        createUser(payload, {
+            onSuccess: () => {
+                showNotification({
+                    title: "User Created",
+                    message: "The new user has been successfully added.",
+                    color: "green",
+                });
+                onClose();
+            },
+            onError: (err: any) => {
+                showNotification({
+                    title: "Error",
+                    message:
+                        err?.response?.data?.message || "Failed to create user. Please try again.",
+                    color: "red",
+                });
+            },
+        });
+    };
+
     if (!opened) return null;
 
     return (
         <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
             <div className="bg-white rounded-xl w-[380px] p-6 relative shadow-md">
-                {/* Close Icon */}
                 <button className="absolute top-4 right-4 text-gray-500" onClick={onClose}>
                     <X size={18} />
                 </button>
 
                 <div className="space-y-4">
-                    {/* Title */}
                     <h2 className="text-lg font-semibold text-gray-900">Add New User</h2>
-                    <p className="text-sm text-gray-500 mb-6">Enter the details below to add a new user</p>
+                    <p className="text-sm text-gray-500 mb-6">
+                        Enter the details below to add a new user
+                    </p>
 
                     <div className="space-y-4">
-                        {/* First Name & Last Name */}
+                        {/* Name */}
                         <div className="flex gap-3">
                             <div className="w-1/2">
                                 <label className="text-sm text-gray-700 block mb-1">First Name</label>
                                 <input
                                     type="text"
+                                    name="firstname"
+                                    value={formValues.firstname}
+                                    onChange={handleChange}
                                     placeholder="Enter first name"
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder:text-gray-400"
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                                 />
                             </div>
                             <div className="w-1/2">
                                 <label className="text-sm text-gray-700 block mb-1">Last Name</label>
                                 <input
                                     type="text"
+                                    name="lastname"
+                                    value={formValues.lastname}
+                                    onChange={handleChange}
                                     placeholder="Enter last name"
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder:text-gray-400"
+                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                                 />
                             </div>
                         </div>
@@ -48,57 +127,98 @@ export default function AddUserModal({ opened, onClose }: Props) {
                             <label className="text-sm text-gray-700 block mb-1">Email</label>
                             <input
                                 type="email"
-                                placeholder="Enter customer email"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder:text-gray-400"
+                                name="email"
+                                value={formValues.email}
+                                onChange={handleChange}
+                                placeholder="Enter email"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                             />
                         </div>
 
-                        {/* Phone Number */}
+                        {/* Phone */}
                         <div>
                             <label className="text-sm text-gray-700 block mb-1">Phone Number</label>
                             <input
                                 type="text"
+                                name="phone_number"
+                                value={formValues.phone_number}
+                                onChange={handleChange}
                                 placeholder="Enter phone number"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm placeholder:text-gray-400"
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                             />
                         </div>
 
-                        {/* Role Dropdown */}
+                        {/* Role */}
                         <div>
                             <label className="text-sm text-gray-700 block mb-1">Role</label>
                             <select
-                                defaultValue=""
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-500"
+                                name="role_id"
+                                value={formValues.role_id}
+                                onChange={handleChange}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                             >
-                                <option value="" disabled>Select role</option>
-                                <option value="admin">Admin</option>
-                                <option value="manager">Manager</option>
-                                <option value="staff">Staff</option>
+                                <option value="" disabled>
+                                    Select role
+                                </option>
+                                {roleOptions.map((role: any) => (
+                                    <option key={role.value} value={role.value}>
+                                        {role.label}
+                                    </option>
+                                ))}
                             </select>
                         </div>
 
-                        {/* Assign Store Dropdown */}
+                        {/* Store */}
                         <div>
                             <label className="text-sm text-gray-700 block mb-1">Assign Store</label>
                             <select
-                                defaultValue=""
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm text-gray-500"
+                                name="locationId"
+                                value={formValues.locationId}
+                                onChange={(e) => {
+                                    const selected = locationOptions.find(
+                                        (loc: any) => String(loc.value) === e.target.value
+                                    );
+
+                                    if (selected) {
+                                        setFormValues({
+                                            ...formValues,
+                                            locationId: selected.label,
+                                        });
+                                    }
+                                }}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                             >
-                                <option value="" disabled>Select store</option>
-                                <option value="store1">Store 1</option>
-                                <option value="store2">Store 2</option>
+                                <option value="" disabled>
+                                    Select store
+                                </option>
+                                {locationOptions.map((loc: any) => (
+                                    <option key={loc.value} value={loc.value}>
+                                        {loc.label}
+                                    </option>
+                                ))}
                             </select>
                         </div>
                     </div>
-                    <div
-                        key="search-product-buttons"
-                        className="flex gap-4 mt-[2em] justify-center"
-                    >
+
+                    {/* Buttons */}
+                    <div className="flex gap-4 mt-6 justify-center">
                         <Button variant="outline-primary" onClick={onClose}>
                             No
                         </Button>
-
-                        <Button variant="filled-primary">Save</Button>
+                        <Button
+                            variant="filled-primary"
+                            loading={isPending}
+                            onClick={handleSubmit}
+                            disabled={
+                                !formValues.firstname ||
+                                !formValues.lastname ||
+                                !formValues.email ||
+                                !formValues.role_id ||
+                                !formValues.locationId
+                            }
+                        >
+                            Save
+                        </Button>
                     </div>
                 </div>
             </div>

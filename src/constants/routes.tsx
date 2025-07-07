@@ -81,6 +81,7 @@ export const ROUTES = {
   pendingNoteDetails: "/dashboard/goods-received/pending-note-details",
   rejectedNoteDetails: "/dashboard/goods-received/rejected-note-details",
   approvedNoteDetails: "/dashboard/goods-received/approved-note-details",
+ 
 
   // ASSET MANAGEMENT SECTION
 
@@ -235,9 +236,17 @@ export const ROUTES = {
   addBank: "/dashboard/banking/add-bank",
 
   // ADMIN SECTION
-  userManagement: "/dashboard/adminPage/user-management",
-  viewUser: "/dashboard/adminPage/user-management/view-user",
-  addNewRole: "/dashboard/adminPage/user-management/add-new-role",
-  helpPage: "/dashboard/adminPage/help-page",
-  learnMore: "/dashboard/adminPage/help-page/learn-more",
+  adminDashboard: "/dashboard/adminPage",
+  userManagement: "/dashboard/user-management",
+  // viewUser: "/dashboard/user-management/view-user",
+  viewUser: (userId: string) => `/dashboard/user-management/view-user/${userId}`,
+  addNewRole: "/dashboard/user-management/add-new-role",
+  helpPage: "/dashboard/help-page",
+  learnMore: "/dashboard/help-page/learn-more",
+  vendorpage: "/dashboard/vendorPage",
+  history: "/dashboard/subscriptionHistory",
+  subplan: "/dashboard/subscriptionPlan",
+  changeplan: "/dashboard/changePlan",
+auditTrail: "/dashboard/auditTrail",
+viewTrail: "/dashboard/viewTrail",
 };

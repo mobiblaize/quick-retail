@@ -27,7 +27,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   percentageValue,
   width = "100%",
   height = "auto",
-  borderColor,
+  // borderColor,
   // lightColor,
 }) => {
   const theme = useMantineTheme();
@@ -40,7 +40,7 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     gap: "3px",
     width,
     height,
-    border: borderColor ? `1px solid ${borderColor}` : undefined,
+    // border: borderColor ? `1px solid ${borderColor}` : undefined,
   };
 
   if (defaultBgColor.includes("gradient")) {

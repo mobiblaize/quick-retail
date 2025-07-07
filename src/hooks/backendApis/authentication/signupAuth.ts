@@ -16,3 +16,7 @@ export const useSignUpUser = () => {
 export const useFetchCompanySize = () => {
   return useGetData(`applications/company-sizes`);
 }
+
+export const useFetchPaymentSummary = () => {
+  return usePostData(`subscribe/payment-summary`);
+}

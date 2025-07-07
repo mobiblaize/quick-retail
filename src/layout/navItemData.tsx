@@ -96,17 +96,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveCustomer,
     activeIcon: ActiveCustomer,
   },
-  // {
-  //   label: "Happy Time",
-  //   href: ROUTES.happyTime,
-  //   inactiveIcon: InActiveHappyTime,
-  //   activeIcon: ActiveHappyTime,
-  //   hasChildren: true,
-  //   children: [
-  //     { label: "Discounts", href: `${ROUTES.happyTime}` },
-  //     // { label: "Gift cards", href: `${ROUTES.happyGiftCard}` },
-  //   ],
-  // },
+  
   {
     label: "Transaction",
     href: ROUTES.transaction,
@@ -125,6 +115,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveReport,
     activeIcon: ActiveReport,
   },
+  
 ];
 
 export const FinancialManagement: NavItem[] = [
@@ -308,13 +299,13 @@ export const Reports: NavItem[] = [
 export const Admin: NavItem[] = [
    {
     label: "Dashboard",
-    href: ROUTES.test,
+    href: ROUTES.adminDashboard,
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },
   {
     label: "Vendor Profile",
-    href: ROUTES.procurementDashboard,
+    href: ROUTES.vendorpage,
     inactiveIcon: InActiveVendorProfile,
     activeIcon: ActiveVendorProfile,
   },
@@ -326,7 +317,7 @@ export const Admin: NavItem[] = [
   },
   {
     label: "Audit Trail",
-    href: ROUTES.test,
+    href: ROUTES.auditTrail,
     inactiveIcon: InActiveAuditTrail,
     activeIcon: ActiveAuditTrail,
   },
@@ -342,7 +333,7 @@ export const otherMenu = [
   { label: "Log Out", href: ROUTES.test, icon: Logout },
 ];
 
-export const mobileOtherMenu = [
+export const MobileOtherMenu = [
   { label: "Norification", href: ROUTES.test, icon: NotificationIcon },
   { label: "Settings", icon: Settings, href: ROUTES.test },
 ];

@@ -213,13 +213,20 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
-import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
+import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage"
 import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
 import UserManagement from "./pages/adminPages/userManagement/userManagement";
 import ViewUser from "./pages/adminPages/userManagement/viewUser";
 import AddNewRole from "./pages/adminPages/userManagement/addNewRole";
 import HelpPage from "./pages/adminPages/help/helpPage";
 import LearnMoreHelp from "./pages/adminPages/help/learnMoreHelp";
+import VendorPage from "./pages/adminPages/vendor/vendor";
+import SubscriptionHistoryPage from "./pages/adminPages/vendor/SubscriptionHistory";
+import SubscriptionChangePage from "./pages/adminPages/vendor/SubscriptionChnge";
+import SubscriptionPage from "./pages/adminPages/vendor/SubscriptionPge";
+import AuditTrailPage from "./pages/adminPages/audit/allAudit";
+import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
+import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 
 export default function App() {
   return (
@@ -433,6 +440,7 @@ export default function App() {
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
           />
+          
 
           {/* ASSET MANAGEMENT ROUTES */}
 
@@ -794,11 +802,19 @@ export default function App() {
           <Route path={ROUTES.addBank} element={<AddBankPage />} />
 
           {/* ADMIN ROUTES */}
+          <Route path={ROUTES.adminDashboard} element={<AdminDashboardPage />} />
           <Route path={ROUTES.userManagement} element={<UserManagement />} />
-          <Route path={ROUTES.viewUser} element={<ViewUser/>} />
+          {/* <Route path={ROUTES.viewUser} element={<ViewUser/>} /> */}
+          <Route path="/dashboard/user-management/view-user/:userId" element={<ViewUser />} />
           <Route path={ROUTES.addNewRole} element={<AddNewRole />}/>
           <Route path={ROUTES.helpPage} element={<HelpPage />} />
           <Route path={`${ROUTES.learnMore}/:id`} element={<LearnMoreHelp />} />
+          <Route path={ROUTES.vendorpage} element={<VendorPage />} />
+           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
+           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
+           <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
+           <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
+           <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
         </Route>
       </Routes>
     </Router>

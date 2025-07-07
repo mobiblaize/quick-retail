@@ -1,4 +1,7 @@
+import { useState } from "react";
 import { MoreVertical } from "lucide-react";
+import { useToggleRoleStatus } from "../../../../hooks/useApis";
+import { notifications } from "@mantine/notifications";
 
 interface RoleCardProps {
     initials: string;
@@ -10,15 +13,42 @@ interface RoleCardProps {
     color?: string;
 }
 
-const RoleCard: React.FC<RoleCardProps> = ({
+const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
+    id,
     initials,
     title,
     userCount,
     description,
-    status,
+    status: initialStatus,
     date,
     color = "#F9E0D7",
 }) => {
+    const [status, setStatus] = useState(initialStatus);
+
+    const toggleRoleStatusMutation = useToggleRoleStatus();
+    const isLoading = toggleRoleStatusMutation.status === "pending";
+
+    const handleToggle = () => {
+        toggleRoleStatusMutation.mutate(Number(id), {
+            onSuccess: (data) => {
+                const newStatus = data?.data?.is_active === 1;
+                setStatus(newStatus); // ✅ update local state
+                notifications.show({
+                    title: "Success",
+                    message: data.message || "Role status updated successfully.",
+                    color: "green",
+                });
+            },
+            onError: (error: any) => {
+                notifications.show({
+                    title: "Error",
+                    message: error?.response?.data?.message || "Failed to update status.",
+                    color: "red",
+                });
+            },
+        });
+    };
+
     return (
         <div className="bg-[#F9F9FB] rounded-lg p-4 shadow-sm relative">
             {/* 3-dot menu */}
@@ -50,12 +80,13 @@ const RoleCard: React.FC<RoleCardProps> = ({
                     <p>Status:</p>
                 </div>
                 <div className="flex items-center gap-2">
-
                     <label className="relative inline-flex items-center cursor-pointer">
                         <input
                             type="checkbox"
                             className="sr-only peer"
-                            defaultChecked={status}
+                            checked={status}
+                            onChange={handleToggle}
+                            disabled={isLoading}
                         />
                         <div className="w-9 h-5 bg-gray-200 rounded-full peer peer-checked:bg-[#F57C51] transition-all"></div>
                         <div className="absolute left-0.5 top-0.5 w-4 h-4 bg-white rounded-full shadow-md transform peer-checked:translate-x-4 transition-all"></div>

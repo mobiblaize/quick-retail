@@ -1,18 +1,19 @@
-import { FC, ReactNode } from "react";
+import { ReactNode } from "react";
 import { Box, Button, Flex, Group } from "@mantine/core";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { Table as ReactTable } from "@tanstack/react-table";
-import { TableRowData } from "../../../types";
 
-export type TableInstance = ReactTable<TableRowData>;
-
-interface PaginationProps {
-  table: TableInstance;
+interface PaginationProps<T extends Record<string, any>> {
+  table: ReactTable<T>;
   buttons: ReactNode[];
   setPageIndex: (index: number) => void;
 }
 
-const Pagination: FC<PaginationProps> = ({ table, buttons, setPageIndex }) => {
+const Pagination = <T extends Record<string, any>>({
+  table,
+  buttons,
+  setPageIndex,
+}: PaginationProps<T>) => {
   const currentPage = table.getState().pagination.pageIndex + 1;
   const totalPages = table.getPageCount();
 
