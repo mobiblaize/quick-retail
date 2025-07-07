@@ -1,9 +1,9 @@
 import { useState } from "react";
 import { Text, Loader } from "@mantine/core";
-import ProfileHeader from "../../../components/admin/vendor/profileHeader";
-import ProfileDetails from "../../../components/admin/vendor/vendorDetails";
+import ProfileHeader from "../../../components/dashboard/adminPage/vendor/profileHeader";
+import ProfileDetails from "../../../components/dashboard/adminPage/vendor/vendorDetails";
 import PageContainer from "../../../layout/pageContainer";
-import SubscriptionPage from "../../../components/admin/vendor/subcriptionPge";
+import SubscriptionPage from "../../../components/dashboard/adminPage/vendor/subcriptionPge";
 import { useFetchProfile } from "../../../hooks/backendApis/admin/profile";
 
 const VendorPage = () => {

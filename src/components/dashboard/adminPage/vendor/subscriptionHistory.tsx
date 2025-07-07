@@ -1,7 +1,7 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
-import TanTable from "../../General/table";
-import { useFetchAllSub } from "../../../hooks/backendApis/admin/profile";
+import TanTable from "../../../General/table";
+import { useFetchAllSub } from "../../../../hooks/backendApis/admin/profile";
 
 
 const HistoryTable = () => {

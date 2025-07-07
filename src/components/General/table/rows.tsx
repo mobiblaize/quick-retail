@@ -1,22 +1,20 @@
-import { FC, MouseEvent } from "react";
+import { MouseEvent } from "react";
 import { TableTbody, TableTr, TableTd } from "@mantine/core";
 import { flexRender, Row } from "@tanstack/react-table";
-import { TableRowData } from "../../../types";
 import { Table as ReactTable } from "@tanstack/react-table";
 
-export type TableInstance = ReactTable<TableRowData>;
-interface TanRowsProps {
-  table: TableInstance;
-  onClick?: (
-    event: MouseEvent<HTMLTableRowElement>,
-    row?: Row<TableRowData>
-  ) => void;
+interface TanRowsProps<T extends Record<string, any>> {
+  table: ReactTable<T>;
+  onClick?: (event: MouseEvent<HTMLTableRowElement>, row?: Row<T>) => void;
 }
 
-const TanRows: FC<TanRowsProps> = ({ table, onClick }) => {
+const TanRows = <T extends Record<string, any>>({
+  table,
+  onClick,
+}: TanRowsProps<T>) => {
   const handleRowClick = (
     event: MouseEvent<HTMLTableRowElement>,
-    row: Row<TableRowData>
+    row: Row<T>
   ) => {
     if (onClick) {
       onClick(event, row);
@@ -25,7 +23,7 @@ const TanRows: FC<TanRowsProps> = ({ table, onClick }) => {
 
   return (
     <TableTbody>
-      {table.getRowModel().rows.map((row: Row<TableRowData>) => (
+      {table.getRowModel().rows.map((row: Row<T>) => (
         <TableTr
           key={row.id}
           style={{

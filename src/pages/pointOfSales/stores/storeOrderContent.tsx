@@ -23,7 +23,7 @@ const slideVariants = {
     x: 0,
     opacity: 1,
     transition: {
-      type: "tween",
+      type: "tween" as const,
       duration: 0.3,
     },
   },
@@ -31,7 +31,7 @@ const slideVariants = {
     x: direction > 0 ? "-100%" : "100%",
     opacity: 0,
     transition: {
-      type: "tween",
+      type: "tween" as const,
       duration: 0.3,
     },
   }),

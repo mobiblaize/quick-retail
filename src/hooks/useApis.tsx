@@ -196,3 +196,16 @@ export const useLazyGetData = (url: string) => {
     },
   });
 };
+
+
+export const useToggleRoleStatus = () => {
+  return useMutation({
+    mutationFn: async (roleId: number) => {
+      const response = await axiosInstance.put(
+        `${baseUrl}admin/roles/toggle-status/${roleId}`
+      );
+      return response.data;
+    },
+  });
+};
+

@@ -1,7 +1,7 @@
 
 import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import TrailTable from "../../../components/admin/auditTrail/trailTable";
+import TrailTable from "../../../components/dashboard/adminPage/auditTrail/trailTable";
 import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 import { useState } from "react";

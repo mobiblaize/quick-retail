@@ -1,14 +1,16 @@
-import { FC, useState } from "react";
+import { useState } from "react";
 import { Menu, Button, Box, Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
-import { TableRowData } from "../../../types";
 
-interface SortFilterProps {
-  data: TableRowData[];
-  onSort: (data: TableRowData[]) => void;
+interface SortFilterProps<T extends Record<string, any>> {
+  data: T[];
+  onSort: (sortedData: T[]) => void;
 }
 
-const SortFilter: FC<SortFilterProps> = ({ data, onSort }) => {
+const SortFilter = <T extends Record<string, any>>({
+  data,
+  onSort,
+}: SortFilterProps<T>) => {
   const [activeOption, setActiveOption] = useState<string>("All");
 
   // Default sort options - can be extended later

@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { useFetchPhoto } from "../../../hooks/backendApis/admin/profile";
+import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
 
 interface CauserProfile {
   profile_pic: string;

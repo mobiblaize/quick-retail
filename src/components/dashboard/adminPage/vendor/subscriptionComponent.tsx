@@ -1,7 +1,7 @@
 import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
-import { ROUTES } from "../../../constants/routes";
-import { useFetchCurrentSub } from "../../../hooks/backendApis/admin/profile";
+import { ROUTES } from "../../../../constants/routes";
+import { useFetchCurrentSub } from "../../../../hooks/backendApis/admin/profile";
 
 
 

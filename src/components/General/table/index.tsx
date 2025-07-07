@@ -1,4 +1,4 @@
-import { FC, useEffect, useMemo, useState, JSX, ReactNode } from "react";
+import { useEffect, useMemo, useState, JSX, ReactNode } from "react";
 import {
   useReactTable,
   getCoreRowModel,
@@ -21,11 +21,12 @@ import ReusableFilterComponent, { FilterValues } from "./reuseableFilter";
 
 export type TableInstance = ReactTable<TableRowData>;
 
-interface TanTableProps {
-  columnData: ColumnDef<TableRowData>[];
-  data: TableRowData[];
+
+export interface TanTableProps<T extends Record<string, any>> {
+  columnData: ColumnDef<T>[];
+  data: T[];
   loadingState?: boolean;
-  onClick?: (row?: TableRowData) => void;
+  onClick?: (row?: T) => void;
   showSearch?: boolean;
   hidePaging?: boolean;
   length?: number;
@@ -43,12 +44,12 @@ interface TanTableProps {
   onFilterChange?: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
-  roles?:string[];
+  roles?: string[];
   reasons?: [];
   tableType?: "inventory" | "sales" | "product" | "returns" | "discount" | "audit";
 }
 
-const TanTable: FC<TanTableProps> = ({
+const TanTable = <T extends Record<string, any>>({
   columnData,
   data,
   loadingState,
@@ -69,12 +70,12 @@ const TanTable: FC<TanTableProps> = ({
   categories,
   roles,
   tableType,
-}) => {
+}: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [filteredData, setFilteredData] = useState<TableRowData[]>(data);
+  const [filteredData, setFilteredData] = useState<T[]>(data);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
@@ -115,7 +116,7 @@ const TanTable: FC<TanTableProps> = ({
     },
   });
 
-  const handleSort = (sortedData: TableRowData[]) => {
+  const handleSort = (sortedData: T[]) => {
     setFilteredData(sortedData);
   };
 
@@ -233,15 +234,15 @@ const TanTable: FC<TanTableProps> = ({
 
               {showSearch && (
                 <div className="min-w-[250px]">
-                <SearchComp
-                  setSearchTerm={setSearchTerm}
-                  setPageIndex={setPageIndex}
-                  searchTerm={searchTerm}
-                  handleFilterChange={handleFilterChange}
-                  filterList={filterList}
-                  placeholder={searchPlaceholder}
-                  maxWidth={searchMaxWidth}
-                />
+                  <SearchComp
+                    setSearchTerm={setSearchTerm}
+                    setPageIndex={setPageIndex}
+                    searchTerm={searchTerm}
+                    handleFilterChange={handleFilterChange}
+                    filterList={filterList}
+                    placeholder={searchPlaceholder}
+                    maxWidth={searchMaxWidth}
+                  />
                 </div>
               )}
 
@@ -399,7 +400,7 @@ const TanTable: FC<TanTableProps> = ({
                           filterType="sales"
                         />
                       )}
-                        {tableType === "audit" && (
+                      {tableType === "audit" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);

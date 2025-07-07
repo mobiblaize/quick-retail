@@ -9,14 +9,14 @@ import {
   selectedApp,
   selectedSubs,
   totalPrice,
-} from "../../../store/subscriptionStore";
-import { useFetchData } from "../../../hooks/useApis";
-import SubscriptionPlans from "../../landingComponent/pricing/SubscriptionPlans";
+} from "../../../../store/subscriptionStore";
+import { useFetchData } from "../../../../hooks/useApis";
+import SubscriptionPlans from "../../../landingComponent/pricing/SubscriptionPlans";
 import {
   BillingType,
   formatMoney,
   getSubscriptionEndDate,
-} from "../../../utils/helpers";
+} from "../../../../utils/helpers";
 
 
 const subscriptionPlan = [

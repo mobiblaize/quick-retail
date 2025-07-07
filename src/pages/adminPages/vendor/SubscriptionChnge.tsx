@@ -2,9 +2,9 @@ import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useLocation, useNavigate } from "react-router";
 import { ChevronLeft } from "lucide-react";
-import SubscriptionSummary1 from "../../../components/admin/vendor/SubscriptionSummary1";
-import PaymentSummaryModal from "../../../components/admin/vendor/paymentSummaryModal";
-import PaymentSuccessModal from "../../../components/admin/vendor/paymentSuccessfulModal";
+import SubscriptionSummary1 from "../../../components/dashboard/adminPage/vendor/SubscriptionSummary1";
+import PaymentSummaryModal from "../../../components/dashboard/adminPage/vendor/paymentSummaryModal";
+import PaymentSuccessModal from "../../../components/dashboard/adminPage/vendor/paymentSuccessfulModal";
 import { useEffect, useRef, useState } from "react";
 import { useFetchPaymentSummary } from "../../../hooks/backendApis/authentication/signupAuth";
 import {

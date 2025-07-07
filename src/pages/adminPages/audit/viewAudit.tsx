@@ -3,8 +3,8 @@ import { Text, Loader } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
-import ViewHeader from "../../../components/admin/auditTrail/viewHeader";
-import ViewDetails from "../../../components/admin/auditTrail/viewDetails";
+import ViewHeader from "../../../components/dashboard/adminPage/auditTrail/viewHeader";
+import ViewDetails from "../../../components/dashboard/adminPage/auditTrail/viewDetails";
 import { useFetchSingleAudit } from "../../../hooks/backendApis/admin/auditTrail";
 import Dropdown from "../../../components/General/dropdown";
 // @ts-ignore

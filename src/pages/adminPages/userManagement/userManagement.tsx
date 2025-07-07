@@ -1,12 +1,15 @@
-import { Button, Menu, Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import UserManagementComp from "../../../components/dashboard/adminPage/userManagement/userManagement";
 import UserAnalyticsOverview from "../../../components/dashboard/adminPage/userManagement/userAnalyticsOverview";
 import AddUserModal from "../../../components/dashboard/adminPage/userManagement/modal/addUserModal";
 import { useState } from "react";
+import { Link } from "react-router";
+import { ROUTES } from "../../../constants/routes";
 
 const UserManagement = () => {
     const [modalOpen, setModalOpen] = useState(false);
+    const [activeTab, setActiveTab] = useState<"userManage" | "roleGrid">("userManage");
 
     const subHeaders = [
         <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
@@ -16,13 +19,18 @@ const UserManagement = () => {
             <div className="flex flex-row gap-2 md:gap-4">
                 <div>
                     <div className="hidden sm:block">
-                        <Menu>
-                            <Menu.Target>
-                                <Button variant="filled-primary" onClick={() => setModalOpen(true)}>
-                                    Add New Users
+                        {activeTab === "userManage" && (
+                            <Button variant="filled-primary" onClick={() => setModalOpen(true)}>
+                                Add New Users
+                            </Button>
+                        )}
+                        {activeTab === "roleGrid" && (
+                            <Link to={ROUTES.addNewRole}>
+                                <Button variant="filled-primary">
+                                    Add New Role
                                 </Button>
-                            </Menu.Target>
-                        </Menu>
+                            </Link>
+                        )}
                     </div>
                 </div>
             </div>
@@ -32,7 +40,10 @@ const UserManagement = () => {
     return (
         <PageContainer subHeaders={subHeaders}>
             <UserAnalyticsOverview />
-            <UserManagementComp />
+            <UserManagementComp
+                activeTab={activeTab}
+                onTabChange={(tab) => setActiveTab(tab)}
+            />
             <AddUserModal opened={modalOpen} onClose={() => setModalOpen(false)} />
         </PageContainer>
     );

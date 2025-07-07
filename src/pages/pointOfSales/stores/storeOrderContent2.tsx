@@ -13,7 +13,9 @@ import ViewProduct from "../../../components/General/orderContext/viewProduct";
 import AllOrders2 from "./allOrder2";
 
 
-const slideVariants = {
+import type { Variants, Transition } from "framer-motion";
+
+const slideVariants: Variants = {
   initial: (direction: number) => ({
     x: direction > 0 ? "100%" : "-100%",
     opacity: 0,
@@ -22,17 +24,17 @@ const slideVariants = {
     x: 0,
     opacity: 1,
     transition: {
-      type: "tween",
+      type: "tween" as const,
       duration: 0.3,
-    },
+    } as Transition,
   },
   exit: (direction: number) => ({
     x: direction > 0 ? "-100%" : "100%",
     opacity: 0,
     transition: {
-      type: "tween",
+      type: "tween" as const,
       duration: 0.3,
-    },
+    } as Transition,
   }),
 };
 

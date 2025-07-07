@@ -299,7 +299,7 @@ export const Reports: NavItem[] = [
 export const Admin: NavItem[] = [
    {
     label: "Dashboard",
-    href: ROUTES.test,
+    href: ROUTES.adminDashboard,
     inactiveIcon: InActiveDashboardIcon,
     activeIcon: ActiveDashboardIcon,
   },
@@ -323,7 +323,7 @@ export const Admin: NavItem[] = [
   },
   {
     label: "Help",
-    href: ROUTES.test,
+    href: ROUTES.helpPage,
     inactiveIcon: InActiveHelp,
     activeIcon: ActiveHelp,
   },
