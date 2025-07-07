@@ -127,13 +127,13 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
             type="date"
             value={filters.startDate}
             onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-            className="flex-1 border rounded p-2 text-sm"
+            className="flex-1 border rounded p-2 text-sm border-gray-200"
           />
           <input
             type="date"
             value={filters.endDate}
             onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-            className="flex-1 border rounded p-2 text-sm"
+            className="flex-1 border rounded p-2 text-sm border-gray-200 "
           />
         </div>
       </div>
@@ -145,7 +145,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           <select
             value={filters.location}
             onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-            className="w-full border rounded p-2 text-sm"
+            className="w-full border rounded p-2 text-sm border-gray-200"
           >
             <option value="">Choose location</option>
             {locations.map((loc) => (
@@ -164,7 +164,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           <select
             value={filters.category}
             onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-            className="w-full border rounded p-2 text-sm"
+            className="w-full border rounded p-2 text-sm border-gray-200"
           >
             <option value="">Choose category</option>
             {categories.map((cat) => (
@@ -183,7 +183,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
                   <select
                     value={filters.reason}
                     onChange={(e) => setFilters({ ...filters, reason: e.target.value as Reason })}
-                    className="w-full border rounded p-2 text-sm"
+                    className="w-full border rounded p-2 text-sm border-gray-200"
                   >
                     <option value="all">All</option>
                     <option value="amount">Damaged</option>
@@ -201,7 +201,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     <select
       value={filters.type}
       onChange={(e) => setFilters({ ...filters, type: e.target.value as DiscountType })}
-      className="w-full border rounded p-2 text-sm"
+      className="w-full border rounded p-2 text-sm border-gray-200"
     >
       <option value="all">All</option>
       <option value="amount">Amount</option>
@@ -220,7 +220,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
         placeholder="From"
         value={filters.stockFrom}
         onChange={(e) => setFilters({ ...filters, stockFrom: e.target.value })}
-        className="w-39 border rounded p-2 text-sm"
+        className="w-39 border rounded p-2 text-sm border-gray-200" 
       />
       <input
         type="number"
@@ -246,7 +246,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
                 placeholder="From"
                 value={filters.priceFrom}
                 onChange={(e) => setFilters({ ...filters, priceFrom: e.target.value })}
-                className="w-39 border rounded p-2 text-sm pl"
+                className="w-39 border rounded p-2 text-sm pl border-gray-200"
               />
             </div>
             <div className="relative w-24">
@@ -256,7 +256,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
                 placeholder="To"
                 value={filters.priceTo}
                 onChange={(e) => setFilters({ ...filters, priceTo: e.target.value })}
-                className="w-39 border rounded p-2 text-sm pl-4"
+                className="w-39 border rounded p-2 text-sm pl-4 border-gray-200"
               />
             </div>
           </div>
@@ -270,7 +270,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           <select
             value={filters.role}
             onChange={(e) => setFilters({ ...filters, role: e.target.value })}
-            className="w-full border rounded p-2 text-sm"
+            className="w-full border rounded p-2 text-sm border-gray-200"
           >
             <option value="">Select Role</option>
             {roles.map((rol) => (
@@ -286,11 +286,11 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
        {/* Module*/}
        {showModule && (
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Role</label>
+          <label className="block text-sm font-medium mb-1">Module</label>
           <select
             value={filters.module}
             onChange={(e) => setFilters({ ...filters, module: e.target.value })}
-            className="w-full border rounded p-2 text-sm"
+            className="w-full border rounded p-2 text-sm border-gray-200"
           >
             <option value="">Select Module</option>
             {modules.map((mod) => (
@@ -410,13 +410,13 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       <div className="flex justify-between mt-4">
         <button
           onClick={handleClear}
-          className="border border-orange-500 text-orange-500 rounded py-1 px-4 text-sm hover:bg-orange-50"
+          className="border border-orange-500 text-orange-500 py-1 px-4 text-sm hover:bg-orange-50 rounded-lg"
         >
           Clear All
         </button>
         <button
           onClick={() => onFilterChange(filters)}
-          className="bg-orange-500 text-white rounded py-1 px-4 text-sm hover:bg-orange-600"
+          className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg"
         >
           Save
         </button>

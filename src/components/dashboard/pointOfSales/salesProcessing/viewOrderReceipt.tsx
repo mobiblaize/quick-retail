@@ -10,17 +10,18 @@ const ViewOrderReceipt = () => {
   const orderId = location.state?.orderID;
   const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
 
-
   if (!orderId) return <div>Preparing receipt...</div>;
-if (isLoading) return <div>Loading receipt...</div>;
-if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
-
+  if (isLoading) return <div>Loading receipt...</div>;
+  if (isError || !saleData?.data)
+    return <div>Failed to load receipt data.</div>;
 
   const order = saleData.data;
+  
 
   // Parse fees
-  const fees = JSON.parse(order.fees || '{}');
+  const fees = JSON.parse(order.fees || "{}");
   const items = order.sale_order_details || [];
+
 
   return (
     <main className="w-full border border-[#E4E7EC] py-6 h-auto rounded-lg bg-white">
@@ -38,11 +39,15 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
           <div className="flex flex-wrap mt-2 gap-5">
             <Text fw={400} className="text-xl">
               Order Date:
-              <span className="ml-2 text-gray-400">{new Date(order.date_completed).toDateString()}</span>
+              <span className="ml-2 text-gray-400">
+                {new Date(order.date_completed).toDateString()}
+              </span>
             </Text>
             <Text fw={400} className="text-xl">
               Payment Method:
-              <span className="ml-2 text-gray-400 capitalize">{order.payment_method}</span>
+              <span className="ml-2 text-gray-400 capitalize">
+                {order.payment_method}
+              </span>
             </Text>
           </div>
         </header>
@@ -70,8 +75,10 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
           </div>
         </section>
 
-        <section className="md:py-4 py-2 md:max-w-6xl w-full">
-          <Text fw="400" size="lg">Items</Text>
+        <section className="md:py-4 py-2 md:max-w-6xl w-full border-b border-[#E4E7EC]">
+          <Text fw="400" size="lg">
+            Items
+          </Text>
           {/* @ts-ignore */}
           {items.map((item, index) => (
             <div
@@ -90,13 +97,17 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
                     {item.product_variation?.name}
                   </Text>
                   <div className="flex justify-between">
-                    <Text size="lg" fw={400}>SKU:</Text>
+                    <Text size="lg" fw={400}>
+                      SKU:
+                    </Text>
                     <Text c="#101928" fw={600}>
                       {item.product_variation?.sku}
                     </Text>
                   </div>
                   <div className="flex justify-between">
-                    <Text size="lg" fw={400}>Code:</Text>
+                    <Text size="lg" fw={400}>
+                      Code:
+                    </Text>
                     <Text c="#101928" fw={600}>
                       {item.product_variation?.code}
                     </Text>
@@ -104,45 +115,63 @@ if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
                 </div>
               </div>
               <div className="flex gap-2 flex-col">
-                <Text c="#101928" size="lg" fw={500}>Unit Price</Text>
-                <Text c="#344054" size="lg">₦{formatMoney(item.unit_price)}</Text>
+                <Text c="#101928" size="lg" fw={500}>
+                  Unit Price
+                </Text>
+                <Text c="#344054" size="lg">
+                  ₦{formatMoney(item.unit_price)}
+                </Text>
               </div>
               <div className="flex gap-2 flex-col">
-                <Text c="#101928" size="lg" fw={500}>Quantity</Text>
-                <Text c="#344054" size="lg">{item.quantity_ordered}</Text>
+                <Text c="#101928" size="lg" fw={500}>
+                  Quantity
+                </Text>
+                <Text c="#344054" size="lg">
+                  {item.quantity_ordered}
+                </Text>
               </div>
               <div className="flex gap-2 flex-col">
-                <Text c="#101928" size="lg" fw={500}>Total Price</Text>
-                <Text c="#2E90FA" size="lg">₦{formatMoney(item.total_price)}</Text>
+                <Text c="#101928" size="lg" fw={500}>
+                  Total Price
+                </Text>
+                <Text c="#2E90FA" size="lg">
+                  ₦{formatMoney(item.total_price)}
+                </Text>
               </div>
             </div>
           ))}
         </section>
 
-        <section className="pt-8 pb-6 md:max-w-6xl w-full">
+        <section className="pt-8 pb-6 md:max-w-6xl w-full border-b border-[#E4E7EC]">
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
-              <Text fw={500}>Subtotal</Text>
-              <Text>₦{formatMoney(order.order_total)}</Text>
-            </div>
-              <div className="flex items-center justify-between">
-              <Text fw={500}>Discount</Text>
-              <Text>₦{formatMoney(fees.discount)}</Text>
+              <Text fw={400}>Subtotal</Text>
+              <Text c="#101928">₦{formatMoney(fees.sub_total)}</Text>
             </div>
             <div className="flex items-center justify-between">
-              <Text fw={500}>Tax {formatMoney(fees.tax_rate)}%</Text>
-              <Text>₦{fees.tax}</Text>
+              <Text fw={400} c="#101928">Discount</Text>
+              <Text c="#101928">₦{formatMoney(fees.discount)}</Text>
             </div>
-   
-          
-            <div className="flex items-center justify-between text-black font-bold text-xl mt-[1em]">
-              <Text  fw={700} c="black" >Total</Text>
-              <Text  fw={700} c="black" >₦{formatMoney(order.amount_paid)}</Text>
+            <div className="flex items-center justify-between">
+              <Text fw={400} c="#101928">Tax {formatMoney(fees.tax_rate)}%</Text>
+              <Text c="#101928">₦{fees.tax}</Text>
             </div>
-            <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
-              <Text>Cashier</Text>
-              <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
 
+            <div className=" border-t border-[#E4E7EC]">
+              <div className="flex items-center justify-between text-black font-bold text-xl mt-[1em] ">
+                <Text fw={700} c="#101928">
+                  Total
+                </Text>
+                <Text fw={500} c="#101928">
+                  ₦{formatMoney(order.amount_paid)}
+                </Text>
+              </div>
+            </div>
+            <div className="border-t border-[#E4E7EC]">
+              <div className="flex items-center justify-between font-bold text-lg mt-[3em]  ">
+                <Text>Cashier</Text>
+                <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
+              </div>
             </div>
           </div>
         </section>

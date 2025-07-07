@@ -45,6 +45,7 @@ export interface TanTableProps<T extends Record<string, any>> {
   locations?: string[];
   categories?: string[];
   roles?: string[];
+  modules?: string[];
   reasons?: [];
   tableType?: "inventory" | "sales" | "product" | "returns" | "discount" | "audit";
 }
@@ -69,6 +70,7 @@ const TanTable = <T extends Record<string, any>>({
   locations,
   categories,
   roles,
+  modules,
   tableType,
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -408,6 +410,7 @@ const TanTable = <T extends Record<string, any>>({
                             setFiltersApplied(true);
                           }}
                           roles={roles}
+                          modules={modules}
                           showRole={true}
                           showModule={true}
                           filterType="audit"

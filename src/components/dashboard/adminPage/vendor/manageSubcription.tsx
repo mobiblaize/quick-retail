@@ -1,7 +1,8 @@
-import { Settings, History, XCircle } from "lucide-react";
+
 import { useState } from "react";
 import { Link } from "react-router-dom";
 import CancelSubscriptionModal from "./cancelSubscription";
+import changeSub from "../../../../assets/images/changeSub.png";
 
 export default function ManageSubscription() {
   const [showCancel, setShowACancel] = useState(false);
@@ -9,19 +10,19 @@ export default function ManageSubscription() {
   const actions = [
     {
       label: "Change Subscription Plan",
-      icon: <Settings size={18} />,
-      path: "/dashboard/admin/subscriptionPlan",
+      icon: <img src={changeSub} alt="Settings" className="w-[18px] h-[18px]" />,
+      path: "/dashboard/subscriptionPlan",
       onClick: null,
     },
     {
       label: "Subscription History",
-      icon: <History size={18} />,
-      path: "/dashboard/admin/subscriptionHistory",
+      icon: <img src={changeSub} alt="Settings" className="w-[18px] h-[18px]" />,
+      path: "/dashboard/subscriptionHistory",
       onClick: null,
     },
     {
       label: "Cancel Subscription",
-      icon: <XCircle size={18} />,
+      icon: <img src={changeSub} alt="Settings" className="w-[18px] h-[18px]" />,
       path: null,
       onClick: () => setShowACancel(true),
     },
