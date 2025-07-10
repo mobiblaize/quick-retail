@@ -3,10 +3,8 @@ import {
     Button,
     Text,
     Box,
-    Notification,
     PasswordInput,
   } from "@mantine/core";
-  import { IconCheck, IconX } from "@tabler/icons-react";
   import { useState } from "react";
   import { useChangePassword } from "../../../../hooks/backendApis/admin/settings";
   
@@ -19,8 +17,8 @@ import {
     const [currentPassword, setCurrentPassword] = useState("");
     const [newPassword, setNewPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
+    const [, setErrorMessage] = useState("");
+    const [, setSuccessMessage] = useState("");
 //   @ts-ignore
     const { mutate, isLoading } = useChangePassword();
   

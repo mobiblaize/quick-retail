@@ -228,7 +228,7 @@ import AuditTrailPage from "./pages/adminPages/audit/allAudit";
 import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
 import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 import SettingsPage from "./pages/adminPages/settings/settingsPage";
-import SecurityPage from "./components/dashboard/adminPage/settings/securityPage";
+
 
 export default function App() {
   return (

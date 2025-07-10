@@ -60,7 +60,7 @@ const NavItem = ({
     return (
       <>
         <div onClick={toggleOpened} className="cursor-pointer">
-          <List.Item
+        <div
             className={`${
               isActive || isChildActive() ? "bg-[#FCE7DD] rounded-lg" : ""
             } rounded-none px-6 p-4`}
@@ -90,7 +90,7 @@ const NavItem = ({
                 {opened ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
             </div>
-          </List.Item>
+            </div>
         </div>
 
         {opened && (
@@ -123,7 +123,7 @@ const NavItem = ({
 
   return (
     <Anchor component={Link} to={href} underline="never" onClick={onNavigate}>
-      <List.Item
+ <div
         className={`cursor-pointer ${
           isActive ? "bg-[#FCE7DD] rounded-lg" : ""
         } rounded-none px-6 p-4`}
@@ -148,7 +148,7 @@ const NavItem = ({
             {label}
           </p>
         </div>
-      </List.Item>
+        </div>
     </Anchor>
   );
 };
