@@ -58,24 +58,24 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
           className="hidden"
         />
         <div>
-          <div className="flex">
+          <div className="flex gap-4">
             <p className="text-sm font-normal text-[#AD3307] shadow-md bg-[#D0D5DD] py-1 px-2 bg-orange-100 rounded-lg">
               User ID: #{id}
             </p>
-            {/* <p className="text-sm font-normal text-[#04326B] shadow-md bg-[#D0D5DD] py-1 px-2 bg-[#E3EFFC] rounded-lg">Role {roles}</p> */}
-            <p>
-              {" "}
-              {roles.length ? (
-                roles.map((role: string, index: number) => (
-                  <span
-                    key={index}
-                    className="text-sm font-medium text-[#04326B] shadow-md bg-[#E3EFFC] py-1 px-2 rounded-lg"
-                  >
-                    {role}
+            <p className="text-sm font-normal text-[#04326B] shadow-md bg-[#D0D5DD] py-1 px-2 bg-[#E3EFFC] rounded-lg">
+              Role :{" "}
+              {roles.length === 0 ? (
+                <span>No roles</span>
+              ) : (
+                roles.map((role, index) => (
+                  <span key={index}>
+                  {/* @ts-ignore */}
+                    {typeof role === "object" && role?.name
+                      //  @ts-ignore
+                      ? role.name
+                      : String(role)}
                   </span>
                 ))
-              ) : (
-                <span className="text-sm text-gray-400"></span>
               )}
             </p>
           </div>

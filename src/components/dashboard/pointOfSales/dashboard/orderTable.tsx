@@ -4,7 +4,7 @@ import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
+import { formatDate,formatMoney  } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 
 const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void; }) => {
@@ -74,7 +74,8 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
-            {shortenTransactionId(props.row.original.orderID)}
+            {/* {shortenTransactionId(props.row.original.orderID)} */}
+            {props.row.original.orderID}
           </Text>
           <Text fw={500}>
             Total Items:{" "}
@@ -111,7 +112,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
       header: "Amount",
       accessorKey: "amount",
       cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.amount}</Text>
+        <Text c="textSecondary.7">{formatMoney(props.row.original.amount)}</Text>
       ),
     },
     {

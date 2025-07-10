@@ -327,9 +327,12 @@ export const Admin: NavItem[] = [
     inactiveIcon: InActiveHelp,
     activeIcon: ActiveHelp,
   },
+
 ];
 
+
 export const otherMenu = [
+  
   { label: "Log Out", href: ROUTES.test, icon: Logout },
 ];
 

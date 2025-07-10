@@ -1,4 +1,4 @@
-import { Card, Divider, List } from "@mantine/core";
+import { Card, List } from "@mantine/core";
 import logo from "../../../assets/images/logo.png";
 import NavItem from "../../../layout/navItem";
 import {
@@ -12,6 +12,10 @@ import {
 import { useDashboard } from "../../../layout/dashboardContext";
 import { X } from "lucide-react";
 import LogoutModal from "../../LogoutModal";
+import { ROUTES } from "../../../constants/routes";
+import {
+  Settings,
+} from "../../../assets/svg";
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
@@ -69,10 +73,19 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           </div>
         </div>
         <div className="px-3">
-          <div className="mt-5">
+          {/* <div className="mt-5">
             <Divider my="lg" />
-          </div>
-          <List className=" gap-4 mt-6">
+          </div> */}
+{activeSection === "Admin" && (
+  <NavItem
+    href={ROUTES.adminSettings}
+    label="Settings"
+    inactiveIcon={Settings}
+    activeIcon={Settings}
+  />
+)}
+
+          <List className=" gap-4 mt-9">
             <LogoutModal />
           </List>
         </div>

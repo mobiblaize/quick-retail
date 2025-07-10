@@ -19,55 +19,48 @@ const ReturnsPage = () => {
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
-    if (status.toLowerCase() === "paid") return "paid";
-    if (status.toLowerCase() === "pending") return "pending";
-    return status.toLowerCase();
+  
+    const allowedStatuses = ["pending", "resolved", "declined"];
+    const lowerStatus = status.toLowerCase();
+  
+    if (allowedStatuses.includes(lowerStatus)) return lowerStatus;
+  
+    return "";
   };
   
+const mapFiltersToPayload = (filters: FilterValues) => {
+  const payload: any = {
+             //@ts-ignore
+    search: filters.search ?? "",
+             //@ts-ignore
+    sort_by: filters.sortBy ?? "",
+    per_page: "500",
+    paginate: true,
+    location_name: filters.location,
+    return_reason:filters.reason,
+    status: mapOrderStatus(filters.returnStatus),
+    price_from: filters.priceFrom ?? 100,
+    price_to: filters.priceTo ?? "",
+  };
 
-const mapFiltersToPayload = (filters: FilterValues) => ({
-  // @ts-ignore
-  search: filters.search ?? "",
-  // @ts-ignore
-  sort_by: filters.sortBy ?? "",
-  per_page: "500",
-  paginate: true,
-  start_date: filters.startDate ?? "",
-  end_date: filters.endDate ?? "",
-  status: mapOrderStatus(filters.paymentStatus),
-  price_from: filters.priceFrom ?? 100,
-  price_to: filters.priceTo ?? ""
-});
+  if (filters.startDate) payload.start_date = filters.startDate;
+  if (filters.endDate) payload.end_date = filters.endDate;
+
+  return payload;
+};
 
 
   const navigate = useNavigate();
-  // Only pass params if both dates are selected
-  // const fetchParams =
-  //   dateRange.startDate && dateRange.endDate
-  //     ? {
-  //         start_date: dateRange.startDate,
-  //         end_date: dateRange.endDate,
-  //       }
-  //     : undefined;
 
-  // const { data, isLoading } = useFetchAllreturns(fetchParams);
-
-  // const returns = Array.isArray(data?.data?.returns?.data)
-  //   ? data.data.returns.data
-  //   : [];
 
   const startDate = dateRange.startDate || appliedFilters?.startDate || "";
   const endDate = dateRange.endDate || appliedFilters?.endDate || "";
-  
-  const shouldFetch = startDate && endDate; 
-  
-  const payload = shouldFetch
-    ? {
-        ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-        start_date: startDate,
-        end_date: endDate,
-      }
-    : undefined;
+
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    ...(startDate ? { start_date: startDate } : {}),
+    ...(endDate ? { end_date: endDate } : {}),
+  };
   
     const { data = {}, isLoading = false } = useFetchAllreturns(payload) || {};
     
@@ -114,10 +107,6 @@ const mapFiltersToPayload = (filters: FilterValues) => ({
         setDateRange={setDateRange}
       />
       <ReturnsTable returns={returns} isLoading={isLoading}    onFilterChange={handleFilterChange}/>
-      {/* <LogComplaints
-        opened={isLogComplaintsOpen}
-        onClose={() => setIsLogComplaintsOpen(false)}
-      /> */}
     </PageContainer>
   );
 };

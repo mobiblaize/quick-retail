@@ -1,4 +1,4 @@
-// trailTable.tsx
+
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
 import TanTable from "../../../General/table";
@@ -30,10 +30,17 @@ const TrailTable = ({
       const roles = Array.from(
         new Set(
           logs
-            ?.map((log) => log.causer?.roles)
-            ?.filter((role) => typeof role === "string")
+            .flatMap((log) => {
+              const r = log.causer?.roles;
+              if (!r) return [];
+              if (Array.isArray(r)) return r.map((role: any) => role.name || role);
+              if (typeof r === "object") return [r.name || r];
+              return [r]; // for string
+            })
+            .filter(Boolean)
         )
       );
+      
 
       function formatTime(dateStr: string) {
         if (!dateStr) return "";
@@ -90,17 +97,26 @@ const TrailTable = ({
       accessorKey: "roles",
       cell: ({ row }) => {
         const causer = row.original.causer;
-        const role = causer?.roles || "N/A";
+        let roleDisplay = "N/A";
+    
+        if (Array.isArray(causer?.roles)) {
+          roleDisplay = causer.roles.map((r: any) => r.name || r).join(", ");
+        } else if (typeof causer?.roles === "object") {
+          roleDisplay = causer.roles.name || "N/A";
+        } else if (typeof causer?.roles === "string") {
+          roleDisplay = causer.roles;
+        }
+    
         return (
           <div className="flex flex-col">
             <Text size="sm" c="dimmed">
-              {role}
+              {roleDisplay}
             </Text>
           </div>
         );
       },
     },
-
+    
     {
       header: "Activity",
       accessorKey: "description",
