@@ -68,3 +68,18 @@ export const useUpdateUser = (userUUID: string) => {
 export const useFetchAllPermissions = () => {
   return useGetData("admin/permission/all");
 };
+
+export const useCreateRole = () => {
+  return useMutation({
+    mutationFn: async (payload: {
+      name: string;
+      display_name: string;
+      description: string;
+      assign_all_permissions: boolean;
+      permissions: number[];
+    }) => {
+      const response = await axiosInstance.post(`${baseUrl}admin/roles/add-role`, payload);
+      return response.data;
+    },
+  });
+};

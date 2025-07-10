@@ -3,27 +3,37 @@ import { useState } from "react";
 import PermissionsTab from "./permissionTab";
 import PointOfSalesPermissions from "./pointofSalesPermision";
 
-// Individual permission screens
-// import FinancePermissions from "./FinancePermissions";
-// import ProcurementPermissions from "./ProcurementPermissions";
-// import AssetPermissions from "./AssetPermissions";
-// import ReportsPermissions from "./ReportsPermissions";
+interface PermissionsPanelProps {
+  selectedPermissions: number[];
+  setSelectedPermissions: React.Dispatch<React.SetStateAction<number[]>>;
+}
 
-export default function PermissionsPanel() {
+export default function PermissionsPanel({
+  selectedPermissions,
+  setSelectedPermissions,
+}: PermissionsPanelProps) {
   const [activeTab, setActiveTab] = useState("Point of Sales");
 
   const renderTabContent = () => {
     switch (activeTab) {
       case "Point of Sales":
-        return <PointOfSalesPermissions />;
-    //   case "Finance Management":
-    //     return <FinancePermissions />;
-    //   case "Procurement":
-    //     return <ProcurementPermissions />;
-    //   case "Asset Management":
-    //     return <AssetPermissions />;
-    //   case "Reports":
-    //     return <ReportsPermissions />;
+        return (
+          <PointOfSalesPermissions
+            selectedPermissions={selectedPermissions}
+            setSelectedPermissions={setSelectedPermissions}
+          />
+        );
+
+      // Add other modules below when ready:
+      // case "Finance Management":
+      //   return <FinancePermissions />;
+      // case "Procurement":
+      //   return <ProcurementPermissions />;
+      // case "Asset Management":
+      //   return <AssetPermissions />;
+      // case "Reports":
+      //   return <ReportsPermissions />;
+
       default:
         return null;
     }
@@ -40,9 +50,7 @@ export default function PermissionsPanel() {
         </div>
       )}
 
-      <div className="mt-6">
-        {renderTabContent()}
-      </div>
+      <div className="mt-6">{renderTabContent()}</div>
     </div>
   );
 }
