@@ -12,7 +12,6 @@ import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
-import { useEffect } from "react";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -80,7 +79,7 @@ const Login = () => {
       email: form.values.email,
     };
     try {
-      const res = await getUser(payload);
+      await getUser(payload);
     } catch (error) {
       console.error("Get user error:", error);
     }
