@@ -12,6 +12,7 @@ import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
+import { useUserStore } from "../../hooks/useUserStore";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -25,6 +26,7 @@ const schema = z.object({
 
 const Login = () => {
   const navigate = useNavigate();
+
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
   const {
     mutateAsync: getUser,
@@ -39,6 +41,7 @@ const Login = () => {
       password: "",
     },
   });
+  const setUser = useUserStore.getState().setUser;
 
   const handleLogin = async () => {
     const payload = {
@@ -51,6 +54,7 @@ const Login = () => {
       if (!res?.data) return;
 
       const { accessToken, user } = res.data;
+      setUser(user);
       const tenant_uuid = user.tenants?.[0]?.uuid;
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));

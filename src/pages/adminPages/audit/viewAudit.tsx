@@ -19,7 +19,7 @@ const ViewAuditPage = () => {
   const { uuid } = location.state || {};
 
   const { data, isLoading, error } = useFetchSingleAudit(uuid); 
-  console.log("Hook response =>", { data, isLoading, error });
+
   const exportOptions = [
     { label: "CSV", value: "csv" },
     { label: "PDF", value: "pdf" },

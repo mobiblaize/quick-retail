@@ -327,10 +327,18 @@ export const Admin: NavItem[] = [
     inactiveIcon: InActiveHelp,
     activeIcon: ActiveHelp,
   },
+  {
+    label: "Settings",
+    href: ROUTES.adminSettings, 
+    inactiveIcon: Settings,
+    activeIcon: Settings,
+  },
 ];
 
+
 export const otherMenu = [
-  { label: "Log Out", href: ROUTES.test, icon: Logout },
+  
+  // { label: "Log Out", href: ROUTES.test, icon: Logout },
 ];
 
 export const mobileOtherMenu = [

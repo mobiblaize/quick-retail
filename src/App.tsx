@@ -227,6 +227,8 @@ import SubscriptionPage from "./pages/adminPages/vendor/SubscriptionPge";
 import AuditTrailPage from "./pages/adminPages/audit/allAudit";
 import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
 import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
+import SettingsPage from "./pages/adminPages/settings/settingsPage";
+import SecurityPage from "./components/dashboard/adminPage/settings/securityPage";
 
 export default function App() {
   return (
@@ -815,6 +817,8 @@ export default function App() {
            <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
            <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
            <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
+           <Route path={ROUTES.adminSettings} element={<SettingsPage />} />
+           {/* <Route path={ROUTES.adminSecurity} element={<SecurityPage />} /> */}
         </Route>
       </Routes>
     </Router>
