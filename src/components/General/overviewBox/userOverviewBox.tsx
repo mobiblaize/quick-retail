@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import dollar from "../../../assets/images/dollarSign.png";
 import orders from "../../../assets/images/orders.png";
 import customer from "../../../assets/images/customers.png";
-import { useFetchAnalysisOverview } from "../../../hooks/backendApis/pos/dashboard";
+import { useFetchUsers } from "../../../hooks/backendApis/admin/userManagement";
 
 const UserOverviewBox = () => {
   const [isMobile, setIsMobile] = useState(false);
@@ -17,7 +17,8 @@ const UserOverviewBox = () => {
     end_date: "",
   });
 
-  const { data, isLoading, error } = useFetchAnalysisOverview(dateRange);
+  // 👇 Connect to your new API
+  const { data, isLoading, error } = useFetchUsers(dateRange);
 
   const checkScreenSize = () => {
     setIsMobile(window.innerWidth < 640);
@@ -29,16 +30,16 @@ const UserOverviewBox = () => {
     return () => window.removeEventListener("resize", checkScreenSize);
   }, []);
 
-  const currencySymbol = "₦";
+  const stats = data?.data?.stats || {
+    totalUsers: 0,
+    activeUsers: 0,
+    inactiveUsers: 0,
+  };
 
-  const formattedValue = data?.data?.totalRevenue
-    ? `${currencySymbol}${Number(data?.data?.totalRevenue).toLocaleString()}`
-    : `${currencySymbol}0`;
   const cards = [
     {
       title: "Total Users",
-      // value: data?.data?.totalRevenue || "₦0.00",
-      value: formattedValue,
+      value: stats.totalUsers.toString(),
       icon: dollar,
       iconColor: "#E17036",
       textColor: "white",
@@ -48,7 +49,7 @@ const UserOverviewBox = () => {
     },
     {
       title: "Total Active Users",
-      value: data?.data?.totalOrders?.toString() || "0",
+      value: stats.activeUsers.toString(),
       icon: orders,
       iconColor: "#E17036",
       cardBgColor: "#EFF8FF",
@@ -58,7 +59,7 @@ const UserOverviewBox = () => {
     },
     {
       title: "Total Inactive Users",
-      value: data?.data?.totalCustomers?.toString() || "0",
+      value: stats.inactiveUsers.toString(),
       icon: customer,
       iconColor: "#E17036",
       cardBgColor: "#F4F3FF",
@@ -73,9 +74,8 @@ const UserOverviewBox = () => {
       <header className="flex flex-row justify-between sm:items-center">
         <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
-           User overview
+            User overview
           </Text>
-
           <Text size="sm">
             {isMobile
               ? "This is an overview summarizing users"
@@ -84,12 +84,11 @@ const UserOverviewBox = () => {
         </div>
         <Group className="mt-2 sm:mt-0">
           <DateFilterMenu
-      
             onDateFilterChange={({ startDate, endDate }) =>
               setDateRange({
-                   //@ts-ignore
+                //@ts-ignore
                 start_date: startDate.toISOString().split("T")[0],
-                   //@ts-ignore
+                //@ts-ignore
                 end_date: endDate.toISOString().split("T")[0],
               })
             }

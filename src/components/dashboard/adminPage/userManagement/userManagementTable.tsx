@@ -23,6 +23,7 @@ export interface UserRowData {
     updated_at: string;
   }[];
   locationID?: string;
+  updated_at?: string;
 }
 
 const UserManagementTable = () => {
@@ -60,10 +61,10 @@ const UserManagementTable = () => {
     },
     {
       header: "Time Stamp",
-      accessorKey: "last_login",
+      accessorKey: "updated_at",
       cell: ({ row }) => (
         <Text fw={400} c="dimmed">
-          {row.original.last_login || "—"}
+          {row.original.updated_at || "—"}
         </Text>
       ),
     },
@@ -71,7 +72,7 @@ const UserManagementTable = () => {
       header: "Role",
       id: "role",
       cell: ({ row }) => (
-        <Text>{row.original.roles?.[0]?.display_name || "—"}</Text>
+        <Text>{row.original.roles?.[0]?.name || "—"}</Text>
       ),
     },
     {

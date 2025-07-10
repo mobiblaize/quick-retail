@@ -14,13 +14,16 @@ type Props = {
 };
 
 export default function AddUserModal({ opened, onClose }: Props) {
+    const windowUrl = window.location.origin;
+    
     const [formValues, setFormValues] = useState({
         firstname: "",
         lastname: "",
         email: "",
         phone_number: "",
         role_id: "",
-        locationId: "",
+        locationID: "",
+        password_url:"",
     });
 
     const { mutate: createUser, isPending } = useCreateUser();
@@ -36,13 +39,12 @@ export default function AddUserModal({ opened, onClose }: Props) {
 
 
     const locationOptions = Array.isArray(locationData?.data?.stores)
-        ? locationData.data.stores.map((store: { id: string; name: string }) => ({
+        ? locationData.data.stores.map((store: { locationID: string; name: string }) => ({
             label: store.name,
-            value: store.id,
+            value: store.locationID
+            ,
         }))
         : [];
-
-    console.log("Location Options:", locationOptions);
 
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
@@ -57,7 +59,8 @@ export default function AddUserModal({ opened, onClose }: Props) {
             email: formValues.email,
             phone_number: formValues.phone_number,
             role_id: formValues.role_id,
-            locationId: formValues.locationId,
+            locationId: formValues.locationID,
+            password_url: windowUrl + "/create-password"
         };
 
         createUser(payload, {
@@ -172,19 +175,13 @@ export default function AddUserModal({ opened, onClose }: Props) {
                         <div>
                             <label className="text-sm text-gray-700 block mb-1">Assign Store</label>
                             <select
-                                name="locationId"
-                                value={formValues.locationId}
+                                name="locationID"
+                                value={formValues.locationID}
                                 onChange={(e) => {
-                                    const selected = locationOptions.find(
-                                        (loc: any) => String(loc.value) === e.target.value
-                                    );
-
-                                    if (selected) {
-                                        setFormValues({
-                                            ...formValues,
-                                            locationId: selected.label,
-                                        });
-                                    }
+                                    setFormValues({
+                                        ...formValues,
+                                        locationID: e.target.value,
+                                    });
                                 }}
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                             >
@@ -198,6 +195,7 @@ export default function AddUserModal({ opened, onClose }: Props) {
                                 ))}
                             </select>
                         </div>
+
                     </div>
 
                     {/* Buttons */}
@@ -214,7 +212,7 @@ export default function AddUserModal({ opened, onClose }: Props) {
                                 !formValues.lastname ||
                                 !formValues.email ||
                                 !formValues.role_id ||
-                                !formValues.locationId
+                                !formValues.locationID
                             }
                         >
                             Save

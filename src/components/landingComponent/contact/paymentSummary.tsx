@@ -1,6 +1,6 @@
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 
-import { Card, Button, TextInput, Text, Select } from "@mantine/core";
+import { Card, Button, TextInput, Select } from "@mantine/core";
 
 import { isEmail, isNotEmpty, useForm } from "@mantine/form";
 import { useAtomValue } from "jotai";
@@ -377,16 +377,16 @@ const PaymentSummary = () => {
                 </div>
               </div>
               <div className="">
-                <h4 className=" font-bold text-[#48464E] mb-4">
+                {/* <h4 className=" font-bold text-[#48464E] mb-4">
                   Add Your Card
                 </h4>
                 <Text size="sm" c="#6C6975" className="mb-4">
                   Add Your Card You will be charged when you exceed your 60 days
                   free trial period. You can choose to cancel or upgrade your
                   plan before the free trial expires.
-                </Text>
+                </Text> */}
                 <div className="flex flex-col gap-4 mt-4">
-                  <TextInput
+                  {/* <TextInput
                     label="Card Name"
                     placeholder="Name on card"
                     {...paymentForm.getInputProps("cardName")}
@@ -395,8 +395,8 @@ const PaymentSummary = () => {
                     label="Card Number"
                     placeholder="1234 5678 9012 3456"
                     {...paymentForm.getInputProps("cardNumber")}
-                  />
-                  <div className="flex gap-4">
+                  /> */}
+                  {/* <div className="flex gap-4">
                     <TextInput
                       className="w-1/2"
                       label="Expiration"
@@ -409,7 +409,7 @@ const PaymentSummary = () => {
                       placeholder="123"
                       {...paymentForm.getInputProps("cvv")}
                     />
-                  </div>
+                  </div> */}
                   <Button
                     color="#F56630"
                     radius="xl"

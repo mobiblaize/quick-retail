@@ -51,3 +51,20 @@ export const useDeactivateUser = (userUUID: string) => {
     },
   });
 };
+
+
+export const useUpdateUser = (userUUID: string) => {
+  return useMutation({
+    mutationFn: async (arg: any) => {
+      const response = await axiosInstance.put(
+        `${baseUrl}admin/staff/update-staff/${userUUID}`,
+        arg
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useFetchAllPermissions = () => {
+  return useGetData("admin/permission/all");
+};
