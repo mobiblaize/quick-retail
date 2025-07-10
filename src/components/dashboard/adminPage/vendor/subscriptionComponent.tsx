@@ -44,7 +44,7 @@ export default function SubscriptionComponent() {
       <h2 className="text-lg font-medium mb-4">CURRENT PLAN</h2>
 
       {/* Subscription Card */}
-      <div className="border rounded-lg p-4 bg-orange-50 border-orange-200">
+      <div className="border rounded-lg p-4 bg-orange-50 border-orange-700">
         <div className="flex justify-between items-center mb-2">
           <div>
             <p className="text-sm font-semibold text-[#475367] capitalize">{plan} Plan</p>
@@ -53,8 +53,8 @@ export default function SubscriptionComponent() {
           <button
             onClick={handleRenewClick}
             className={`text-sm ${
-              status === "Active" ? "text-gray-400 cursor-pointer" : "text-orange-600"
-            } border rounded px-3 py-1`}
+              status === "Active" ? "text-gray-400 cursor-pointer bg-white" : "text-orange-600"
+            } border border-gray-200 rounded-lg px-3 py-1`}
             disabled={status === "Active"}
           >
             Renew Plan

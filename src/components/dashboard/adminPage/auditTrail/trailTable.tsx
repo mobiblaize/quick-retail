@@ -44,7 +44,20 @@ const TrailTable = ({
         }).format(date);
       }
       
+     
+      const modules = Array.from(
+        new Set(
+          logs
+            ?.map((log) => {
+              const fullPath = log?.action_type || "";
+              return fullPath.split("\\").pop(); 
+            })
+            ?.filter((module) => typeof module === "string")
+        )
+      );   
       
+      console.log("📦 modules", modules);
+
   const columns: ColumnDef<any>[] = [
     {
       header: "Time stamp",
@@ -156,6 +169,7 @@ const TrailTable = ({
           length={8}
           showFilter
           roles={roles}
+          modules={modules}
           tableType="audit"
           onFilterChange={onFilterChange}
           tableTitle={
