@@ -177,22 +177,23 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       )}
 
            {/* Reason */}
-           {showReason && (
-                <div className="mb-4">
-                  <label className="block text-sm font-medium mb-1">Reason</label>
-                  <select
-                    value={filters.reason}
-                    onChange={(e) => setFilters({ ...filters, reason: e.target.value as Reason })}
-                    className="w-full border rounded p-2 text-sm border-gray-200"
-                  >
-                    <option value="all">All</option>
-                    <option value="amount">Damaged</option>
-                    <option value="percentage">Mistaken</option>
-                    <option value="percentage">Size Issue</option>
-                    <option value="percentage">Others</option>
-                  </select>
-                </div>
-              )}
+          {/* Reason */}
+{showReason && (
+  <div className="mb-4">
+    <label className="block text-sm font-medium mb-1">Reason</label>
+    <select
+      value={filters.reason}
+      onChange={(e) => setFilters({ ...filters, reason: e.target.value as Reason })}
+      className="w-full border rounded p-2 text-sm border-gray-200"
+    >
+      <option value="all">All</option>
+      <option value="damaged">Damaged</option>
+      <option value="mistaken">Mistaken</option>
+      <option value="size issue">Size Issue</option>
+      <option value="others">Others</option>
+    </select>
+  </div>
+)}
 
        {/* Discount Type */}
        {showDiscountType && (

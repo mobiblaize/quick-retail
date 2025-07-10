@@ -2,6 +2,7 @@ import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
 import { Text } from "@mantine/core";
 import { shortenTransactionId } from "../../../../utils/helpers";
+import ContactSupportModal from "../helpComponent/modal/sendMessageModal";
 
 interface ProfileSectionProps {
   profile: {
@@ -34,7 +35,7 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [localImage, setLocalImage] = useState(profile_pic);
-
+  const [modalOpen, setModalOpen] = useState(false);
   // @ts-ignore
   const { mutate: updatePhoto, isLoading } = useFetchPhoto();
 
@@ -128,7 +129,8 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
 
 
         {/* Account Info */}
-        <div className="border p-3 border-gray-200 rounded-lg">
+        <div className="border p-3 border-gray-200 rounded-lg mt-[2em]">
+        <ContactSupportModal opened={modalOpen} onClose={() => setModalOpen(false)} />
           <h3 className="text-lg font-medium mb-4 text-[#101928]">ACCOUNT INFORMATION</h3>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
             <div>
@@ -191,8 +193,8 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
           
           </div>
 
-          <p className="mt-4 text-sm text-orange-500">
-            Contact support <span className="text-[#000000]">to edit your business profile</span>
+          <p className="mt-4 text-sm text-orange-500 cursor-pointer"  onClick={() => setModalOpen(true)}>
+            Contact support <span className="text-[#000000]"  onClick={() => setModalOpen(true)}>to edit your business profile</span>
           </p>
         </div>
       </div>

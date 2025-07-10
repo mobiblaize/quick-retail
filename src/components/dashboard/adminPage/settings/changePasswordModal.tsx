@@ -127,7 +127,7 @@ import {
             classNames={sharedLabel}
           />
   
-          {errorMessage && (
+          {/* {errorMessage && (
             <Notification color="red" icon={<IconX size={16} />} title="Error">
               {errorMessage}
             </Notification>
@@ -137,7 +137,7 @@ import {
             <Notification color="green" icon={<IconCheck size={16} />} title="Success">
               {successMessage}
             </Notification>
-          )}
+          )} */}
   
           <div className="flex gap-4 mt-[2em] justify-center rounded-lg">
             <Button variant="outline" onClick={onClose}>

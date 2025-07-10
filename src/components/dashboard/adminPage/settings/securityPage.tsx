@@ -4,6 +4,7 @@ import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
 import EditIcon from "../../../../assets/images/EditIcon.png";
 import ChangePasswordModal from "./changePasswordModal";
 import SecurityQuestionModal from "./securityModal";
+import { IconChevronRight } from "@tabler/icons-react";
 
 interface ProfileSectionProps {
   profile: {
@@ -118,25 +119,34 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
       </div>
 
       {/* Account Info */}
-      <div className="border p-3 border-gray-200 rounded-lg">
-        <h3 className="text-lg font-medium mb-4 text-[#101928]">SECURITY</h3>
+      <div className="border p-3 border-gray-200 rounded-lg mt-[2em]">
+        <h3 className="text-lg font-normal mb-4 text-[#101928]">SECURITY</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         <div
-  className="flex items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 gap-2 cursor-pointer hover:bg-gray-50"
-  onClick={() => setModalOpen(true)}
->
-  <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
-  Change my Password
-</div>
-
-
-          <div className="flex items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 gap-2" 
-            onClick={() => setModalOpen2(true)}>
-            <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
-            Security Question
-          </div>
-        </div>
+      className="flex justify-between items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 cursor-pointer hover:bg-gray-50"
+      onClick={() => setModalOpen(true)}
+    >
+      <div className="flex items-center gap-2">
+        <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
+        Change my Password
       </div>
+      <IconChevronRight size={18} className="text-gray-400 ml-2" />
+    </div>
+
+    {/* Security Question */}
+    <div
+      className="flex justify-between items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 cursor-pointer hover:bg-gray-50"
+      onClick={() => setModalOpen2(true)}
+    >
+      <div className="flex items-center gap-2">
+        <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
+        Security Question
+      </div>
+      <IconChevronRight size={18} className="text-gray-400 ml-2" />
+    </div>
+
+  </div>
+</div>
     </div>
   );
 }

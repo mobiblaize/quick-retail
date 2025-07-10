@@ -3,11 +3,9 @@ import {
     Button,
     Text,
     Box,
-    Notification,
     TextInput,
     Select,
   } from "@mantine/core";
-  import { IconCheck, IconX } from "@tabler/icons-react";
   import { useState } from "react";
 import { useAllQuestion, useSecurityQuestion } from "../../../../hooks/backendApis/admin/settings";
 import { useUserStore } from "../../../../hooks/useUserStore";
@@ -20,13 +18,12 @@ import { useUserStore } from "../../../../hooks/useUserStore";
   };
   
   export default function SecurityQuestionModal({ opened, onClose }: Props) {
-    const { user } = useUserStore();
-    console.log(user);
+    const { user,  } = useUserStore();
     const [currentAnswer, setCurrentAnswer] = useState("");
     const [newQuestionId, setNewQuestionId] = useState<string | null>(null);
     const [newAnswer, setNewAnswer] = useState("");
-    const [errorMessage, setErrorMessage] = useState("");
-    const [successMessage, setSuccessMessage] = useState("");
+    const [, setErrorMessage] = useState("");
+    const [, setSuccessMessage] = useState("");
   // @ts-ignore
     const { mutate, isLoading } = useSecurityQuestion();
     const { data: questionsRes, isLoading: loadingQuestions } = useAllQuestion();
@@ -37,22 +34,33 @@ import { useUserStore } from "../../../../hooks/useUserStore";
         value: String(q.id),
       })) || [];
   
-    const handleSubmit = () => {
-      setErrorMessage("");
-      setSuccessMessage("");
-  
-      if (!currentAnswer || !newAnswer || !newQuestionId) {
-        setErrorMessage("All fields are required");
-        return;
-      }
-  
-      mutate(
-        {
-          old_answer: currentAnswer,
-          new_question_id: Number(newQuestionId),
+      const handleSubmit = () => {
+        setErrorMessage("");
+        setSuccessMessage("");
+      
+        if (!currentAnswer || !newAnswer || !newQuestionId) {
+          setErrorMessage("All fields are required");
+          return;
+        }
+      
+        // Find the new question text from the selected ID
+        const newQuestionObj = questionsRes?.data?.find(
+          (q: any) => String(q.id) === newQuestionId
+        );
+      
+        if (!newQuestionObj) {
+          setErrorMessage("Invalid new question selected.");
+          return;
+        }
+      
+        const payload = {
+          current_question: user?.security_question || "",
+          current_answer: currentAnswer,
+          new_question: newQuestionObj.question,
           new_answer: newAnswer,
-        },
-        {
+        };
+      
+        mutate(payload, {
           onSuccess: (res) => {
             if (!res.error) {
               setSuccessMessage(res.message);
@@ -71,9 +79,9 @@ import { useUserStore } from "../../../../hooks/useUserStore";
             const msg = err?.response?.data?.message || "An error occurred";
             setErrorMessage(msg);
           },
-        }
-      );
-    };
+        });
+      };
+      
   
     return (
       <Modal
@@ -95,7 +103,7 @@ import { useUserStore } from "../../../../hooks/useUserStore";
             label="Current Security Question"
             value={user?.security_question || ""}
             disabled
-            styles={{ input: { background: "#F3F4F6", fontWeight: 500 } }}
+            styles={{ input: { background: "#F3F4F6", fontWeight: 500,  color: "#101928", } }}
           />
   
           <TextInput
@@ -124,7 +132,7 @@ import { useUserStore } from "../../../../hooks/useUserStore";
             required
           />
   
-          {errorMessage && (
+          {/* {errorMessage && (
             <Notification color="red" icon={<IconX size={16} />} title="Error">
               {errorMessage}
             </Notification>
@@ -138,7 +146,7 @@ import { useUserStore } from "../../../../hooks/useUserStore";
             >
               {successMessage}
             </Notification>
-          )}
+          )} */}
   
           <div className="flex gap-4 mt-[2em] justify-center rounded-lg">
             <Button variant="outline" onClick={onClose}>

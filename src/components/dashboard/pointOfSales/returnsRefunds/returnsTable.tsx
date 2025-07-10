@@ -16,11 +16,11 @@ import { FilterValues } from "../../../General/table/reuseableFilter";
 const ReturnsTable = ({
   returns,
   isLoading,
-  onFilterChange ,
+  onFilterChange,
 }: {
   returns: any[];
   isLoading: any;
-  onFilterChange: (filters: FilterValues) => void; 
+  onFilterChange: (filters: FilterValues) => void;
 }) => {
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
@@ -31,8 +31,15 @@ const ReturnsTable = ({
     returnedReason: item.return_reason || "N/A",
     complaintStatus: item.status === "approved" ? "Resolved" : "Pending",
     returnId: item.returnID || "N/A",
-    
   }));
+
+  const locations = Array.from(
+    new Set(
+      returns
+        ?.map((p: any) => p.product?.location?.name)
+        ?.filter((name: any) => typeof name === "string")
+    )
+  );
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -87,21 +94,11 @@ const ReturnsTable = ({
       cell: ({ row }) => (
         <Text c="textSecondary.7">
           {" "}
-            {/* @ts-ignore */}
+          {/* @ts-ignore */}
           {formatDate(row.original.dateReturned)}
         </Text>
       ),
     },
-    // {
-    //   header: "Order ID",
-    //   accessorKey: "orderId",
-    //   cell: ({ row }) => (
-    //     <Text c="textSecondary.7">
-    //       {/* @ts-ignore  */}
-    //       {shortenTransactionId(row.original.orderId)}
-    //     </Text>
-    //   ),
-    // },
 
     {
       header: "Customer",
@@ -141,13 +138,8 @@ const ReturnsTable = ({
       cell: ({ row }: any) => (
         <Link
           to={ROUTES.viewReturns}
-          // state={{
-          //   orderId: row.original.orderId,
-          //   returnId: row.original.returnId,
-          //   complaintStatus:row.original.complaintStatus,
-          // }}
           state={{
-            ...row.original, 
+            ...row.original,
           }}
         >
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
@@ -171,7 +163,9 @@ const ReturnsTable = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search orders"
-          length={5}
+          length={8}
+          //@ts-ignore
+          locations={locations}
           showFilter
           tableType="returns"
           onFilterChange={onFilterChange}

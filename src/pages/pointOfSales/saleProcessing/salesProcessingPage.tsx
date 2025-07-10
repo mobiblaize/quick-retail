@@ -44,15 +44,12 @@ const mapFiltersToPayload = (filters: FilterValues) => ({
   const startDate = dateRange.startDate || appliedFilters?.startDate || "";
 const endDate = dateRange.endDate || appliedFilters?.endDate || "";
 
-const shouldFetch = startDate && endDate; 
 
-const payload = shouldFetch
-  ? {
-      ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-      start_date: startDate,
-      end_date: endDate,
-    }
-  : undefined;
+const payload = {
+  ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+  ...(startDate ? { start_date: startDate } : {}),
+  ...(endDate ? { end_date: endDate } : {}),
+};
 
   const { data = {}, isLoading = false } = useFetchAllSales(payload) || {};
   

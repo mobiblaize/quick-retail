@@ -383,10 +383,22 @@ const TanTable = <T extends Record<string, any>>({
                             setShowFilterDropdown(false);
                             setFiltersApplied(true);
                           }}
-                          locations={locations}
                           showDiscountType={true}
                           showDiscountStatus={true}
                           filterType={"discount"}
+                        />
+                      )}
+                        {tableType === "returns" && (
+                        <ReusableFilterComponent
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                            setFiltersApplied(true);
+                          }}
+                          locations={locations}
+                          showReason={true}
+                          showReturnStatus={true}
+                          filterType={"returns"}
                         />
                       )}
 
