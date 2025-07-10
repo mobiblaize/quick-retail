@@ -77,9 +77,9 @@ const SignupPage = () => {
             <div className="text-gray-400 text-sm font-normal mb-1">
               Let's get Started
             </div>
-            <div className="flex items-center font-bold text-2xl tracking-tight">
-              Victoria Store LLC
-            </div>
+            {/* <div className="flex items-center font-bold text-2xl tracking-tight">
+              
+            </div> */}
           </div>
           {/* Form */}
           <form

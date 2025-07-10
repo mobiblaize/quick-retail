@@ -27,10 +27,6 @@ interface FormValues {
   companySize: string;
   phoneNumber: string;
   email: string;
-  cardName: string;
-  cardNumber: string;
-  expiration: string;
-  cvv: string;
 }
 
 interface CompanySize {
@@ -54,8 +50,6 @@ const PaymentSummary = () => {
     "applications/company-sizes"
   );
 
-  console.log(companySizes?.data);
-
   const { mutateAsync: createPayment, isPending } = usePostData(
     "auth/signup/register"
   );
@@ -68,10 +62,6 @@ const PaymentSummary = () => {
       companySize: "",
       phoneNumber: "",
       email: "",
-      cardName: "",
-      cardNumber: "",
-      expiration: "",
-      cvv: "",
     },
     validate: {
       firstName: isNotEmpty("First Name is required"),
@@ -84,35 +74,10 @@ const PaymentSummary = () => {
           return "Invalid phone number format";
         return null;
       },
-      email: isEmail("Invalid email"),
-      cardName: (value) => {
-        //  only validate when the cardName is not empty
-        if (value) {
-          if (!/^[a-zA-Z\s]+$/.test(value)) return "Invalid card name";
-        }
-        return null;
-      },
-      cardNumber: (value) => {
-        //  only validate when the cardNumber is not empty
-        if (value) {
-          if (!/^[0-9]{16}$/.test(value.replace(/\s/g, "")))
-            return "Invalid card number";
-        }
-        return null;
-      },
-      expiration: (value) => {
-        //  only validate when the expiration is not empty
-        if (value) {
-          if (!/^(0[1-9]|1[0-2])\/([0-9]{2})$/.test(value))
-            return "Invalid expiration date (MM/YY)";
-        }
-        return null;
-      },
-      cvv: (value) => {
-        //  only validate when the cvv is not empty
-        if (value) {
-          if (!/^[0-9]{3,4}$/.test(value)) return "Invalid CVV";
-        }
+      email: (value) => {
+        if (!value) return "Email is required";
+        // email should be valid
+        if (!isEmail(value)) return "Invalid email format";
         return null;
       },
     },
@@ -278,7 +243,14 @@ const PaymentSummary = () => {
                       </div>
                     </div>
                     <div className="font-bold text-[#F16722]">
-                      ₦ {formatMoney(Number(sub?.amount))}
+                      ₦{" "}
+                      {formatMoney(
+                        Number(
+                          sub?.amount +
+                            (sub?.additional_user_seat_number || 0) *
+                              (sub?.price_per_seat || 0)
+                        )
+                      )}
                     </div>
                   </div>
                 ))}
@@ -289,15 +261,46 @@ const PaymentSummary = () => {
                 </h4>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="font-medium">Billing Type</span>
-                  <span>Monthly (1 Month)</span>
+                  <span className="capitalize">
+                    {billingType} (
+                    {billingType === "monthly"
+                      ? "1 Month"
+                      : billingType === "yearly"
+                      ? "12 Months"
+                      : "6 Months"}
+                    )
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm mb-2">
                   <span className="font-medium">Billing Start</span>
-                  <span>April 11, 2025</span>
+                  <span>
+                    {new Date().toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
                 </div>
                 <div className="flex justify-between text-sm">
                   <span className="font-medium">Billing Ends</span>
-                  <span>May 11, 2025</span>
+                  <span>
+                    {new Date(
+                      new Date().getTime() +
+                        (billingType === "monthly"
+                          ? 30
+                          : billingType === "yearly"
+                          ? 365
+                          : 180) *
+                          24 *
+                          60 *
+                          60 *
+                          1000
+                    ).toLocaleDateString("en-US", {
+                      month: "long",
+                      day: "numeric",
+                      year: "numeric",
+                    })}
+                  </span>
                 </div>
               </div>
             </Card>
@@ -361,7 +364,7 @@ const PaymentSummary = () => {
                     <span className="text-[#F16722]">
                       ₦{" "}
                       {formatMoney(
-                        Math.round(totalPriceValue * 1.075)
+                        Math.round(totalPriceValue * 0.075)
                       ).toLocaleString()}
                     </span>
                   </div>

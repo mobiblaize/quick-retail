@@ -1,4 +1,10 @@
-import { TextInput, PasswordInput, Button, Box } from "@mantine/core";
+import {
+  TextInput,
+  PasswordInput,
+  Button,
+  Box,
+  LoadingOverlay,
+} from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
 
@@ -6,6 +12,7 @@ import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
+import { useEffect } from "react";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -20,6 +27,11 @@ const schema = z.object({
 const Login = () => {
   const navigate = useNavigate();
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
+  const {
+    mutateAsync: getUser,
+    isPending: isUserPending,
+    data: userData,
+  } = usePostData("auth/signin/user-info");
   // const { updateUser } = useSessionStorage();
   const form = useForm({
     validate: zodResolver(schema),
@@ -28,44 +40,6 @@ const Login = () => {
       password: "",
     },
   });
-
-  // const handleLogin = async () => {
-  //   const payload = {
-  //     email: form.values.email,
-  //     password: form.values.password,
-  //   };
-
-  //   try {
-  //     const res = await login(payload);
-
-  //      console.log("✅ Login response:", res);
-
-  //     if (!res?.data) return;
-
-  //     const { accessToken, user } = res.data;
-  //     const tenant_uuid = user.tenants?.[0]?.uuid;
-
-  //     sessionStorage.setItem("access_token", accessToken);
-  //     sessionStorage.setItem("user", JSON.stringify(user));
-
-  //     if (tenant_uuid) {
-  //       sessionStorage.setItem("tenant_uuid", tenant_uuid);
-  //     } else {
-  //       console.warn("Tenant UUID not found in login response.");
-  //     }
-
-  //     // window.location.replace("/dashboard");
-  //      navigate("/dashboard");
-
-  //     notifications.show({
-  //       title: "Success",
-  //       message: "Login successful",
-  //       color: "green",
-  //     });
-  //   } catch (error) {
-  //     console.log(error);
-  //   }
-  // };
 
   const handleLogin = async () => {
     const payload = {
@@ -81,7 +55,10 @@ const Login = () => {
       const tenant_uuid = user.tenants?.[0]?.uuid;
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));
-      sessionStorage.setItem("customer_name", `${user.firstname} ${user.lastname}`);
+      sessionStorage.setItem(
+        "customer_name",
+        `${user.firstname} ${user.lastname}`
+      );
       sessionStorage.setItem("customer_email", user.email);
       if (tenant_uuid) sessionStorage.setItem("tenant_uuid", tenant_uuid);
 
@@ -91,28 +68,46 @@ const Login = () => {
         color: "green",
       });
 
-      // navigate("/dashboard"); 
+      // navigate("/dashboard");
       window.location.replace("/dashboard");
-      
     } catch (error) {
       console.error("Login error:", error);
     }
   };
 
+  const handleGetUser = async () => {
+    const payload = {
+      email: form.values.email,
+    };
+    try {
+      const res = await getUser(payload);
+    } catch (error) {
+      console.error("Get user error:", error);
+    }
+  };
+
   return (
     <AuthLayout image={placeholderImage}>
+      <LoadingOverlay
+        visible={isUserPending}
+        zIndex={1000}
+        overlayProps={{ radius: "sm", blur: 1 }}
+      />
       <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10 border border-gray-200">
         {/* Logo */}
 
         {/* Title */}
-        <div className="mb-2">
-          <div className="text-gray-400 text-sm font-normal mb-1">
-            Welcome Back,
+        {userData?.data && (
+          <div className="mb-2">
+            <div className="text-gray-400 text-sm font-normal mb-1">
+              Welcome Back,
+            </div>
+            <div className="flex items-center font-bold text-2xl tracking-tight gap-2">
+              <span>{userData?.data?.firstname}</span>
+              <span>{userData?.data?.lastname}</span>
+            </div>
           </div>
-          <div className="flex items-center font-bold text-2xl tracking-tight">
-            Victoria Store LLC
-          </div>
-        </div>
+        )}
         {/* Form */}
         <form
           onSubmit={form.onSubmit(handleLogin)}
@@ -125,6 +120,12 @@ const Login = () => {
             size="md"
             radius="md"
             withAsterisk
+            disabled={isUserPending}
+            onBlur={() => {
+              if (form.values.email) {
+                handleGetUser();
+              }
+            }}
             classNames={{ label: "text-[14px] text-[#222] font-medium" }}
             styles={{
               input: {
@@ -164,6 +165,7 @@ const Login = () => {
             loading={isPending}
             size="md"
             radius="md"
+            disabled={isUserPending}
             className="font-bold text-lg mt-1 shadow-md"
             style={{ boxShadow: "0 2px 8px rgba(249, 115, 22, 0.08)" }}
           >
@@ -172,7 +174,10 @@ const Login = () => {
         </form>
         <div className="text-[#000] text-sm font-normal mb-1 item-center m-auto">
           Don't have an account?
-          <span className="ml-1 text-sm font-semibold no-underline text-[#F16722] cursor-pointer" onClick={() => navigate("/signup")}>
+          <span
+            className="ml-1 text-sm font-semibold no-underline text-[#F16722] cursor-pointer"
+            onClick={() => navigate("/signup")}
+          >
             Create Account
           </span>
         </div>

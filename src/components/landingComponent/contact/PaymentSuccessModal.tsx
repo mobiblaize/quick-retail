@@ -16,11 +16,15 @@ const PaymentSuccessModal = ({
   opened,
   onClose,
   onCompleteSetup,
-  // @ts-ignore
-  reference,
-   // @ts-ignore
-  email,
 }: PaymentSuccessModalProps) => {
+  // get reference as param from url e.g http://localhost:5173/payment-summary?trxref=xrafr1sxkp&reference=xrafr1sxkp
+
+  // get the reference from the url
+  const reference = new URLSearchParams(window.location.search).get(
+    "reference"
+  );
+  const email = sessionStorage.getItem("registerEmail");
+
   const isValid = email && reference;
 
   const { refetch, isPending } = useFetchData(
@@ -68,8 +72,8 @@ const PaymentSuccessModal = ({
         Payment Success
       </Title>
       <Text ta="center" c="dimmed" mb="xl">
-        Congratulations! You have successfully paid for your subscription. Go and
-        onboard and log in to your system. We’ve also sent you an email.
+        Congratulations! You have successfully paid for your subscription. Go
+        and onboard and log in to your system. We’ve also sent you an email.
       </Text>
       <Button
         fullWidth
@@ -89,6 +93,5 @@ const PaymentSuccessModal = ({
     </Modal>
   );
 };
-
 
 export default PaymentSuccessModal;

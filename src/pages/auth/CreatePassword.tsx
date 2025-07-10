@@ -98,7 +98,7 @@ const CreatePassword = () => {
             Let's get Started
           </div>
           <div className="flex items-center font-bold text-2xl tracking-tight">
-            {email ? email : "Victoria Store LLC"}
+            {email ? email : ""}
           </div>
         </div>
         {/* Form */}

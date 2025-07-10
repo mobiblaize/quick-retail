@@ -7,11 +7,14 @@ import {
   totalPrice,
   selectedSubs,
 } from "../../../store/subscriptionStore";
+import { notifications } from "@mantine/notifications";
 
 const SubscriptionPlans = ({ data }: any) => {
   const setSelectedSub = useSetAtom(selectedSubs);
   const setTotal = useSetAtom(totalPrice);
   const selected = useAtomValue(selectedSubs);
+
+  console.log(data);
 
   // 👉 Auto-select POS on mount if available
   useEffect(() => {
@@ -23,7 +26,10 @@ const SubscriptionPlans = ({ data }: any) => {
     );
 
     if (posApp && !selected.some((s) => s.id === posApp.id)) {
-      const updated = [...selected, { ...posApp, additional_user_seat_number: 0 }];
+      const updated = [
+        ...selected,
+        { ...posApp, additional_user_seat_number: 0 },
+      ];
       setSelectedSub(updated);
 
       const total = updated.reduce(
@@ -73,9 +79,11 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
   const isChecked = selectedSub.some((item: any) => item.id === data.id);
   const posIsSelected = selectedSub.some(
-    (item: any) => item?.application?.name === "Point of Sales Management System"
+    (item: any) =>
+      item?.application?.name === "Point of Sales Management System"
   );
-  const thisIsPOS = data?.application?.name === "Point of Sales Management System";
+  const thisIsPOS =
+    data?.application?.name === "Point of Sales Management System";
   const shouldBeDisabled = posIsSelected && !thisIsPOS;
 
   const recalcTotal = (subs: any[]) => {
@@ -188,7 +196,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
             />
           </Text>
           <Text fw={600} c="#48464E">
-            {data?.application?.free_user_access} Seats
+            {data?.application?.free_access_users} Seats
           </Text>
         </Box>
 
@@ -240,7 +248,17 @@ const SubscriptionPlanCard = ({ data }: any) => {
               color="gray"
               radius="xl"
               size="xs"
-              onClick={() => handleSeatChange(adminSeat + 1)}
+              onClick={() => {
+                if (adminSeat >= data?.additional_user_seat_limit) {
+                  notifications.show({
+                    title: "Maximum additional user seat limit reached",
+                    message:
+                      "You have reached the maximum additional user seat limit",
+                  });
+                  return;
+                }
+                handleSeatChange(adminSeat + 1);
+              }}
               style={{ width: 32, height: 32, padding: 0 }}
               disabled={shouldBeDisabled}
             >
@@ -252,4 +270,3 @@ const SubscriptionPlanCard = ({ data }: any) => {
     </Card>
   );
 };
-
