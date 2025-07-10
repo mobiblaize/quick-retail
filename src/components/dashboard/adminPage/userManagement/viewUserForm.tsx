@@ -96,7 +96,7 @@ const ViewUserForm = ({ setUser }: { setUser: (user: any) => void }) => {
                             <FormInput
                                 type="text"
                                 label="Role"
-                                value={user.roles?.[0]?.display_name || "—"}
+                                value={user.roles?.[0]?.name || "—"}
                                 paddingY="0.7rem"
                             />
 

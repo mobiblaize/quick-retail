@@ -152,8 +152,22 @@ const ViewUser = () => {
     <PageContainer subHeaders={subHeaders}>
       <ViewUserForm setUser={setSelectedUser} />
       <ActivateUserModal opened={modalOpen} onClose={() => setModalOpen(false)} userId={selectedUser?.user_uuid} setUser={setSelectedUser} />
-      <DeactiveUserModal opened={deactiveModalOpen} onClose={() => setDeactiveModalOpen(false)}  setUser={setSelectedUser} />
-      <EditUserModal opened={editModalOpen} onClose={() => setEditModalOpen(false)} />
+      <DeactiveUserModal opened={deactiveModalOpen} onClose={() => setDeactiveModalOpen(false)} setUser={setSelectedUser} />
+      {selectedUser && (
+        <EditUserModal
+          opened={editModalOpen}
+          onClose={() => setEditModalOpen(false)}
+          userUUID={selectedUser.user_uuid}
+          initialData={{
+            firstname: selectedUser?.firstname || "",
+            lastname: selectedUser?.lastname || "",
+            email: selectedUser?.email || "",
+            phone_number: selectedUser?.phone_number || "",
+            role_id: selectedUser?.roles?.[0]?.id?.toString() || "",
+            locationId: selectedUser.locations?.[0]?.id?.toString() ?? ""
+          }}
+        />
+      )}
     </PageContainer>
   );
 };

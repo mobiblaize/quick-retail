@@ -51,3 +51,35 @@ export const useDeactivateUser = (userUUID: string) => {
     },
   });
 };
+
+
+export const useUpdateUser = (userUUID: string) => {
+  return useMutation({
+    mutationFn: async (arg: any) => {
+      const response = await axiosInstance.put(
+        `${baseUrl}admin/staff/update-staff/${userUUID}`,
+        arg
+      );
+      return response.data;
+    },
+  });
+};
+
+export const useFetchAllPermissions = () => {
+  return useGetData("admin/permission/all");
+};
+
+export const useCreateRole = () => {
+  return useMutation({
+    mutationFn: async (payload: {
+      name: string;
+      display_name: string;
+      description: string;
+      assign_all_permissions: boolean;
+      permissions: number[];
+    }) => {
+      const response = await axiosInstance.post(`${baseUrl}admin/roles/add-role`, payload);
+      return response.data;
+    },
+  });
+};
