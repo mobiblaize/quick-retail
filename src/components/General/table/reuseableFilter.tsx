@@ -194,7 +194,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     </select>
   </div>
 )}
-
+ 
        {/* Discount Type */}
        {showDiscountType && (
   <div className="mb-4">
@@ -408,18 +408,18 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       )}
 
       {/* Buttons */}
-      <div className="flex justify-between mt-4">
+      <div className="flex justify-between gap-3 mt-4">
         <button
           onClick={handleClear}
-          className="border border-orange-500 text-orange-500 py-1 px-4 text-sm hover:bg-orange-50 rounded-lg"
+          className="border border-orange-500 text-orange-500 py-1 px-4 text-sm hover:bg-orange-50 rounded-lg  w-full"
         >
           Clear All
         </button>
         <button
           onClick={() => onFilterChange(filters)}
-          className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg"
+          className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
         >
-          Save
+          Filter
         </button>
       </div>
     </div>

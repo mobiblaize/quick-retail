@@ -21,7 +21,7 @@ const attachToken = (config: any) => {
 };
 
 let isShowingError = false;
-const errorResetTimeout = 5000; // 5 seconds
+const errorResetTimeout = 10000; // 10 seconds
 
 const handleError = (error: any) => {
   if (!error.response) {

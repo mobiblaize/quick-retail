@@ -97,20 +97,7 @@ const CreateOrderPageContent: React.FC = () => {
   const createSaleMutation = useCreateSales();
   const updateDraftMutation = useUpdateDraft(orderId);
   const handleSubmit = async (status: "draft" | "completed") => {
-    // const payload = {
-    //   status,
-    //   customerId: paymentDetails.customerId,
-    //   payment_method: paymentDetails.method,
-    //   amount_collected: paymentDetails.amount,
-    //   items: paymentDetails.items.map(
-    //     (item: { variationId: any; quantity: any; selling_price: any }) => ({
-    //       variationId: item.variationId,
-    //       quantity: Number(item.quantity),
-    //       price: item.selling_price,
-    //     })
-    //   ),
-    // };
-    const currentDetails = paymentDetails; // always use latest
+    const currentDetails = paymentDetails; 
     const payload = {
       status,
       customerId: currentDetails.customerId,
@@ -138,18 +125,19 @@ const CreateOrderPageContent: React.FC = () => {
         color: "green",
       });
       navigate(ROUTES.sales);
-    } catch (error) {
-      notifications.show({
-        title: "Error",
-        //@ts-ignore
-        message: error?.message || "Failed to save order",
-        color: "red",
-      });
+    } 
+    catch (error) {
+      // notifications.show({
+      //   title: "Error",
+      //   //@ts-ignore
+      //   message: error?.message || "Failed to save order",
+      //   color: "red",
+      // });
     }
   };
 
   useEffect(() => {
-    console.log("🟢 Updated paymentDetails:", paymentDetails);
+    // console.log("🟢 Updated paymentDetails:", paymentDetails);
   }, [paymentDetails]);
   
 
@@ -167,28 +155,7 @@ const CreateOrderPageContent: React.FC = () => {
     setSubmitHandler(() => handler);
   };
 
-  // const updatePaymentDetails = (details: {
-  //   method: string;
-  //   amount: string;
-  //   items: any[];
-  //   customerId: string | null;
-  // }) => {
-  //   setPaymentDetails(details);
-  // };
 
-  // const updatePaymentDetails = (
-  //   updater: (prev: {
-  //     method: string;
-  //     amount: string;
-  //     items: any[];
-  //     customerId: string | null;
-  //   }) => any
-  // ) => {
-  //   setPaymentDetails((prev) => {
-  //     const next = typeof updater === 'function' ? updater(prev) : updater;
-  //     return next;
-  //   });
-  // };
   
   const updatePaymentDetails = (updater: (arg0: { method: string; amount: string; items: any[]; customerId: string | null; }) => any) => {
     setPaymentDetails((prev) => {
@@ -235,7 +202,7 @@ const CreateOrderPageContent: React.FC = () => {
   }, 0);
 
   const tax = subtotal * 0.075;
-  const service_fee = 1000;
+  // const service_fee = 1000;
 
   const subtotalFromSaleData = saleData?.data?.fees
     ? JSON.parse(saleData.data.fees).sub_total
@@ -245,9 +212,9 @@ const CreateOrderPageContent: React.FC = () => {
     ? JSON.parse(saleData.data.fees).tax
     : tax;
 
-  const serviceFeeFromSaleData = saleData?.data?.fees
-    ? JSON.parse(saleData.data.fees).service_fee
-    : service_fee;
+  // const serviceFeeFromSaleData = saleData?.data?.fees
+  //   ? JSON.parse(saleData.data.fees).service_fee
+  //   : service_fee;
 
   const paymentItems = [
     {
@@ -262,15 +229,15 @@ const CreateOrderPageContent: React.FC = () => {
       label: "Tax (7.5% VAT)",
       amount: formatCurrency(taxFromSaleData),
     },
-    {
-      label: "Service (1000)",
-      amount: formatCurrency(serviceFeeFromSaleData),
-    },
+    // {
+    //   label: "Service (1000)",
+    //   amount: formatCurrency(serviceFeeFromSaleData),
+    // },
   ];
 
   const totalAmount = saleData?.data?.order_total
     ? Number(saleData.data.order_total)
-    : subtotalFromSaleData + taxFromSaleData + serviceFeeFromSaleData;
+    : subtotalFromSaleData + taxFromSaleData ;
 
   const total = formatCurrency(totalAmount);
 

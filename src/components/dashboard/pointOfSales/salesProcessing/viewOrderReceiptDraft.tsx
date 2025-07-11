@@ -167,8 +167,8 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
               <Text  c="#101928">₦{formatMoney(fees.sub_total)}</Text>
             </div>
             <div className="flex items-center justify-between">
-              <Text fw={500}>Tax ({formatMoney(fees.tax_rate)})%</Text>
-              <Text  c="#101928">₦{fees.tax}</Text>
+              <Text fw={500}>Tax {fees.tax_rate}%</Text>
+              <Text  c="#101928">₦{formatMoney(fees.tax)}</Text>
             </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
