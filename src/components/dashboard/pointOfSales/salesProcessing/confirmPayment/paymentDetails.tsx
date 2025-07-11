@@ -4,6 +4,9 @@ import { CircleHelp } from "lucide-react";
 import Dropdown2 from "../../../../General/dropdown2";
 import { useEffect, useState } from "react";
 import { useFetchSingleSale } from "../../../../../hooks/backendApis/pos/salesProcessing";
+import { formatMoney } from "../../../../../utils/helpers";
+import { NumericFormat } from "react-number-format";
+
 
 type PaymentItem = {
   label: string;
@@ -59,10 +62,6 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     return "";
   };
 
-  const handleAmountChange = (enteredAmount: string) => {
-    setLocalAmount(enteredAmount);
-    onPaymentChange(selectedMethod, enteredAmount);
-  };
 
   const handleMethodChange = (val: string) => {
     setSelectedMethod(val);
@@ -102,9 +101,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
   }, [method]);
 
   useEffect(() => {
-    console.log("localAmount changed:", localAmount);
-    console.log("selectedMethod:", selectedMethod);
-    console.log("total:", total);
+
   }, [localAmount, selectedMethod, total]);
   
 
@@ -141,23 +138,48 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
 
         {selectedMethod === "cash" && (
           <>
-            <FormInput
-              type="number"
-              label="Amount Collected"
-              placeholder="Enter the amount customer paid in cash"
-              className="w-full"
-              value={localAmount}
-              onChange={(e: { target: { value: string } }) =>
-                handleAmountChange(e.target.value)
-              }
-            />
-
-            <FormInput
+        
+        <div className="w-full">
+  <label className="block text-sm font-medium text-gray-700 mb-2">
+    Amount Collected
+  </label>
+  <NumericFormat
+    value={localAmount}
+    onValueChange={(values) => {
+      setLocalAmount(values.value);
+      onPaymentChange(selectedMethod, values.value);
+    }}
+    thousandSeparator
+    prefix="₦"
+    allowNegative={false}
+    decimalScale={2}
+    fixedDecimalScale
+    allowLeadingZeros={false}
+    className={`
+      w-full
+      text-gray-900
+      border
+      border-gray-300
+      rounded-md
+      px-3
+      py-2
+      text-sm
+      shadow-sm
+      focus:outline-none
+      focus:ring-2
+      focus:ring-blue-500
+      focus:border-blue-500
+      disabled:bg-gray-200
+    `}
+  />
+</div>
+        <FormInput
               type="text"
               label="Customer Balance"
               className="w-full"
-              value={balance}
+              value={formatMoney(balance)}
               readOnly
+              leftPrefix="₦"
             />
           </>
         )}

@@ -25,13 +25,15 @@ const SearchComp: FC<SearchCompProps> = ({
   searchIcon,
   iconColor = "#000000",
 }) => {
+
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
+    const value = e.target.value.replace(/,/g, ""); 
+    setSearchTerm(value);
     if (setPageIndex) {
       setPageIndex(0);
     }
   };
-
+  
   return (
     <Box
       style={{

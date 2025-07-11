@@ -18,9 +18,9 @@ import SortFilter from "./sortFilter";
 import { SortOption, TableRowData } from "../../../types";
 import { Table as ReactTable } from "@tanstack/react-table";
 import ReusableFilterComponent, { FilterValues } from "./reuseableFilter";
+import EmptyStateImage from "../../../assets/images/EmptyState.png";
 
 export type TableInstance = ReactTable<TableRowData>;
-
 
 export interface TanTableProps<T extends Record<string, any>> {
   columnData: ColumnDef<T>[];
@@ -47,7 +47,13 @@ export interface TanTableProps<T extends Record<string, any>> {
   roles?: string[];
   modules?: string[];
   reasons?: [];
-  tableType?: "inventory" | "sales" | "product" | "returns" | "discount" | "audit";
+  tableType?:
+    | "inventory"
+    | "sales"
+    | "product"
+    | "returns"
+    | "discount"
+    | "audit";
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -233,7 +239,6 @@ const TanTable = <T extends Record<string, any>>({
           </div>
           <div className="hidden md:flex ml-auto ">
             <div className="flex flex-row items-center gap-4 flex-wrap">
-
               {showSearch && (
                 <div className="min-w-[250px]">
                   <SearchComp
@@ -248,7 +253,11 @@ const TanTable = <T extends Record<string, any>>({
                 </div>
               )}
 
-              {showSortFilter && <div className="min-w-[150px]"><SortFilter data={data} onSort={handleSort} /></div>}
+              {showSortFilter && (
+                <div className="min-w-[150px]">
+                  <SortFilter data={data} onSort={handleSort} />
+                </div>
+              )}
 
               {showFilter && (
                 <div style={{ position: "relative" }}>
@@ -272,8 +281,8 @@ const TanTable = <T extends Record<string, any>>({
                           type: "all",
                           discountStatus: "All",
                           returnStatus: "All",
-                          role: '',
-                          module: '',
+                          role: "",
+                          module: "",
                         });
                         setFiltersApplied(false);
                         setShowFilterDropdown(false);
@@ -388,7 +397,7 @@ const TanTable = <T extends Record<string, any>>({
                           filterType={"discount"}
                         />
                       )}
-                        {tableType === "returns" && (
+                      {tableType === "returns" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
@@ -456,8 +465,24 @@ const TanTable = <T extends Record<string, any>>({
             Loading...
           </Box>
         ) : data.length < 1 ? (
-          <Box style={{ padding: "2rem", textAlign: "center" }}>
-            No data to display
+          <Box
+            style={{
+              padding: "3rem 1rem",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "1rem",
+            }}
+          >
+            <img
+              src={EmptyStateImage}
+              alt="No data"
+              style={{ width: "160px", height: "auto", opacity: 0.8 }}
+            />
+            <Text fw={500} size="lg" c="gray.6">
+              No data to display
+            </Text>
           </Box>
         ) : (
           <TanBody

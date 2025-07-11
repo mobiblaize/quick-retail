@@ -5,6 +5,7 @@ import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 import { SqrCode } from "../../../../assets/svg";
 import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
+import { formatMoney } from "../../../../utils/helpers";
 
 
 interface SelectedItemPayload {
@@ -31,7 +32,6 @@ interface SearchProductProps {
 const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  // const [selectedItems, setSelectedItems] = useState([]);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [hasSetInitial, setHasSetInitial] = useState(false);
 
@@ -77,20 +77,25 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
     ? [data.data]
     : [];
 
+
     const handleSelect = (item: {
       name: string;
       custom: boolean;
       variationId?: string;
+      [key: string]: any;
     }) => {
+      const itemWithDefaultQuantity = {
+        ...item,
+        quantity: 1, 
+      };
+    
       setSelectedItems((prev) => {
-        if (
-          item.custom
-            ? prev.some((i) => i.custom && i.name === item.name)
-            : prev.some((i) => i.variationId === item.variationId)
-        ) {
-          return prev;
-        }
-        return [...prev, item];
+        const exists = item.custom
+          ? prev.some((i) => i.custom && i.name === item.name)
+          : prev.some((i) => i.variationId === item.variationId);
+    
+        if (exists) return prev;
+        return [...prev, itemWithDefaultQuantity];
       });
     
       if (item.custom) {
@@ -125,7 +130,6 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
           Search Product
         </Text>
       </div>
-      {/* <Divider size="sm" className="mt-3" color="#E4E7EC" /> */}
       <div className="pt-4 pb-4 max-w-md px-6">
         <FormInput
           placeholder="Search by Name."
@@ -160,7 +164,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                 <li
                   key={item.variationID}
                        /* @ts-ignore */
-                  // onClick={() => handleSelect(item)}
+
                   onClick={() =>
                     handleSelect({
                     //  @ts-ignore */
@@ -173,7 +177,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                       sku: item.sku,
                         /* @ts-ignore */
                       ean: item.ean,
-                      quantity: 1,  // default quantity
+                      quantity: 1, 
                       ...item 
                     })
 
@@ -210,9 +214,9 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
               onClick={() =>
                 handleSelect({ name: debouncedSearch, custom: true })
               }
-              className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
+              // className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
             >
-              Use custom entry: <strong>{debouncedSearch}</strong>
+              {/* Use custom entry: <strong>{debouncedSearch}</strong> */}
             </li>
           )}
         </ul>
@@ -233,7 +237,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                      /* @ts-ignore */
                 : item.variationId;
                      /* @ts-ignore */
-              const quantity = item.quantity ?? 0; // default quantity 1
+              const quantity = item.quantity ?? 0;
                    /* @ts-ignore */
               const unitPrice = Number(item.selling_price || 0);
               const totalPrice = unitPrice * quantity;
@@ -261,7 +265,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                   <div className="flex justify-around gap-[2em] w-full">
                         {/* /* @ts-ignore */ 
                     <div className="flex flex-col ">
-                      <span className="font-semibold text-gray-900">
+                      <span className="font-medium text-gray-900">
                        {/* @ts-ignore */}
                         {item.name}
                       </span>
@@ -269,29 +273,29 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                       {item.ean && (
                         <span className="text-sm text-gray-600">
                           {/* @ts-ignore */}
-                          EAN: {item.ean}
+                          EAN: <span className="font-medium">{item.ean}</span>
                         </span>
                       )}
                       {/* @ts-ignore */}
                       {item.sku && (
                         <span className="text-sm text-gray-600">
                           {/* @ts-ignore */}
-                          SKU: {item.sku}
+                          SKU:  <span className="font-medium">{item.sku}</span>
                         </span>
                       )}
                     </div>
 
                     /* Unit Price */}
                     <div className="flex flex-col items-center min-w-[70px]">
-                      <span className="text-xs text-gray-500">Unit Price</span>
+                      <span className="text-xs text-gray-800">Unit Price</span>
                       <span className="font-medium">
-                      ₦ {unitPrice.toFixed(2)}
+                      ₦ {formatMoney(unitPrice.toFixed(2))}
                       </span>
                     </div>
 
                     {/* Quantity Input */}
                     <div className="min-w-[70px]">
-                      <span className="text-xs text-gray-500">Quantity</span>
+                      <span className="text-xs text-gray-800">Quantity</span>
                       <FormInput
                         type="number"
                         min={1}
@@ -300,7 +304,6 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                         onChange={(e: { target: { value: any; }; }) => {
                           const val = e.target.value;
 
-                          // Allow empty value while typing
                           if (val === "") {
                             // @ts-ignore
                             handleQuantityChange(itemKey, ""); 
@@ -312,15 +315,15 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                             handleQuantityChange(itemKey, parsed);
                           }
                         }}
-                        className="w-16"
+                        className="w-16 font-medium"
                       />
                     </div>
 
                     {/* Total Price */}
                     <div className="flex flex-col items-center min-w-[70px]">
-                      <span className="text-xs text-gray-500">Total Price</span>
+                      <span className="text-xs text-gray-900">Total Price</span>
                       <span className="font-semibold text-[#2E90FA]">
-                      ₦ {totalPrice.toFixed(2)}
+                      ₦ {formatMoney(totalPrice.toFixed(2))}
                       </span>
                     </div>
 
@@ -338,7 +341,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                           )
                         );
                       }}
-                      className="text-red-500 hover:text-red-700 font-bold text-xxl"
+                      className="text-red-500 hover:text-red-700 font-bold text-xxxl"
                       aria-label="Remove selected item"
                     >
                       &times; Remove

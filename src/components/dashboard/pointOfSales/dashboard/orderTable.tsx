@@ -95,24 +95,24 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
     },
     
     {
-      header: "Cashier Issued",
+      header: "Cashier Details",
       accessorKey: "cashier",
       cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.cashier}</Text>
+        <Text c="#1D2739">{props.row.original.cashier}</Text>
       ),
     },
     {
       header: "Customer",
       accessorKey: "customer",
       cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.customer}</Text>
+        <Text c="#1D2739">{props.row.original.customer}</Text>
       ),
     },
     {
       header: "Amount",
       accessorKey: "amount",
       cell: (props) => (
-        <Text c="textSecondary.7">{formatMoney(props.row.original.amount)}</Text>
+        <Text c="#1D2739">₦ {formatMoney(props.row.original.amount)}</Text>
       ),
     },
     {

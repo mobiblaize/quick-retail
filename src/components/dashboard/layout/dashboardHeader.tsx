@@ -13,44 +13,44 @@ export const DashboardHeader = ({
   type DashboardSection =
     | "Overview"
     | "Point of Sales"
-    | "Financial Management"
-    | "Procurement"
-    | "Asset Management"
-    | "Reports"
-    | "Admin";
+    // | "Financial Management"
+    // | "Procurement"
+    // | "Asset Management"
+    // | "Reports"
+    // | "Admin";
 
   const navLinks = [
-    {
-      label: "Overview" as DashboardSection,
-      to: ROUTES.dashboard,
-      active: activeSection === "Overview",
-    },
+    // {
+    //   label: "Overview" as DashboardSection,
+    //   to: ROUTES.dashboard,
+    //   active: activeSection === "Overview",
+    // },
     {
       label: "Point of Sales" as DashboardSection,
       to: ROUTES.dashboard,
       active: activeSection === "Point of Sales",
     },
-    {
-      label: "Financial Management" as DashboardSection,
-      to: ROUTES.financialDashboard,
-      active: activeSection === "Financial Management",
-    },
-    {
-      label: "Procurement" as DashboardSection,
-      to: ROUTES.procurementDashboard,
-      active: activeSection === "Procurement",
-    },
-    {
-      label: "Asset Management" as DashboardSection,
-      to: ROUTES.assetDashboard,
-      active: activeSection === "Asset Management",
-    },
+    // {
+    //   label: "Financial Management" as DashboardSection,
+    //   to: ROUTES.financialDashboard,
+    //   active: activeSection === "Financial Management",
+    // },
+    // {
+    //   label: "Procurement" as DashboardSection,
+    //   to: ROUTES.procurementDashboard,
+    //   active: activeSection === "Procurement",
+    // },
+    // {
+    //   label: "Asset Management" as DashboardSection,
+    //   to: ROUTES.assetDashboard,
+    //   active: activeSection === "Asset Management",
+    // },
     
-    {
-      label: "Reports" as DashboardSection,
-      to: ROUTES.dashboard,
-      active: activeSection === "Reports",
-    },
+    // {
+    //   label: "Reports" as DashboardSection,
+    //   to: ROUTES.dashboard,
+    //   active: activeSection === "Reports",
+    // },
     {
       label: "Admin" as DashboardSection,
       to: ROUTES.adminDashboard,

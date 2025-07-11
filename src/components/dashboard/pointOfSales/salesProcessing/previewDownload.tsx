@@ -41,8 +41,8 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
         {/* Customer & Receipt Details */}
         <div className="flex justify-between mb-8">
           <div>
-            <h2 className="font-medium">Customer Details</h2>
-            <p className="font-bold">
+            <h2 className="font-normal">Customer Details</h2>
+            <p className="font-medium">
               {actualOrder.customer?.customer_name || actualOrder.customer_name}
             </p>
 
@@ -51,7 +51,7 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
             </p>
           </div>
           <div className="text-right">
-            <h2 className="font-bold">Receipt Details</h2>
+            <h2 className="font-medium">Receipt Details</h2>
             <p className="text-[gray] font-normal">
               Date Issued:{" "}
               <span className="text-[black] font-normal">
@@ -69,7 +69,7 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
           </h3> */}
           <div className="overflow-x-auto mt-4">
             <table className="min-w-full text-left text-md">
-              <thead className="border-b font-bold  bg-gray-100">
+              <thead className="border-b font-medium  bg-gray-100">
                 <tr>
                   <th className="p-2">Item</th>
                   <th className="p-2">Qty</th>
@@ -93,11 +93,11 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
                   return (
                     <tr key={detail.order_detail_id}>
                       <td className="p-2 text-md">
-                        <span className="font-semibold"> {variationName} </span>{" "}
+                        <span className="font-medium"> {variationName} </span>{" "}
                         <br />
-                        Size: <span className="font-semibold">{size} </span>
+                        Size: <span className="font-medium">{size} </span>
                         <br />
-                        Color: <span className="font-semibold">{color}</span>
+                        Color: <span className="font-medium">{color}</span>
                       </td>
                       <td className="p-2">{detail.quantity_ordered}</td>
                       <td className="p-2">
@@ -142,8 +142,8 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
         </div>
 
         {/* Receipt Amount */}
-        <div className="mt-8 bg-orange-100 text-center py-6 rounded border-dashed border-2 border-orange-200">
-          <p className="text-lg font-bold"> Total</p>
+        <div className="mt-8 bg-[#FDE1D0] text-center py-6 rounded border-dashed border-2 border-orange-200">
+          <p className="text-lg font-bold text-[#F9A578]"> Total</p>
           <p className="text-4xl text-orange-600 font-bold">
             ₦{Number(actualOrder.amount_paid).toLocaleString()}
           </p>

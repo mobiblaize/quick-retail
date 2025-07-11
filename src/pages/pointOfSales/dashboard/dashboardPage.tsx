@@ -9,17 +9,14 @@ import { useFetchAllSales } from "../../../hooks/backendApis/pos/salesProcessing
 import { useState } from "react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
-
-
 const DashboardPage = () => {
-
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
-  const [dateRange, ] = useState<{ startDate: string; endDate: string }>({
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
+    null
+  );
+  const [dateRange] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
   });
-
-  
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -27,38 +24,31 @@ const DashboardPage = () => {
     if (status.toLowerCase() === "pending") return "pending";
     return status.toLowerCase();
   };
-  
 
-const mapFiltersToPayload = (filters: FilterValues) => ({
-  // @ts-ignore
-  search: filters.search ?? "",
-  // @ts-ignore
-  sort_by: filters.sortBy ?? "",
-  per_page: "500",
-  paginate: true,
-  start_date: filters.startDate ?? "",
-  end_date: filters.endDate ?? "",
-  status: mapOrderStatus(filters.paymentStatus),
-  price_from: filters.priceFrom ?? 100,
-  price_to: filters.priceTo ?? ""
-});
-
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    // @ts-ignore
+    search: filters.search ?? "",
+    // @ts-ignore
+    sort_by: filters.sortBy ?? "",
+    per_page: "500",
+    paginate: true,
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+    status: mapOrderStatus(filters.paymentStatus),
+    price_from: filters.priceFrom ?? 100,
+    price_to: filters.priceTo ?? "",
+  });
 
   const startDate = dateRange.startDate || appliedFilters?.startDate || "";
-const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
 
-const shouldFetch = startDate && endDate; 
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    ...(startDate ? { start_date: startDate } : {}),
+    ...(endDate ? { end_date: endDate } : {}),
+  };
 
-const payload = shouldFetch
-  ? {
-      ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-      start_date: startDate,
-      end_date: endDate,
-    }
-  : undefined;
-
-  const { data = {}, } = useFetchAllSales(payload) || {};
-  
+  const { data = {} } = useFetchAllSales(payload) || {};
 
   const salesData = data?.data?.sales?.data ?? [];
 
@@ -78,7 +68,10 @@ const payload = shouldFetch
       <SalesOverview />
       <CustomerAnalysis />
       <DivisionSalesOverview />
-      <CustomerOrdersTable salesData={salesData}  onFilterChange={handleFilterChange} />
+      <CustomerOrdersTable
+        salesData={salesData}
+        onFilterChange={handleFilterChange}
+      />
     </PageContainer>
   );
 };

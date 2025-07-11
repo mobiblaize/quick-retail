@@ -6,7 +6,7 @@ interface FlexibleInputField
   paddingX?: number | string;
   paddingY?: number | string;
   borderWidth?: number | string;
-  leftPrefix?: string; 
+  leftPrefix?: string;
   onBlur?: () => void;
 }
 
@@ -75,15 +75,11 @@ const FormInput = ({
             {leftIcon}
           </div>
         ) : leftPrefix ? (
-          <div
-            className="text-gray-700 text-sm pl-1 pr-3 pt-5 pb-4 ml-3 rounded-l-md border-r border-gray-200"
-            style={{ backgroundColor: "#F9FAFB" }}
-          >
+          <div className="text-gray-700 text-sm px-3 flex items-center h-full  border-gray-200 rounded-l-md">
             {leftPrefix}
           </div>
         ) : undefined
       }
-      
       rightSection={
         rightIcon && (
           <div onClick={rightIconClick} className="cursor-pointer">
@@ -96,12 +92,13 @@ const FormInput = ({
           width: "100%",
         },
         input: {
-          backgroundColor: readOnly ? "#D0D5DD" : bgColor, 
-          color: error ? "#D42620" : color,
           borderWidth: borderWidthValue,
+          backgroundColor: readOnly ? "#F2F4F7" : bgColor,
+          color: readOnly ? "#6B7280" : error ? "#D42620" : color ?? "#111827",
+          borderColor: readOnly ? "#D1D5DB" : "#E5E7EB",
           borderStyle: "solid",
           borderRadius: "0.375rem",
-          paddingLeft: leftIcon ? "2.5rem" : paddingXValue,
+          paddingLeft: leftIcon || leftPrefix ? "2.5rem" : paddingXValue,
           paddingRight: rightIcon ? "2.5rem" : paddingXValue,
           paddingTop: paddingYValue,
           paddingBottom: paddingYValue,

@@ -153,8 +153,8 @@ const ViewOrderReceipt = () => {
               <Text c="#101928">₦{formatMoney(fees.discount)}</Text>
             </div>
             <div className="flex items-center justify-between">
-              <Text fw={400} c="#101928">Tax {formatMoney(fees.tax_rate)}%</Text>
-              <Text c="#101928">₦{fees.tax}</Text>
+              <Text fw={400} c="#101928">Tax {fees.tax_rate}%</Text>
+              <Text c="#101928">₦{formatMoney(fees.tax)}</Text>
             </div>
 
             <div className=" border-t border-[#E4E7EC]">
