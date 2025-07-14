@@ -14,11 +14,13 @@ import { ROUTES } from "../../../../constants/routes";
 interface AllTransactionTableProps {
   data?: TableRowData[];
   isLoading?: boolean;
+  onSortChange: (sortKey: string) => void;
 }
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
   isLoading = false,
+  onSortChange,
 }) => {
   const navigate = useNavigate();
 
@@ -168,6 +170,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        onSortChange={onSortChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

@@ -227,6 +227,11 @@ const { data, isLoading, refetch } = useFetchAllProducts(
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        onSortChange={(sortKey) => {
+          const newOrder = appliedFilters?.order === "asc" ? "desc" : "asc";
+          // @ts-ignore
+          setAppliedFilters({ ...(appliedFilters ?? {}), sortBy: sortKey, order: newOrder });
+        }}
         onFilterChange={handleFilterChange}
         tableType="inventory"
         //@ts-ignore

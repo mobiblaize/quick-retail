@@ -54,6 +54,9 @@ export interface TanTableProps<T extends Record<string, any>> {
     | "returns"
     | "discount"
     | "audit";
+onSortChange?: (sortKey: string) => void;
+activeSort?: string;
+
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -78,17 +81,21 @@ const TanTable = <T extends Record<string, any>>({
   roles,
   modules,
   tableType,
+  onSortChange,
+  activeSort,
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [filteredData, setFilteredData] = useState<T[]>(data);
+  const [, setFilteredData] = useState<T[]>(data);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
 
-  const tableData = useMemo(() => filteredData, [filteredData]);
+  // const tableData = useMemo(() => filteredData, [filteredData]);
+  const tableData = useMemo(() => data, [data]);
+
   const columns = useMemo(() => columnData, [columnData]);
   // const pageSize = length;
   const pageSize = showAll && showSeeAllToggle ? data.length : length;
@@ -124,9 +131,7 @@ const TanTable = <T extends Record<string, any>>({
     },
   });
 
-  const handleSort = (sortedData: T[]) => {
-    setFilteredData(sortedData);
-  };
+
 
   const startPage = useMemo(() => {
     const totalPages = table.getPageCount();
@@ -235,7 +240,14 @@ const TanTable = <T extends Record<string, any>>({
               />
             )}
 
-            {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+            {showSortFilter && 
+            // <SortFilter data={data} onSort={handleSort} />
+            <SortFilter
+    onSortChange={onSortChange!}
+    activeSort={activeSort || ""}
+  />
+         
+            }
           </div>
           <div className="hidden md:flex ml-auto ">
             <div className="flex flex-row items-center gap-4 flex-wrap">
@@ -255,7 +267,11 @@ const TanTable = <T extends Record<string, any>>({
 
               {showSortFilter && (
                 <div className="min-w-[150px]">
-                  <SortFilter data={data} onSort={handleSort} />
+                  {/* <SortFilter data={data} onSort={handleSort} /> */}
+                  <SortFilter
+    onSortChange={onSortChange!}
+    activeSort={activeSort || ""}
+  />
                 </div>
               )}
 
