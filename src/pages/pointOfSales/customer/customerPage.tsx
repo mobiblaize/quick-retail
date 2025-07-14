@@ -5,10 +5,16 @@ import CreateNewCustomer from "../../../components/dashboard/pointOfSales/custom
 import { useState } from "react";
 import { useFetchAllCustomers } from "../../../hooks/backendApis/pos/customersManagement";
 import { Plus } from "lucide-react";
+import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 const CustomerPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
-  const { data, isLoading, refetch } = useFetchAllCustomers();
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    sort_by: filters.sortBy || "",
+
+  });
+  const { data, isLoading, refetch } = useFetchAllCustomers(mapFiltersToPayload(appliedFilters));
   const customers = Array.isArray(data?.data?.customers?.data)
     ? data.data.customers.data
     : [];
@@ -31,7 +37,10 @@ const CustomerPage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CustomerTable customers={customers} isLoading={isLoading} />
+      <CustomerTable customers={customers} isLoading={isLoading} onSortChange={(sortKey) => {
+    const newFilters = { ...appliedFilters, sortBy: sortKey };
+    setAppliedFilters(newFilters);
+  }} />
       <CreateNewCustomer
         opened={isCreateCategoryOpen}
         onClose={() => setIsCreateCategoryOpen(false)}

@@ -70,7 +70,7 @@ const TrailTable = ({
       header: "Time stamp",
       accessorKey: "date",
       cell: (props) => (
-        <div className="text-gray-900 whitespace-normal text-sm">
+        <div className="text-gray-900 whitespace-nowrap text-sm">
           {formatTime(props.row.original.created_at)}
         </div>
       ),

@@ -6,14 +6,22 @@ import { useState } from "react";
 import CreateNewCategory from "../../../components/dashboard/pointOfSales/categories/modals/createNewCategory";
 import CreateSubCategory from "../../../components/dashboard/pointOfSales/categories/modals/createSubCategory";
 import { useFetchAllCategories } from "../../../hooks/backendApis/pos/categories";
+import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 const CategoriesPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
   const [isCreateSubCategoryOpen, setIsSubCreateCategoryOpen] = useState(false);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    sort_by: filters.sortBy || "",
+  });
 
-  const { data, isLoading,refetch  } = useFetchAllCategories();
+  const { data, isLoading, refetch } = useFetchAllCategories(
+    mapFiltersToPayload(appliedFilters)
+  );
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
-  
 
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0
@@ -75,13 +83,20 @@ const CategoriesPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CategoriesTable categories={categories} isLoading={isLoading}  />
+      <CategoriesTable
+        categories={categories}
+        isLoading={isLoading}
+        onSortChange={(sortKey) => {
+          const newFilters = { ...appliedFilters, sortBy: sortKey };
+          setAppliedFilters(newFilters);
+        }}
+      />
       <CreateNewCategory
         opened={isCreateCategoryOpen}
         onClose={() => setIsCreateCategoryOpen(false)}
         onCreated={() => {
-          refetch();          
-          setIsCreateCategoryOpen(false); 
+          refetch();
+          setIsCreateCategoryOpen(false);
         }}
       />
       <CreateSubCategory

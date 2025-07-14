@@ -5,6 +5,7 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable from "../../../General/table";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { useState } from "react";
 
 
 // type DiscountTableProps = {
@@ -17,9 +18,23 @@ import { FilterValues } from "../../../General/table/reuseableFilter";
 
 const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; }) => {
 
+  const [, setSortBy] = useState<string>("");
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
-console.log (rawDiscounts)
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+
+    setAppliedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
+
+
   const discounts = rawDiscounts.map((item: any) => ({
     name: item.name || "Unnamed",
     discountCode: item.code || "-",
@@ -142,6 +157,7 @@ console.log (rawDiscounts)
         showSearch
         showFilter
         showSortFilter
+        onSortChange={handleSortChange}
         searchPlaceholder="Search orders"
         length={8}
            //@ts-ignore

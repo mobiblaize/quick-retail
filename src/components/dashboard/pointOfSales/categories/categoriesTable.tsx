@@ -9,9 +9,12 @@ import { PaidDot, UnpaidDot} from "../../../../assets/svg";
 interface CategoriesTableProps {
   categories: Array<any>;
   isLoading: boolean;
+  onSortChange: (sortKey: string) => void;
 }
 
-const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
+const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTableProps) => {
+
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -155,6 +158,7 @@ const CategoriesTable = ({ categories, isLoading }: CategoriesTableProps) => {
         data={categories}
         showSearch
         showSortFilter
+        onSortChange={onSortChange}
         searchPlaceholder="Search orders"
         length={8}
          tableTitle={

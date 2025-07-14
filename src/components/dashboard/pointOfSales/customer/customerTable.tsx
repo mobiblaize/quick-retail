@@ -10,9 +10,10 @@ import EditCustomer from "./editCustomer";
 interface CategoriesTableProps {
   customers: Array<any>;
   isLoading: boolean;
+  onSortChange: (sortKey: string) => void;
 }
 
-const CustomerTable = ({ customers, }: CategoriesTableProps) => {
+const CustomerTable = ({ customers,  onSortChange  }: CategoriesTableProps) => {
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
   // const { data } = useFetchAllCustomers();
@@ -141,7 +142,8 @@ const CustomerTable = ({ customers, }: CategoriesTableProps) => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={8}
+        onSortChange={onSortChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

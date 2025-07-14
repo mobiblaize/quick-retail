@@ -20,12 +20,14 @@ type StoreOverviewTableProps = {
   stores?: StoreData[];
   loading?: boolean;
   refetchStores?: () => void;
+  onSortChange: (sortKey: string) => void;
 };
 
 const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
   stores = [],
   loading = false,
   refetchStores,
+  onSortChange,
 }) => {
   if (loading) {
     return (
@@ -203,6 +205,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           data={stores}
           showSearch
           showSortFilter
+          onSortChange={onSortChange}
           searchPlaceholder="Search orders"
           length={8}
           tableTitle={

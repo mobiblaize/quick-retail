@@ -6,9 +6,24 @@ import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { formatDate,formatMoney  } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { useState } from "react";
 
 const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void; }) => {
+  const [, setSortBy] = useState<string>("");
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
+
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+
+    setAppliedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
 
   // ✅ Mapped data
   const tableData = Array.isArray(salesData)
@@ -167,6 +182,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        onSortChange={handleSortChange}
         showFilter
         tableType="sales"
         onFilterChange={onFilterChange}

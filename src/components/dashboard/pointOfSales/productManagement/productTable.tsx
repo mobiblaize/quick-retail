@@ -17,7 +17,23 @@ import { notifications } from "@mantine/notifications";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 
 const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[], isLoading:any,   onFilterChange: (filters: FilterValues) => void; }) => {
-  // const { data, isLoading, refetch } = useFetchAllProducts();
+
+  const [, setSortBy] = useState<string>("");
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+
+
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+
+    setAppliedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
+  
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
@@ -241,6 +257,7 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
         showSortFilter
         showFilter
         searchPlaceholder="Search orders"
+        onSortChange={handleSortChange}
         length={8}
         //@ts-ignore
         locations={locations}
