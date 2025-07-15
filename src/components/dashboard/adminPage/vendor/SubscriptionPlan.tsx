@@ -195,7 +195,7 @@ const SubscriptionPlan = () => {
             </Group>
             <Group justify="right" mt={32}>
               <Link
-                to="/dashboard/admin/changePlan"
+                to="/dashboard/change-plan"
                 state={{
                   items: selectedSub.map((item: any) => ({
                     title: item.application?.name || "Unnamed App",
