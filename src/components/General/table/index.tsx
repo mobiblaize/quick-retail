@@ -18,7 +18,7 @@ import SortFilter from "./sortFilter";
 import { SortOption, TableRowData } from "../../../types";
 import { Table as ReactTable } from "@tanstack/react-table";
 import ReusableFilterComponent, { FilterValues } from "./reuseableFilter";
-import EmptyStateImage from "../../../assets/images/EmptyState.png";
+import EmptyStateImage from "../../../assets/images/Empty.png";
 
 export type TableInstance = ReactTable<TableRowData>;
 
@@ -54,9 +54,8 @@ export interface TanTableProps<T extends Record<string, any>> {
     | "returns"
     | "discount"
     | "audit";
-onSortChange?: (sortKey: string) => void;
-activeSort?: string;
-
+  onSortChange?: (sortKey: string) => void;
+  activeSort?: string;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -130,8 +129,6 @@ const TanTable = <T extends Record<string, any>>({
       setPageIndex(newPagination.pageIndex);
     },
   });
-
-
 
   const startPage = useMemo(() => {
     const totalPages = table.getPageCount();
@@ -240,14 +237,12 @@ const TanTable = <T extends Record<string, any>>({
               />
             )}
 
-            {showSortFilter && 
-            // <SortFilter data={data} onSort={handleSort} />
-            <SortFilter
-    onSortChange={onSortChange!}
-    activeSort={activeSort || ""}
-  />
-         
-            }
+            {showSortFilter && (
+              <SortFilter
+                onSortChange={onSortChange!}
+                activeSort={activeSort || ""}
+              />
+            )}
           </div>
           <div className="hidden md:flex ml-auto ">
             <div className="flex flex-row items-center gap-4 flex-wrap">
@@ -267,11 +262,10 @@ const TanTable = <T extends Record<string, any>>({
 
               {showSortFilter && (
                 <div className="min-w-[150px]">
-                  {/* <SortFilter data={data} onSort={handleSort} /> */}
                   <SortFilter
-    onSortChange={onSortChange!}
-    activeSort={activeSort || ""}
-  />
+                    onSortChange={onSortChange!}
+                    activeSort={activeSort || ""}
+                  />
                 </div>
               )}
 
@@ -488,7 +482,7 @@ const TanTable = <T extends Record<string, any>>({
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
-              gap: "1rem",
+              gap: "0.25rem",
             }}
           >
             <img
@@ -496,8 +490,17 @@ const TanTable = <T extends Record<string, any>>({
               alt="No data"
               style={{ width: "160px", height: "auto", opacity: 0.8 }}
             />
-            <Text fw={500} size="lg" c="gray.6">
-              No data to display
+            <Text fw={600} size="lg" c="#1D2739">
+              Not found
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              We couldn’t find what you are
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              looking for. Try entering a correct
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              order ID, name or amount
             </Text>
           </Box>
         ) : (
