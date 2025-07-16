@@ -228,11 +228,13 @@ import AuditTrailPage from "./pages/adminPages/audit/allAudit";
 import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
 import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 import SettingsPage from "./pages/adminPages/settings/settingsPage";
+import ScrollToTop from "./utils/scrollToTop";
 
 
 export default function App() {
   return (
     <Router>
+      <ScrollToTop />
       <Routes>
         <Route path={ROUTES.HOME} element={<DefaultLayout />}>
           <Route index element={<Home />} />
@@ -317,7 +319,7 @@ export default function App() {
             path={ROUTES.happyDiscountAnalytics}
             element={<DiscountAnalysisPage />}
           />
-          <Route path={ROUTES.createDiscounts} element={<CreateDiscounts/>}/>
+          <Route path={ROUTES.createDiscounts} element={<CreateDiscounts />} />
           <Route path={ROUTES.happyGiftCard} element={<GiftCardPage />} />
           <Route path={ROUTES.transaction} element={<TransactionPage />} />
           <Route
@@ -352,7 +354,7 @@ export default function App() {
             path={ROUTES.returnsRefundsReport}
             element={<RetunsRefundsReportPage />}
           />
-           <Route
+          <Route
             path={ROUTES.discountReport}
             element={<DiscountReportPage />}
           />
@@ -442,7 +444,7 @@ export default function App() {
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
           />
-          
+
 
           {/* ASSET MANAGEMENT ROUTES */}
 
@@ -808,17 +810,17 @@ export default function App() {
           <Route path={ROUTES.userManagement} element={<UserManagement />} />
           {/* <Route path={ROUTES.viewUser} element={<ViewUser/>} /> */}
           <Route path="/dashboard/user-management/view-user/:userId" element={<ViewUser />} />
-          <Route path={ROUTES.addNewRole} element={<AddNewRole />}/>
+          <Route path={ROUTES.addNewRole} element={<AddNewRole />} />
           <Route path={ROUTES.helpPage} element={<HelpPage />} />
           <Route path={`${ROUTES.learnMore}/:id`} element={<LearnMoreHelp />} />
           <Route path={ROUTES.vendorpage} element={<VendorPage />} />
-           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
-           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
-           <Route path={ROUTES.changeplan} element={<SubscriptionChangePage/>} />
-           <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
-           <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
-           <Route path={ROUTES.adminSettings} element={<SettingsPage />} />
-           {/* <Route path={ROUTES.adminSecurity} element={<SecurityPage />} /> */}
+          <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
+          <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
+          <Route path={ROUTES.changeplan} element={<SubscriptionChangePage />} />
+          <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
+          <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
+          <Route path={ROUTES.adminSettings} element={<SettingsPage />} />
+          {/* <Route path={ROUTES.adminSecurity} element={<SecurityPage />} /> */}
         </Route>
       </Routes>
     </Router>

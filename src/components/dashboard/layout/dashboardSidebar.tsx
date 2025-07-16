@@ -76,14 +76,14 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           {/* <div className="mt-5">
             <Divider my="lg" />
           </div> */}
-{activeSection === "Admin" && (
-  <NavItem
-    href={ROUTES.adminSettings}
-    label="Settings"
-    inactiveIcon={Settings}
-    activeIcon={Settings}
-  />
-)}
+          {activeSection === "Admin" && (
+            <NavItem
+              href={ROUTES.adminSettings}
+              label="Settings"
+              inactiveIcon={Settings}
+              activeIcon={Settings}
+            />
+          )}
 
           <List className=" gap-4 mt-9">
             <LogoutModal />
