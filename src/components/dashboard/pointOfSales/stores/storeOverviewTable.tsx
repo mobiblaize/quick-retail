@@ -44,26 +44,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
 
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+   
     {
       header: "Store Name",
       accessorKey: "name",
@@ -78,25 +59,21 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
         </div>
       ),
     },
-    // {
-    //   header: "Store Size",
-    //   accessorKey: "store",
-    //   cell: (props) => (
-    //     <div className="flex flex-col">
-    //       <Text fw={500} c="black">
-    //         GLA: {props.row.original.gla}
-    //       </Text>
-    //       <Text fw={400} className="text-sm">
-    //         GSA: {props.row.original.gsa}
-    //       </Text>
-    //     </div>
-    //   ),
-    // },
+   
     {
       header: "Store Location",
       accessorKey: "location",
-      cell: (props) => <Text>{props.row.original.lga}</Text>,
+      cell: (props) => {
+        const location = props.row.original.lga;
+        return (
+          <Text>
+            {/* @ts-ignore */}
+            {location && location.trim() !== "" ? location : "No location available"}
+          </Text>
+        );
+      },
     },
+    
     {
       header: "Date Created",
       accessorKey: "dateCreated",
@@ -124,12 +101,19 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Customers",
       accessorKey: "totalCustomer",
-      cell: (props) => (
-        <Text c="black" fw={500} className="text-sm font-medium">
-          {props.row.original.total_customers}
-        </Text>
-      ),
-    },
+      cell: (props) => {
+        const totalCustomers = props.row.original.total_customers;
+        return (
+          <Text
+            c={typeof totalCustomers === "number" ? "black" : "dimmed"}
+            fw={500}
+            className="text-sm font-medium"
+          >
+            {typeof totalCustomers === "number" ? totalCustomers : "No customers"}
+          </Text>
+        );
+      },
+    },    
 
     {
       header: "Status",

@@ -48,26 +48,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
   
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+   
     {
       header: "Product",
       accessorKey: "name",
@@ -86,13 +67,13 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
         </div>
       ),
     },
-    {
-      header: "Discount Code",
-      accessorKey: "discountCode",
-      cell: ({ row }) => (
-        <Text c="textSecondary.7">{row.original.discountCode}</Text>
-      ),
-    },
+    // {
+    //   header: "Discount Code",
+    //   accessorKey: "discountCode",
+    //   cell: ({ row }) => (
+    //     <Text c="textSecondary.7">{row.original.discountCode}</Text>
+    //   ),
+    // },
     {
       header: "Percent Off",
       accessorKey: "percent",
