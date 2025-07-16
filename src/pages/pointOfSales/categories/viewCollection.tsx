@@ -21,11 +21,7 @@ const ViewCollection = () => {
         <button onClick={() => navigate(-1)} className="cursor-pointer">
           Back
         </button>
-        <div className="flex items-center">
-          <Text>Categories</Text>
-          <span className="mx-2">/</span>
-          {/* <Text c={"black"}>Cosmetics</Text> */}
-        </div>
+      
       </div>
     </div>,
     <div key="2">
@@ -39,7 +35,7 @@ const ViewCollection = () => {
           variant="outline-primary"
           style={{ padding: "14px 25px" }}
         >
-          Edit SubCategory
+          Edit Sub-Category
         </Button>
       </div>
     </div>,

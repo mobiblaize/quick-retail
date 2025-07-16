@@ -107,7 +107,7 @@ const CategoryProductDetails = ({
       }
     );
   };
-  console.log("User Info:", subCategory.user);
+
 
   return (
     <>
@@ -125,7 +125,7 @@ const CategoryProductDetails = ({
         <section className="mt-6">
           <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 w-full gap-4 md:max-w-6xl">
             <div className="flex flex-col">
-              <Text fw={"500"}>Sub-category Name</Text>
+              <Text fw={"500"}>Sub-Category Name</Text>
               <Text size="lg" c={"black"} fw={"400"}>
                 {subCategory.name}
               </Text>

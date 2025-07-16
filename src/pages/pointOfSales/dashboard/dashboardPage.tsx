@@ -77,9 +77,9 @@ const DashboardPage = () => {
           <CustomerAnalysis />
           <DivisionSalesOverview />
           <CustomerOrdersTable
-            salesData={salesData}
-            onFilterChange={handleFilterChange}
-          />
+                salesData={salesData}
+                onFilterChange={handleFilterChange}
+                 isLoading={false}          />
         </>
       )}
     </PageContainer>
