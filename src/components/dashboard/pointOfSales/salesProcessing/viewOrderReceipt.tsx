@@ -163,7 +163,7 @@ const ViewOrderReceipt = () => {
                   Total
                 </Text>
                 <Text fw={500} c="#101928">
-                  ₦{formatMoney(order.amount_paid)}
+                  ₦{formatMoney(order.order_total)}
                 </Text>
               </div>
             </div>

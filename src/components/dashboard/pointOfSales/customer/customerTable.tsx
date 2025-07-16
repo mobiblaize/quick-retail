@@ -39,18 +39,26 @@ const CustomerTable = ({ customers,  onSortChange  }: CategoriesTableProps) => {
     {
       header: "Contact",
       accessorKey: "contact",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="black">
-            {props.row.original.contact}
-          </Text>
-          <Text fw={400} className="text-[#667185] text-sm">
-            Tel:{""}{" "}
-            <span className="text-gray-500">{props.row.original.number}</span>
-          </Text>
-        </div>
-      ),
+      cell: (props) => {
+        const contactName = props.row.original.contact || "No contact email";
+        const contactNumber = props.row.original.number || "No number";
+    
+        return (
+          <div className="flex flex-col">
+            <Text fw={500} c={props.row.original.contact ? "black" : "dimmed"}>
+              {contactName}
+            </Text>
+            <Text fw={400} className="text-[#667185] text-sm">
+              Tel:{" "}
+              <span className="text-gray-500">
+                {contactNumber}
+              </span>
+            </Text>
+          </div>
+        );
+      },
     },
+    
     {
       header: "Total Amount Spent",
       accessorKey: "totalAmount",

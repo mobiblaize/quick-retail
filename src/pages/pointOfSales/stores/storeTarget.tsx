@@ -32,7 +32,7 @@ const StoreTarget = () => {
   const subHeaders = [
     <div key="1" className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-        <Text fw={500} size="xl" c="black">
+        <Text fw={500} size="xl"c="#1D2739">
           Stores
         </Text>
         <div className="flex gap-4 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
