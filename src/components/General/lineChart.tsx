@@ -97,6 +97,7 @@ interface LineChartProps {
   yAxisFormatter?: (value: number) => string;
   tooltipFormatter?: (value: number) => string;
   highlightedPoint?: HighlightedPoint;
+  yAxisLabel?: string;
 }
 
 const LineChart: React.FC<LineChartProps> = ({
@@ -110,13 +111,16 @@ const LineChart: React.FC<LineChartProps> = ({
   yAxisFormatter = (value) => `${value}M`,
   tooltipFormatter,
   highlightedPoint,
+  yAxisLabel,
 }) => {
   return (
     <div className="w-full" style={{ height: `${height}px` }}>
       <ResponsiveContainer width="100%" height="100%">
+        
         <ComposedChart
           data={data}
-          margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
+          // margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
+          margin={{ top: 10, right: 30, left: 60, bottom: 10 }} 
         >
           {showGrid && (
             <CartesianGrid
@@ -140,6 +144,13 @@ const LineChart: React.FC<LineChartProps> = ({
             tickMargin={10}
             tick={{ fontSize: 12, fill: "#666" }}
             tickFormatter={yAxisFormatter}
+            label={{
+              value: yAxisLabel || '',
+              angle: -90,
+              position: 'insideLeft',
+              offset: -20, // Increase this value to add padding
+              style: { textAnchor: 'middle', fill: '#667085' },
+            }}
           /> 
 
          

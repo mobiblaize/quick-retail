@@ -94,7 +94,7 @@ const SalesAnalytics = () => {
               }}
               showLegend={false}
               highlightedPoint={highlightedPoint}
-
+              yAxisLabel="Amount (NGN)"
             />
              
               // <LineChart

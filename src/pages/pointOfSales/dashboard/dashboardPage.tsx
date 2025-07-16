@@ -8,6 +8,7 @@ import CustomerOrdersTable from "../../../components/dashboard/pointOfSales/dash
 import { useFetchAllSales } from "../../../hooks/backendApis/pos/salesProcessing";
 import { useState } from "react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import EmptyState from "../../../components/General/EmptyState";
 
 const DashboardPage = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
@@ -48,7 +49,8 @@ const DashboardPage = () => {
     ...(endDate ? { end_date: endDate } : {}),
   };
 
-  const { data = {} } = useFetchAllSales(payload) || {};
+  // const { data = {} } = useFetchAllSales(payload) || {};
+  const { data = {}, isLoading } = useFetchAllSales(payload) || {};
 
   const salesData = data?.data?.sales?.data ?? [];
 
@@ -64,16 +66,26 @@ const DashboardPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <AnalyticsOverview />
-      <SalesOverview />
-      <CustomerAnalysis />
-      <DivisionSalesOverview />
-      <CustomerOrdersTable
-        salesData={salesData}
-        onFilterChange={handleFilterChange}
-      />
+      {isLoading ? (
+        <Text ta="center" py="xl">Loading...</Text> 
+      ) : salesData.length === 0 ? (
+        <EmptyState />
+      ) : (
+        <>
+          <AnalyticsOverview />
+          <SalesOverview />
+          <CustomerAnalysis />
+          <DivisionSalesOverview />
+          <CustomerOrdersTable
+            salesData={salesData}
+            onFilterChange={handleFilterChange}
+          />
+        </>
+      )}
     </PageContainer>
   );
+  
+  
 };
 
 export default DashboardPage;
