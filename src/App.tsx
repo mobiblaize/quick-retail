@@ -228,11 +228,13 @@ import AuditTrailPage from "./pages/adminPages/audit/allAudit";
 import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
 import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 import SettingsPage from "./pages/adminPages/settings/settingsPage";
+import ScrollToTop from "./components/General/scrollTop";
 
 
 export default function App() {
   return (
     <Router>
+          <ScrollToTop />
       <Routes>
         <Route path={ROUTES.HOME} element={<DefaultLayout />}>
           <Route index element={<Home />} />

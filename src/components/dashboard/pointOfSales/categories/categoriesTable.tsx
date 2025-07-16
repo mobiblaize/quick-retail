@@ -4,7 +4,7 @@ import { TableRowData } from "../../../../types";
 import { Loader, Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { PaidDot, UnpaidDot} from "../../../../assets/svg";
+
 
 interface CategoriesTableProps {
   categories: Array<any>;
@@ -58,9 +58,10 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
       header: "Total Amount",
       accessorKey: "totalAmount",
       cell: ({ row }) => (
-        <span className=" text-gray-900 text-sm font-medium">
-    ₦{row.original.total_amount ?? 0}
-        </span>
+        <span className="text-gray-900 text-sm font-medium">
+  ₦{Number(row.original.total_amount ?? 0).toFixed(2)}
+</span>
+
       ),
     },
     {
@@ -95,27 +96,27 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
         return <Text>Invalid date</Text>;
       },
     },
-    {
-      header: "Status",
-      accessorKey: "status",
-      cell: (props) => {
-        const status = props.row.original.status;
-        const isActive = typeof status === "string" && status.toLowerCase() === "active";
+    // {
+    //   header: "Status",
+    //   accessorKey: "status",
+    //   cell: (props) => {
+    //     const status = props.row.original.status;
+    //     const isActive = typeof status === "string" && status.toLowerCase() === "active";
     
-        return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              isActive
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
-          >
-            {isActive ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2 capitalize">{String(status)}</span>
-          </div>
-        );
-      },
-    },
+    //     return (
+    //       <div
+    //         className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+    //           isActive
+    //             ? "bg-[#ECFDF3] text-[#027A48]"
+    //             : "bg-[#FFFAEB] text-[#B54708]"
+    //         }`}
+    //       >
+    //         {isActive ? <PaidDot /> : <UnpaidDot />}
+    //         <span className="ml-2 capitalize">{String(status)}</span>
+    //       </div>
+    //     );
+    //   },
+    // },
     {
       header: "",
       accessorKey: "action",
@@ -159,7 +160,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
         showSearch
         showSortFilter
         onSortChange={onSortChange}
-        searchPlaceholder="Search orders"
+        searchPlaceholder="Search categories"
         length={8}
          tableTitle={
           <div className="flex gap-2.5">

@@ -8,7 +8,7 @@ import { formatDate,formatMoney  } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { useState } from "react";
 
-const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void; }) => {
+const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void;  isLoading: boolean }) => {
   const [, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
@@ -151,6 +151,16 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
     },
     
   ];
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Text fw={500} size="md" c="dimmed">
+          Loading orders...
+        </Text>
+      </div>
+    );
+  }
+  
 
   return (
     <main className="w-full h-auto py-8 rounded-lg bg-white">

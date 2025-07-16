@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
-import { Text, Switch } from "@mantine/core";
+import { Text } from "@mantine/core";
 import TanTable from "../../../General/table";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { TableRowData } from "../../../../types";
@@ -44,7 +44,8 @@ const CategoriesProductTable = ({
         productID: product.productID,
         product_name: variation.name || product.product_name || "Unnamed",
         total_quantity: variation.quantity_available || 0, 
-        status: variation.is_active === 1 ? "Active" : "Inactive",
+        amount: `₦${Number(variation.selling_price).toLocaleString()}`,
+        status: variation.status === "active" ? "Active" : "Inactive",
         updated_at: product.updated_at || "",
       }));
     });
@@ -56,19 +57,10 @@ const CategoriesProductTable = ({
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
-  console.log(tableData);
 
-  const handleToggle = (index: number) => {
-    const updatedData = [...tableData];
-    const currentStatus = updatedData[index].status;
-    updatedData[index].status =
-      currentStatus === "Active" ? "Inactive" : "Active";
-    setTableData(updatedData);
-  };
 
   const handleDelete = async () => {
     if (!selectedId) return;
-    console.log("Attempting to delete product with ID:", selectedId);
     try {
       await deleteMutation.mutateAsync();
       notifications.show({
@@ -89,26 +81,7 @@ const CategoriesProductTable = ({
   };
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    
     {
       header: "Product Name",
       accessorKey: "productName",
@@ -138,13 +111,21 @@ const CategoriesProductTable = ({
         );
       },
     },
-    
+    {
+      header: "Amount",
+      accessorKey: "amount",
+      cell: (props) => (
+        <Text c="#1D2739" fw={500} className="text-sm font-medium">
+        {props.row.original.amount}
+        </Text>
+      ),
+    },
 
     {
       header: "Date Modified",
       accessorKey: "dateCreated",
       cell: (props) => (
-        <Text c="black" fw={500} className="text-sm font-medium">
+        <Text c="#1D2739" fw={500} className="text-sm font-medium">
           {formatDate(String(props.row.original.updated_at))}
         </Text>
       ),
@@ -152,50 +133,24 @@ const CategoriesProductTable = ({
     {
       header: "Status",
       accessorKey: "status",
-      cell: (props) => {
-        const rowIndex = props.row.index;
-        const status = props.row.original.status;
-
+      cell: ({ row }) => {
+        const status = row.original.status;
         return (
-          <div className="flex items-center gap-2">
-            <Switch
-              checked={status === "Active"}
-              onChange={() => handleToggle(rowIndex)}
-              color="orange"
-              size="md"
-            />
-            <div
-              className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-                status === "Active"
-                  ? "bg-[#ECFDF3] text-[#027A48]"
-                  : "bg-[#F2F4F7] text-[#667085]"
-              }`}
-            >
-              {status === "Active" ? <PaidDot /> : <UnpaidDot />}
-              <span className="ml-2">{status}</span>
-            </div>
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+              status === "Active"
+                ? "bg-[#ECFDF3] text-[#027A48]"
+                : "bg-[#FFFAEB] text-[#B54708]"
+            }`}
+          >
+            {status === "Active" ? <PaidDot /> : <UnpaidDot />}
+            <span className="ml-2">{status}</span>
           </div>
         );
       },
     },
-    {
-      header: "",
-      accessorKey: "action",
-      cell: (props) => (
-        <Text
-          fw={600}
-          c="black"
-          className="cursor-pointer"
-          onClick={() => {
-            // @ts-ignore
-            setSelectedId(props.row.original.id);
-            setIsDeleteOpen(true);
-          }}
-        >
-          Delete
-        </Text>
-      ),
-    },
+   
+   
 
     {
       header: "",
