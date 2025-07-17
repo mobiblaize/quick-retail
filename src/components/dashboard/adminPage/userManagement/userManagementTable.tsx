@@ -8,6 +8,7 @@ import { useFetchUsers } from "../../../../hooks/backendApis/admin/userManagemen
 import { useEffect } from "react";
 
 export interface UserRowData {
+  user_uuid: string;
   userID: string;
   firstname: string;
   lastname: string;
@@ -98,7 +99,7 @@ const UserManagementTable = () => {
       header: "",
       accessorKey: "action",
       cell: ({ row }) => (
-        <Link to={ROUTES.viewUser(row.original.userID)}>
+        <Link to={ROUTES.viewUser(row.original.user_uuid)}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
             View User
           </Text>
