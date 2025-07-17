@@ -1,8 +1,8 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Center, Loader, Text } from "@mantine/core";
-import { useState } from "react";
+import {  Loader, Text } from "@mantine/core";
+import { useEffect, useState } from "react";
 import DeleteSubCategory from "./modals/deleteSubCategory";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -16,35 +16,47 @@ interface SubCategoriesTableProps {
   onDeleteSuccess?: () => void;
 }
 
-const SubCategoryTable = ({ subCategories, category, isLoading, onDeleteSuccess }: SubCategoriesTableProps) => {
+const SubCategoryTable = ({ subCategories, category, isLoading}: SubCategoriesTableProps) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const deleteMutation = useDeleteSubCategory(selectedId ?? "");
+  const [localSubCategories, setLocalSubCategories] = useState(() =>
+  subCategories.map((subCat) => ({ ...subCat, category }))
+);
+
+useEffect(() => {
+  setLocalSubCategories(subCategories.map((subCat) => ({ ...subCat, category })));
+}, [subCategories, category]);
 
   const handleOpenDelete = (id: string | number) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
-  const enhancedSubCategories = subCategories.map((subCat) => ({
+  const enhancedSubCategories = localSubCategories.map((subCat) => ({
     ...subCat,
-    category, 
+    category,
   }));
+  
 
   const handleDelete = async () => {
     if (!selectedId) return;
 
     try {
       await deleteMutation.mutateAsync();
+
+      // ✅ Optimistically remove deleted item from the local state
+      setLocalSubCategories((prev) =>
+        prev.filter((item) => item.id !== selectedId)
+      );
+
       notifications.show({
         title: "Sub-category Deleted!",
         message: "This product sub-category has been deleted!",
         color: "red",
       });
+
       setIsDeleteOpen(false);
       setSelectedId(null);
-
-      // Tell parent to refetch
-      if (onDeleteSuccess) onDeleteSuccess();
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -53,27 +65,28 @@ const SubCategoryTable = ({ subCategories, category, isLoading, onDeleteSuccess 
       });
     }
   };
+  
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={table.getIsAllRowsSelected()}
+    //       onChange={table.getToggleAllRowsSelectedHandler()}
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={row.getIsSelected()}
+    //       onChange={row.getToggleSelectedHandler()}
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableColumnFilter: false,
+    //   size: 10,
+    // },
     {
       header: "Division",
       accessorKey: "name",
@@ -159,30 +172,34 @@ const SubCategoryTable = ({ subCategories, category, isLoading, onDeleteSuccess 
   ]
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
-      {isLoading ? (
-        <Center className="h-64">
-          <Loader color="customPrimary.10" size="lg" />
-        </Center>
-      ) : (
-        <TanTable
-          columnData={columns}
-          data={enhancedSubCategories}
-          showSearch
-          showSortFilter
-          searchPlaceholder="Search orders"
-          length={8}
-          tableTitle={
-            <div className="flex gap-2.5">
-              <Text fw={500} size="xl" c="textSecondary.9">
-                All Sub-categories
-              </Text>
-              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{subCategories.length}</Text>
-              </div>
-            </div>
-          }
-        />
-      )}
+    {isLoading ? (
+  <div className="w-full h-[300px] flex items-center justify-center bg-white rounded-lg">
+    <Loader color="customPrimary.10" size="lg" />
+    <Text ml={10} size="md" c="dimmed">
+      Loading sub-categories...
+    </Text>
+  </div>
+) : (
+  <TanTable
+    columnData={columns}
+    data={enhancedSubCategories}
+    showSearch
+    showSortFilter
+    searchPlaceholder="Search orders"
+    length={8}
+    tableTitle={
+      <div className="flex gap-2.5">
+        <Text fw={500} size="xl" c="textSecondary.9">
+          All Sub-categories
+        </Text>
+        <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+          <Text c="customPrimary.10">{subCategories.length}</Text>
+        </div>
+      </div>
+    }
+  />
+)}
+
 
       <DeleteSubCategory
         opened={isDeleteOpen}

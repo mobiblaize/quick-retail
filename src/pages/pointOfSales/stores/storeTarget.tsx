@@ -6,31 +6,33 @@ import StoreOverviewTable from "../../../components/dashboard/pointOfSales/store
 import AddNewStore from "../../../components/dashboard/pointOfSales/stores/modals/addNewStore";
 import { useState } from "react";
 import {  useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
+import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 
 const StoreTarget = () => {
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [, setDateRange] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
   });
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    sort_by: filters.sortBy || "",
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+  });
 
-  const { data, isLoading } = useFetchStore(dateRange.startDate && dateRange.endDate ? {
-    start_date: dateRange.startDate,
-    end_date: dateRange.endDate
-  } : undefined);
-
+  const payload = mapFiltersToPayload(appliedFilters);
+  const { data, isLoading } = useFetchStore(payload); 
+  
   const stores = Array.isArray(data?.data?.stores?.data) ? data.data.stores.data : [];
 
-  console.log("Fetched data:", data);
 
   const [isAddNewStoreOpen, setIsAddNewStoreOpen] = useState(false);
-  console.log("Total stores:", data?.data?.stats?.total_stores);
-  console.log("Active stores:", data?.data?.stats?.active_stores);
-  console.log("Inactive stores:", data?.data?.stats?.inactive_stores);
+
   const subHeaders = [
     <div key="1" className="w-full">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-        <Text fw={500} size="xl" c="black">
+        <Text fw={500} size="xl"c="#1D2739">
           Stores
         </Text>
         <div className="flex gap-4 overflow-x-auto w-full sm:w-auto pb-2 sm:pb-0">
@@ -61,7 +63,10 @@ const StoreTarget = () => {
         isLoading={isLoading}
         setDateRange={setDateRange}
       />
-      <StoreOverviewTable stores={stores} loading={isLoading} refetchStores={handleRefetchAll} />
+      <StoreOverviewTable stores={stores} loading={isLoading} refetchStores={handleRefetchAll}  onSortChange={(sortKey) => {
+    const newFilters = { ...appliedFilters, sortBy: sortKey };
+    setAppliedFilters(newFilters);
+  }} />
       <AddNewStore
         opened={isAddNewStoreOpen}
         onClose={() => setIsAddNewStoreOpen(false)}

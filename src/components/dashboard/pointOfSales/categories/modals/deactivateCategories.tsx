@@ -29,7 +29,7 @@ const DeactivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
                 fontSize: "clamp(0.875rem, 2vw, 1rem)",
               }}
             >
-              Are you sure you want to deactivate this Categorie? Deactivated
+              Are you sure you want to deactivate this Category? Deactivated
               Categories will not appear when adding a product. You can also
               activate this product later.
             </Text>

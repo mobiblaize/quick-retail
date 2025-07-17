@@ -22,6 +22,7 @@ export interface FilterValues {
    returnStatus?: string;
    role: string;
    module: string;
+   [key: string]: string | undefined; 
 }
 
 interface ReusableFilterComponentProps {

@@ -18,7 +18,7 @@ const StoreTargetTable = ({ stores = [], loading = false }) => {
       </div>
     );
   }
-  console.log(stores, "stores");
+  // console.log(stores, "stores");
   if (!stores.length) return <p>No stores available.</p>;
   const [isViewTargetOpen, setIsViewTargetOpen] = useState(false);
 

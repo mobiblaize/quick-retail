@@ -2,7 +2,6 @@ import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
-import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useState } from "react";
 import EditCustomer from "./editCustomer";
 
@@ -10,15 +9,12 @@ import EditCustomer from "./editCustomer";
 interface CategoriesTableProps {
   customers: Array<any>;
   isLoading: boolean;
+  onSortChange: (sortKey: string) => void;
 }
 
-const CustomerTable = ({ customers, }: CategoriesTableProps) => {
+const CustomerTable = ({ customers,  onSortChange ,   isLoading }: CategoriesTableProps) => {
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
-  // const { data } = useFetchAllCustomers();
-  // const customers = Array.isArray(data?.data?.customers?.data)
-  //   ? data.data.customers.data
-  //   : [];
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -38,18 +34,26 @@ const CustomerTable = ({ customers, }: CategoriesTableProps) => {
     {
       header: "Contact",
       accessorKey: "contact",
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="black">
-            {props.row.original.contact}
-          </Text>
-          <Text fw={400} className="text-[#667185] text-sm">
-            Tel:{""}{" "}
-            <span className="text-gray-500">{props.row.original.number}</span>
-          </Text>
-        </div>
-      ),
+      cell: (props) => {
+        const contactName = props.row.original.contact || "No contact email";
+        const contactNumber = props.row.original.number || "No number";
+    
+        return (
+          <div className="flex flex-col">
+            <Text fw={500} c={props.row.original.contact ? "black" : "dimmed"}>
+              {contactName}
+            </Text>
+            <Text fw={400} className="text-[#667185] text-sm">
+              Tel:{" "}
+              <span className="text-gray-500">
+                {contactNumber}
+              </span>
+            </Text>
+          </div>
+        );
+      },
     },
+    
     {
       header: "Total Amount Spent",
       accessorKey: "totalAmount",
@@ -58,9 +62,9 @@ const CustomerTable = ({ customers, }: CategoriesTableProps) => {
           <Text fw={500} c="black">
             {props.row.original.totalAmount}
           </Text>
-          <Text fw={400} className="text-[#667185] text-sm">
-           Total Trasactions:{""}
-            <span className="text-gray-500">
+          <Text fw={400} className="text-[#667185] flex gap-2 text-sm">
+           Total Transactions:{""} 
+            <span className="text-gray-800">
               {props.row.original.totalTransaction}
             </span>
           </Text>
@@ -76,25 +80,25 @@ const CustomerTable = ({ customers, }: CategoriesTableProps) => {
         </Text>
       ),
     },
-    {
-      header: "Status",
-      accessorKey: "status",
-      cell: (props) => {
-        const status = props.row.original.status;
-        return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "Active"
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
-          >
-            {status === "Active" ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2">{status}</span>
-          </div>
-        );
-      },
-    },
+    // {
+    //   header: "Status",
+    //   accessorKey: "status",
+    //   cell: (props) => {
+    //     const status = props.row.original.status;
+    //     return (
+    //       <div
+    //         className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+    //           status === "Active"
+    //             ? "bg-[#ECFDF3] text-[#027A48]"
+    //             : "bg-[#FFFAEB] text-[#B54708]"
+    //         }`}
+    //       >
+    //         {status === "Active" ? <PaidDot /> : <UnpaidDot />}
+    //         <span className="ml-2">{status}</span>
+    //       </div>
+    //     );
+    //   },
+    // },
 
     {
       header: "",
@@ -128,11 +132,31 @@ const CustomerTable = ({ customers, }: CategoriesTableProps) => {
     totalAmount: customer.sales_orders_sum_order_total
       ? `₦${Number(customer.sales_orders_sum_order_total).toLocaleString()}`
       : "₦0",
-    totalTransaction: `${customer.sales_orders_count} transaction(s)`,
-    timeStamp: new Date(customer.created_at).toLocaleString(),
+    totalTransaction: `${customer.sales_orders_count}`,
+    timeStamp: new Date(customer.created_at).toLocaleString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "2-digit",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric",
+      hour12: true,
+    }),
+    
     status: customer.status === "active" ? "Active" : "Inactive",
   }));
 
+
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center h-64">
+        <Text fw={500} size="md" c="dimmed">
+          Loading customers...
+        </Text>
+      </div>
+    );
+  }
+  
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
@@ -141,7 +165,8 @@ const CustomerTable = ({ customers, }: CategoriesTableProps) => {
         showSearch
         showSortFilter
         searchPlaceholder="Search orders"
-        length={5}
+        length={8}
+        onSortChange={onSortChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

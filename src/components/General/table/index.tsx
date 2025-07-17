@@ -18,7 +18,7 @@ import SortFilter from "./sortFilter";
 import { SortOption, TableRowData } from "../../../types";
 import { Table as ReactTable } from "@tanstack/react-table";
 import ReusableFilterComponent, { FilterValues } from "./reuseableFilter";
-import EmptyStateImage from "../../../assets/images/EmptyState.png";
+import EmptyStateImage from "../../../assets/images/Empty.png";
 
 export type TableInstance = ReactTable<TableRowData>;
 
@@ -54,6 +54,8 @@ export interface TanTableProps<T extends Record<string, any>> {
     | "returns"
     | "discount"
     | "audit";
+  onSortChange?: (sortKey: string) => void;
+  activeSort?: string;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -78,17 +80,21 @@ const TanTable = <T extends Record<string, any>>({
   roles,
   modules,
   tableType,
+  onSortChange,
+  activeSort,
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [filteredData, setFilteredData] = useState<T[]>(data);
+  const [, setFilteredData] = useState<T[]>(data);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
 
-  const tableData = useMemo(() => filteredData, [filteredData]);
+  // const tableData = useMemo(() => filteredData, [filteredData]);
+  const tableData = useMemo(() => data, [data]);
+
   const columns = useMemo(() => columnData, [columnData]);
   // const pageSize = length;
   const pageSize = showAll && showSeeAllToggle ? data.length : length;
@@ -123,10 +129,6 @@ const TanTable = <T extends Record<string, any>>({
       setPageIndex(newPagination.pageIndex);
     },
   });
-
-  const handleSort = (sortedData: T[]) => {
-    setFilteredData(sortedData);
-  };
 
   const startPage = useMemo(() => {
     const totalPages = table.getPageCount();
@@ -235,7 +237,12 @@ const TanTable = <T extends Record<string, any>>({
               />
             )}
 
-            {showSortFilter && <SortFilter data={data} onSort={handleSort} />}
+            {showSortFilter && (
+              <SortFilter
+                onSortChange={onSortChange!}
+                activeSort={activeSort || ""}
+              />
+            )}
           </div>
           <div className="hidden md:flex ml-auto ">
             <div className="flex flex-row items-center gap-4 flex-wrap">
@@ -255,7 +262,10 @@ const TanTable = <T extends Record<string, any>>({
 
               {showSortFilter && (
                 <div className="min-w-[150px]">
-                  <SortFilter data={data} onSort={handleSort} />
+                  <SortFilter
+                    onSortChange={onSortChange!}
+                    activeSort={activeSort || ""}
+                  />
                 </div>
               )}
 
@@ -453,44 +463,54 @@ const TanTable = <T extends Record<string, any>>({
           color: "var(--mantine-color-gray-7)",
         }}
       >
-        {loadingState ? (
-          <Box
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "2.5rem 0",
-            }}
-          >
-            Loading...
-          </Box>
-        ) : data.length < 1 ? (
-          <Box
-            style={{
-              padding: "3rem 1rem",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "1rem",
-            }}
-          >
-            <img
-              src={EmptyStateImage}
-              alt="No data"
-              style={{ width: "160px", height: "auto", opacity: 0.8 }}
-            />
-            <Text fw={500} size="lg" c="gray.6">
-              No data to display
-            </Text>
-          </Box>
-        ) : (
-          <TanBody
-            table={table}
-            loadingState={loadingState}
-            onClick={onClick}
-          />
-        )}
+{loadingState ? (
+  <Box
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2.5rem 0",
+    }}
+  >
+    Loading...
+  </Box>
+) : table.getFilteredRowModel().rows.length === 0 ? (
+  <Box
+    style={{
+      padding: "3rem 1rem",
+      textAlign: "center",
+      display: "flex",
+      flexDirection: "column",
+      alignItems: "center",
+      gap: "0.25rem",
+    }}
+  >
+    <img
+      src={EmptyStateImage}
+      alt="No data"
+      style={{ width: "160px", height: "auto", opacity: 0.8 }}
+    />
+    <Text fw={600} size="lg" c="#1D2739">
+      Not found
+    </Text>
+    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+      We couldn’t find what you are
+    </Text>
+    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+      looking for. Try entering a correct
+    </Text>
+    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+      order ID, name or amount
+    </Text>
+  </Box>
+) : (
+  <TanBody
+    table={table}
+    loadingState={loadingState}
+    onClick={onClick}
+  />
+)}
+
       </Box>
       {showSeeAllToggle && !showAll && data.length > length && (
         <Box

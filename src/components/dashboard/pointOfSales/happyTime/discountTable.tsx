@@ -5,6 +5,7 @@ import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable from "../../../General/table";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { useState } from "react";
 
 
 // type DiscountTableProps = {
@@ -17,9 +18,23 @@ import { FilterValues } from "../../../General/table/reuseableFilter";
 
 const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; }) => {
 
+  const [, setSortBy] = useState<string>("");
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
-console.log (rawDiscounts)
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+
+    setAppliedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
+
+
   const discounts = rawDiscounts.map((item: any) => ({
     name: item.name || "Unnamed",
     discountCode: item.code || "-",
@@ -33,26 +48,7 @@ console.log (rawDiscounts)
   
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+   
     {
       header: "Product",
       accessorKey: "name",
@@ -71,13 +67,13 @@ console.log (rawDiscounts)
         </div>
       ),
     },
-    {
-      header: "Discount Code",
-      accessorKey: "discountCode",
-      cell: ({ row }) => (
-        <Text c="textSecondary.7">{row.original.discountCode}</Text>
-      ),
-    },
+    // {
+    //   header: "Discount Code",
+    //   accessorKey: "discountCode",
+    //   cell: ({ row }) => (
+    //     <Text c="textSecondary.7">{row.original.discountCode}</Text>
+    //   ),
+    // },
     {
       header: "Percent Off",
       accessorKey: "percent",
@@ -142,6 +138,7 @@ console.log (rawDiscounts)
         showSearch
         showFilter
         showSortFilter
+        onSortChange={handleSortChange}
         searchPlaceholder="Search orders"
         length={8}
            //@ts-ignore

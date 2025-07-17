@@ -6,9 +6,24 @@ import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { formatDate,formatMoney  } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { useState } from "react";
 
-const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void; }) => {
+const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void;  isLoading: boolean }) => {
+  const [, setSortBy] = useState<string>("");
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
+
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+
+    setAppliedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
 
   // ✅ Mapped data
   const tableData = Array.isArray(salesData)
@@ -48,26 +63,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
   };
    
   const columns: ColumnDef<any>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+   
     {
       header: "Order ID",
       accessorKey: "orderID",
@@ -155,6 +151,16 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
     },
     
   ];
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Text fw={500} size="md" c="dimmed">
+          Loading orders...
+        </Text>
+      </div>
+    );
+  }
+  
 
   return (
     <main className="w-full h-auto py-8 rounded-lg bg-white">
@@ -167,6 +173,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange }: { salesData: any[]
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        onSortChange={handleSortChange}
         showFilter
         tableType="sales"
         onFilterChange={onFilterChange}

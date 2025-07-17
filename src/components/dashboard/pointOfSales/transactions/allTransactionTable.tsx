@@ -14,11 +14,13 @@ import { ROUTES } from "../../../../constants/routes";
 interface AllTransactionTableProps {
   data?: TableRowData[];
   isLoading?: boolean;
+  onSortChange: (sortKey: string) => void;
 }
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
   isLoading = false,
+  onSortChange,
 }) => {
   const navigate = useNavigate();
 
@@ -34,26 +36,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   };
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+   
     {
       header: "Transaction ID",
       accessorKey: "transactionID",
@@ -168,6 +151,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        onSortChange={onSortChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

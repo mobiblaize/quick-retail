@@ -1,57 +1,21 @@
-import { useState } from "react";
+
 import { Menu, Button, Box, Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
 
-interface SortFilterProps<T extends Record<string, any>> {
-  data: T[];
-  onSort: (sortedData: T[]) => void;
+
+interface SortFilterProps {
+  onSortChange: (sortBy: string) => void;
+  activeSort: string;
 }
 
-const SortFilter = <T extends Record<string, any>>({
-  data,
-  onSort,
-}: SortFilterProps<T>) => {
-  const [activeOption, setActiveOption] = useState<string>("All");
-
-  // Default sort options - can be extended later
+const SortFilter = ({ onSortChange, activeSort }: SortFilterProps) => {
   const sortOptions = [
-    { label: "All", key: "all" },
-    { label: "Recent", key: "recent" },
-    { label: "Oldest", key: "oldest" },
-    { label: "A-Z", key: "a-z" },
-    { label: "Z-A", key: "z-a" },
+    { label: "All", key: "" },
+    { label: "Recent",  key: "desc"  },
+    { label: "Oldest",  key: "asc"},
+    { label: "A-Z",  key: "desc"  },
+    { label: "Z-A",  key: "asc" },
   ];
-
-  const handleSort = (optionKey: string) => {
-    setActiveOption(optionKey);
-    const sortedData = [...data];
-
-    switch (optionKey) {
-      case "recent":
-        // Will be implemented when API is connected
-        // sortedData.sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime());
-        break;
-      case "oldest":
-        // Will be implemented when API is connected
-        // sortedData.sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime());
-        break;
-      case "a-z":
-        sortedData.sort((a, b) =>
-          (a.name?.toString() || "").localeCompare(b.name?.toString() || "")
-        );
-        break;
-      case "z-a":
-        sortedData.sort((a, b) =>
-          (b.name?.toString() || "").localeCompare(a.name?.toString() || "")
-        );
-        break;
-      default:
-        // "All" case - return original order
-        break;
-    }
-
-    onSort(sortedData);
-  };
 
   return (
     <Box style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -76,18 +40,18 @@ const SortFilter = <T extends Record<string, any>>({
               },
             }}
           >
-            {activeOption}
+            {activeSort || "All"}
           </Button>
         </Menu.Target>
         <Menu.Dropdown style={{ minWidth: "120px" }}>
           {sortOptions.map((option) => (
             <Menu.Item
               key={option.key}
-              onClick={() => handleSort(option.key)}
+              onClick={() => onSortChange(option.key)}
               styles={{
                 item: {
                   backgroundColor:
-                    activeOption === option.key
+                    activeSort === option.key
                       ? "var(--mantine-color-gray-1)"
                       : undefined,
                 },
@@ -103,3 +67,4 @@ const SortFilter = <T extends Record<string, any>>({
 };
 
 export default SortFilter;
+

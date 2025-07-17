@@ -78,7 +78,7 @@ const payload = shouldFetch
       <SalesOverview />
       <CustomerAnalysis />
       <DivisionSalesOverview />
-      <CustomerOrdersTable salesData={salesData}  onFilterChange={handleFilterChange} />
+      <CustomerOrdersTable salesData={salesData} onFilterChange={handleFilterChange} isLoading={false} />
     </PageContainer>
   );
 };

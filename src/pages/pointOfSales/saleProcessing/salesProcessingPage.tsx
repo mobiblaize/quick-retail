@@ -85,6 +85,7 @@ const payload = {
         <CustomerOrdersTable
         salesData={salesData}
         onFilterChange={handleFilterChange}
+        isLoading={isLoading}
       />
     </PageContainer>
   );

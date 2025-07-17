@@ -12,6 +12,7 @@ import {
   truncateText,
 } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { useState } from "react";
 
 const ReturnsTable = ({
   returns,
@@ -22,6 +23,21 @@ const ReturnsTable = ({
   isLoading: any;
   onFilterChange: (filters: FilterValues) => void;
 }) => {
+  const [, setSortBy] = useState<string>("");
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+
+
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+
+    setAppliedFilters(updatedFilters);
+    onFilterChange(updatedFilters);
+  };
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
     productCode: item.product_variation?.sku || "N/A",
@@ -42,26 +58,7 @@ const ReturnsTable = ({
   );
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    
     {
       header: "Name",
       accessorKey: "name",
@@ -169,6 +166,7 @@ const ReturnsTable = ({
           showFilter
           tableType="returns"
           onFilterChange={onFilterChange}
+          onSortChange={handleSortChange}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

@@ -16,10 +16,12 @@ import { ROUTES } from "../../../constants/routes";
 import {
   Settings,
 } from "../../../assets/svg";
+import { useUserStore } from "../../../hooks/useUserStore";
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
-
+  const { user,  } = useUserStore();
+  console.log(user)
   const getSidebarItems = () => {
     switch (activeSection) {
       case "Point of Sales":
@@ -56,6 +58,16 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         </div>
 
         <div className="mt-8 px-3 overflow-y-auto hide-scrollbar flex-1">
+  <div className="mb-6 px-3 bg-[#F0F2F5] p-4 rounded-lg">
+    <div className="text-[#101928] font-medium text-lg">
+      {user?.firstname} {user?.lastname}
+    </div>
+    <div className="text-[#667185] text-md mt-1">
+      {user?.locations?.[0]?.name}
+    </div>
+  </div>
+
+
           <div className="mb-6">
             <List spacing="md" size="sm" className="p-0">
               {sidebarItems.map((item, index) => (
