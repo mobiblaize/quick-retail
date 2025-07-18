@@ -11,8 +11,6 @@ import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
     paginate: false,
   };
 
-type PayloadType = Partial<typeof defaultPayload>;
-
 export const useFetchUsers = (queryParams: Record<string, any> = {}) => {
   const queryString = new URLSearchParams(queryParams).toString();
   return useGetData(`admin/staff/all${queryString ? `?${queryString}` : ""}`);
