@@ -9,6 +9,7 @@ import { useEffect } from "react";
 
 export interface UserRowData {
   user_uuid: string;
+  userID: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -55,7 +56,7 @@ const UserManagementTable = () => {
       accessorKey: "email",
       cell: ({ row }) => (
         <Text fw={500} c="black">
-          {row.original.user_uuid}
+          {row.original.userID}
         </Text>
       ),
     },

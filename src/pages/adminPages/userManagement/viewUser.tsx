@@ -12,6 +12,7 @@ const ViewUser = () => {
   const [deactiveModalOpen, setDeactiveModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
+  
 
   const isPending = selectedUser?.status?.toLowerCase() === "pending";
   const isActive = selectedUser?.status?.toLowerCase() === "active";
@@ -164,7 +165,8 @@ const ViewUser = () => {
             email: selectedUser?.email || "",
             phone_number: selectedUser?.phone_number || "",
             role_id: selectedUser?.roles?.[0]?.id?.toString() || "",
-            locationId: selectedUser.locations?.[0]?.id?.toString() ?? ""
+            locationId: selectedUser.locations?.[0]?.id?.toString() ?? "",
+            applicationId: selectedUser?.application_id?.toString() || "",
           }}
         />
       )}

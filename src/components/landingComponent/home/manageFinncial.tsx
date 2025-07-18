@@ -4,21 +4,21 @@ const ManageFinncial = () => {
   const Values = [
     {
       icon: Barchat,
-      title: "Core Value Proposition",
+      title: "Create sales and track inventory ",
       description:
-        "This is a content that would run for this value proposition to the target population and at best this should not be more than 3 lines.",
+        "Make quick business sales with your mobile phone or laptop and track ",
     },
     {
       icon: Barchat,
-      title: "Core Value Proposition",
+      title: "Multiple stores for one business",
       description:
-        "This is a content that would run for this value proposition to the target population and at best this should not be more than 3 lines.",
+        "Unlock the potential of your business by   creating multiple stores for your business and tracking them digitally.",
     },
     {
       icon: Barchat,
-      title: "Core Value Proposition",
+      title: "Generate reports",
       description:
-        "This is a content that would run for this value proposition to the target population and at best this should not be more than 3 lines.",
+        "Generating a core business reports for your retail business helps you track performance and identify trends.",
     },
   ];
 

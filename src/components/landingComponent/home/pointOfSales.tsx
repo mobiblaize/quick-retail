@@ -1,106 +1,150 @@
 import { Barchat } from "../../../assets/svg";
 import frame from "../../../assets/images/frame1.png";
-import frame2 from "../../../assets/images/frame2.png";
-import frame3 from "../../../assets/images/frame3.png";
 
 const PointOfSales = () => {
   const sales = [
     {
       icon: Barchat,
-      label: "Sales Invoice",
+      label: "Sales Processing",
       description: "Manag, Create, Share, Sales Invoice with customers.",
     },
     {
       icon: Barchat,
-      label: "Receipt",
+      label: "Product and inventory management",
       description: "Manag, Create, Share, Sales Invoice with customers.",
     },
     {
       icon: Barchat,
-      label: "Receipt",
+      label: "Returns log",
       description: "Manag, Create, Share, Sales Invoice with customers.",
     },
     {
       icon: Barchat,
-      label: "Receipt",
+      label: "Customer management",
+      description: "Manag, Create, Share, Sales Invoice with customers.",
+    },
+
+    {
+      icon: Barchat,
+      label: "Discounts/Promo and so much more...",
       description: "Manag, Create, Share, Sales Invoice with customers.",
     },
   ];
 
+  const purchase = [
+    {
+      icon: Barchat,
+      label: "Inventory Tracking",
+    },
+    {
+      icon: Barchat,
+      label: "Purchase Invoice",
+    },
+    {
+      icon: Barchat,
+      label: "Supplier Management",
+    },
+  ]
+
+  const finance = [
+    {
+      icon: Barchat,
+      label: "Sales and Purchase Invoice",
+    },
+    {
+      icon: Barchat,
+      label: "Journal Entry",
+    },
+    {
+      icon: Barchat,
+      label: "Account Reconciliation",
+    },
+    {
+      icon: Barchat,
+      label: "Transaction Management",
+    },
+  ]
+
+  const asset = [
+    {
+      icon: Barchat,
+      label: "Asset Request and Register",
+    },
+    {
+      icon: Barchat,
+      label: "Procurement",
+    },
+    {
+      icon: Barchat,
+      label: "Reports",
+    },
+  ]
+
   return (
     <main className="border-[#F8E2D8] border-t">
       <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div className="flex flex-col">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
+          {/* Left Column */}
+          <div className="flex flex-col h-full">
             <div>
               <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
                 Point of Sales System
               </h2>
               <p className="mt-4 text-[#667085] font-sans">
-                The point of sales system has sub-modules within the ERP that
-                covers safes, inventory, products, discounts, customer
-                management and so many other in-store functionalities needed for
-                business
+                This covers sales, inventory, products, discounts, customer management and
+                so many other in-store functionalities needed for businesses to make and manage sales
               </p>
             </div>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
+            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mt-6">
+              <div className="text-[#667085] font-sans">Some features include:</div>
               {sales.map((item, i) => (
-                <div className="flex gap-3 items-start" key={i}>
-                  <item.icon />
-                  <div className="flex flex-col">
-                    <p className="text-sm font-clash-medium text-gray-800">
-                      {item.label}
-                    </p>
-                    <span className="text-sm text-[#667085] mt-1">
-                      {item.description}
-                    </span>
-                  </div>
+                <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                  <item.icon height="20" width="20" />
+                  <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex justify-center lg:justify-end order-first lg:order-last">
-            <img src={frame} alt="frame" className="max-w-full h-auto" />
+
+          {/* Right Column */}
+          <div className="h-full flex justify-center lg:justify-end">
+            <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-b border-[#F8E2D8]">
-        <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="flex justify-center lg:justify-start order-first">
-              <img src={frame2} alt="frame" className="max-w-full h-auto" />
+
+      {/* <section className="border-t border-b border-[#F8E2D8]"> */}
+      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          <div className="h-full flex justify-center lg:justify-end">
+            <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
+          </div>
+          <div className="flex flex-col">
+            <div>
+              <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
+                Procurement  System Functionalities.
+              </h2>
+              <p className="mt-4 text-[#667085] font-sans">
+                The procurement app in the ERP streamlines the purchasing process
+                by integrating with various modules, including inventory management,
+                supplier management, and order tracking, ensuring efficient procurement
+                operations.
+              </p>
             </div>
-            <div className="flex flex-col">
-              <div>
-                <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
-                  Purchase System Functionalities
-                </h2>
-                <p className="mt-4 text-[#667085] font-sans">
-                  The sales system functionality within the finance module is
-                  connected to three (3) sub-modules within the ERP, namely, the
-                  instore, Customer Relation System and E-Commerce.
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
-                {sales.map((item, i) => (
-                  <div className="flex gap-3 items-start" key={i}>
-                    <item.icon />
-                    <div className="flex flex-col">
-                      <p className="text-sm font-clash-medium text-gray-800">
-                        {item.label}
-                      </p>
-                      <span className="text-sm text-[#667085] mt-1">
-                        {item.description}
-                      </span>
-                    </div>
-                  </div>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mt-6">
+              <div className="text-[#667085] font-sans">Some features include:</div>
+              {purchase.map((item, i) => (
+                <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                  <item.icon height="20" width="20" />
+                  <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
+        </div>
       </section>
+      {/* </section> */}
 
       <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
@@ -110,69 +154,57 @@ const PointOfSales = () => {
                 Finance System Functionalities.
               </h2>
               <p className="mt-4 text-[#667085] font-sans">
-                The sales system functionality witin the finance module is
-                connected to three (3) sub-modules within the ERP, namely the
-                Instore, Customer Relation System and E-Commerce.
+                The covers core accounting functions, enabling efficient tracking of sales,
+                expenses, and profits. It simplifies financial reporting, inventory management,
+                and customer transactions, ensuring that retailers can focus on growth while
+                maintaining accurate financial oversight.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
-              {sales.map((item, i) => (
-                <div className="flex gap-3 items-start" key={i}>
-                  <item.icon />
-                  <div className="flex flex-col">
-                    <p className="text-sm font-clash-medium text-gray-800">
-                      {item.label}
-                    </p>
-                    <span className="text-sm text-[#667085] mt-1">
-                      {item.description}
-                    </span>
-                  </div>
+              {finance.map((item, i) => (
+                <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                  <item.icon height="20" width="20" />
+                  <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
                 </div>
               ))}
             </div>
           </div>
-          <div className="flex justify-center lg:justify-end order-first lg:order-last">
-            <img src={frame3} alt="frame" className="max-w-full h-auto" />
+          <div className="h-full flex justify-center lg:justify-end">
+            <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
           </div>
         </div>
       </section>
 
-      <section className="border-t border-b border-[#F8E2D8]">
+      {/* <section className="border-t border-b border-[#F8E2D8]"> */}
         <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="flex justify-center lg:justify-start order-first">
-              <img src={frame3} alt="frame" className="max-w-full h-auto" />
+            <div className="h-full flex justify-center lg:justify-end">
+              <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
             </div>
             <div className="flex flex-col">
               <div>
                 <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
-                  Asset SystemFunctionality
+                  Asset Management System Features.
                 </h2>
                 <p className="mt-4 text-[#667085] font-sans">
-                  The sales system functionality within the finance module is
-                  connected to three (3) sub-modules within the ERP, namely, the
-                  instore, Customer Relation System and E-Commerce.
+                  This simplifies asset management for retail businesses. With real-time
+                  updates and user-friendly dashboards, it boosts efficiency and keeps your
+                  assets in check. Say goodbye to manual tracking and embrace smarter retail
+                  management!
                 </p>
               </div>
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
-                {sales.map((item, i) => (
-                  <div className="flex gap-3 items-start" key={i}>
-                    <item.icon />
-                    <div className="flex flex-col">
-                      <p className="text-sm font-clash-medium text-gray-800">
-                        {item.label}
-                      </p>
-                      <span className="text-sm text-[#667085] mt-1">
-                        {item.description}
-                      </span>
-                    </div>
+                {asset.map((item, i) => (
+                  <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                    <item.icon height="20" width="20" />
+                    <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
                   </div>
                 ))}
               </div>
             </div>
           </div>
         </section>
-      </section>
+      {/* </section> */}
     </main>
   );
 };

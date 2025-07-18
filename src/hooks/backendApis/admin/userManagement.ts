@@ -27,6 +27,11 @@ export const useFetchAllRoles = (
   const payload = { ...defaultPayload, ...customPayload };
 
   return useFetchPostData("admin/roles/all-roles", payload);
+}; 
+
+export const useFetchAllApplicationRoles = () => {
+
+  return useGetData("admin/staff/subscribed-applications");
 };
 
 

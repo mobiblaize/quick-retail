@@ -4,6 +4,7 @@ import { useState } from "react";
 import {
     useCreateUser,
     useFetchAllRoles,
+    useFetchAllApplicationRoles,
 } from "../../../../../hooks/backendApis/admin/userManagement";
 import { showNotification } from "@mantine/notifications";
 import { useFetchAllLocations } from "../../../../../hooks/backendApis/pos/products";
@@ -15,7 +16,7 @@ type Props = {
 
 export default function AddUserModal({ opened, onClose }: Props) {
     const windowUrl = window.location.origin;
-    
+
     const [formValues, setFormValues] = useState({
         firstname: "",
         lastname: "",
@@ -23,12 +24,14 @@ export default function AddUserModal({ opened, onClose }: Props) {
         phone_number: "",
         role_id: "",
         locationID: "",
-        password_url:"",
+        password_url: "",
+        applicationId: "",
     });
 
     const { mutate: createUser, isPending } = useCreateUser();
     const { data: locationData } = useFetchAllLocations();
     const { data: roleData } = useFetchAllRoles();
+    const { data: applicationData } = useFetchAllApplicationRoles();
 
     const roleOptions = Array.isArray(roleData?.data)
         ? roleData.data.map((role: { display_name: string; id: string }) => ({
@@ -46,6 +49,14 @@ export default function AddUserModal({ opened, onClose }: Props) {
         }))
         : [];
 
+    const applicationOptions = Array.isArray(applicationData?.data)
+        ? applicationData.data.map((app: { id: number; name: string }) => ({
+            label: app.name,
+            value: String(app.id),
+        }))
+        : [];
+
+
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -60,7 +71,8 @@ export default function AddUserModal({ opened, onClose }: Props) {
             phone_number: formValues.phone_number,
             role_id: formValues.role_id,
             locationId: formValues.locationID,
-            password_url: windowUrl + "/create-password"
+            password_url: windowUrl + "/create-password",
+            applicationId: formValues.applicationId,
         };
 
         createUser(payload, {
@@ -196,6 +208,32 @@ export default function AddUserModal({ opened, onClose }: Props) {
                             </select>
                         </div>
 
+
+                        {/* APPLICATION */}
+                        <div>
+                            <label className="text-sm text-gray-700 block mb-1">Select Application</label>
+                            <select
+                                name="applicationId"
+                                value={formValues.applicationId}
+                                onChange={(e) => {
+                                    setFormValues({
+                                        ...formValues,
+                                        applicationId: e.target.value,
+                                    });
+                                }}
+                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                            >
+                                <option value="" disabled>
+                                    Select application
+                                </option>
+                                {applicationOptions.map((app: any) => (
+                                    <option key={app.value} value={app.value}>
+                                        {app.label}
+                                    </option>
+                                ))}
+                            </select>
+
+                        </div>
                     </div>
 
                     {/* Buttons */}

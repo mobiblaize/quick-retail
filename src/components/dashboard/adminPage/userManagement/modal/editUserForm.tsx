@@ -1,7 +1,7 @@
 import { Button } from "@mantine/core";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useUpdateUser, useFetchAllRoles } from "../../../../../hooks/backendApis/admin/userManagement";
+import { useUpdateUser, useFetchAllRoles, useFetchAllApplicationRoles } from "../../../../../hooks/backendApis/admin/userManagement";
 import { showNotification } from "@mantine/notifications";
 import { useFetchAllLocations } from "../../../../../hooks/backendApis/pos/products";
 
@@ -16,6 +16,7 @@ type Props = {
         phone_number: string;
         role_id: string;
         locationId: string;
+        applicationId: string;
     };
 };
 
@@ -27,11 +28,13 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
         phone_number: "",
         role_id: "",
         locationId: "",
+        applicationId: "",
     });
 
     const { mutate: updateUser, isPending } = useUpdateUser(userUUID);
     const { data: roleData } = useFetchAllRoles();
     const { data: locationData } = useFetchAllLocations();
+    const { data: applicationData } = useFetchAllApplicationRoles();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -88,6 +91,13 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
         ? locationData.data.stores.map((store: { locationID: string; name: string }) => ({
             label: store.name,
             value: store.locationID.toString(),
+        }))
+        : [];
+
+     const applicationOptions = Array.isArray(applicationData?.data)
+        ? applicationData.data.map((app: { id: number; name: string }) => ({
+            label: app.name,
+            value: String(app.id),
         }))
         : [];
 
@@ -184,6 +194,24 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
                         >
                             <option value="">Select Store</option>
                             {storeOptions.map((store: any) => (
+                                <option key={store.value} value={store.value}>
+                                    {store.label}
+                                </option>
+                            ))}
+                        </select>
+                    </div>
+
+                    {/* Application */}
+                     <div>
+                        <label className="text-sm text-gray-700 block mb-1">Select Application</label>
+                        <select
+                            name="applicationId"
+                            value={formValues.applicationId}
+                            onChange={handleChange}
+                            className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
+                        >
+                            <option value="">Select application</option>
+                            {applicationOptions.map((store: any) => (
                                 <option key={store.value} value={store.value}>
                                     {store.label}
                                 </option>
