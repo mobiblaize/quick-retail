@@ -25,6 +25,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { sal
     onFilterChange(updatedFilters);
   };
 
+  
   // ✅ Mapped data
   const tableData = Array.isArray(salesData)
   ? salesData.map((sale) => {
@@ -49,6 +50,7 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { sal
       };
     })
   : [];
+  
 
   const navigate = useNavigate();
 

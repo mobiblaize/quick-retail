@@ -74,7 +74,7 @@ const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
         <div className="space-y-4 grid grid-cols-1">
           <FormInput
             label="Category Name"
-            placeholder="Enter Cateory Name"
+            placeholder="Enter Category Name"
             paddingY={6}
             value={categoryName}
             onChange={(e: React.ChangeEvent<HTMLInputElement>) =>

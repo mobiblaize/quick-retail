@@ -4,59 +4,46 @@ import AnalyticsOverview from "../../../components/dashboard/pointOfSales/dashbo
 import SalesOverview from "../../../components/dashboard/pointOfSales/dashboard/salesOverview";
 import CustomerAnalysis from "../../../components/dashboard/pointOfSales/dashboard/customerAnalysis";
 import DivisionSalesOverview from "../../../components/dashboard/pointOfSales/dashboard/divisionSalesOverview";
-import CustomerOrdersTable from "../../../components/dashboard/pointOfSales/dashboard/orderTable";
-import { useFetchAllSales } from "../../../hooks/backendApis/pos/salesProcessing";
-import { useState } from "react";
-import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import DashboardOrdersTable from "../../../components/dashboard/pointOfSales/dashboard/dashboardOrderTable";
 import EmptyState from "../../../components/General/EmptyState";
+import { useState, useEffect } from "react";
 
 const DashboardPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
-    null
-  );
-  const [dateRange] = useState<{ startDate: string; endDate: string }>({
-    startDate: "",
-    endDate: "",
-  });
+  const [isLoading, setIsLoading] = useState(true);
+  const [hasData, setHasData] = useState(false);
 
-  const mapOrderStatus = (status: string | undefined) => {
-    if (!status || status.toLowerCase() === "all") return "";
-    if (status.toLowerCase() === "paid") return "paid";
-    if (status.toLowerCase() === "pending") return "pending";
-    return status.toLowerCase();
-  };
+  useEffect(() => {
+    const loadData = async () => {
+      setIsLoading(true);
 
-  const mapFiltersToPayload = (filters: FilterValues) => ({
-    // @ts-ignore
-    search: filters.search ?? "",
-    // @ts-ignore
-    sort_by: filters.sortBy ?? "",
-    per_page: "500",
-    paginate: true,
-    start_date: filters.startDate ?? "",
-    end_date: filters.endDate ?? "",
-    status: mapOrderStatus(filters.paymentStatus),
-    price_from: filters.priceFrom ?? 100,
-    price_to: filters.priceTo ?? "",
-  });
+      const [
+        analyticsHasData,
+        salesHasData,
+        customerHasData,
+        divisionHasData,
+        ordersHasData,
+      ] = await Promise.all([
+        Promise.resolve(true), 
+        Promise.resolve(false),
+        Promise.resolve(false),
+        Promise.resolve(false),
+        Promise.resolve(false),
+      ]);
 
-  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
-  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+      const anyData = [
+        analyticsHasData,
+        salesHasData,
+        customerHasData,
+        divisionHasData,
+        ordersHasData,
+      ].some(Boolean);
 
-  const payload = {
-    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-    ...(startDate ? { start_date: startDate } : {}),
-    ...(endDate ? { end_date: endDate } : {}),
-  };
+      setHasData(anyData);
+      setIsLoading(false);
+    };
 
-  // const { data = {} } = useFetchAllSales(payload) || {};
-  const { data = {}, isLoading } = useFetchAllSales(payload) || {};
-
-  const salesData = data?.data?.sales?.data ?? [];
-
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);
-  };
+    loadData();
+  }, []);
 
   const subHeaders = [
     <Text fw={500} size="xl" c="black">
@@ -67,25 +54,22 @@ const DashboardPage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       {isLoading ? (
-        <Text ta="center" py="xl">Loading...</Text> 
-      ) : salesData.length === 0 ? (
-        <EmptyState />
+        <Text ta="center" py="xl">Loading...</Text>
+      ) : !hasData ? (
+        <EmptyState
+        />
       ) : (
         <>
           <AnalyticsOverview />
           <SalesOverview />
           <CustomerAnalysis />
           <DivisionSalesOverview />
-          <CustomerOrdersTable
-                salesData={salesData}
-                onFilterChange={handleFilterChange}
-                 isLoading={false}          />
+          <DashboardOrdersTable />
         </>
       )}
     </PageContainer>
   );
-  
-  
 };
 
 export default DashboardPage;
+
