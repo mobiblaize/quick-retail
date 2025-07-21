@@ -8,12 +8,12 @@ import { formatMoney } from "../../../../utils/helpers";
 const ViewOrderReceipt = () => {
   const location = useLocation();
   const orderId = location.state?.orderID;
-  const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
+  const { data: saleData, isLoading,  } = useFetchSingleSale(orderId);
 
   if (!orderId) return <div>Preparing receipt...</div>;
   if (isLoading) return <div>Loading receipt...</div>;
-  if (isError || !saleData?.data)
-    return <div>Failed to load receipt data.</div>;
+  // if (isError || !saleData?.data)
+  //   return <div>Failed to load receipt data.</div>;
 
   const order = saleData.data;
   

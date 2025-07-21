@@ -53,7 +53,8 @@ export interface TanTableProps<T extends Record<string, any>> {
     | "product"
     | "returns"
     | "discount"
-    | "audit";
+    | "audit"
+    | "transaction";
   onSortChange?: (sortKey: string) => void;
   activeSort?: string;
 }
@@ -205,6 +206,25 @@ const TanTable = <T extends Record<string, any>>({
     setPageIndex(0);
   }, [data]);
 
+  // Define all possible sort options
+const baseSortOptions: SortOption[] = [
+  { label: "All", key: "" },
+  { label: "Recent", key: "recent" },
+  { label: "Oldest", key: "oldest" },
+  { label: "A-Z", key: "a-z" },
+  { label: "Z-A", key: "z-a" },
+];
+
+// Define table types that should exclude A-Z and Z-A
+const tablesWithoutAZSort = ["transaction", "returns"];
+
+const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
+  ? baseSortOptions.filter(opt => opt.key !== "a-z" && opt.key !== "z-a")
+  : baseSortOptions;
+
+
+
+
   return (
     <Box className="font-sans">
       <Box
@@ -241,6 +261,7 @@ const TanTable = <T extends Record<string, any>>({
               <SortFilter
                 onSortChange={onSortChange!}
                 activeSort={activeSort || ""}
+                sortOptions={customSortOptions}
               />
             )}
           </div>
@@ -265,6 +286,7 @@ const TanTable = <T extends Record<string, any>>({
                   <SortFilter
                     onSortChange={onSortChange!}
                     activeSort={activeSort || ""}
+                    sortOptions={customSortOptions}
                   />
                 </div>
               )}

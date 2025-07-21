@@ -1,5 +1,17 @@
-import { defaultDashboardAnalysis } from "../../../types";
+import { defaultDashboardAnalysis, SalesPayload } from "../../../types";
 import { useFetchPostData } from "../../useApis";
+
+const defaultsPayload = {
+  search: "",
+  sort_by: "",
+ location_name: "",
+  category_name: "",
+  price_from: "",
+  price_to: "",
+  date_range: "",
+  per_page: "500",
+  paginate: true,
+};
 
 export const useFetchAnalysisOverview = (customPayload?: Partial<typeof defaultDashboardAnalysis>) => {
     const defaultDashboardAnalysis = {
@@ -45,3 +57,38 @@ export const useFetchAnalysisOverview = (customPayload?: Partial<typeof defaultD
     return useFetchPostData("pos/dashboard/category-sales-overview", payload);
   };
   
+  export const useFetchPopularProducts = (
+    productPayload?: Partial<typeof defaultsPayload>
+  ) => {
+  
+    const payload = { ...defaultsPayload, ...productPayload };
+  
+    return useFetchPostData("pos/dashboard/popular-products", payload);
+  };
+  export const useFetchDashbordOrders = (customPayload?: SalesPayload) => {
+    const defaultPayload: SalesPayload = {
+      search: "",
+      sort_by: "",
+      per_page: "500",
+      paginate: true,
+      start_date: "",
+      end_date: "",
+      status: "",
+      //@ts-ignore
+      price_from: "",
+      price_to: "",
+    };
+  
+    const payload = { ...defaultPayload, ...customPayload };
+  
+    return useFetchPostData("pos/dashboard/all-sales", payload);
+  };
+
+  export const useFetchDashboardCustomers = (
+    productPayload?: Partial<typeof defaultsPayload>
+  ) => {
+  
+    const payload = { ...defaultsPayload, ...productPayload };
+  
+    return useFetchPostData("pos/customer/all", payload);
+  };

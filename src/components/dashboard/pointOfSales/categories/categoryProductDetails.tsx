@@ -131,7 +131,7 @@ const CategoryProductDetails = ({
               </Text>
             </div>
             <div className="flex flex-col">
-              <Text fw={"500"}>Product</Text>
+              <Text fw={"500"}>Total Product</Text>
               <Text size="lg" c={"black"} fw={"400"}>
                 {data?.data?.total_products}
               </Text>
@@ -179,7 +179,7 @@ const CategoryProductDetails = ({
               </Text>
             </div> */}
             <div className="flex flex-col">
-              <Text fw={"500"}>In Stock</Text>
+              <Text fw={"500"}>Total Category Stock</Text>
               <Text size="lg" c={"black"} fw={"400"}>
                 {data?.data?.in_stock}
               </Text>

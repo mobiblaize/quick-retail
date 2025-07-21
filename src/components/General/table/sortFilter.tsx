@@ -1,21 +1,22 @@
-
 import { Menu, Button, Box, Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
-
 
 interface SortFilterProps {
   onSortChange: (sortBy: string) => void;
   activeSort: string;
+  sortOptions?: { label: string; key: string }[];
 }
 
-const SortFilter = ({ onSortChange, activeSort }: SortFilterProps) => {
-  const sortOptions = [
+const SortFilter = ({ onSortChange, activeSort, sortOptions }: SortFilterProps) => {
+  const defaultSortOptions = [
     { label: "All", key: "" },
-    { label: "Recent",  key: "desc"  },
-    { label: "Oldest",  key: "asc"},
-    { label: "A-Z",  key: "desc"  },
-    { label: "Z-A",  key: "asc" },
+    { label: "Recent", key: "recent" },
+    { label: "Oldest", key: "oldest" },
+    { label: "A-Z", key: "a-z" },
+    { label: "Z-A", key: "z-a" },
   ];
+
+  const optionsToUse = sortOptions ?? defaultSortOptions;
 
   return (
     <Box style={{ display: "flex", alignItems: "center", gap: "0.5rem" }}>
@@ -44,7 +45,7 @@ const SortFilter = ({ onSortChange, activeSort }: SortFilterProps) => {
           </Button>
         </Menu.Target>
         <Menu.Dropdown style={{ minWidth: "120px" }}>
-          {sortOptions.map((option) => (
+          {optionsToUse.map((option) => (
             <Menu.Item
               key={option.key}
               onClick={() => onSortChange(option.key)}
@@ -67,4 +68,3 @@ const SortFilter = ({ onSortChange, activeSort }: SortFilterProps) => {
 };
 
 export default SortFilter;
-

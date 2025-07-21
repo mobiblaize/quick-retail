@@ -2,13 +2,14 @@ import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import SubCategoryTable from "../../../components/dashboard/pointOfSales/categories/subCategoryTable";
 import { useLocation, useNavigate } from "react-router";
-import {  useFetchSubCatOfCat } from "../../../hooks/backendApis/pos/categories";
+import { useFetchSingleSubCatOfCat } from "../../../hooks/backendApis/pos/categories";
+
 
 const SubCategories = () => {
   const { state } = useLocation();
   const navigate = useNavigate();
   const category = state?.category;
-  const { data, isLoading,refetch  } = useFetchSubCatOfCat(category?.id);
+  const { data, isLoading,refetch  } = useFetchSingleSubCatOfCat(category?.id);
   const subCategories = Array.isArray(data?.data) ? data.data : [];
   const handleDeleteSuccess = () => {
     // Refetch data from backend

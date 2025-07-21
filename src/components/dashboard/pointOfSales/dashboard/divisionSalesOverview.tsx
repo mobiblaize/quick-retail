@@ -2,10 +2,9 @@ import {  Group, Text, Loader } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { useFetchCategorySales,  } from "../../../../hooks/backendApis/pos/dashboard";
+import { useFetchCategorySales, useFetchPopularProducts,  } from "../../../../hooks/backendApis/pos/dashboard";
 import DivisionSalePie from "../../../General/DivisionPie";
-import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/products";
-import { useState } from "react";
+import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
 
 
 const DivisionSalesOverview = () => {
@@ -17,14 +16,13 @@ const DivisionSalesOverview = () => {
     end_date: "",
   });
   const { data, } = useFetchCategorySales(dateRange);
-  const { data: productData, isLoading: loadingProducts, error: productError } = useFetchAllProducts();
+  const { data: productData, isLoading: loadingProducts, error: productError } = useFetchPopularProducts();
 
   const stats = data?.data;
-  const products = productData?.data?.products?.data || [];
-const topProducts = [...products]
-  .sort((a, b) => b.quantity_sold - a.quantity_sold)
-  .slice(0, 3); // adjust to show top 3 or more
 
+  const products = productData?.data?.data || [];
+  const topProducts = products.slice(0, 3);
+  
 
   return (
     <main className="flex flex-col lg:flex-row gap-6">
@@ -82,7 +80,7 @@ const topProducts = [...products]
     </Text>
   ) : (
     <div className="mt-6 flex flex-col gap-4">
-      {topProducts.map((product) => (
+      {topProducts.map((product: { id: Key | null | undefined; image_path: string | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; selling_price: any; }) => (
         <div
           key={product.id}
           className="flex justify-between items-center px-2 py-2 hover:bg-gray-100 rounded"
@@ -90,6 +88,7 @@ const topProducts = [...products]
           <div className="flex gap-2 items-center">
             <img
               src={product.image_path}
+              // @ts-ignore
               alt={product.name}
               className="w-10 h-10 rounded object-cover"
             />

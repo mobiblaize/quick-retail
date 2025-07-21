@@ -48,11 +48,11 @@ interface ViewOrderReceiptDraftProps {
   isError: boolean;
 }
 
-const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceiptDraftProps) =>
+const ViewOrderReceiptDraft = ({ saleData, isLoading, }: ViewOrderReceiptDraftProps) =>
 {
 
   if (isLoading) return <div>Loading receipt...</div>;
-  if (isError || !saleData) return <div>Failed to load receipt data.</div>;
+  // if (isError || !saleData) return <div>Failed to load receipt data.</div>;
 
 
   
