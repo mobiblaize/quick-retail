@@ -16,7 +16,7 @@ import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 
-const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[], isLoading:any,   onFilterChange: (filters: FilterValues) => void; }) => {
+const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[], isLoading: any, onFilterChange: (filters: FilterValues) => void; }) => {
 
   const [, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
@@ -33,7 +33,7 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
     setAppliedFilters(updatedFilters);
     onFilterChange(updatedFilters);
   };
-  
+
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
@@ -46,7 +46,7 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
         ?.filter((name: any) => typeof name === "string")
     )
   );
-  
+
 
   const categories = Array.from(
     new Set(
@@ -55,7 +55,7 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
         ?.filter((name: any) => typeof name === "string")
     )
   );
-  
+
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -88,10 +88,11 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
 
 
   const mappedProducts: TableRowData[] = products.map((product: any) => {
-    const statusRaw = (product.status as string).toLowerCase();
+    const stockStatus = (product.stock_status as string)?.toLowerCase();
 
-    const isActive = statusRaw === "active";
-
+    // Create our own status based on stock_status, ignoring the backend status field
+    const isActive = stockStatus !== "sold out";
+    const frontendStatus = isActive ? "Active" : "Sold Out";
 
     return {
       name: product.name,
@@ -100,11 +101,13 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
       category: product.product?.category?.name || "—",
       sellingPrice: `₦${Number(product.selling_price).toLocaleString()}`,
       stockLevel: product.quantity_available,
-      status: isActive ? "Active" : "Inactive",
+      status: frontendStatus, // Use our calculated status, not product.status
       image: product.image_path,
       items: product.items ?? "",
       variationID: product.variationID,
       ...product,
+      // Override the backend status with our calculated one
+      originalStatus: product.status, // Keep original if needed
     };
   });
 
@@ -179,24 +182,23 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
       accessorKey: "status",
       cell: (props) => {
         const status = props.row.original.status;
-        const isActive = typeof status === "string" && status.toLowerCase() === "active";
-    
+        const isSoldOut = status === "Sold Out";
+
         return (
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              isActive
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
+            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${isSoldOut
+              ? "bg-[#FFFAEB] text-[#B54708]"   // ORANGE for Sold Out
+              : "bg-[#ECFDF3] text-[#027A48]"  // GREEN for Active
+              }`}
           >
-            {isActive ? <PaidDot /> : <UnpaidDot />}
+            {isSoldOut ? <UnpaidDot /> : <PaidDot />}
             <span className="ml-2 capitalize">{String(status)}</span>
           </div>
         );
       },
     },
-    
-    
+
+
     {
       header: "",
       accessorKey: "action",
@@ -250,32 +252,36 @@ const ProductTable = ({ products, isLoading,  onFilterChange }: { products: any[
         </div>
       )}
 
-      <TanTable
-        columnData={columns}
-        data={mappedProducts}
-        showSearch
-        showSortFilter
-        showFilter
-        searchPlaceholder="Search orders"
-        onSortChange={handleSortChange}
-        length={8}
-        //@ts-ignore
-        locations={locations}
-        //@ts-ignore
-        categories={categories}
-        tableType="product"
-        onFilterChange={onFilterChange}
-        tableTitle={
-          <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">
-              Products
-            </Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{products.length}</Text>
-            </div>
-          </div>
-        }
-      />
+      <div className="w-full overflow-x-auto">
+        <div className="min-w-[1000px]">
+          <TanTable
+            columnData={columns}
+            data={mappedProducts}
+            showSearch
+            showSortFilter
+            showFilter
+            searchPlaceholder="Search orders"
+            onSortChange={handleSortChange}
+            length={8}
+            //@ts-ignore
+            locations={locations}
+            //@ts-ignore
+            categories={categories}
+            tableType="product"
+            onFilterChange={onFilterChange}
+            tableTitle={
+              <div className="flex gap-2.5">
+                <Text fw={500} size="xl" c="textSecondary.9">
+                  Products
+                </Text>
+                <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+                  <Text c="customPrimary.10">{products.length}</Text>
+                </div>
+              </div>
+            }
+          />
+        </div>
+      </div>
       <DeleteProduct
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}

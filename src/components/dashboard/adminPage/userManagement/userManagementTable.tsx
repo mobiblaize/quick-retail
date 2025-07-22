@@ -1,11 +1,11 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchUsers } from "../../../../hooks/backendApis/admin/userManagement";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
 export interface UserRowData {
   user_uuid: string;
@@ -28,9 +28,30 @@ export interface UserRowData {
 }
 
 const UserManagementTable = () => {
-  const { data, isLoading, isError } = useFetchUsers();
+  const [currentPage, setCurrentPage] = useState(1);
+  const [queryParams, setQueryParams] = useState({ page:currentPage });
+  const { data, isLoading, isError } = useFetchUsers(queryParams);
+ 
 
-  const users: UserRowData[] = data?.data?.users?.data || [];
+
+   const users: UserRowData[] = data?.data?.users?.data || [];
+  const paginationData: PaginationData | undefined = data?.data?.users ? {
+    current_page: data.data.users.current_page,
+    last_page: data.data.users.last_page,
+    per_page: data.data.users.per_page,
+    total: data.data.users.total,
+    from: data.data.users.from,
+    to: data.data.users.to,
+    next_page_url: data.data.users.next_page_url,
+    prev_page_url: data.data.users.prev_page_url,
+  } : undefined;
+
+  // Extract stats for display
+  const stats = data?.data?.stats;
+    const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+    setQueryParams({ ...queryParams, page });
+  };
 
   useEffect(() => {
     if (users.length > 0) {
@@ -110,21 +131,24 @@ const UserManagementTable = () => {
 
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
-      <TanTable<UserRowData>
+           <TanTable<UserRowData>
         columnData={columns}
         data={isLoading || isError ? [] : users}
         showSearch
         showSortFilter
         searchPlaceholder="Search users"
-        length={5}
+        length={10}
         loadingState={isLoading}
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
               Users
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{users.length}</Text>
+              <Text c="customPrimary.10">{stats?.totalUsers}</Text>
             </div>
           </div>
         }

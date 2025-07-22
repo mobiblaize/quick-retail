@@ -25,7 +25,7 @@ const ViewProduct = () => {
           Back
         </button>
         <div className="md:flex hidden items-center">
-          <Text>In-store management</Text>
+          <Text>Product management</Text>
           <span className="mx-2">/</span>
           <Text c={"black"}>View Product</Text>
         </div>
@@ -35,8 +35,8 @@ const ViewProduct = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      <main className="grid gap-8 grid-cols-1 md:grid-cols-2">
-        <div className="order-2 md:order-1">
+      <main className="grid gap-8 grid-cols-1 md:grid-cols-2 items-start">
+        <div className="order-2 md:order-1 flex flex-col h-full">
           <ProductForm
             overview={{
               name: data?.data?.name,
@@ -66,7 +66,7 @@ const ViewProduct = () => {
             }}
           />
         </div>
-        <div className="order-1 md:order-2">
+        <div className="order-1 md:order-2 flex flex-col h-full">
           <ProductImagesSection details={{
                 image: data?.data?.image_path,
                 image_path: data?.data?.product?.image_path,

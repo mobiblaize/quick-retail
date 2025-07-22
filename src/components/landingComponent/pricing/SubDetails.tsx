@@ -102,8 +102,8 @@ const SubDetails = () => {
                   className="lg:max-w-[400px]"
                   mt={10}
                 >
-                  Select a plan and any of the system applications of your
-                  choice to add to your business subscription plans.
+                  Subscribe to the point of sales business to effectively manage your retail business. 
+                  You can add more seats if you need more that the given seats available for your plan. 
                 </Text>
               </Title>
 

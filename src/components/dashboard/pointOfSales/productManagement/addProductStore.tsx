@@ -3,6 +3,11 @@ import { create } from "zustand";
 interface VariationAttribute {
   option_value: string;
 }
+type ProductData={  
+  has_variations?: number;
+  variation_attributes?: VariationAttribute[];
+  
+}
 
 // Step 1: Define a separate type for form data
 type FormData = {
@@ -16,7 +21,8 @@ type FormData = {
   short_description: string;
   long_description: string;
   location_id: string;
-  has_variation: string;
+  product?: ProductData;
+  has_variations: number;
   tags: string;
   promotional_price: string;
   promotional_start_date: string;
@@ -50,7 +56,7 @@ export const initialFormState: FormData = {
   short_description: "",
   long_description: "",
   location_id: "",
-  has_variation: "",
+  has_variations: 0,
   tags: "",
   promotional_price: "",
   promotional_start_date: "",
