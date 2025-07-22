@@ -63,7 +63,8 @@ export interface TanTableProps<T extends Record<string, any>> {
     | "product"
     | "returns"
     | "discount"
-    | "audit";
+    | "audit"
+    | "transaction";
   onSortChange?: (sortKey: string) => void;
   activeSort?: string;
   // Add server-side pagination props
@@ -230,6 +231,24 @@ const TanTable = <T extends Record<string, any>>({
   const canNextPage = serverSidePagination 
     ? !!paginationData?.next_page_url 
     : table.getCanNextPage();
+  // Define all possible sort options
+const baseSortOptions: SortOption[] = [
+  { label: "All", key: "" },
+  { label: "Recent", key: "recent" },
+  { label: "Oldest", key: "oldest" },
+  { label: "A-Z", key: "a-z" },
+  { label: "Z-A", key: "z-a" },
+];
+
+// Define table types that should exclude A-Z and Z-A
+const tablesWithoutAZSort = ["transaction", "returns"];
+
+const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
+  ? baseSortOptions.filter(opt => opt.key !== "a-z" && opt.key !== "z-a")
+  : baseSortOptions;
+
+
+
 
   return (
     <Box className="font-sans">
@@ -267,6 +286,7 @@ const TanTable = <T extends Record<string, any>>({
               <SortFilter
                 onSortChange={onSortChange!}
                 activeSort={activeSort || ""}
+                sortOptions={customSortOptions}
               />
             )}
           </div>
@@ -291,6 +311,7 @@ const TanTable = <T extends Record<string, any>>({
                   <SortFilter
                     onSortChange={onSortChange!}
                     activeSort={activeSort || ""}
+                    sortOptions={customSortOptions}
                   />
                 </div>
               )}

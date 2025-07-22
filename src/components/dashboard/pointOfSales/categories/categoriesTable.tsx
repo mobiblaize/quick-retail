@@ -46,7 +46,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
       ),
     },
     {
-      header: "Total Product",
+      header: "Total Products",
       accessorKey: "totalProduct",
       cell: ({ row }) => (
         <Text c="textSecondary.9" fw={500}>
@@ -165,7 +165,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
          tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              All Category
+              All Categories
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">{categories.length}</Text>

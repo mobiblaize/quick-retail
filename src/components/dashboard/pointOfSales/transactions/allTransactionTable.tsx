@@ -151,6 +151,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        tableType="transaction"
         onSortChange={onSortChange}
         tableTitle={
           <div className="flex gap-2.5">

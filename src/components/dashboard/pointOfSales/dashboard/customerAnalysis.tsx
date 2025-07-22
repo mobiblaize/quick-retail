@@ -4,7 +4,7 @@ import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
-import { useFetchAllCustomers } from "../../../../hooks/backendApis/pos/customersManagement";
+import { useFetchDashboardCustomers} from "../../../../hooks/backendApis/pos/dashboard";
 import {
   ReactElement,
   JSXElementConstructor,
@@ -25,7 +25,7 @@ const CustomerAnalysis = () => {
     end_date: "",
   });
   const { data } = useFetchCustomerAnalysis(dateRange);
-  const { data: allCustomersData } = useFetchAllCustomers();
+  const { data: allCustomersData } = useFetchDashboardCustomers();
 
   const customers =
     allCustomersData?.data?.customers?.data?.sort(

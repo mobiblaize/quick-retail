@@ -99,7 +99,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
 
           <FormInput
             label="Sub-Category Name"
-            placeholder="Enter Category Name"
+            placeholder="Enter Sub-Category Name"
             paddingY={6}
             value={subCategoryName}
             onChange={(e: { target: { value: SetStateAction<string> } }) =>
@@ -110,6 +110,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
         <div className="flex mt-7 gap-5">
           <Button
             variant="outline"
+            onClick={onClose} 
             style={{
               color: "#475367",
               borderRadius: "0.4rem",
