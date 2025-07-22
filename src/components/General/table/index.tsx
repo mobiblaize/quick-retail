@@ -2,13 +2,11 @@ import { useEffect, useMemo, useState, JSX, ReactNode } from "react";
 import {
   useReactTable,
   getCoreRowModel,
-  getPaginationRowModel,
   getSortedRowModel,
   getFilteredRowModel,
   ColumnDef,
   SortingState,
   ColumnFiltersState,
-  PaginationState,
 } from "@tanstack/react-table";
 import { Box, Text } from "@mantine/core";
 import TanBody from "./body";
@@ -21,6 +19,18 @@ import ReusableFilterComponent, { FilterValues } from "./reuseableFilter";
 import EmptyStateImage from "../../../assets/images/Empty.png";
 
 export type TableInstance = ReactTable<TableRowData>;
+
+// Add interface for server-side pagination data
+export interface PaginationData {
+  current_page: number;
+  last_page: number;
+  per_page: number;
+  total: number;
+  from: number;
+  to: number;
+  next_page_url: string | null;
+  prev_page_url: string | null;
+}
 
 export interface TanTableProps<T extends Record<string, any>> {
   columnData: ColumnDef<T>[];
@@ -57,6 +67,10 @@ export interface TanTableProps<T extends Record<string, any>> {
     | "transaction";
   onSortChange?: (sortKey: string) => void;
   activeSort?: string;
+  // Add server-side pagination props
+  paginationData?: PaginationData;
+  onPageChange?: (page: number) => void;
+  serverSidePagination?: boolean;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -83,30 +97,31 @@ const TanTable = <T extends Record<string, any>>({
   tableType,
   onSortChange,
   activeSort,
+  paginationData,
+  onPageChange,
+  serverSidePagination = false,
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
-  const [, setFilteredData] = useState<T[]>(data);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
   const [filtersApplied, setFiltersApplied] = useState(false);
 
-  // const tableData = useMemo(() => filteredData, [filteredData]);
   const tableData = useMemo(() => data, [data]);
-
   const columns = useMemo(() => columnData, [columnData]);
-  // const pageSize = length;
-  const pageSize = showAll && showSeeAllToggle ? data.length : length;
+  
+  // Use server-side pagination data or fallback to client-side
+  const currentPage = serverSidePagination 
+    ? (paginationData?.current_page || 1) - 1  // Convert to 0-based indexing
+    : pageIndex;
+    
+  const totalPages = serverSidePagination 
+    ? paginationData?.last_page || 1 
+    : Math.ceil(data.length / length);
 
-  const pagination = useMemo<PaginationState>(
-    () => ({
-      pageIndex,
-      pageSize,
-    }),
-    [pageIndex, pageSize]
-  );
+  // const pageSize = showAll && showSeeAllToggle ? data.length : length;
 
   const table = useReactTable({
     data: tableData,
@@ -115,55 +130,46 @@ const TanTable = <T extends Record<string, any>>({
       globalFilter: searchTerm,
       sorting,
       columnFilters,
-      pagination,
     },
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
     onGlobalFilterChange: setSearchTerm,
     onSortingChange: setSorting,
-    getPaginationRowModel: getPaginationRowModel(),
     getSortedRowModel: getSortedRowModel(),
-    onPaginationChange: (updater) => {
-      const newPagination =
-        typeof updater === "function" ? updater(pagination) : updater;
-      setPageIndex(newPagination.pageIndex);
-    },
+    // Disable built-in pagination for server-side
+    manualPagination: serverSidePagination,
+    pageCount: serverSidePagination ? totalPages : undefined,
   });
 
-  const startPage = useMemo(() => {
-    const totalPages = table.getPageCount();
-    return Math.max(
-      0,
-      Math.min(totalPages - 1, pageIndex - Math.floor(pageSize / 2))
-    );
-  }, [pageIndex, pageSize, table]);
-
-  const endPage = useMemo(() => {
-    const totalPages = table.getPageCount();
-    return Math.min(totalPages - 1, startPage + pageSize - 1);
-  }, [startPage, pageSize, table]);
-
-  function isPageActive(pageIndex: number, currentPage: number) {
-    return pageIndex === currentPage;
-  }
-
-  const currentPage = table.getState().pagination.pageIndex;
-
+  // Generate pagination buttons based on server or client pagination
   const paginationButtons = useMemo(() => {
-    const totalPages = table.getPageCount();
     if (totalPages <= 1) return [];
+    
     const buttons: JSX.Element[] = [];
+    const maxVisiblePages = 5;
+    let startPage = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
+    let endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
+    
+    // Adjust start if we're near the end
+    if (endPage - startPage < maxVisiblePages - 1) {
+      startPage = Math.max(0, endPage - maxVisiblePages + 1);
+    }
+
     for (let i = startPage; i <= endPage; i++) {
       buttons.push(
         <button
           key={i}
           onClick={() => {
-            table.setPageIndex(i);
-            setPageIndex(i);
+            if (serverSidePagination) {
+              onPageChange?.(i + 1); // Convert back to 1-based for API
+            } else {
+              table.setPageIndex(i);
+              setPageIndex(i);
+            }
           }}
           style={{
-            color: isPageActive(i, currentPage) ? "black" : "#98A2B3",
+            color: i === currentPage ? "black" : "#98A2B3",
             backgroundColor: "transparent",
             display: "flex",
             alignItems: "center",
@@ -179,21 +185,13 @@ const TanTable = <T extends Record<string, any>>({
       );
     }
     return buttons;
-  }, [startPage, endPage, currentPage, table]);
+  }, [currentPage, totalPages, serverSidePagination, onPageChange, table]);
 
   const handleFilterChange = (selectedFilter: string) => {
     if (!selectedFilter || typeof selectedFilter !== "string") {
-      setFilteredData(data);
       return;
     }
-
-    const filtered = data.filter((item) =>
-      Object.values(item).some((value) =>
-        String(value)?.toLowerCase()?.includes(selectedFilter.toLowerCase())
-      )
-    );
-
-    setFilteredData(filtered);
+    // For server-side pagination, you might want to trigger a search API call here
     setPageIndex(0);
   };
 
@@ -202,10 +200,37 @@ const TanTable = <T extends Record<string, any>>({
   }, [searchTerm]);
 
   useEffect(() => {
-    setFilteredData(data);
     setPageIndex(0);
   }, [data]);
 
+  // Custom pagination controls for server-side pagination
+  const handlePrevPage = () => {
+    if (serverSidePagination) {
+      if (paginationData?.prev_page_url) {
+        onPageChange?.(currentPage); // currentPage is already 0-based, so this goes to previous page
+      }
+    } else {
+      table.previousPage();
+    }
+  };
+
+  const handleNextPage = () => {
+    if (serverSidePagination) {
+      if (paginationData?.next_page_url) {
+        onPageChange?.(currentPage + 2); // +2 because currentPage is 0-based and we want next page
+      }
+    } else {
+      table.nextPage();
+    }
+  };
+
+  const canPreviousPage = serverSidePagination 
+    ? !!paginationData?.prev_page_url 
+    : table.getCanPreviousPage();
+    
+  const canNextPage = serverSidePagination 
+    ? !!paginationData?.next_page_url 
+    : table.getCanNextPage();
   // Define all possible sort options
 const baseSortOptions: SortOption[] = [
   { label: "All", key: "" },
@@ -296,7 +321,6 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                   <button
                     onClick={() => {
                       if (filtersApplied) {
-                        // Reset filters
                         onFilterChange?.({
                           startDate: "",
                           endDate: "",
@@ -478,6 +502,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
           <div className="mb-4"></div>
         </div>
       </Box>
+      
       <Box
         style={{
           backgroundColor: "var(--mantine-color-gray-0)",
@@ -485,55 +510,55 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
           color: "var(--mantine-color-gray-7)",
         }}
       >
-{loadingState ? (
-  <Box
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2.5rem 0",
-    }}
-  >
-    Loading...
-  </Box>
-) : table.getFilteredRowModel().rows.length === 0 ? (
-  <Box
-    style={{
-      padding: "3rem 1rem",
-      textAlign: "center",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "0.25rem",
-    }}
-  >
-    <img
-      src={EmptyStateImage}
-      alt="No data"
-      style={{ width: "160px", height: "auto", opacity: 0.8 }}
-    />
-    <Text fw={600} size="lg" c="#1D2739">
-      Not found
-    </Text>
-    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-      We couldn’t find what you are
-    </Text>
-    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-      looking for. Try entering a correct
-    </Text>
-    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-      order ID, name or amount
-    </Text>
-  </Box>
-) : (
-  <TanBody
-    table={table}
-    loadingState={loadingState}
-    onClick={onClick}
-  />
-)}
-
+        {loadingState ? (
+          <Box
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "2.5rem 0",
+            }}
+          >
+            Loading...
+          </Box>
+        ) : (serverSidePagination ? data.length === 0 : table.getFilteredRowModel().rows.length === 0) ? (
+          <Box
+            style={{
+              padding: "3rem 1rem",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "0.25rem",
+            }}
+          >
+            <img
+              src={EmptyStateImage}
+              alt="No data"
+              style={{ width: "160px", height: "auto", opacity: 0.8 }}
+            />
+            <Text fw={600} size="lg" c="#1D2739">
+              Not found
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              We couldn't find what you are
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              looking for. Try entering a correct
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              order ID, name or amount
+            </Text>
+          </Box>
+        ) : (
+          <TanBody
+            table={table}
+            loadingState={loadingState}
+            onClick={onClick}
+          />
+        )}
       </Box>
+
       {showSeeAllToggle && !showAll && data.length > length && (
         <Box
           style={{
@@ -549,19 +574,17 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
         </Box>
       )}
 
-      {/* {!hidePaging && tableData.length > pageSize && (
+      {!hidePaging && totalPages > 1 && (
         <Pagination
           setPageIndex={setPageIndex}
           buttons={paginationButtons}
           table={table}
-        />
-      )} */}
-
-      {!hidePaging && table.getPageCount() > 1 && (
-        <Pagination
-          setPageIndex={setPageIndex}
-          buttons={paginationButtons}
-          table={table}
+          // Pass custom handlers for server-side pagination
+          canPreviousPage={canPreviousPage}
+          canNextPage={canNextPage}
+          onPreviousPage={handlePrevPage}
+          onNextPage={handleNextPage}
+          serverSidePagination={serverSidePagination}
         />
       )}
     </Box>

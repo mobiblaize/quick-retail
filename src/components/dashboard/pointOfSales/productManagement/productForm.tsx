@@ -17,6 +17,7 @@ type OverviewProps = {
   category?: string;
   product: {
     category: string;
+    has_variations: number; // Added this property
   };
   cost_price: number;
   selling_price: number;
@@ -141,30 +142,32 @@ export default function ProductForm({ overview }: { overview: OverviewProps }) {
         />
       </Section>
 
-      {/* Product Variation */}
-      <Section title="PRODUCT VARIATION">
-        <div>
-          <Text size="sm">Size</Text>
-          <div className="flex gap-2 mt-1 flex-wrap">
-            {(overview.variation_attributes?.length ?? 0) > 0 && (
-              <div className="flex gap-4 mt-3">
-                {overview.variation_attributes!.map((attr) => (
-                  <div key={attr.id} className="flex items-center gap-2">
-                    <Text c="#667185" fw="500" size="xl">
-                      {attr.option_type.charAt(0).toUpperCase() +
-                        attr.option_type.slice(1)}
-                      :
-                    </Text>
-                    <Text c="black" fw="500" size="xl">
-                      {attr.option_value}
-                    </Text>
-                  </div>
-                ))}
-              </div>
-            )}
+      {/* Product Variation - Only show if has_variations === 1 */}
+      {overview?.product?.has_variations === 1 && (
+        <Section title="PRODUCT VARIATION">
+          <div>
+            {/* <Text size="sm">Size</Text> */}
+            <div className="flex gap-2 mt-1 flex-wrap">
+              {(overview.variation_attributes?.length ?? 0) > 0 && (
+                <div className="flex gap-4 mt-3">
+                  {overview.variation_attributes!.map((attr) => (
+                    <div key={attr.id} className="flex items-center gap-2">
+                      <Text c="#667185" fw="500" size="xl">
+                        {attr.option_type.charAt(0).toUpperCase() +
+                          attr.option_type.slice(1)}
+                        :
+                      </Text>
+                      <Text c="black" fw="500" size="xl">
+                        {attr.option_value}
+                      </Text>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
           </div>
-        </div>
-      </Section>
+        </Section>
+      )}
 
       {/* Promotions */}
       <Section title="PROMOTIONS">

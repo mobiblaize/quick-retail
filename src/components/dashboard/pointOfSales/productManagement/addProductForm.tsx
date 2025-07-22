@@ -146,7 +146,7 @@ const AddProductForm = () => {
       short_description: formData.short_description,
       long_description: formData.long_description,
       location_id: Number(formData.location_id),
-      has_variations: false,
+      has_variations: formData.has_variations,
       cost_price: costPrice,
       selling_price: sellingPrice,
       total_quantity: Number(formData.quantity),

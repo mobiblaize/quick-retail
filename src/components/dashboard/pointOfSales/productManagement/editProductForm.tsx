@@ -135,16 +135,7 @@ const EditProductForm = () => {
     fileInputRef.current?.click();
   };
 
-  // const initialFormState = {
-  //   id: "",
-  //   cost_price: "",
-  //   selling_price: "",
-  //   quantity: "",
-  //   reorder_level: "",
-  //   size: "",
-  //   color: "",
-  //   location_id: "",
-  // };
+  
   const [variants, setVariants] = useState<Variant[]>(initialVariants);
 
   const handleUpdateSubmit = () => {
@@ -182,6 +173,10 @@ const EditProductForm = () => {
     );
   };
 
+  console.log("formData", form_data?.has_variations);
+  console.log("formData obj", form_data);
+  
+
   const handleAddVariant = () => {
     const newId = variants.length + 1;
     const newVariant: Variant = {
@@ -195,6 +190,7 @@ const EditProductForm = () => {
     };
     setVariants((prev) => [...prev, newVariant]);
   };
+
 
   return (
     <div>
@@ -637,7 +633,9 @@ const EditProductForm = () => {
             }
           />
         </div>
+          
 
+        {form_data?.product?.has_variations === 1 && (
         <div className="overflow-auto">
           <div className="min-w-[1000px]">
             <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
@@ -730,6 +728,7 @@ const EditProductForm = () => {
             </button>
           </div>
         </div>
+        )}
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em] mb-5 ">
