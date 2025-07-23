@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Loader, Text } from "@mantine/core";
@@ -14,16 +14,22 @@ import {
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { useState } from "react";
 
+interface ReturnsTableProps {
+  returns: any[];
+  isLoading: boolean;
+  onFilterChange: (filters: FilterValues) => void;
+  paginationData: PaginationData;
+  onPageChange: (page: number) => void;
+}
+
 const ReturnsTable = ({
   returns,
   isLoading,
   onFilterChange,
-}: {
-  returns: any[];
-  isLoading: any;
-  onFilterChange: (filters: FilterValues) => void;
-}) => {
-  const [, setSortBy] = useState<string>("");
+  paginationData,
+  onPageChange,
+}: ReturnsTableProps) => {
+  const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -167,6 +173,10 @@ const ReturnsTable = ({
           tableType="returns"
           onFilterChange={onFilterChange}
           onSortChange={handleSortChange}
+          activeSort={sortBy}
+          serverSidePagination={true}
+          paginationData={paginationData}
+          onPageChange={onPageChange}
           tableTitle={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

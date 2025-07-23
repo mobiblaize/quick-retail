@@ -76,7 +76,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
                 fontSize: "clamp(0.875rem, 2vw, 1rem)",
               }}
             >
-              fill the details below.
+              Fill the details below.
             </Text>
           </div>
         }

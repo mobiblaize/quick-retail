@@ -3,7 +3,7 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { useState } from "react";
 
@@ -16,9 +16,11 @@ import { useState } from "react";
 // };
 
 
-const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; }) => {
+const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationData,
+  onPageChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; paginationData?: PaginationData;
+    onPageChange: (page: number) => void;}) => {
 
-  const [, setSortBy] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -139,12 +141,16 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
         showFilter
         showSortFilter
         onSortChange={handleSortChange}
+        activeSort={sortBy} 
         searchPlaceholder="Search orders"
         length={8}
            //@ts-ignore
         tableType="discount"
         // types={types}
         onFilterChange={onFilterChange}
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

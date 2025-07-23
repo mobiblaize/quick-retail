@@ -97,7 +97,7 @@ useEffect(() => {
       ),
     },
     {
-      header: "Total Product",
+      header: "Total Products",
       accessorKey: "totalProduct",
       cell: ({ row }) => (
         <Text fw={300} c="#101928">

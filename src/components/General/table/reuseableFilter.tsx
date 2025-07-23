@@ -112,10 +112,11 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     };
   
     setFilters(cleared);
-    onFilterChange(cleared); 
+    // onFilterChange(cleared); 
   };
   
 
+  
   return (
     <div className="w-80 bg-white rounded-lg">
       <h2 className="text-lg font-semibold mb-4">FILTER</h2>
@@ -417,7 +418,11 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           Clear All
         </button>
         <button
-          onClick={() => onFilterChange(filters)}
+          // onClick={() => onFilterChange(filters)}
+          onClick={() => {
+            console.log("Submitting filters:", filters);
+            onFilterChange(filters);
+          }}
           className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
         >
           Filter

@@ -19,7 +19,9 @@ const AdminDashboardPage = () => {
     endDate: "",
   });
 
-  
+    
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10); 
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -40,7 +42,8 @@ const mapFiltersToPayload = (filters: FilterValues) => ({
   end_date: filters.endDate ?? "",
   status: mapOrderStatus(filters.paymentStatus),
   price_from: filters.priceFrom ?? 100,
-  price_to: filters.priceTo ?? ""
+  price_to: filters.priceTo ?? "",
+  page: currentPage.toString(),
 });
 
 
@@ -54,9 +57,11 @@ const payload = shouldFetch
       ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
       start_date: startDate,
       end_date: endDate,
+      page: currentPage,
+      per_page: perPage,
     }
   : undefined;
-
+// @ts-ignore
   const { data = {}, } = useFetchAllSales(payload) || {};
   
 
@@ -66,6 +71,10 @@ const payload = shouldFetch
     setAppliedFilters(filters);
   };
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
   const subHeaders = [
     <Text fw={500} size="xl" c="black">
       Dashboard
@@ -78,7 +87,8 @@ const payload = shouldFetch
       <SalesOverview />
       <CustomerAnalysis />
       <DivisionSalesOverview />
-      <CustomerOrdersTable salesData={salesData} onFilterChange={handleFilterChange} isLoading={false} />
+      <CustomerOrdersTable salesData={salesData} onFilterChange={handleFilterChange} isLoading={false}  paginationData={data?.data?.sales}
+        onPageChange={handlePageChange}/>
     </PageContainer>
   );
 };

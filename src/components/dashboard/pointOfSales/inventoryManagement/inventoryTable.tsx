@@ -8,19 +8,21 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
 import { formatDate, truncateText } from "../../../../utils/helpers";
-import  { FilterValues } from "../../../General/table/reuseableFilter";
-import { useEffect, useState } from "react";
+import { FilterValues } from "../../../General/table/reuseableFilter";
+import {  useState } from "react";
 
 const InventoryTable = () => {
   // const { data, isLoading } = useFetchAllProducts();
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10);
+  const [sortBy, setSortBy] = useState<string>("");
   const mapOrderStatus = (status: string | undefined) => {
     if (!status) return undefined;
     if (status === "Paid") return "paid";
     if (status === "Unpaid") return "unpaid";
     return status.toLowerCase();
   };
-  
+
   const mapFiltersToPayload = (filters: FilterValues) => ({
     start_date: filters.startDate,
     end_date: filters.endDate,
@@ -28,21 +30,28 @@ const InventoryTable = () => {
     price_from: filters.stockFrom,
     price_to: filters.stockTo,
     order_status: mapOrderStatus(filters.orderStatus),
-         //@ts-ignore
+    //@ts-ignore
     search: filters.search ?? "",
-         //@ts-ignore
+    //@ts-ignore
     sort_by: filters.sortBy ?? "",
     paginate: true,
-    per_page: "500",
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
   });
-  
-  const [, setShowFilter] = useState(false);
 
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+ 
 
-const { data, isLoading, refetch } = useFetchAllProducts(
-  appliedFilters ? mapFiltersToPayload(appliedFilters) : undefined
-);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
+    null
+  );
+
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
+  };
+
+  const { data, isLoading,  } = useFetchAllProducts(payload);
 
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
@@ -66,18 +75,39 @@ const { data, isLoading, refetch } = useFetchAllProducts(
     ...product,
   }));
 
-
   const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters); // keep as FilterValues
-    setShowFilter(false);
+    setAppliedFilters(filters);
+    // setShowFilter(false);
+  };
+
+  const paginationData = data?.data?.products
+    ? {
+        current_page: data.data.products.current_page,
+        last_page: data.data.products.last_page,
+        per_page: data.data.products.per_page,
+        total: data.data.products.total,
+        from: data.data.products.from,
+        to: data.data.products.to,
+        next_page_url: data.data.products.next_page_url,
+        prev_page_url: data.data.products.prev_page_url,
+      }
+    : undefined;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+
+  const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
+    const updatedFilters = {
+      ...appliedFilters,
+      sortBy: sortKey,
+    };
+    // @ts-ignore
+    setAppliedFilters(updatedFilters);
   };
   
-  useEffect(() => {
-    if (appliedFilters) {
-      refetch();
-    }
-  }, [appliedFilters, refetch]);
-  
+
   const locations = Array.from(
     new Set(
       data?.data?.products?.data
@@ -85,11 +115,8 @@ const { data, isLoading, refetch } = useFetchAllProducts(
         ?.filter((name: any) => typeof name === "string")
     )
   );
-  
-  
 
   const columns: ColumnDef<TableRowData>[] = [
-   
     {
       header: "Product",
       accessorKey: "name",
@@ -206,14 +233,14 @@ const { data, isLoading, refetch } = useFetchAllProducts(
         showSearch
         showFilter
         showSortFilter
-        searchPlaceholder="Search orders"
+        searchPlaceholder="Search inventory"
         length={8}
-        onSortChange={(sortKey) => {
-          const newOrder = appliedFilters?.order === "asc" ? "desc" : "asc";
-          // @ts-ignore
-          setAppliedFilters({ ...(appliedFilters ?? {}), sortBy: sortKey, order: newOrder });
-        }}
+        activeSort={sortBy}
+        onSortChange={handleSortChange}
         onFilterChange={handleFilterChange}
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
+        serverSidePagination={true}
         tableType="inventory"
         //@ts-ignore
         locations={locations}
@@ -229,7 +256,7 @@ const { data, isLoading, refetch } = useFetchAllProducts(
               </Text>
             </div>
           </div>
-        }
+        } 
       />
     </main>
   );

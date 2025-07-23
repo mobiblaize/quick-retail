@@ -11,19 +11,38 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 const CategoriesPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
   const [isCreateSubCategoryOpen, setIsSubCreateCategoryOpen] = useState(false);
-  
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10); 
+  const [sortBy, setSortBy] = useState<string>(""); 
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
   });
 
   const { data, isLoading, refetch } = useFetchAllCategories(
     mapFiltersToPayload(appliedFilters)
   );
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
+  const paginationData = data?.data
+  ? {
+      current_page: data.data.current_page,
+      last_page: data.data.last_page,
+      per_page: data.data.per_page,
+      total: data.data.total,
+      from: data.data.from,
+      to: data.data.to,
+      next_page_url: data.data.next_page_url,
+      prev_page_url: data.data.prev_page_url,
+    }
+  : undefined;
 
+const handlePageChange = (page: number) => {
+  setCurrentPage(page);
+};
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0
       ? categories.map((cat: { name: string; id: number }) => ({
@@ -90,7 +109,12 @@ const CategoriesPage = () => {
         onSortChange={(sortKey) => {
           const newFilters = { ...appliedFilters, sortBy: sortKey };
           setAppliedFilters(newFilters);
+          setSortBy(sortKey);
+          setCurrentPage(1);
         }}
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
+        activeSort={sortBy} 
       />
       <CreateNewCategory
         opened={isCreateCategoryOpen}

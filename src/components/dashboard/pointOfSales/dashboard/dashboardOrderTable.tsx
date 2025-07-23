@@ -14,6 +14,10 @@ const DashboardOrdersTable = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [dateRange, ] = useState({ startDate: "", endDate: "" });
 
+    
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10); 
+  const [sortBy, setSortBy] = useState<string>("");
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     return status.toLowerCase();
@@ -22,13 +26,14 @@ const DashboardOrdersTable = () => {
   const mapFiltersToPayload = (filters: FilterValues) => ({
     search: filters.search ?? "",
     sort_by: filters.sortBy ?? "",
-    per_page: "500",
+    per_page: perPage.toString(),
     paginate: true,
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     status: mapOrderStatus(filters.paymentStatus),
     price_from: filters.priceFrom ?? 100,
-    price_to: filters.priceTo ?? ""
+    price_to: filters.priceTo ?? "",
+    page: currentPage.toString(),
   });
 
   const startDate = dateRange.startDate || appliedFilters.startDate || "";
@@ -38,16 +43,23 @@ const DashboardOrdersTable = () => {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     ...(startDate ? { start_date: startDate } : {}),
     ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage,
   };
 
+  // @ts-ignore
   const { data = {}, isLoading = false } = useFetchDashbordOrders(payload);
   const salesData = data?.data?.sales?.data ?? [];
 
   const handleFilterChange = (filters: FilterValues) => {
     setAppliedFilters(filters);
   };
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
 
   const handleSortChange = (sortKey: string) => {
+    setSortBy(sortKey);
     const updatedFilters = {
       ...appliedFilters,
       sortBy: sortKey,
@@ -182,7 +194,11 @@ const DashboardOrdersTable = () => {
           searchPlaceholder="Search orders"
           length={8}
           onSortChange={handleSortChange}
+          activeSort={sortBy}
           onFilterChange={handleFilterChange}
+          paginationData={data?.data?.sales}
+          onPageChange={handlePageChange}
+          serverSidePagination={true}
           tableType="sales"
           showFilter
           sortOptions={[

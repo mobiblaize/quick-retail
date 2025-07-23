@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
   const { reportData} = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
-
+  const [, setCurrentPage] = useState(reportData?.data?.products?.current_page || 1);
 
   useEffect(() => {
     const productsArray = reportData?.data?.products?.data;
@@ -30,7 +30,21 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     }
   }, [reportData]);
   
+  const paginationData = {
+    current_page: reportData?.data?.products?.current_page,
+    last_page: reportData?.data?.products?.last_page,
+    per_page: reportData?.data?.products?.per_page,
+    total: reportData?.data?.products?.total,
+    from: reportData?.data?.products?.from,
+    to: reportData?.data?.products?.to,
+    next_page_url: reportData?.data?.products?.next_page_url,
+    prev_page_url: reportData?.data?.products?.prev_page_url,
+  };  
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+  };
   const columns: ColumnDef<TableRowData>[] = [
     {
       id: "select",
@@ -141,6 +155,9 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
         data={data}
         showSearch={false}
         showSortFilter={false}
+        serverSidePagination
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
         length={8}
         tableTitle={<div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div className="flex gap-2.5 items-center">

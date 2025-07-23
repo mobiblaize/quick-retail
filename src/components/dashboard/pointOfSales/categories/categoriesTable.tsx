@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Loader, Text } from "@mantine/core";
@@ -10,9 +10,12 @@ interface CategoriesTableProps {
   categories: Array<any>;
   isLoading: boolean;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
 }
 
-const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTableProps) => {
+const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationData ,   onPageChange,   activeSort}: CategoriesTableProps) => {
 
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -160,8 +163,12 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
         showSearch
         showSortFilter
         onSortChange={onSortChange}
+        activeSort={activeSort} 
         searchPlaceholder="Search categories"
         length={8}
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
          tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

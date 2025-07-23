@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
@@ -7,9 +7,25 @@ import { ROUTES } from "../../../../constants/routes";
 import { formatDate,formatMoney  } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { useState } from "react";
+import { TableRowData } from "../../../../types";
 
-const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { salesData: any[],   onFilterChange: (filters: FilterValues) => void;  isLoading: boolean }) => {
-  const [, setSortBy] = useState<string>("");
+interface CustomerOrdersTableProps {
+  salesData: any[]; 
+  onFilterChange: (filters: FilterValues) => void;
+  isLoading: boolean;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  
+}
+
+const CustomerOrdersTable = ({
+  salesData,
+  onFilterChange,
+  isLoading,
+  paginationData,
+  onPageChange,
+}: CustomerOrdersTableProps) => {
+  const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -26,8 +42,8 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { sal
   };
 
   
-  // ✅ Mapped data
-  const tableData = Array.isArray(salesData)
+
+  const tableData: TableRowData[] = Array.isArray(salesData)
   ? salesData.map((sale) => {
       const totalItems = sale.sale_order_details?.reduce(
         //@ts-ignore
@@ -168,27 +184,31 @@ const CustomerOrdersTable = ({ salesData,   onFilterChange,  isLoading, }: { sal
     <main className="w-full h-auto py-8 rounded-lg bg-white">
         <div className="overflow-auto max-w-full">
       <TanTable
-    // @ts-ignore
         columnData={columns}
         data={tableData} 
         showSearch
         showSortFilter
+        showFilter= {true}
         searchPlaceholder="Search orders"
-        length={8}
         onSortChange={handleSortChange}
-        showFilter
+        activeSort={sortBy} 
+        length={8}   
         tableType="sales"
         onFilterChange={onFilterChange}
-        sortOptions={[
-          {
-            key: "products",
-            label: "Sort By Recently Uploaded",
-          },
-          {
-            key: "added_on",
-            label: "Sort by Date Added",
-          },
-        ]}
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
+                     
+        // sortOptions={[
+        //   {
+        //     key: "products",
+        //     label: "Sort By Recently Uploaded",
+        //   },
+        //   {
+        //     key: "added_on",
+        //     label: "Sort by Date Added",
+        //   },
+        // ]}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
