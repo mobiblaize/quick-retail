@@ -1,4 +1,4 @@
-import { Plus, Upload, UploadCloud, X } from "lucide-react";
+import { Plus, UploadCloud } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
@@ -40,7 +40,7 @@ const initialVariants: Variant[] = [
 ];
 
 const EditProductForm = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { form_data } = useStore();
 
   const [formData, setFormData] = useState({ ...form_data });
@@ -93,16 +93,16 @@ const EditProductForm = () => {
     }
   }, [formData]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     setSelectedFile(file);
+  //   }
+  // };
 
-  const removeFile = () => {
-    setSelectedFile(null);
-  };
+  // const removeFile = () => {
+  //   setSelectedFile(null);
+  // };
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [images, setImages] = useState<File[]>([]);
