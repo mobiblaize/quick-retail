@@ -46,29 +46,30 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
 
   };
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={table.getIsAllRowsSelected()}
+    //       onChange={table.getToggleAllRowsSelectedHandler()}
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={row.getIsSelected()}
+    //       onChange={row.getToggleSelectedHandler()}
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableColumnFilter: false,
+    //   size: 10,
+    // },
     {
       header: "Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -90,6 +91,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Product Code",
       accessorKey: "productCode",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.productCode}</Text>
       ),
@@ -97,6 +99,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Location",
       accessorKey: "location",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.location}</Text>
       ),
@@ -104,6 +107,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Category",
       accessorKey: "category",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
           {row.original.category}
@@ -113,6 +117,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Selling Price",
       accessorKey: "Amount",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
           {row.original.Amount}
@@ -122,6 +127,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
+      enableSorting: false, 
       cell: (props) => (
         <span className="font-medium text-center">
           {props.row.original.stockLevel}
@@ -131,6 +137,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Discount Status",
       accessorKey: "discountStatus",
+      enableSorting: false, 
       cell: (props) => {
         const status = props.row.original.discountStatus;
         return (

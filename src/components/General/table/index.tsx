@@ -246,9 +246,9 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
   ? baseSortOptions.filter(opt => opt.key !== "a-z" && opt.key !== "z-a")
   : baseSortOptions;
 
-  useEffect(() => {
-    console.log("filtersApplied changed:", filtersApplied);
-  }, [filtersApplied]);
+  // useEffect(() => {
+  //   console.log("filtersApplied changed:", filtersApplied);
+  // }, [filtersApplied]);
   
   const isFilterActive = (filters: FilterValues): boolean => {
     return Object.entries(filters).some(([ value]) => {
