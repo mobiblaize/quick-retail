@@ -568,7 +568,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
               looking for. Try entering a correct
             </Text>
             <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              order ID, name or amount
+              data
             </Text>
           </Box>
         ) : (

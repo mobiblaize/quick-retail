@@ -1,4 +1,4 @@
-import { Plus, Upload, UploadCloud, X } from "lucide-react";
+import { Plus, UploadCloud } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
@@ -40,7 +40,7 @@ const initialVariants: Variant[] = [
 ];
 
 const EditProductForm = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const { form_data } = useStore();
 
   const [formData, setFormData] = useState({ ...form_data });
@@ -93,16 +93,16 @@ const EditProductForm = () => {
     }
   }, [formData]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     setSelectedFile(file);
+  //   }
+  // };
 
-  const removeFile = () => {
-    setSelectedFile(null);
-  };
+  // const removeFile = () => {
+  //   setSelectedFile(null);
+  // };
 
   const fileInputRef = useRef<HTMLInputElement | null>(null);
   const [images, setImages] = useState<File[]>([]);
@@ -732,12 +732,12 @@ const EditProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em] mb-5 ">
-        <h3 className="text-lg font-semibold text-gray-800">
+        {/* <h3 className="text-lg font-semibold text-gray-800">
           COMPLIANCE INFORMATION{" "}
           <span className="text-gray-500">(optional)</span>
-        </h3>
+        </h3> */}
 
-        <div className="mt-4 w-full md:w-[700px]">
+        {/* <div className="mt-4 w-full md:w-[700px]">
           <FormInput
             type="text"
             label="Safety Instructions"
@@ -748,9 +748,9 @@ const EditProductForm = () => {
               setFormData({ ...formData, safety_instructions: e.target.value })
             }
           />
-        </div>
+        </div> */}
 
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <label className="block text-gray-700 font-medium mb-2">
             Compliance Certificates
           </label>
@@ -793,7 +793,7 @@ const EditProductForm = () => {
               </>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-end mt-6">
           <button
             className="bg-orange-600 text-white px-6 py-2 rounded-md hover:bg-orange-700"

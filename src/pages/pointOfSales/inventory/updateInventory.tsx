@@ -2,7 +2,7 @@ import {  Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
-import { useActivateInventory } from "../../../hooks/backendApis/pos/inventory";
+// import { useActivateInventory } from "../../../hooks/backendApis/pos/inventory";
 import { useFetchAllLocations } from "../../../hooks/backendApis/pos/products";
 import { useState } from "react";
 // import { notifications } from "@mantine/notifications";

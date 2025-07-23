@@ -101,7 +101,7 @@ export default function AddProduct({ opened, onClose }: Props) {
           className="flex gap-4 mt-[2em] justify-center"
         >
           <Button variant="outline-primary" onClick={onClose}>
-            No, Cancel
+            Cancel
           </Button>
 
           <Button
@@ -109,7 +109,7 @@ export default function AddProduct({ opened, onClose }: Props) {
             disabled={!selected}
             onClick={handleContinue}
           >
-            Yes, Confirm
+            Continue
           </Button>
         </div>
       </div>

@@ -45,7 +45,7 @@ const EditProduct: React.FC = () => {
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-          Add Product
+          Edit Product
         </Text>
       </div>,
     ];
