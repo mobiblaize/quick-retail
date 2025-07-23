@@ -8,7 +8,7 @@ const InventoryManagementPage = () => {
     <div key="1">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-          Inventory
+          Inventory Management
         </Text>
         {/* <Link to={ROUTES.updateInventory}>
           <Button variant="filled-primary">Update Inventory</Button>

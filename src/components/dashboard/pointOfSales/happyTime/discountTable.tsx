@@ -54,6 +54,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     {
       header: "Product",
       accessorKey: "name",
+      enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -79,6 +80,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     {
       header: "Percent Off",
       accessorKey: "percent",
+      enableSorting: false, 
       cell: ({ row }) => 
         row.original.discountType === "percentage"
           ? `${row.original.value}%`
@@ -87,6 +89,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     {
       header: "Price Off",
       accessorKey: "price",
+      enableSorting: false, 
       cell: ({ row }) => 
         row.original.discountType === "amount"
           ? `₦${row.original.value}`
@@ -95,14 +98,17 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     {
       header: "Date From",
       accessorKey: "dateFrom",
+      enableSorting: false, 
     },
     {
       header: "Date To",
       accessorKey: "dateTo",
+      enableSorting: false, 
     },
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.status;
         return (

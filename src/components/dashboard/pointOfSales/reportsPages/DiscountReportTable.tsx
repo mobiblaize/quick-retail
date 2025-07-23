@@ -54,6 +54,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Discount Name",
       accessorKey: "discountName",
+      enableSorting: false, 
       cell: (props) => (
         <Text fw={500} c="black">
           {props.row.original.discountName}
@@ -63,11 +64,13 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Percent Off",
       accessorKey: "percentOff",
+      enableSorting: false, 
       cell: (props) => <Text>{props.row.original.percentOff}</Text>,
     },
     {
         header: "Price Off",
         accessorKey: "priceOff",
+        enableSorting: false, 
         cell: (props) => {
           const priceOff = props.row.original.priceOff;
           const percentOff = props.row.original.percentOff;
@@ -91,6 +94,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Date From",
       accessorKey: "dateFrom",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">
             {/* @ts-ignore */}
@@ -101,6 +105,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Date To",
       accessorKey: "dateTo",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">
                      {/* @ts-ignore */}
@@ -111,6 +116,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: (props) => {
         const status = props.row.original.status;
         return (
@@ -131,6 +137,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Redemption",
       accessorKey: "redemption",
+      enableSorting: false, 
       cell: (props) => <Text>{props.row.original.redemption}</Text>,
     },
   ];

@@ -64,14 +64,10 @@ const InventoryTable = () => {
     stockLevel: product.quantity_available ?? 0,
     quantitySupplied: product.quantity_supplied ?? 0,
     date: product.created_at,
-    status:
-      product.quantity_available === 0
-        ? "Sold Out"
-        : parseInt(product.reorder_level) >= product.quantity_available
-        ? "Low Stock"
-        : "Available",
+    status: product.stock_status,
     image: product.image_path,
     variationID: product.variationID,
+    price: product.selling_price, 
     ...product,
   }));
 
@@ -79,6 +75,7 @@ const InventoryTable = () => {
     setAppliedFilters(filters);
     // setShowFilter(false);
   };
+
 
   const paginationData = data?.data?.products
     ? {
@@ -120,6 +117,7 @@ const InventoryTable = () => {
     {
       header: "Product",
       accessorKey: "name",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -142,14 +140,17 @@ const InventoryTable = () => {
     {
       header: "SKU",
       accessorKey: "sku",
+      enableSorting: false, 
     },
     {
       header: "Location",
       accessorKey: "location",
+      enableSorting: false, 
     },
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
+      enableSorting: false, 
       cell: (props) => {
         const available = props.row.original.stockLevel;
         const supplied = props.row.original.quantitySupplied;
@@ -169,8 +170,20 @@ const InventoryTable = () => {
       },
     },
     {
+      header: "Price",
+      accessorKey: "price",
+      enableSorting: false,
+      cell: (props) => (
+        <Text fw={500}>
+          ₦{Number(props.row.original.price).toLocaleString()}
+        </Text>
+      ),
+    },
+    
+    {
       header: "Date",
       accessorKey: "date",
+      enableSorting: false, 
       cell: (props) => (
         <div className="text-gray-600 whitespace-nowrap break-words ">
           {/* @ts-ignore */}
@@ -178,32 +191,54 @@ const InventoryTable = () => {
         </div>
       ),
     },
-
     {
       header: "Status",
-      accessorKey: "status",
+      accessorKey: "stock_status", // ✅ Correct key
+      enableSorting: false,
       cell: (props) => {
-        const status = props.row.original.status;
-        const isActive =
-          typeof status === "string" && status.toLowerCase() === "active";
-
+        // @ts-ignore  
+        const status = props.row.original.stock_status?.toLowerCase();
+    
+        const statusStyles = {
+          "available": {
+            bg: "bg-[#ECFDF3]",
+            text: "text-[#027A48]",
+            dot: <PaidDot />,
+          },
+          "low stock": {
+            bg: "bg-[#FFFAEB]",
+            text: "text-[#B54708]",
+            dot: <UnpaidDot />,
+          },
+          "sold out": {
+            bg: "bg-[#FEF3F2]",
+            text: "text-[#B42318]",
+            dot: <UnpaidDot />,
+          },
+        };
+        // @ts-ignore  
+        const { bg, text, dot } = statusStyles[status] || {
+          bg: "bg-gray-100",
+          text: "text-gray-600",
+          dot: <UnpaidDot />,
+        };
+    
         return (
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              isActive
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
+            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bg} ${text}`}
           >
-            {isActive ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2 capitalize">{String(status)}</span>
+            {dot}
+            <span className="ml-2 capitalize">{status || "N/A"}</span>
           </div>
         );
       },
-    },
+    }
+    
+,    
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: (props) => {
         return (
           <Link

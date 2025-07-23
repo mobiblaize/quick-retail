@@ -134,6 +134,7 @@ const ProductTable = ({
     {
       header: "Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -160,6 +161,7 @@ const ProductTable = ({
     {
       header: "Product Code",
       accessorKey: "productCode",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.productCode}</Text>
       ),
@@ -167,10 +169,12 @@ const ProductTable = ({
     {
       header: "Location",
       accessorKey: "location",
+      enableSorting: false, 
     },
     {
       header: "Category",
       accessorKey: "category",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
           {row.original.category}
@@ -180,10 +184,12 @@ const ProductTable = ({
     {
       header: "Selling Price",
       accessorKey: "sellingPrice",
+      enableSorting: false, 
     },
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
+      enableSorting: false, 
       cell: (props) => (
         <span className="font-medium text-center">
           {props.row.original.stockLevel}
@@ -193,6 +199,7 @@ const ProductTable = ({
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: (props) => {
         const status = props.row.original.status;
         const isSoldOut = status === "Sold Out";
@@ -215,6 +222,7 @@ const ProductTable = ({
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: (props) => (
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>

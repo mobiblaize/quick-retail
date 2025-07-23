@@ -51,6 +51,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Order ID",
       accessorKey: "id",
+      enableSorting: false, 
       cell: (props) => (
         <Text fw={500} c="black">
           {props.row.original.id}
@@ -60,16 +61,19 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Time stamp",
       accessorKey: "timeStamp",
+      enableSorting: false, 
       cell: ({ row }) => <Text c="textSecondary.7">{row.original.timeStamp}</Text>,
     },
     {
       header: "Customer",
       accessorKey: "customer",
+      enableSorting: false, 
       cell: ({ row }) => <Text c="textSecondary.7">{row.original.customer}</Text>,
     },
     {
       header: "Total Amount",
       accessorKey: "Amount",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
           {row.original.Amount}
@@ -79,6 +83,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Status",
       accessorKey: "paymentStatus",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.paymentStatus;
         return (

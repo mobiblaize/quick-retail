@@ -105,6 +105,7 @@ const DashboardOrdersTable = () => {
     {
       header: "Order ID",
       accessorKey: "orderID",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">{props.row.original.orderID}</Text>
@@ -117,6 +118,7 @@ const DashboardOrdersTable = () => {
     {
       header: "Time stamp",
       accessorKey: "date",
+      enableSorting: false, 
       cell: (props) => (
         <div className="text-gray-600 whitespace-nowrap break-words ">
           {formatDate(props.row.original.date)}
@@ -126,21 +128,25 @@ const DashboardOrdersTable = () => {
     {
       header: "Cashier Details",
       accessorKey: "cashier",
+      enableSorting: false, 
       cell: (props) => <Text c="#1D2739">{props.row.original.cashier}</Text>,
     },
     {
       header: "Customer",
       accessorKey: "customer",
+      enableSorting: false, 
       cell: (props) => <Text c="#1D2739">{props.row.original.customer}</Text>,
     },
     {
       header: "Amount",
       accessorKey: "amount",
+      enableSorting: false, 
       cell: (props) => <Text c="#1D2739">₦ {formatMoney(props.row.original.amount)}</Text>,
     },
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: (props) => {
         const status = props.row.original.status;
         return (
@@ -158,6 +164,7 @@ const DashboardOrdersTable = () => {
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: (props) => {
         const { orderID, status } = props.row.original;
         return (

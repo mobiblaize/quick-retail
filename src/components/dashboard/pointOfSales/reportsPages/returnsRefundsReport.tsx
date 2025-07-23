@@ -58,29 +58,30 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
   };
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={table.getIsAllRowsSelected()}
+    //       onChange={table.getToggleAllRowsSelectedHandler()}
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={row.getIsSelected()}
+    //       onChange={row.getToggleSelectedHandler()}
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableColumnFilter: false,
+    //   size: 10,
+    // },
     {
       header: "Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -107,6 +108,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Date Returned",
       accessorKey: "dateReturned",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text c="textSecondary.7">{row.original.dateReturned}</Text>
       ),
@@ -114,6 +116,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Order ID",
       accessorKey: "id",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
@@ -126,6 +129,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Customer",
       accessorKey: "customer",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
           {row.original.customer}
@@ -135,6 +139,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Returned Reason",
       accessorKey: "returnedReason",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
           {row.original.returnedReason}
@@ -144,6 +149,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Complaint Status",
       accessorKey: "complaintStatus",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.complaintStatus;
         let bgClass = "";
