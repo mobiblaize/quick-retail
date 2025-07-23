@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text, Menu, Button, Loader } from "@mantine/core";
@@ -15,10 +15,23 @@ import DeleteProduct from "../categories/modals/deleteProduct";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+interface ProductTableProps {
+  products: any[];
+  isLoading: boolean;
+  onFilterChange: (filters: FilterValues) => void;
+  paginationData: PaginationData;
+  onPageChange: (page: number) => void;
+}
 
-const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[], isLoading: any, onFilterChange: (filters: FilterValues) => void; }) => {
+const ProductTable = ({
+  products,
+  isLoading,
+  onFilterChange,
+  paginationData,
+  onPageChange,
+}: ProductTableProps) => {
 
-  const [, setSortBy] = useState<string>("");
+  const [ sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -262,6 +275,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
             showFilter
             searchPlaceholder="Search orders"
             onSortChange={handleSortChange}
+            activeSort={sortBy}
             length={8}
             //@ts-ignore
             locations={locations}
@@ -269,6 +283,9 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
             categories={categories}
             tableType="product"
             onFilterChange={onFilterChange}
+            serverSidePagination={true}
+            paginationData={paginationData}
+            onPageChange={onPageChange}
             tableTitle={
               <div className="flex gap-2.5">
                 <Text fw={500} size="xl" c="textSecondary.9">

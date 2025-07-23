@@ -8,13 +8,14 @@ import { useEffect, useState } from "react";
 const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
   const { reportData } = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
+  const [, setCurrentPage] = useState(reportData?.data?.discounts?.current_page || 1);
 
   useEffect(() => {
-    console.log("reportData", reportData);
-    console.log(
-      "reportData.data.discounts.data",
-      reportData?.data?.discounts?.data
-    );
+    // console.log("reportData", reportData);
+    // console.log(
+    //   "reportData.data.discounts.data",
+    //   reportData?.data?.discounts?.data
+    // );
 
     const discountsArray = reportData?.data?.discounts?.data;
 
@@ -32,6 +33,22 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
       setData(formattedData);
     }
   }, [reportData]);
+
+  const paginationData = {
+    current_page: reportData?.data?.discounts?.current_page,
+    last_page: reportData?.data?.discounts?.last_page,
+    per_page: reportData?.data?.discounts?.per_page,
+    total: reportData?.data?.discounts?.total,
+    from: reportData?.data?.discounts?.from,
+    to: reportData?.data?.discounts?.to,
+    next_page_url: reportData?.data?.discounts?.next_page_url,
+    prev_page_url: reportData?.data?.discounts?.prev_page_url,
+  };  
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+  };
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -126,6 +143,9 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
         showSearch={false}
         showSortFilter={false}
         length={8}
+        serverSidePagination
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
         tableTitle={
           <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex gap-2.5 items-center">

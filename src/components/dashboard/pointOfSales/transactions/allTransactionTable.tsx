@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import {
   formatDate,
   shortenTransactionId,
@@ -15,12 +15,19 @@ interface AllTransactionTableProps {
   data?: TableRowData[];
   isLoading?: boolean;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
+
 }
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
   isLoading = false,
   onSortChange,
+  paginationData ,   
+  onPageChange,
+  activeSort
 }) => {
   const navigate = useNavigate();
 
@@ -153,6 +160,10 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         length={8}
         tableType="transaction"
         onSortChange={onSortChange}
+        activeSort={activeSort} 
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

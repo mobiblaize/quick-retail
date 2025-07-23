@@ -12,6 +12,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
   const { reportData} = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
 
+  const [, setCurrentPage] = useState(reportData?.data?.returns?.current_page || 1);
 
   useEffect(() => {
     const returnsArray = reportData?.data?.returns?.data;
@@ -40,6 +41,21 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
 
 
   
+  const paginationData = {
+    current_page: reportData?.data?.returns?.current_page,
+    last_page: reportData?.data?.returns?.last_page,
+    per_page: reportData?.data?.returns?.per_page,
+    total: reportData?.data?.returns?.total,
+    from: reportData?.data?.returns?.from,
+    to: reportData?.data?.returns?.to,
+    next_page_url: reportData?.data?.returns?.next_page_url,
+    prev_page_url: reportData?.data?.returns?.prev_page_url,
+  };  
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+  };
 
   const columns: ColumnDef<TableRowData>[] = [
     {
@@ -169,6 +185,9 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
         showSearch={false}
         showSortFilter={false}
         length={8}
+        serverSidePagination
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
         tableTitle={<div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div className="flex gap-2.5 items-center">
             <Text fw={500} size="xl" c="textSecondary.9">

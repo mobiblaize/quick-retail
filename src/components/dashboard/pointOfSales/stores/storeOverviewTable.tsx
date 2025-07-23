@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch, Loader } from "@mantine/core";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { storeTargetOrder } from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -21,6 +21,9 @@ type StoreOverviewTableProps = {
   loading?: boolean;
   refetchStores?: () => void;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
 };
 
 const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
@@ -28,6 +31,9 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
   loading = false,
   refetchStores,
   onSortChange,
+  paginationData ,  
+   onPageChange,
+   activeSort
 }) => {
   if (loading) {
     return (
@@ -190,7 +196,11 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSearch
           showSortFilter
           onSortChange={onSortChange}
+          activeSort={activeSort} 
           searchPlaceholder="Search orders"
+          serverSidePagination={true}
+          paginationData={paginationData}
+          onPageChange={onPageChange}
           length={8}
           tableTitle={
             <div className="flex gap-2.5">

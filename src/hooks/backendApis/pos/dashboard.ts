@@ -77,6 +77,7 @@ export const useFetchAnalysisOverview = (customPayload?: Partial<typeof defaultD
       //@ts-ignore
       price_from: "",
       price_to: "",
+ 
     };
   
     const payload = { ...defaultPayload, ...customPayload };

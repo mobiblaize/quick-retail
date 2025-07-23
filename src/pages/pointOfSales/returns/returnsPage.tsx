@@ -15,7 +15,8 @@ const ReturnsPage = () => {
     startDate: "",
     endDate: "",
   });
-
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10); 
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -34,13 +35,14 @@ const mapFiltersToPayload = (filters: FilterValues) => {
     search: filters.search ?? "",
              //@ts-ignore
     sort_by: filters.sortBy ?? "",
-    per_page: "500",
+    per_page: "",
     paginate: true,
     location_name: filters.location,
     return_reason:filters.reason,
     status: mapOrderStatus(filters.returnStatus),
     price_from: filters.priceFrom ?? 100,
     price_to: filters.priceTo ?? "",
+    page: currentPage.toString(),
   };
 
   if (filters.startDate) payload.start_date = filters.startDate;
@@ -60,6 +62,8 @@ const mapFiltersToPayload = (filters: FilterValues) => {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     ...(startDate ? { start_date: startDate } : {}),
     ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage,
   };
   
     const { data = {}, isLoading = false } = useFetchAllreturns(payload) || {};
@@ -76,6 +80,11 @@ const mapFiltersToPayload = (filters: FilterValues) => {
     const handleLogPage = () => {
      navigate(ROUTES.logReturns);
       } 
+
+      const handlePageChange = (page: number) => {
+        setCurrentPage(page);
+      };
+      
   
   const subHeaders = [
     <div key="1">
@@ -106,7 +115,8 @@ const mapFiltersToPayload = (filters: FilterValues) => {
         }}
         setDateRange={setDateRange}
       />
-      <ReturnsTable returns={returns} isLoading={isLoading}    onFilterChange={handleFilterChange}/>
+      <ReturnsTable returns={returns} isLoading={isLoading}    onFilterChange={handleFilterChange}  paginationData={data?.data?.sales}
+        onPageChange={handlePageChange}/>
     </PageContainer>
   );
 };
