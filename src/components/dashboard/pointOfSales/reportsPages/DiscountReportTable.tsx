@@ -8,13 +8,14 @@ import { useEffect, useState } from "react";
 const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
   const { reportData } = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
+  const [, setCurrentPage] = useState(reportData?.data?.discounts?.current_page || 1);
 
   useEffect(() => {
-    console.log("reportData", reportData);
-    console.log(
-      "reportData.data.discounts.data",
-      reportData?.data?.discounts?.data
-    );
+    // console.log("reportData", reportData);
+    // console.log(
+    //   "reportData.data.discounts.data",
+    //   reportData?.data?.discounts?.data
+    // );
 
     const discountsArray = reportData?.data?.discounts?.data;
 
@@ -33,10 +34,27 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     }
   }, [reportData]);
 
+  const paginationData = {
+    current_page: reportData?.data?.discounts?.current_page,
+    last_page: reportData?.data?.discounts?.last_page,
+    per_page: reportData?.data?.discounts?.per_page,
+    total: reportData?.data?.discounts?.total,
+    from: reportData?.data?.discounts?.from,
+    to: reportData?.data?.discounts?.to,
+    next_page_url: reportData?.data?.discounts?.next_page_url,
+    prev_page_url: reportData?.data?.discounts?.prev_page_url,
+  };  
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+  };
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Discount Name",
       accessorKey: "discountName",
+      enableSorting: false, 
       cell: (props) => (
         <Text fw={500} c="black">
           {props.row.original.discountName}
@@ -46,11 +64,13 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Percent Off",
       accessorKey: "percentOff",
+      enableSorting: false, 
       cell: (props) => <Text>{props.row.original.percentOff}</Text>,
     },
     {
         header: "Price Off",
         accessorKey: "priceOff",
+        enableSorting: false, 
         cell: (props) => {
           const priceOff = props.row.original.priceOff;
           const percentOff = props.row.original.percentOff;
@@ -74,6 +94,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Date From",
       accessorKey: "dateFrom",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">
             {/* @ts-ignore */}
@@ -84,6 +105,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Date To",
       accessorKey: "dateTo",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">
                      {/* @ts-ignore */}
@@ -94,6 +116,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: (props) => {
         const status = props.row.original.status;
         return (
@@ -114,6 +137,7 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Redemption",
       accessorKey: "redemption",
+      enableSorting: false, 
       cell: (props) => <Text>{props.row.original.redemption}</Text>,
     },
   ];
@@ -126,6 +150,9 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
         showSearch={false}
         showSortFilter={false}
         length={8}
+        serverSidePagination
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
         tableTitle={
           <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex gap-2.5 items-center">

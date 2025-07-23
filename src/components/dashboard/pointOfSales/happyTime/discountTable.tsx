@@ -3,7 +3,7 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { useState } from "react";
 
@@ -16,9 +16,11 @@ import { useState } from "react";
 // };
 
 
-const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; }) => {
+const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationData,
+  onPageChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; paginationData?: PaginationData;
+    onPageChange: (page: number) => void;}) => {
 
-  const [, setSortBy] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -52,6 +54,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
     {
       header: "Product",
       accessorKey: "name",
+      enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -77,6 +80,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
     {
       header: "Percent Off",
       accessorKey: "percent",
+      enableSorting: false, 
       cell: ({ row }) => 
         row.original.discountType === "percentage"
           ? `${row.original.value}%`
@@ -85,6 +89,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
     {
       header: "Price Off",
       accessorKey: "price",
+      enableSorting: false, 
       cell: ({ row }) => 
         row.original.discountType === "amount"
           ? `₦${row.original.value}`
@@ -93,14 +98,17 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
     {
       header: "Date From",
       accessorKey: "dateFrom",
+      enableSorting: false, 
     },
     {
       header: "Date To",
       accessorKey: "dateTo",
+      enableSorting: false, 
     },
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.status;
         return (
@@ -139,12 +147,16 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange }: { rawDisco
         showFilter
         showSortFilter
         onSortChange={handleSortChange}
+        activeSort={sortBy} 
         searchPlaceholder="Search orders"
         length={8}
            //@ts-ignore
         tableType="discount"
         // types={types}
         onFilterChange={onFilterChange}
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

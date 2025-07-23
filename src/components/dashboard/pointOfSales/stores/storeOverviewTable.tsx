@@ -1,7 +1,7 @@
 import { FC } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch, Loader } from "@mantine/core";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { storeTargetOrder } from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -21,6 +21,9 @@ type StoreOverviewTableProps = {
   loading?: boolean;
   refetchStores?: () => void;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
 };
 
 const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
@@ -28,6 +31,9 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
   loading = false,
   refetchStores,
   onSortChange,
+  paginationData ,  
+   onPageChange,
+   activeSort
 }) => {
   if (loading) {
     return (
@@ -48,6 +54,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Store Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
@@ -63,6 +70,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Store Location",
       accessorKey: "location",
+      enableSorting: false, 
       cell: (props) => {
         const location = props.row.original.lga;
         return (
@@ -77,6 +85,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Date Created",
       accessorKey: "dateCreated",
+      enableSorting: false, 
       cell: ({ row }) => {
         const createdAt = row.original.created_at;
 
@@ -101,6 +110,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Customers",
       accessorKey: "totalCustomer",
+      enableSorting: false, 
       cell: (props) => {
         const totalCustomers = props.row.original.total_customers;
         return (
@@ -118,6 +128,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: (props) => {
         const store = props.row.original;
         const locationId = store.locationID as string;
@@ -171,6 +182,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: (props) => (
         <Link to={ROUTES.viewStore} state={{ store: props.row.original }}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
@@ -190,7 +202,11 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSearch
           showSortFilter
           onSortChange={onSortChange}
+          activeSort={activeSort} 
           searchPlaceholder="Search orders"
+          serverSidePagination={true}
+          paginationData={paginationData}
+          onPageChange={onPageChange}
           length={8}
           tableTitle={
             <div className="flex gap-2.5">

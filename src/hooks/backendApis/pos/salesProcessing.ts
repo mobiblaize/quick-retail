@@ -9,7 +9,7 @@ export const useFetchAllSales = (customPayload?: SalesPayload) => {
   const defaultPayload: SalesPayload = {
     search: "",
     sort_by: "",
-    per_page: "500",
+    per_page: "",
     paginate: true,
     start_date: "",
     end_date: "",
@@ -17,6 +17,7 @@ export const useFetchAllSales = (customPayload?: SalesPayload) => {
     //@ts-ignore
     price_from: "",
     price_to: "",
+
   };
 
   const payload = { ...defaultPayload, ...customPayload };

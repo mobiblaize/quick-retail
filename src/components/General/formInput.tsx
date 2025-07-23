@@ -1,5 +1,6 @@
 import { TextInput } from "@mantine/core";
 import { iInputField } from "./formTypes";
+import { useRef } from "react";
 
 interface FlexibleInputField
   extends Omit<iInputField, "paddingX" | "paddingY" | "borderWidth"> {
@@ -8,6 +9,7 @@ interface FlexibleInputField
   borderWidth?: number | string;
   leftPrefix?: string;
   onBlur?: () => void;
+  onWheel?: (e: React.WheelEvent<HTMLInputElement>) => void;
 }
 
 const FormInput = ({
@@ -28,7 +30,7 @@ const FormInput = ({
   bgColor = "white",
   borderWidth = "1px",
   color,
-  inputRef,
+  // inputRef,
   fontSize = "16px",
   paddingX = 16,
   paddingY = "5px",
@@ -36,6 +38,7 @@ const FormInput = ({
   id,
   leftPrefix,
   requiredColor = "text-red-600",
+  onWheel,
   ...rest
 }: FlexibleInputField) => {
   const normalizeDimension = (dimension: number | string | undefined) => {
@@ -43,16 +46,22 @@ const FormInput = ({
     if (typeof dimension === "number") return `${dimension}px`;
     return dimension;
   };
-
+  const inputRef = useRef<HTMLInputElement>(null);
   const paddingXValue = normalizeDimension(paddingX);
   const paddingYValue = normalizeDimension(paddingY);
   const borderWidthValue = normalizeDimension(borderWidth);
 
+  const handleWheel = () => {
+    if (inputRef.current && type === "number") {
+      inputRef.current.blur(); // Prevent scroll increment
+    }
+  };
   return (
     <TextInput
       id={id}
       ref={inputRef}
-      type={type}
+      onWheel={handleWheel}
+
       label={
         label && (
           <div className="flex items-center">

@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
@@ -10,9 +10,12 @@ interface CategoriesTableProps {
   customers: Array<any>;
   isLoading: boolean;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
 }
 
-const CustomerTable = ({ customers,  onSortChange ,   isLoading }: CategoriesTableProps) => {
+const CustomerTable = ({ customers,  onSortChange ,   isLoading,  paginationData ,   onPageChange,  activeSort }: CategoriesTableProps) => {
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
@@ -164,9 +167,13 @@ const CustomerTable = ({ customers,  onSortChange ,   isLoading }: CategoriesTab
         data={mappedCustomers}
         showSearch
         showSortFilter
-        searchPlaceholder="Search orders"
+        searchPlaceholder="Search Customers"
         length={8}
         onSortChange={onSortChange}
+        activeSort={activeSort} 
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
@@ -184,7 +191,7 @@ const CustomerTable = ({ customers,  onSortChange ,   isLoading }: CategoriesTab
   onCreated={() => {
     setIsCreateCategoryOpen(false);
   }}
-  customer={selectedCustomer} // pass selected customer data
+  customer={selectedCustomer} 
 />
 
     </main>

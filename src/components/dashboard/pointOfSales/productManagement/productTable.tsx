@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text, Menu, Button, Loader } from "@mantine/core";
@@ -15,10 +15,23 @@ import DeleteProduct from "../categories/modals/deleteProduct";
 import { useState } from "react";
 import { notifications } from "@mantine/notifications";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+interface ProductTableProps {
+  products: any[];
+  isLoading: boolean;
+  onFilterChange: (filters: FilterValues) => void;
+  paginationData: PaginationData;
+  onPageChange: (page: number) => void;
+}
 
-const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[], isLoading: any, onFilterChange: (filters: FilterValues) => void; }) => {
+const ProductTable = ({
+  products,
+  isLoading,
+  onFilterChange,
+  paginationData,
+  onPageChange,
+}: ProductTableProps) => {
 
-  const [, setSortBy] = useState<string>("");
+  const [ sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -125,6 +138,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
     {
       header: "Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -151,6 +165,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
     {
       header: "Product Code",
       accessorKey: "productCode",
+      enableSorting: false, 
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.productCode}</Text>
       ),
@@ -158,10 +173,12 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
     {
       header: "Location",
       accessorKey: "location",
+      enableSorting: false, 
     },
     {
       header: "Category",
       accessorKey: "category",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
           {row.original.category}
@@ -171,10 +188,12 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
     {
       header: "Selling Price",
       accessorKey: "sellingPrice",
+      enableSorting: false, 
     },
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
+      enableSorting: false, 
       cell: (props) => (
         <span className="font-medium text-center">
           {props.row.original.stockLevel}
@@ -184,6 +203,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: (props) => {
         const originalStatus = props.row.original.originalStatus;
         const normalizedStatus =
@@ -213,6 +233,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: (props) => (
         // <Menu shadow="md" width={150} position="bottom-end">
         //   <Menu.Target>
@@ -314,6 +335,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
             showFilter
             searchPlaceholder="Search Product Management"
             onSortChange={handleSortChange}
+            activeSort={sortBy}
             length={8}
             //@ts-ignore
             locations={locations}
@@ -321,6 +343,9 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
             categories={categories}
             tableType="product"
             onFilterChange={onFilterChange}
+            serverSidePagination={true}
+            paginationData={paginationData}
+            onPageChange={onPageChange}
             tableTitle={
               <div className="flex gap-2.5">
                 <Text fw={500} size="xl" c="textSecondary.9">

@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import {
   formatDate,
   shortenTransactionId,
@@ -15,12 +15,19 @@ interface AllTransactionTableProps {
   data?: TableRowData[];
   isLoading?: boolean;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
+
 }
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
   isLoading = false,
   onSortChange,
+  paginationData ,   
+  onPageChange,
+  activeSort
 }) => {
   const navigate = useNavigate();
 
@@ -40,6 +47,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Transaction ID",
       accessorKey: "transactionID",
+      enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
@@ -52,6 +60,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Transaction Date",
       accessorFn: (row) => row.created_at,
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text fw={400} className="text-sm">
           {/* @ts-ignore */}
@@ -61,6 +70,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     },
     {
       header: "Order ID",
+      enableSorting: false, 
       // @ts-ignore
       accessorFn: (row) => row.sales_order?.orderID ?? "",
       cell: ({ row }) => (
@@ -73,6 +83,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Customer Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
           {/* @ts-ignore */}
@@ -83,6 +94,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Amount",
       accessorKey: "amount",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
           {row.original.amount}
@@ -92,6 +104,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Payment Status",
       accessorKey: "paymentStatus",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status =
           // @ts-ignore
@@ -121,6 +134,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: ({ row }) => {
         //@ts-ignore
         const orderID = row.original.sales_order?.orderID;
@@ -153,6 +167,10 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         length={8}
         tableType="transaction"
         onSortChange={onSortChange}
+        activeSort={activeSort} 
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

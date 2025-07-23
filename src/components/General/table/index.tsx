@@ -111,17 +111,16 @@ const TanTable = <T extends Record<string, any>>({
 
   const tableData = useMemo(() => data, [data]);
   const columns = useMemo(() => columnData, [columnData]);
-  
-  // Use server-side pagination data or fallback to client-side
+
   const currentPage = serverSidePagination 
-    ? (paginationData?.current_page || 1) - 1  // Convert to 0-based indexing
+    ? (paginationData?.current_page || 1) - 1 
     : pageIndex;
     
   const totalPages = serverSidePagination 
     ? paginationData?.last_page || 1 
     : Math.ceil(data.length / length);
 
-  // const pageSize = showAll && showSeeAllToggle ? data.length : length;
+
 
   const table = useReactTable({
     data: tableData,
@@ -162,7 +161,7 @@ const TanTable = <T extends Record<string, any>>({
           key={i}
           onClick={() => {
             if (serverSidePagination) {
-              onPageChange?.(i + 1); // Convert back to 1-based for API
+              onPageChange?.(i + 1); 
             } else {
               table.setPageIndex(i);
               setPageIndex(i);
@@ -247,9 +246,19 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
   ? baseSortOptions.filter(opt => opt.key !== "a-z" && opt.key !== "z-a")
   : baseSortOptions;
 
-
-
-
+  // useEffect(() => {
+  //   console.log("filtersApplied changed:", filtersApplied);
+  // }, [filtersApplied]);
+  
+  const isFilterActive = (filters: FilterValues): boolean => {
+    return Object.entries(filters).some(([ value]) => {
+      if (typeof value === "string") {
+        return value.trim() !== "" && value !== "All" && value !== "all";
+      }
+      return !!value;
+    });
+  };
+  
   return (
     <Box className="font-sans">
       <Box
@@ -358,42 +367,42 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                       justifyContent: "center",
                     }}
                   >
-                    {filtersApplied ? (
-                      <span className="whitespace-nowrap">Reset Filter</span>
-                    ) : (
-                      <div
-                        style={{
-                          display: "flex",
-                          flexDirection: "column",
-                          gap: "2px",
-                        }}
-                      >
-                        <span
-                          style={{
-                            display: "block",
-                            width: "16px",
-                            height: "2px",
-                            background: "white",
-                          }}
-                        />
-                        <span
-                          style={{
-                            display: "block",
-                            width: "16px",
-                            height: "2px",
-                            background: "white",
-                          }}
-                        />
-                        <span
-                          style={{
-                            display: "block",
-                            width: "16px",
-                            height: "2px",
-                            background: "white",
-                          }}
-                        />
-                      </div>
-                    )}
+                    {(!filtersApplied || !["inventory", "product", "sales", "returns", "discount", "audit"].includes(tableType || "")) ? (
+  <div
+    style={{
+      display: "flex",
+      flexDirection: "column",
+      gap: "2px",
+    }}
+  >
+    <span
+      style={{
+        display: "block",
+        width: "16px",
+        height: "2px",
+        background: "white",
+      }}
+    />
+    <span
+      style={{
+        display: "block",
+        width: "16px",
+        height: "2px",
+        background: "white",
+      }}
+    />
+    <span
+      style={{
+        display: "block",
+        width: "16px",
+        height: "2px",
+        background: "white",
+      }}
+    />
+  </div>
+) : (
+  <span className="whitespace-nowrap">Reset Filter</span>
+)}
                   </button>
 
                   {showFilterDropdown && (
@@ -409,6 +418,28 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                         padding: "1rem",
                       }}
                     >
+                       {tableType === "sales" && (
+                        <ReusableFilterComponent
+                          // onFilterChange={(filters) => {
+                          //   onFilterChange?.(filters);
+                          //   setShowFilterDropdown(false);
+                          //   console.log("Filter salesapplied:", filters);
+                          //   setFiltersApplied(true);
+                          // }}
+                          onFilterChange={(filters) => {
+                            onFilterChange?.(filters);
+                            setShowFilterDropdown(false);
+                        
+                            const hasFilters = isFilterActive(filters);
+                            console.log("Filter sales applied:", filters, hasFilters);
+                            setFiltersApplied(hasFilters);
+                          }}
+                          showPrice={true}
+                          showPaymentStatus={true}
+                          filterType={"sales"}
+                        />
+                      )}
+                      
                       {tableType === "inventory" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {
@@ -429,6 +460,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
+                            console.log("Filter productapplied:", filters);
                             setFiltersApplied(true);
                           }}
                           locations={locations}
@@ -467,18 +499,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                         />
                       )}
 
-                      {tableType === "sales" && (
-                        <ReusableFilterComponent
-                          onFilterChange={(filters) => {
-                            onFilterChange?.(filters);
-                            setShowFilterDropdown(false);
-                            setFiltersApplied(true);
-                          }}
-                          showPrice={true}
-                          showPaymentStatus={true}
-                          filterType="sales"
-                        />
-                      )}
+                     
                       {tableType === "audit" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {

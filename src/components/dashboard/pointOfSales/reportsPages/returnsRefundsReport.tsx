@@ -12,6 +12,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
   const { reportData} = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
 
+  const [, setCurrentPage] = useState(reportData?.data?.returns?.current_page || 1);
 
   useEffect(() => {
     const returnsArray = reportData?.data?.returns?.data;
@@ -40,31 +41,47 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
 
 
   
+  const paginationData = {
+    current_page: reportData?.data?.returns?.current_page,
+    last_page: reportData?.data?.returns?.last_page,
+    per_page: reportData?.data?.returns?.per_page,
+    total: reportData?.data?.returns?.total,
+    from: reportData?.data?.returns?.from,
+    to: reportData?.data?.returns?.to,
+    next_page_url: reportData?.data?.returns?.next_page_url,
+    prev_page_url: reportData?.data?.returns?.prev_page_url,
+  };  
+  
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+
+  };
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={table.getIsAllRowsSelected()}
+    //       onChange={table.getToggleAllRowsSelectedHandler()}
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={row.getIsSelected()}
+    //       onChange={row.getToggleSelectedHandler()}
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableColumnFilter: false,
+    //   size: 10,
+    // },
     {
       header: "Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -91,6 +108,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Date Returned",
       accessorKey: "dateReturned",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text c="textSecondary.7">{row.original.dateReturned}</Text>
       ),
@@ -98,6 +116,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Order ID",
       accessorKey: "id",
+      enableSorting: false, 
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
@@ -110,6 +129,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Customer",
       accessorKey: "customer",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
           {row.original.customer}
@@ -119,6 +139,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Returned Reason",
       accessorKey: "returnedReason",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
           {row.original.returnedReason}
@@ -128,6 +149,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Complaint Status",
       accessorKey: "complaintStatus",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.complaintStatus;
         let bgClass = "";
@@ -169,6 +191,9 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
         showSearch={false}
         showSortFilter={false}
         length={8}
+        serverSidePagination
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
         tableTitle={<div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
           <div className="flex gap-2.5 items-center">
             <Text fw={500} size="xl" c="textSecondary.9">

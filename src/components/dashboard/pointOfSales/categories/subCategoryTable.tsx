@@ -97,7 +97,7 @@ useEffect(() => {
       ),
     },
     {
-      header: "Total Product",
+      header: "Total Products",
       accessorKey: "totalProduct",
       cell: ({ row }) => (
         <Text fw={300} c="#101928">
@@ -185,7 +185,7 @@ useEffect(() => {
     data={enhancedSubCategories}
     showSearch
     showSortFilter
-    searchPlaceholder="Search orders"
+    searchPlaceholder="Search categories"
     length={8}
     tableTitle={
       <div className="flex gap-2.5">

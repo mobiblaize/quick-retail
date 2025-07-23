@@ -66,6 +66,7 @@ const UserManagementTable = () => {
     {
       header: "User Name",
       id: "fullName",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text fw={500} c="black">
           {`${row.original.firstname} ${row.original.lastname}`}
@@ -75,6 +76,7 @@ const UserManagementTable = () => {
     {
       header: "User ID",
       accessorKey: "email",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text fw={500} c="black">
           {row.original.userID}
@@ -84,6 +86,7 @@ const UserManagementTable = () => {
     {
       header: "Time Stamp",
       accessorKey: "updated_at",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text fw={400} c="dimmed">
           {row.original.updated_at || "—"}
@@ -93,6 +96,7 @@ const UserManagementTable = () => {
     {
       header: "Role",
       id: "role",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text>{row.original.roles?.[0]?.name || "—"}</Text>
       ),
@@ -100,6 +104,7 @@ const UserManagementTable = () => {
     {
       header: "Status",
       accessorKey: "status",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.status;
         const isActive = status?.toLowerCase() === "active";
@@ -119,6 +124,7 @@ const UserManagementTable = () => {
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: ({ row }) => (
         <Link to={ROUTES.viewUser(row.original.user_uuid)}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">

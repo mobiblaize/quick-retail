@@ -10,7 +10,7 @@ const defaultPayload = {
   price_from: "",
   price_to: "",
   order_status: "",
-  per_page: "500",
+  per_page: "",
   paginate: true,
 };
 

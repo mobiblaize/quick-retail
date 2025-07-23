@@ -9,16 +9,40 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 
 const CustomerPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10);
+  const [sortBy, setSortBy] = useState<string>(""); 
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
-
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
   });
-  const { data, isLoading, refetch } = useFetchAllCustomers(mapFiltersToPayload(appliedFilters));
+  const { data, isLoading, refetch } = useFetchAllCustomers(
+    mapFiltersToPayload(appliedFilters)
+  );
   const customers = Array.isArray(data?.data?.customers?.data)
     ? data.data.customers.data
     : [];
+    const paginationData = data?.data?.customers
+    ? {
+        current_page: data.data.customers.current_page,
+        last_page: data.data.customers.last_page,
+        per_page: data.data.customers.per_page,
+        total: data.data.customers.total,
+        from: data.data.customers.from,
+        to: data.data.customers.to,
+        next_page_url: data.data.customers.next_page_url,
+        prev_page_url: data.data.customers.prev_page_url,
+      }
+    : undefined;
+  
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
@@ -37,10 +61,18 @@ const CustomerPage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
-      <CustomerTable customers={customers} isLoading={isLoading} onSortChange={(sortKey) => {
-    const newFilters = { ...appliedFilters, sortBy: sortKey };
-    setAppliedFilters(newFilters);
-  }} />
+      <CustomerTable
+        customers={customers}
+        isLoading={isLoading}
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
+        onSortChange={(sortKey) => {
+          const newFilters = { ...appliedFilters, sortBy: sortKey };
+          setAppliedFilters(newFilters);
+          setSortBy(sortKey); 
+        }}
+        activeSort={sortBy}
+      />
       <CreateNewCustomer
         opened={isCreateCategoryOpen}
         onClose={() => setIsCreateCategoryOpen(false)}
