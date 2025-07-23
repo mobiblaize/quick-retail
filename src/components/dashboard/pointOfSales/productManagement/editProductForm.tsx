@@ -732,12 +732,12 @@ const EditProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em] mb-5 ">
-        <h3 className="text-lg font-semibold text-gray-800">
+        {/* <h3 className="text-lg font-semibold text-gray-800">
           COMPLIANCE INFORMATION{" "}
           <span className="text-gray-500">(optional)</span>
-        </h3>
+        </h3> */}
 
-        <div className="mt-4 w-full md:w-[700px]">
+        {/* <div className="mt-4 w-full md:w-[700px]">
           <FormInput
             type="text"
             label="Safety Instructions"
@@ -748,9 +748,9 @@ const EditProductForm = () => {
               setFormData({ ...formData, safety_instructions: e.target.value })
             }
           />
-        </div>
+        </div> */}
 
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <label className="block text-gray-700 font-medium mb-2">
             Compliance Certificates
           </label>
@@ -793,7 +793,7 @@ const EditProductForm = () => {
               </>
             )}
           </div>
-        </div>
+        </div> */}
         <div className="flex justify-end mt-6">
           <button
             className="bg-orange-600 text-white px-6 py-2 rounded-md hover:bg-orange-700"

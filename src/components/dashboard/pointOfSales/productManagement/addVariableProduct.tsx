@@ -114,6 +114,9 @@ const AddVariableForm = () => {
         });
         resetForm();
         window.scrollTo({ top: 0, behavior: "smooth" });
+
+        // 🔁 Navigate back to the previous page
+        navigate(-1);
       },
       onError: (error: any) => {
         setLoading(false);
@@ -124,6 +127,7 @@ const AddVariableForm = () => {
         });
       },
     });
+
   };
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>(
@@ -156,17 +160,17 @@ const AddVariableForm = () => {
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0
       ? categories.map((cat: { name: string; id: number }) => ({
-          label: cat.name,
-          value: cat.id,
-        }))
+        label: cat.name,
+        value: cat.id,
+      }))
       : [];
 
   const subCategoryOptions =
     Array.isArray(subCategories) && subCategories.length > 0
       ? subCategories.map((cat: { name: string; id: number }) => ({
-          label: cat.name,
-          value: cat.id,
-        }))
+        label: cat.name,
+        value: cat.id,
+      }))
       : [];
 
   const { form_data, updateForm } = useStore();
@@ -318,7 +322,7 @@ const AddVariableForm = () => {
               <div>Cost Price</div>
               <div>Selling Price</div>
               <div>Reorder Level</div>
-              <div>Image</div>
+              <div>Variant Image</div>
             </div>
 
             {variants.map((variant) => (

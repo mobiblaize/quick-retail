@@ -1,28 +1,28 @@
 import { Checkbox, Switch } from "@mantine/core";
-import { Plus, Upload, UploadCloud, X } from "lucide-react";
+import { Plus, UploadCloud } from "lucide-react";
 import FormInput from "../../components/General/formInput";
 import FormSelect from "../../components/General/select";
 import { useState } from "react";
 
 
 const AddProductForm = () => {
-  const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [isEnabled, setIsEnabled] = useState(false);
   const [variations, setVariations] = useState([
     { name: "Size", values: ["Small", "Medium", "Large"] },
     { name: "Colour", values: ["White", "Pink", "Black"] },
   ]);
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (file) {
-      setSelectedFile(file);
-    }
-  };
+  // const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  //   const file = event.target.files?.[0];
+  //   if (file) {
+  //     setSelectedFile(file);
+  //   }
+  // };
 
-  const removeFile = () => {
-    setSelectedFile(null);
-  };
+  // const removeFile = () => {
+  //   setSelectedFile(null);
+  // };
 
   const handleDelete = (index: number) => {
     const updated = [...variations];
@@ -195,7 +195,7 @@ const AddProductForm = () => {
         )}
       </div>
 
-      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
+      {/* <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
           PROMOTIONS <span className="text-gray-500">(optional)</span>
         </h2>
@@ -217,7 +217,7 @@ const AddProductForm = () => {
             />
           </div>
         </div>
-      </div>
+      </div> */}
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4">
@@ -278,7 +278,7 @@ const AddProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em] mb-5 ">
-        <h3 className="text-lg font-semibold text-gray-800">
+        {/* <h3 className="text-lg font-semibold text-gray-800">
           COMPLIANCE INFORMATION{" "}
           <span className="text-gray-500">(optional)</span>
         </h3>
@@ -290,9 +290,9 @@ const AddProductForm = () => {
             paddingY={"0.7rem"}
             placeholder="Enter safety instructions"
           />
-        </div>
+        </div> */}
 
-        <div className="mt-6">
+        {/* <div className="mt-6">
           <label className="block text-gray-700 font-medium mb-2">
             Compliance Certificates
           </label>
@@ -335,7 +335,7 @@ const AddProductForm = () => {
               </>
             )}
           </div>
-        </div>
+        </div> */}
       </div>
     </div>
   );

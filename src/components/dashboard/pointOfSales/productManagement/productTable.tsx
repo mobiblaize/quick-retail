@@ -88,28 +88,32 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
 
 
   const mappedProducts: TableRowData[] = products.map((product: any) => {
-    const stockStatus = (product.stock_status as string)?.toLowerCase();
+    const stockStatus = product?.stock_status?.toLowerCase() ?? "";
 
-    // Create our own status based on stock_status, ignoring the backend status field
-    const isActive = stockStatus !== "sold out";
-    const frontendStatus = isActive ? "Active" : "Sold Out";
+    const isOutOfStock = ["sold out", "sold_out", "out_of_stock", "unavailable"].includes(stockStatus);
+    const frontendStatus = isOutOfStock ? "Inactive" : "Active";
+
 
     return {
       name: product.name,
       productCode: product.code,
+      // location: product.location?.name || "—",
+      // category: product.category?.name || "—",
       location: product.product?.location?.name || "—",
       category: product.product?.category?.name || "—",
       sellingPrice: `₦${Number(product.selling_price).toLocaleString()}`,
       stockLevel: product.quantity_available,
-      status: frontendStatus, // Use our calculated status, not product.status
+      status: frontendStatus,
       image: product.image_path,
       items: product.items ?? "",
       variationID: product.variationID,
       ...product,
-      // Override the backend status with our calculated one
-      originalStatus: product.status, // Keep original if needed
+      originalStatus: stockStatus, // for debugging
     };
   });
+
+
+
 
   const { updateForm } = useStore();
 
@@ -181,28 +185,72 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
       header: "Status",
       accessorKey: "status",
       cell: (props) => {
-        const status = props.row.original.status;
-        const isSoldOut = status === "Sold Out";
+        const originalStatus = props.row.original.originalStatus;
+        const normalizedStatus =
+          typeof originalStatus === "string" ? originalStatus.toLowerCase() : "";
+
+        const isInactive = ["sold out", "sold_out", "out_of_stock", "unavailable"].includes(normalizedStatus);
+        const frontendStatus = isInactive ? "Inactive" : "Active";
+
+        const statusStyles = isInactive
+          ? "bg-red-100 text-red-700"
+          : "bg-green-100 text-green-700";
 
         return (
           <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${isSoldOut
-              ? "bg-[#FFFAEB] text-[#B54708]"   // ORANGE for Sold Out
-              : "bg-[#ECFDF3] text-[#027A48]"  // GREEN for Active
-              }`}
+            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${statusStyles}`}
           >
-            {isSoldOut ? <UnpaidDot /> : <PaidDot />}
-            <span className="ml-2 capitalize">{String(status)}</span>
+            {isInactive ? <UnpaidDot /> : <PaidDot />}
+            <span className="ml-2">{frontendStatus}</span>
           </div>
         );
       },
     },
 
 
+
+
     {
       header: "",
       accessorKey: "action",
       cell: (props) => (
+        // <Menu shadow="md" width={150} position="bottom-end">
+        //   <Menu.Target>
+        //     <Button variant="subtle" size="xs" p={1}>
+        //       <MoreVertical size={20} className="cursor-pointer" />
+        //     </Button>
+        //   </Menu.Target>
+
+        //   <Menu.Dropdown>
+        //     <Menu.Item>
+        //       <Link
+        //         to={ROUTES.viewProduct}
+        //         state={{ variationID: props.row.original.variationID }}
+        //       >
+        //         View
+        //       </Link>
+        //     </Menu.Item>
+        //     <Menu.Item>
+        //       <Link
+        //         to={ROUTES.editProduct}
+        //         state={{ variationID: props.row.original.variationID }}
+        //         onClick={() => handleProductEdit(props.row.original)}
+        //       >
+        //         Edit
+        //       </Link>
+        //     </Menu.Item>
+        //     <Menu.Item
+        //       color="red"
+        //       onClick={() => {
+        //         //@ts-ignore
+        //         setSelectedId(props.row.original.variationID); // Ensure the correct product is selected
+        //         setIsDeleteOpen(true);
+        //       }}
+        //     >
+        //       Delete
+        //     </Menu.Item>
+        //   </Menu.Dropdown>
+        // </Menu>
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <Button variant="subtle" size="xs" p={1}>
@@ -211,28 +259,31 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
           </Menu.Target>
 
           <Menu.Dropdown>
-            <Menu.Item>
-              <Link
-                to={ROUTES.viewProduct}
-                state={{ variationID: props.row.original.variationID }}
-              >
-                View
-              </Link>
+            <Menu.Item
+              component={Link}
+              to={ROUTES.viewProduct}
+              state={{ variationID: props.row.original.variationID }}
+            >
+              View
             </Menu.Item>
-            <Menu.Item>
-              <Link
-                to={ROUTES.editProduct}
-                state={{ variationID: props.row.original.variationID }}
-                onClick={() => handleProductEdit(props.row.original)}
-              >
-                Edit
-              </Link>
+
+            <Menu.Item
+              component={Link}
+              to={ROUTES.editProduct}
+              state={{ variationID: props.row.original.variationID }}
+              onClick={() => handleProductEdit(props.row.original)}
+            >
+              Edit
             </Menu.Item>
+
             <Menu.Item
               color="red"
               onClick={() => {
-                //@ts-ignore
-                setSelectedId(props.row.original.variationID); // Ensure the correct product is selected
+                setSelectedId(
+                  typeof props.row.original.variationID === "string" || typeof props.row.original.variationID === "number"
+                    ? props.row.original.variationID
+                    : null
+                );
                 setIsDeleteOpen(true);
               }}
             >
@@ -240,6 +291,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
+
       ),
     },
   ];
@@ -260,7 +312,7 @@ const ProductTable = ({ products, isLoading, onFilterChange }: { products: any[]
             showSearch
             showSortFilter
             showFilter
-            searchPlaceholder="Search orders"
+            searchPlaceholder="Search Product Management"
             onSortChange={handleSortChange}
             length={8}
             //@ts-ignore

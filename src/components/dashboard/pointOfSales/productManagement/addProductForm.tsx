@@ -159,30 +159,35 @@ const AddProductForm = () => {
       certificates: formData.certificates || [],
       image_path: formData.image_path || [],
       variations: [],
+      notes: formData.notes || "",
     };
 
     setLoading(true);
 
-    mutate(payload, {
-      onSuccess: () => {
-        setLoading(false);
-        notifications.show({
-          title: "Success",
-          message: "Product added successfully",
-          color: "green",
-        });
-        setFormData({ ...initialFormState }); // reset form
-        window.scrollTo({ top: 0, behavior: "smooth" });
-      },
-      onError: (error: any) => {
-        setLoading(false);
-        notifications.show({
-          title: "Error",
-          message: error?.response?.data?.message || "Failed to add product",
-          color: "red",
-        });
-      },
+  mutate(payload, {
+  onSuccess: () => {
+    setLoading(false);
+    notifications.show({
+      title: "Success",
+      message: "Product added successfully",
+      color: "green",
     });
+    setFormData({ ...initialFormState }); // reset form
+    window.scrollTo({ top: 0, behavior: "smooth" });
+
+    // ✅ Navigate back after success
+    navigate(-1);
+  },
+  onError: (error: any) => {
+    setLoading(false);
+    notifications.show({
+      title: "Error",
+      message: error?.response?.data?.message || "Failed to add product",
+      color: "red",
+    });
+  },
+});
+
   };
 
   return (
@@ -350,10 +355,10 @@ const AddProductForm = () => {
             paddingY={"0.7rem"}
             placeholder="Enter random notes on product, supplier or inventory"
             optional
-            // value={formData.notes}
-            // onChange={(e: any) =>
-            //   setFormData({ ...formData, notes: e.target.value })
-            // }
+            value={formData.notes}
+            onChange={(e: any) =>
+              setFormData({ ...formData, notes: e.target.value })
+            }
           />
         </div>
 
