@@ -90,7 +90,7 @@ const mapFiltersToPayload = (filters: FilterValues) => {
     <div key="1">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-          Returns and Overview
+          Returns and Refunds 
         </Text>
         <Button
           onClick={handleLogPage}

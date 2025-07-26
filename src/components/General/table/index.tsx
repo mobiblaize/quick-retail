@@ -531,53 +531,64 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
           color: "var(--mantine-color-gray-7)",
         }}
       >
-        {loadingState ? (
-          <Box
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "2.5rem 0",
-            }}
-          >
-            Loading...
-          </Box>
-        ) : (serverSidePagination ? data.length === 0 : table.getFilteredRowModel().rows.length === 0) ? (
-          <Box
-            style={{
-              padding: "3rem 1rem",
-              textAlign: "center",
-              display: "flex",
-              flexDirection: "column",
-              alignItems: "center",
-              gap: "0.25rem",
-            }}
-          >
-            <img
-              src={EmptyStateImage}
-              alt="No data"
-              style={{ width: "160px", height: "auto", opacity: 0.8 }}
-            />
-            <Text fw={600} size="lg" c="#1D2739">
-              Not found
-            </Text>
-            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              We couldn't find what you are
-            </Text>
-            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              looking for. Try entering a correct
-            </Text>
-            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              data
-            </Text>
-          </Box>
-        ) : (
-          <TanBody
-            table={table}
-            loadingState={loadingState}
-            onClick={onClick}
-          />
-        )}
+ {loadingState ? (
+  <Box
+    style={{
+      display: "flex",
+      alignItems: "center",
+      justifyContent: "center",
+      padding: "2.5rem 0",
+    }}
+  >
+    Loading...
+  </Box>
+) : (
+  (
+    table.getFilteredRowModel().rows.length === 0 &&
+    (searchTerm || data.length === 0)
+  )
+  
+  
+  
+    ? (
+      <Box
+        style={{
+          padding: "3rem 1rem",
+          textAlign: "center",
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          gap: "0.25rem",
+        }}
+      >
+        <img
+          src={EmptyStateImage}
+          alt="No data"
+          style={{ width: "160px", height: "auto", opacity: 0.8 }}
+        />
+        <Text fw={600} size="lg" c="#1D2739">
+          Not found
+        </Text>
+        <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+          We couldn't find what you are
+        </Text>
+        <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+          looking for. Try entering a correct
+        </Text>
+        <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+          data
+        </Text>
+      </Box>
+    )
+    : (
+      <TanBody
+        table={table}
+        loadingState={loadingState}
+        onClick={onClick}
+      />
+    )
+)}
+
       </Box>
 
       {showSeeAllToggle && !showAll && data.length > length && (

@@ -391,7 +391,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       {/* Payment Status */}
       {showPaymentStatus && (
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Payment Status</label>
+          <label className="block text-sm font-medium mb-1">Order Status</label>
           <div className="flex justify-around  gap-x-2 gap-y-2">
             {['All', 'Pending', 'Paid'].map((status) => (
               <label key={status} className="flex items-center gap-1 text-sm">

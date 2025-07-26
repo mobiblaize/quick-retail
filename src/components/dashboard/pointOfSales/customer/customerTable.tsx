@@ -75,7 +75,7 @@ const CustomerTable = ({ customers,  onSortChange ,   isLoading,  paginationData
       ),
     },
     {
-      header: "Timestamp",
+      header: "Date Created",
       accessorKey: "timeStamp",
       cell: ({ row }) => (
         <Text className="text-gray-900 text-sm font-medium">

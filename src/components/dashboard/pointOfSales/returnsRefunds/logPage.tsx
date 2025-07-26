@@ -2,24 +2,32 @@ import { useState, useEffect } from "react";
 import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import Dropdown2 from "../../../General/dropdown2";
-import { useFetchSaleOrderById, useLogComplain } from "../../../../hooks/backendApis/pos/returns";
+import {
+  useFetchSaleOrderById,
+  useLogComplain,
+} from "../../../../hooks/backendApis/pos/returns";
 import { notifications } from "@mantine/notifications";
 import { fileToBase64 } from "../../../../utils/helpers";
+import { useNavigate } from "react-router";
 
 const LogOrder = () => {
   const [orderId, setOrderId] = useState<string>("");
   const [submittedOrderId, setSubmittedOrderId] = useState<string>("");
   const [returnReason, setReturnReason] = useState<string>("");
   const [notes, setNotes] = useState<string>("");
-  const [quantitiesReturned, setQuantitiesReturned] = useState<{ [key: string]: number }>({});
+  const [quantitiesReturned, setQuantitiesReturned] = useState<{
+    [key: string]: number;
+  }>({});
   const [defectImages, setDefectImages] = useState<File[]>([]);
-  const [selectedItems, setSelectedItems] = useState<{ [key: string]: boolean }>({});
-  const { mutate, } = useLogComplain();
-    //@ts-ignore
+  const [selectedItems, setSelectedItems] = useState<{
+    [key: string]: boolean;
+  }>({});
+  const { mutate } = useLogComplain();
+  //@ts-ignore
   const { data, error, isLoading } = useFetchSaleOrderById(submittedOrderId, {
     //@ts-ignore
     enabled: !!submittedOrderId,
-      //@ts-ignore
+    //@ts-ignore
   });
 
   const handleOrderIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -32,30 +40,40 @@ const LogOrder = () => {
     }
   };
 
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
   useEffect(() => {
     const handler = setTimeout(() => {
       if (orderId.trim()) setSubmittedOrderId(orderId.trim());
     }, 500); // wait 500ms after user stops typing
-  
+
     return () => clearTimeout(handler);
   }, [orderId]);
 
   const handleSelectItem = (orderDetailId: string, isChecked: boolean) => {
-    setSelectedItems(prev => ({ ...prev, [orderDetailId]: isChecked }));
+    setSelectedItems((prev) => ({ ...prev, [orderDetailId]: isChecked }));
   };
 
-  const handleQuantityReturnedChange = (orderDetailId: string, value: number) => {
-    setQuantitiesReturned(prev => ({ ...prev, [orderDetailId]: value }));
+  const handleQuantityReturnedChange = (
+    orderDetailId: string,
+    value: number
+  ) => {
+    setQuantitiesReturned((prev) => ({ ...prev, [orderDetailId]: value }));
   };
 
   const handleAddPhotos = (files: FileList | null) => {
     if (files) {
-      setDefectImages(prev => [...prev, ...Array.from(files)]);
+      setDefectImages((prev) => [...prev, ...Array.from(files)]);
     }
   };
 
   const calculateRefundDetails = () => {
     let subtotal = 0;
+
     if (data?.data?.sale_order_details) {
       data.data.sale_order_details.forEach((salesOrder: any) => {
         const orderDetailId = salesOrder.order_detail_id;
@@ -63,14 +81,19 @@ const LogOrder = () => {
         const quantityReturned = quantitiesReturned[orderDetailId] || 0;
 
         if (isSelected && quantityReturned > 0) {
-          const unitPrice = Number(salesOrder.product_variation?.selling_price || 0);
+          const unitPrice = Number(
+            salesOrder.product_variation?.selling_price || 0
+          );
           subtotal += unitPrice * quantityReturned;
         }
       });
     }
+
     const discount = 0;
-    const total = subtotal - discount;
-    return { subtotal, discount, total };
+    const tax = parseFloat((0.075 * subtotal).toFixed(2));
+    const total = subtotal - discount + tax;
+
+    return { subtotal, discount, tax, total };
   };
 
   const handleSave = async () => {
@@ -83,7 +106,7 @@ const LogOrder = () => {
       });
       return;
     }
-    
+
     if (!returnReason) {
       notifications.show({
         title: "Validation Error",
@@ -92,25 +115,28 @@ const LogOrder = () => {
       });
       return;
     }
-  
+
     // Gather selected order details with quantity returned > 0
     const order_detail = Object.entries(selectedItems)
-      .filter(([orderDetailId, isSelected]) => isSelected && (quantitiesReturned[orderDetailId] ?? 0) > 0)
+      .filter(
+        ([orderDetailId, isSelected]) =>
+          isSelected && (quantitiesReturned[orderDetailId] ?? 0) > 0
+      )
       .map(([orderDetailId]) => ({
         order_detail_id: orderDetailId,
         quantity_returned: quantitiesReturned[orderDetailId] || 0,
       }));
-  
+
     if (order_detail.length === 0) {
       notifications.show({
         title: "Validation Error",
-        message: "Please select at least one product and specify quantity returned",
+        message:
+          "Please select at least one product and specify quantity returned",
         color: "red",
       });
       return;
     }
 
-  
     let defect_image: string[] = [];
     try {
       defect_image = await Promise.all(defectImages.map(fileToBase64));
@@ -122,7 +148,7 @@ const LogOrder = () => {
       });
       return;
     }
-  
+
     // Payload ready
     const payload = {
       order_id: submittedOrderId,
@@ -131,9 +157,9 @@ const LogOrder = () => {
       notes: notes || null,
       defect_image,
     };
-  
+
     console.log("Payload to send:", payload);
-  
+
     mutate(payload, {
       onSuccess: () => {
         notifications.show({
@@ -141,7 +167,7 @@ const LogOrder = () => {
           message: "Return information successfully submitted.",
           color: "green",
         });
-  
+
         // reset form states as needed
         setOrderId("");
         setSubmittedOrderId("");
@@ -160,7 +186,6 @@ const LogOrder = () => {
       },
     });
   };
-  
 
   return (
     <main className="w-full h-auto rounded-lg bg-white pb-[3em]">
@@ -183,93 +208,145 @@ const LogOrder = () => {
         />
       </section>
 
-      {submittedOrderId && isLoading && <Text className="px-6">Loading...</Text>}
-{submittedOrderId && error && (
-  <Text className="px-6 text-red-500">Error fetching order</Text>
-)}
+      <div className="px-6 mt-[-1rem]">
+        {submittedOrderId && isLoading && (
+          <Text className="text-sm text-gray-500">Loading...</Text>
+        )}
+        {submittedOrderId && error && (
+          <Text className="text-sm text-red-500 mt-1">
+            Error fetching order
+          </Text>
+        )}
+      </div>
 
       {data?.data?.sale_order_details?.length > 0 && (
         <>
           <section className="mt-6 w-full">
             <div className="grid grid-cols-1 gap-4 w-full max-w-6xl mx-auto pl-3">
-              <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase"className="pl-4" >
+              <Text
+                size="lg"
+                fw={500}
+                c="textSecondary.9"
+                tt="uppercase"
+                className="pl-4"
+              >
                 ITEMS IN ORDER (SELECT PRODUCTS TO RETURN)
               </Text>
               <ul className="space-y-3">
-                {data.data.sale_order_details.map((salesOrder: any, index: number) => {
-                  const product = salesOrder.product_variation;
-                  const isSelected = selectedItems[salesOrder.order_detail_id] || false;
-                  return (
-                    <li
-                    key={index}
-                    className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 "
-                  >
-                    <div className="flex items-center gap-2 mb-3 md:mb-0">
-                      <input
-                        type="checkbox"
-                        checked={isSelected}
-                        onChange={(e) => handleSelectItem(salesOrder.order_detail_id, e.target.checked)}
-                        className="w-5 h-5"
-                      />
-                      <img
-                        src={product?.image_path || "/placeholder.png"}
-                        alt={product?.name || "Product Image"}
-                        className="w-16 h-16 md:w-20 md:h-20 object-cover rounded border"
-                      />
-                    </div>
-                  
-                    <div className="flex flex-col md:flex-row flex-1 justify-between w-full gap-4">
-                      <div className="flex flex-col gap-1">
-                        <span className="font-semibold text-gray-900 text-base">{product?.name || "Product Name"}</span>
-                        <div className="text-sm text-gray-600">
-                          <div>EAN: {product?.ean || "N/A"}</div>
-                          <div>SKU: {product?.sku || "N/A"}</div>
+                {data.data.sale_order_details.map(
+                  (salesOrder: any, index: number) => {
+                    const product = salesOrder.product_variation;
+                    const isSelected =
+                      selectedItems[salesOrder.order_detail_id] || false;
+                    return (
+                      <li
+                        key={index}
+                        className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 "
+                      >
+                        <div className="flex items-center gap-2 mb-3 md:mb-0">
+                          <input
+                            type="checkbox"
+                            checked={isSelected}
+                            onChange={(e) =>
+                              handleSelectItem(
+                                salesOrder.order_detail_id,
+                                e.target.checked
+                              )
+                            }
+                            className="w-5 h-5"
+                          />
+                          <img
+                            src={product?.image_path || "/placeholder.png"}
+                            alt={product?.name || "Product Image"}
+                            className="w-16 h-16 md:w-20 md:h-20 object-cover rounded border"
+                          />
                         </div>
-                      </div>
-                  
-                      <div className="flex flex-col items-start md:items-center min-w-[90px]">
-                        <span className="text-xs text-gray-500">Unit Price</span>
-                        <span className="font-medium text-gray-700">
-                          ₦ {Number(product?.selling_price || 0).toLocaleString()}
-                        </span>
-                      </div>
-                  
-                      <div className="flex flex-col items-start md:items-center min-w-[90px]">
-                        <span className="text-xs text-gray-500">Quantity</span>
-                        <input
-                          type="number"
-                          min={1}
-                          value={salesOrder?.quantity_ordered || 0}
-                          className="w-full md:w-16 border rounded px-2 py-1 text-center text-gray-700"
-                          disabled
-                        />
-                      </div>
-                  
-                      <div className="flex flex-col items-start md:items-center min-w-[90px]">
-                        <span className="text-xs text-gray-500">Return Quantity</span>
-                        <input
-                          type="number"
-                          min={1}
-                          value={quantitiesReturned[salesOrder.order_detail_id] || 0}
-                          onChange={(e) =>
-                            handleQuantityReturnedChange(salesOrder.order_detail_id, parseInt(e.target.value, 10))
-                          }
-                          className="w-full md:w-16 border rounded px-2 py-1 text-center text-gray-700"
-                          disabled={!isSelected}
-                        />
-                      </div>
-                    </div>
-                  </li>
-                  
-                  );
-                })}
+
+                        <div className="flex flex-col md:flex-row flex-1 justify-between w-full gap-4">
+                          <div className="flex flex-col gap-1">
+                            <span className="font-semibold text-gray-900 text-base">
+                              {product?.name || "Product Name"}
+                            </span>
+                            <div className="text-sm text-gray-600">
+                              <div>EAN: {product?.ean || "N/A"}</div>
+                              <div>SKU: {product?.sku || "N/A"}</div>
+                            </div>
+                          </div>
+
+                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
+                            <span className="text-xs text-gray-500">
+                              Unit Price
+                            </span>
+                            <span className="font-medium text-gray-700">
+                              ₦{" "}
+                              {Number(
+                                product?.selling_price || 0
+                              ).toLocaleString()}
+                            </span>
+                          </div>
+
+                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
+                            <span className="text-xs text-gray-500">
+                              Quantity
+                            </span>
+                            <input
+                              type="number"
+                              min={1}
+                              value={salesOrder?.quantity_ordered || 0}
+                              className="w-full md:w-16 border rounded px-2 py-1 text-center text-gray-700"
+                              disabled
+                            />
+                          </div>
+
+                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
+                            <span className="text-xs text-gray-500">
+                              Return Quantity
+                            </span>
+                            <input
+                              type="number"
+                              min={1}
+                              value={
+                                quantitiesReturned[
+                                  salesOrder.order_detail_id
+                                ] || 0
+                              }
+                              // onChange={(e) =>
+                              //   handleQuantityReturnedChange(
+                              //     salesOrder.order_detail_id,
+                              //     parseInt(e.target.value, 10)
+                              //   )
+                              // }
+                              onChange={(e) => {
+                                const inputQty = parseInt(e.target.value, 10);
+                                const orderedQty = salesOrder.quantity_ordered;
+                              
+                                if (inputQty <= orderedQty) {
+                                  handleQuantityReturnedChange(salesOrder.order_detail_id, inputQty);
+                                } else {
+                                  notifications.show({
+                                    title: "Invalid Quantity",
+                                    message: `You can't return more than ${orderedQty} items.`,
+                                    color: "red",
+                                  });
+                                }
+                              }}
+                              
+                              className="w-full md:w-16 border rounded px-2 py-1 text-center text-gray-700"
+                              disabled={!isSelected}
+                            />
+                          </div>
+                        </div>
+                      </li>
+                    );
+                  }
+                )}
               </ul>
             </div>
           </section>
 
           <div className="space-y-4 grid grid-cols-1 md:grid-cols-2 mt-12 px-6 gap-4">
             <Dropdown2
-              label="Select Category"
+              label="Reason for return"
               options={[
                 { label: "Damaged product", value: "Damaged product" },
                 { label: "Expired Product", value: "Expired Product" },
@@ -290,12 +367,16 @@ const LogOrder = () => {
               placeholder="Enter random notes for return"
               paddingY={6}
               value={notes}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => setNotes(e.target.value)}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                setNotes(e.target.value)
+              }
             />
 
             <div className="md:col-span-2">
               <label className="text-red-400 cursor-pointer inline-flex items-center gap-1">
-                <span>{defectImages.length > 0 ? "Add More Photos" : "Add Photos"}</span>
+                <span>
+                  {defectImages.length > 0 ? "Add More Photos" : "Add Photos"}
+                </span>
                 <span className="text-lg font-medium pl-2">+</span>
                 <input
                   type="file"
@@ -306,18 +387,29 @@ const LogOrder = () => {
                 />
               </label>
 
-              {defectImages.length > 0 && (
-                <div className="mt-2 flex gap-2 flex-wrap">
-                  {defectImages.map((file, index) => (
+              <div className="mt-2 flex gap-4 flex-wrap">
+                {defectImages.map((file, index) => (
+                  <div key={index} className="relative w-32 h-32">
                     <img
-                      key={index}
                       src={URL.createObjectURL(file)}
                       alt={`Defect preview ${index + 1}`}
-                      className="w-32 h-32 object-cover border rounded"
+                      className="w-full h-full object-cover border rounded"
                     />
-                  ))}
-                </div>
-              )}
+                    <button
+                      type="button"
+                      onClick={() => {
+                        setDefectImages((prev) =>
+                          prev.filter((_, i) => i !== index)
+                        );
+                      }}
+                      className="absolute top-1 right-1 bg-white text-red-600 border border-red-500 rounded-full w-6 h-6 flex items-center justify-center shadow-sm hover:bg-red-500 hover:text-white transition"
+                      title="Remove Image"
+                    >
+                      ×
+                    </button>
+                  </div>
+                ))}
+              </div>
             </div>
           </div>
         </>
@@ -330,44 +422,55 @@ const LogOrder = () => {
           </Text>
           <Divider size="sm" className="my-2" color="#E4E7EC" />
           {(() => {
-            const { subtotal, discount, total } = calculateRefundDetails();
+            const { subtotal, discount, tax, total } = calculateRefundDetails();
             return (
               <div className="space-y-2">
-                <div className="flex gap-12 text-sm">
+                <div className="flex gap-18 text-sm">
                   <span className="text-gray-700">Subtotal</span>
-                  <span className="text-gray-900 font-medium">₦ {subtotal.toLocaleString()}</span>
+                  <span className="text-gray-900 font-medium">
+                    ₦ {subtotal.toLocaleString()}
+                  </span>
                 </div>
-                <div className="flex gap-12 text-sm">
+                <div className="flex gap-18 text-sm">
                   <span className="text-gray-700">Discount</span>
-                  <span className="text-gray-900 font-medium">₦ {discount.toLocaleString()}</span>
+                  <span className="text-gray-900 font-medium">
+                    ₦ {discount.toLocaleString()}
+                  </span>
                 </div>
-                <div className="flex gap-12 text-base font-semibold">
+                <div className="flex gap-18 text-sm">
+                  <span className="text-gray-700">Tax(VAT)</span>
+                  <span className="text-gray-900 font-medium">
+                    ₦ {tax.toLocaleString()}
+                  </span>
+                </div>
+                <div className="flex gap-22 text-base font-semibold">
                   <span className="text-gray-800">Total </span>
-                  <span className="text-gray-900">₦ {total.toLocaleString()}</span>
+                  <span className="text-gray-900">
+                    ₦ {total.toLocaleString()}
+                  </span>
                 </div>
               </div>
             );
           })()}
         </div>
       )}
-     <div className="fixed bottom-4 left-4 right-9 flex flex-col md:flex-row justify-end gap-3 z-50">
-  <button
-    type="button"
-    onClick={() => { /* reset logic */ }}
-    className="w-full md:w-auto px-4 py-2 bg-white text-[#F16722] font-semibold border border-[#F16722] rounded-lg"
-  >
-    Cancel
-  </button>
+      <div className="fixed bottom-4 left-4 right-9 flex flex-col md:flex-row justify-end gap-3 z-50">
+        <button
+          type="button"
+          onClick={handleBack}
+          className="w-full md:w-auto px-4 py-2 bg-white text-[#F16722] font-semibold border border-[#F16722] rounded-lg"
+        >
+          Cancel
+        </button>
 
-  <button
-    type="button"
-    onClick={handleSave}
-    className="w-full md:w-auto px-4 py-2 bg-[#F16722] text-white font-semibold rounded-lg"
-  >
-    Log Returns
-  </button>
-</div>
-
+        <button
+          type="button"
+          onClick={handleSave}
+          className="w-full md:w-auto px-4 py-2 bg-[#F16722] text-white font-semibold rounded-lg"
+        >
+          Log Returns
+        </button>
+      </div>
     </main>
   );
 };

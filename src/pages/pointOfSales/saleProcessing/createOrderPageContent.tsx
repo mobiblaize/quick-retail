@@ -90,6 +90,21 @@ const CreateOrderPageContent: React.FC = () => {
     }
   };
 
+
+  
+  const [isRedirecting, setIsRedirecting] = useState(false);
+
+  const handleBack2 = () => {
+    setIsRedirecting(true);
+    setTimeout(() => {
+      window.location.href = ROUTES.sales;
+    }, 500); // small delay so loading indicator shows
+  };
+  
+  
+
+  
+
   const [submitHandler, setSubmitHandler] = useState<
     ((status: string) => void) | null
   >(null);
@@ -120,8 +135,8 @@ const CreateOrderPageContent: React.FC = () => {
         title: "Success",
         message:
           status === "completed"
-            ? "Payment confirmed"
-            : "Draft saved successfully",
+            ? "Draft saved successfully"
+            : "Payment for this order wasn't confirmed by cashier",
         color: "green",
       });
       navigate(ROUTES.sales);
@@ -258,30 +273,7 @@ const CreateOrderPageContent: React.FC = () => {
       <div key="1" className="py-2.5">
         <div className="hidden sm:flex gap-8 items-center">
           {backButton}
-          <div className="flex items-center">
-            <Text>Sales processing</Text>
-            <span className="mx-2">/</span>
-            <Text
-              c={
-                currentStep === OrderCreationStep.SEARCH_PRODUCT
-                  ? "black"
-                  : "inherit"
-              }
-            >
-              Create Order
-            </Text>
-            {(currentStep === OrderCreationStep.CONFIRM_PAYMENT ||
-              currentStep === OrderCreationStep.CUSTOMER_RECEIPT) && (
-              <>
-                <span className="mx-2">/</span>
-                <Text c="black" fw={500}>
-                  {currentStep === OrderCreationStep.CONFIRM_PAYMENT
-                    ? "Confirm Payment"
-                    : "Customer Receipt"}
-                </Text>
-              </>
-            )}
-          </div>
+         
         </div>
 
         <div className="flex sm:hidden">{backButton}</div>
@@ -305,7 +297,7 @@ const CreateOrderPageContent: React.FC = () => {
       case OrderCreationStep.SEARCH_PRODUCT:
         return [
           <div key="search-product-buttons" className="flex gap-4 justify-end">
-            <Button variant="outline-primary" onClick={() => navigate(-1)}>
+            <Button variant="outline-primary"         onClick={handleBack2}>
               Cancel
             </Button>
             <Button variant="filled-primary" onClick={nextStep}>
@@ -412,8 +404,16 @@ const CreateOrderPageContent: React.FC = () => {
         return null;
     }
   };
-
+  
+  if (isRedirecting) {
+    return (
+      <div className="flex h-screen items-center justify-center bg-white">
+        <Text fw={500} size="lg">Redirecting...</Text>
+      </div>
+    );
+  }
   return (
+    
     <PageContainer
       subHeaders={getSubHeaders()}
       subHeaderButtom={getBottomButtons()}

@@ -52,7 +52,7 @@ const CustomerDetails = ({ returnId }: CustomerDetailsProps) => {
 
                 {/* Quantity */}
                 <div className="flex flex-col items-center min-w-[90px]">
-                  <span className="text-xs text-black-500">Quantity</span>
+                  <span className="text-xs text-black-500"> Return  Quantity</span>
                   <input
                     type="number"
                     min={1}

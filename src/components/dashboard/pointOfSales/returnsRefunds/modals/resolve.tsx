@@ -56,7 +56,7 @@ const Resolve = ({ opened, onClose, returnID }: ResolveProps) => {
             fw={700}
             style={{ fontSize: "clamp(1.3rem, 4vw, 1.8rem)" }}
           >
-            Complaints Resolved
+            Complaint Resolved
           </Text>
           <Text mt="5" style={{ fontSize: "clamp(0.875rem, 2vw, 1rem)" }}>
             Are you sure you want to resolve this complaint?
