@@ -44,6 +44,13 @@ const ReturnsTable = ({
     setAppliedFilters(updatedFilters);
     onFilterChange(updatedFilters);
   };
+
+  const statusMap: Record<string, string> = {
+    approved: "Resolved",
+    pending: "Pending",
+    declined: "Declined",
+  };
+  
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
     productCode: item.product_variation?.sku || "N/A",
@@ -51,9 +58,10 @@ const ReturnsTable = ({
     orderId: item.sales_order?.orderID || "N/A",
     customer: item.customer?.customer_name || "N/A",
     returnedReason: item.return_reason || "N/A",
-    complaintStatus: item.status === "approved" ? "Resolved" : "Pending",
+    complaintStatus: statusMap[item.status] || "Unknown",
     returnId: item.returnID || "N/A",
   }));
+  
 
   const locations = Array.from(
     new Set(
@@ -64,7 +72,15 @@ const ReturnsTable = ({
   );
 
   const columns: ColumnDef<TableRowData>[] = [
-    
+    {
+      header: "Return ID",
+      accessorKey: "returnId",
+      cell: ({ row }) => (
+        <span className="text-sm text-gray-900 font-medium">
+          {row.original.returnId}
+        </span>
+      ),
+    }, 
     {
       header: "Name",
       accessorKey: "name",
@@ -121,19 +137,33 @@ const ReturnsTable = ({
       accessorKey: "complaintStatus",
       cell: ({ row }) => {
         const status = row.original.complaintStatus;
+        let bgColor = "";
+        let textColor = "";
+        let Dot = null;
+      
+        if (status === "Resolved") {
+          bgColor = "bg-[#ECFDF3]";
+          textColor = "text-[#027A48]";
+          Dot = <PaidDot />;
+        } else if (status === "Declined") {
+          bgColor = "bg-[#FEF3F2]";
+          textColor = "text-[#B42318]";
+          Dot = <UnpaidDot />;
+        } else {
+          // Pending
+          bgColor = "bg-[#FFFAEB]";
+          textColor = "text-[#B54708]";
+          Dot = <UnpaidDot />;
+        }
+      
         return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "Resolved"
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
-          >
-            {status === "Resolved" ? <PaidDot /> : <UnpaidDot />}
+          <div className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}>
+            {Dot}
             <span className="ml-2">{status}</span>
           </div>
         );
       },
+      
     },
     {
       header: "",

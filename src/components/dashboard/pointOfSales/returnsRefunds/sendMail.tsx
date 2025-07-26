@@ -195,12 +195,13 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
         {attachments.length > 0 && (
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {attachments.map((file, idx) => (
-              <img
-                key={idx}
-                src={URL.createObjectURL(file)}
-                alt={`attachment-${idx}`}
-                className="w-full h-32 object-cover rounded"
-              />
+             <img
+             key={idx}
+             src={URL.createObjectURL(file)}
+             alt={`attachment-${idx}`}
+             className="w-full max-h-[200px] object-contain rounded border"
+           />
+           
             ))}
           </div>
         )}
