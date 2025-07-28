@@ -76,7 +76,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       cell: ({ row }) => (
         <Text fw={500} c="black">
           {/* @ts-ignore */}
-          {shortenTransactionId(row.original.sales_order?.orderID)}
+          {row.original.sales_order?.orderID}
         </Text>
       ),
     },
@@ -97,7 +97,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
       enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
-          {row.original.amount}
+               ₦ {row.original.amount}
         </span>
       ),
     },
@@ -174,7 +174,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              Transaction
+             All Transactions
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">{data.length}</Text>

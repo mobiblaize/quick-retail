@@ -69,8 +69,8 @@ const DivisionProductChartReport = ({ categories }: Props) => {
 
   return (
     <main className="flex flex-col md:flex-row mt-6">
-      <div className="flex flex-col md:flex-row w-full md:w-[53%] items-center ml-2">
-        <div className="w-60 h-60">
+      <div className="w-72 h-72 md:w-80 md:h-80 flex items-center justify-center mb-4 md:mb-0 ml-[4em]">
+
           {pieData.length > 0 ? (
             <ResponsiveContainer width="110%" height="100%">
               <PieChart>
@@ -99,7 +99,6 @@ const DivisionProductChartReport = ({ categories }: Props) => {
           ) : (
             <Text>No data available</Text>
           )}
-        </div>
       </div>
 
       <div className="rounded-lg py-4 w-full md:w-[45%] px-4 md:px-8 flex flex-col gap-6 mt-6 md:mt-0">

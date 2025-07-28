@@ -48,9 +48,9 @@ const AnalysisOverview1 = () => {
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Analysis overview
+          Discount Overview
           </Text>
-          <Text size="sm">An overview sales made</Text>
+          <Text size="sm">An overview of discounts created and used</Text>
         </div>
         {/* <Group>
           <DateFilterMenu

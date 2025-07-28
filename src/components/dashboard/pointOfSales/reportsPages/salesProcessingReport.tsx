@@ -5,7 +5,7 @@ import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
 import { useEffect, useState } from "react";
-import { shortenTransactionId } from "../../../../utils/helpers";
+import { formatDate, shortenTransactionId } from "../../../../utils/helpers";
 import { TableRowData } from "../../../../types";
 
 const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
@@ -54,7 +54,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
       enableSorting: false, 
       cell: (props) => (
         <Text fw={500} c="black">
-          {props.row.original.id}
+          {props.row.original.fullId}
         </Text>
       ),
     },
@@ -62,7 +62,11 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
       header: "Time stamp",
       accessorKey: "timeStamp",
       enableSorting: false, 
-      cell: ({ row }) => <Text c="textSecondary.7">{row.original.timeStamp}</Text>,
+      cell: ({ row }) => 
+      <div className="text-gray-600 whitespace-nowrap break-words ">
+        {/* @ts-ignore */}
+      {formatDate(row.original.timeStamp)}
+    </div>
     },
     {
       header: "Customer",
@@ -76,7 +80,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
       enableSorting: false, 
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
-          {row.original.Amount}
+            ₦  {row.original.Amount}
         </span>
       ),
     },
@@ -110,7 +114,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
         showSearch={false}
         showSortFilter={false}
         length={8}
-        serverSidePagination
+    serverSidePagination={true}
         paginationData={paginationData}
         onPageChange={handlePageChange}
         tableTitle={
