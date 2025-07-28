@@ -6,7 +6,7 @@ interface VariationAttribute {
 type ProductData={  
   has_variations?: number;
   variation_attributes?: VariationAttribute[];
-  
+  productID?: string;
 }
 
 // Step 1: Define a separate type for form data
@@ -38,12 +38,13 @@ type FormData = {
   quantity: string;
   location: string;
   cost_price: string;
-  reorder_level?: string; // Optional field
-  size?: string; // Optional field
-  color?: string; // Optional field
+  reorder_level?: string; 
+  size?: string; 
+  color?: string; 
   variation_attributes?: VariationAttribute[]; 
-  notes?: string; // Optional field for additional notes
+  notes?: string; 
   productID?: string; 
+  cost_Price?: string; 
 };
 
 // Step 2: Use the type for your initial state
@@ -79,7 +80,8 @@ export const initialFormState: FormData = {
   color: "",
   variation_attributes: [],
   notes: "",
-  productID: "", 
+  productID: "",
+  cost_Price: "", 
 };
 
 

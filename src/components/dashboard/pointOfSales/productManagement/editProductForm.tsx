@@ -1,4 +1,4 @@
-import { Plus, UploadCloud } from "lucide-react";
+import { UploadCloud } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
 import FormSelect from "../../../General/select";
@@ -12,8 +12,9 @@ import {
   useFetchAllLocations,
   useUpdateProduct,
 } from "../../../../hooks/backendApis/pos/products";
-import { Input } from "@mantine/core";
-import { Trash2 } from "lucide-react";
+import ProductVariationSection from "./productVariationSection";
+import { useNavigate } from "react-router";
+
 
 interface Variant {
   id: number;
@@ -26,28 +27,33 @@ interface Variant {
   size?: string;
   color?: string;
   location_id?: string;
-  productID?: string; 
-  has_variations?: number;
+  productID?: string;
+  has_variations?: boolean;
 }
 
 const initialVariants: Variant[] = [
   {
     id: 1,
-    image: "/product.jpg",
+    image: "",
     name: "",
     quantity: "",
-    cost_price: "30000",
-    selling_price: "30000",
+    cost_price: "",
+    selling_price: "",
     reorder_level: "",
   },
 ];
 
 const EditProductForm = () => {
   // const [selectedFile, setSelectedFile] = useState<File | null>(null);
+  const navigate = useNavigate();
   const { form_data } = useStore();
 
   const [formData, setFormData] = useState({ ...form_data });
-  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct();
+  // const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct();
+  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct(form_data?.product?.productID);
+
+  console.log("formData", formData);
+
   const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
   const [serverImages, setServerImages] = useState<string[]>([]);
@@ -140,69 +146,68 @@ const EditProductForm = () => {
   const [variants, setVariants] = useState<Variant[]>(initialVariants);
 
   const handleUpdateSubmit = () => {
-    const formPayload = {
+    const payload = {
       ...formData,
-      category: String(formData.category_id),
-      sub_category_id: Number(formData.sub_category_id),
-      image: formData.image,
-      name: formData.product_name,
-      has_variations:
-    formData?.product?.has_variations !== undefined
-      ? Number(formData.product.has_variations)
-      : formData.has_variations ?? 0,
+      has_variations: Boolean(
+        form_data.has_variations ??
+        form_data.product?.has_variations ??
+        false
+      ),
+      productID: form_data.productID,
+
+      cost_price: parseInt(form_data.cost_Price || "0", 10),
+      selling_price: parseInt(form_data.selling_price || "0", 10),
+
+      image_path: Array.isArray(form_data.image_path)
+        ? form_data.image_path
+        : form_data.image_path
+          ? [form_data.image_path as string]
+          : [],
+      variations: variants,
     };
 
-    console.log("forms", formData);
+    updateProduct(payload, {
+      onSuccess: () => {
+        notifications.show({
+          title: "Success",
+          message: "Product updated successfully",
+          color: "green",
+        });
 
-   
-
-    updateProduct(
-      {
-        id: formData.variationID,
-        body: formPayload,
+         navigate(-1);
       },
-      {
-        onSuccess: () => {
-          notifications.show({
-            title: "Success",
-            message: "Product updated successfully",
-            color: "green",
-          });
-        },
-        onError: (err: any) => {
-          notifications.show({
-            title: "Error",
-            message: err?.response?.data?.message || "Failed to update product",
-            color: "red",
-          });
-        },
-      }
-    );
+      onError: (err: any) => {
+        notifications.show({
+          title: "Error",
+          message: err?.response?.data?.message || "Failed to update product",
+          color: "red",
+        });
+      },
+    });
   };
 
-  console.log("formData", form_data?.has_variations);
-  console.log("formData obj", form_data);
-  console.log("formData variations", form_data?.variations);
-   console.log("bring", form_data?.product);
 
 
-  const handleAddVariant = () => {
-    const newId = variants.length + 1;
-    const newVariant: Variant = {
-      id: newId,
-      image: "/product.jpg",
-      name: `New Variant ${newId}`,
-      quantity: "",
-      cost_price: "30000",
-      selling_price: "30000",
-      reorder_level: "",
-    };
-    setVariants((prev) => [...prev, newVariant]);
-  };
 
-  const handleDeleteVariant = (id: number) => {
-    setVariants((prev) => prev.filter((variant) => variant.id !== id));
-  };
+  // const handleAddVariant = () => {
+  //   const newId = variants.length + 1;
+  //   const newVariant: Variant = {
+  //     id: newId,
+  //     image: "",
+  //     name: `New Variant ${newId}`,
+  //     quantity: "",
+  //     cost_price: "",
+  //     selling_price: "",
+  //     reorder_level: "",
+  //   };
+  //   setVariants((prev) => [...prev, newVariant]);
+  // };
+
+  // const handleDeleteVariant = (id: number) => {
+  //   setVariants((prev) => prev.filter((variant) => variant.id !== id));
+  // };
+
+
 
 
   return (
@@ -287,7 +292,7 @@ const EditProductForm = () => {
         </div>
       </div>
 
-      {/* <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
+      <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
           PRICING INFORMATION
         </h2>
@@ -299,15 +304,15 @@ const EditProductForm = () => {
               label="Cost Price"
               placeholder="₦"
               paddingY={"0.7rem"}
-              value={formData.costPrice}
+              value={formData.cost_Price}
               onChange={(e: any) =>
-                setFormData({ ...formData, costPrice: e.target.value })
+                setFormData({ ...formData, cost_Price: e.target.value })
               }
             />
-            <Checkbox
+            {/* <Checkbox
               label="Apply to Variations"
               className="mt-2 text-gray-600"
-            />
+            /> */}
           </div>
 
           <div>
@@ -316,18 +321,18 @@ const EditProductForm = () => {
               label="Selling Price"
               placeholder="₦"
               paddingY={"0.7rem"}
-              value={formData.sellingPrice}
+              value={formData.selling_price}
               onChange={(e: any) =>
-                setFormData({ ...formData, sellingPrice: e.target.value })
+                setFormData({ ...formData, selling_price: e.target.value })
               }
             />
-            <Checkbox
+            {/* <Checkbox
               label="Apply to Variations"
               className="mt-2 text-gray-600"
-            />
+            /> */}
           </div>
 
-          <FormSelect
+          {/* <FormSelect
             label="Tax %"
             placeholder="Select tax percentage"
             options={["0%", "5%", "10%", "15%"]}
@@ -348,9 +353,9 @@ const EditProductForm = () => {
             onChange={(e: any) =>
               setFormData({ ...formData, discount: e.target.value })
             }
-          />
+          /> */}
         </div>
-      </div> */}
+      </div>
 
       {/* <div className="mt-12 bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <div className="flex justify-between items-center max-w-full w-full">
@@ -648,114 +653,11 @@ const EditProductForm = () => {
         </div>
 
 
-        {form_data?.product?.has_variations === 1 && (
-          <div className="overflow-auto">
-            <div className="min-w-[1000px]">
-              <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
-                {/* <div className="col-span-2">Product Variant</div> */}
-                <div>Cost Price</div>
-                <div>Selling Price</div>
-                <div>Reorder Level</div>
-                <div>Size</div>
-                <div>Color</div>
-              </div>
-
-              {variants.map((variant) => (
-                <div
-                  key={variant.id}
-                  className="grid grid-cols-8 gap-4 items-center px-4 py-3 border-b border-gray-200 relative group"
-                >
-                  {/* Inputs for cost price, selling price, etc. */}
-                  <Input
-                    placeholder="Enter cost price"
-                    value={variant.cost_price}
-                    onChange={(e: any) =>
-                      setVariants((prev) =>
-                        prev.map((v) =>
-                          v.id === variant.id
-                            ? { ...v, cost_price: e.target.value }
-                            : v
-                        )
-                      )
-                    }
-                  />
-                  <Input
-                    placeholder="Enter selling price"
-                    value={variant.selling_price}
-                    onChange={(e: any) =>
-                      setVariants((prev) =>
-                        prev.map((v) =>
-                          v.id === variant.id
-                            ? { ...v, selling_price: e.target.value }
-                            : v
-                        )
-                      )
-                    }
-                  />
-                  <Input
-                    type="number"
-                    placeholder="Reorder Level"
-                    value={variant.reorder_level}
-                    onChange={(e: any) =>
-                      setVariants((prev) =>
-                        prev.map((v) =>
-                          v.id === variant.id
-                            ? { ...v, reorder_level: e.target.value }
-                            : v
-                        )
-                      )
-                    }
-                  />
-                  <Input
-                    placeholder="Size"
-                    value={variant.size}
-                    onChange={(e: any) =>
-                      setVariants((prev) =>
-                        prev.map((v) =>
-                          v.id === variant.id ? { ...v, size: e.target.value } : v
-                        )
-                      )
-                    }
-                  />
-                  <Input
-                    placeholder="Color"
-                    value={variant.color}
-                    onChange={(e: any) =>
-                      setVariants((prev) =>
-                        prev.map((v) =>
-                          v.id === variant.id ? { ...v, color: e.target.value } : v
-                        )
-                      )
-                    }
-                  />
-
-                  {/* Delete Button */}
-                  <div className="flex justify-end pr-2">
-                    <button
-                      type="button"
-                      onClick={() => handleDeleteVariant(variant.id)}
-                      className="text-red-500 hover:text-red-700"
-                      aria-label="Delete variant"
-                    >
-                      <Trash2 size={18} />
-                    </button>
-                  </div>
-                </div>
-              ))}
-
-            </div>
-
-            <div className="flex justify-end mt-4">
-              <button
-                className="flex items-center px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-medium rounded transition"
-                onClick={handleAddVariant}
-              >
-                <Plus className="w-4 h-4 mr-2" />
-                Add Variation
-              </button>
-            </div>
-          </div>
-        )}
+        <ProductVariationSection
+          form_data={form_data}
+          variants={variants}
+          setVariants={setVariants}
+        />
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em] mb-5 ">
