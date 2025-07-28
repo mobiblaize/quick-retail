@@ -11,6 +11,7 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatDate } from "../../../utils/helpers";
 import Dropdown from "../../../components/General/dropdown";
+import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 
 
 const ProductReportPage = () => {
@@ -33,6 +34,11 @@ const ProductReportPage = () => {
   ];
 
 
+  const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
+
+  const selectedStore = storeData?.data?.stores?.data?.find(
+    (store: any) => store.locationID === locationId
+  );
      const handleBack = () => {
        navigate(-2);
      };
@@ -153,7 +159,12 @@ const ProductReportPage = () => {
       const url = window.URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "full-product-report.csv");
+      const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
+      const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
+      const fileName = `full-product-report_${formattedStart}_to_${formattedEnd}.csv`;
+      
+      link.setAttribute("download", fileName);
+      
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
@@ -231,6 +242,18 @@ const ProductReportPage = () => {
        <PageContainer
          subHeaders={getSubHeaders()}
        >
+          <div className=" rounded-lg px-4 py-2 mb-2">
+    {isLoadingStores ? (
+      <Text>Loading store info...</Text>
+    ) : (
+      <Text>
+Showing Report For: 
+        <span className="font-semibold text-lg">
+          {selectedStore?.name || "All Stores"}
+        </span>
+      </Text>
+    )}
+  </div>
             <ProductOverviewReport reportInfo={reportInfo} />
             <ProductCustomerAnalysis reportInfo={reportInfo} />
          <ProductManagementReport reportInfo={reportInfo}/>

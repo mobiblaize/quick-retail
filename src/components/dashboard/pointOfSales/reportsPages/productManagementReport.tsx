@@ -5,18 +5,21 @@ import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
 
-
 const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
-  const { reportData} = reportInfo || {};
+  const { reportData } = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
-  const [, setCurrentPage] = useState(reportData?.data?.products?.current_page || 1);
+  const [, setCurrentPage] = useState(
+    reportData?.data?.products?.current_page || 1
+  );
 
   useEffect(() => {
     const productsArray = reportData?.data?.products?.data;
-  
+
     if (Array.isArray(productsArray)) {
       const formattedData = productsArray.map((item: any) => ({
         category: item["Category"],
+        costPrice: item["Cost price"],
+        margin: item["Margin"],
         productCode: item["SKU"],
         product: item["Product Name"],
         stockLevel: item["Stock"],
@@ -25,11 +28,11 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
         discountStatus: item["Status"] === "Active" ? "Active" : "Inactive",
         imageUrl: item["Image"],
       }));
-  
+
       setData(formattedData);
     }
   }, [reportData]);
-  
+
   const paginationData = {
     current_page: reportData?.data?.products?.current_page,
     last_page: reportData?.data?.products?.last_page,
@@ -39,11 +42,10 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     to: reportData?.data?.products?.to,
     next_page_url: reportData?.data?.products?.next_page_url,
     prev_page_url: reportData?.data?.products?.prev_page_url,
-  };  
+  };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
-
   };
   const columns: ColumnDef<TableRowData>[] = [
     // {
@@ -69,7 +71,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Name",
       accessorKey: "name",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -91,7 +93,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Product Code",
       accessorKey: "productCode",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.productCode}</Text>
       ),
@@ -99,7 +101,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Location",
       accessorKey: "location",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.location}</Text>
       ),
@@ -107,7 +109,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Category",
       accessorKey: "category",
-      enableSorting: false, 
+      enableSorting: false,
       cell: ({ row }) => (
         <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
           {row.original.category}
@@ -115,19 +117,40 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       ),
     },
     {
+      header: "Cost Price",
+      accessorKey: "cost price",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <span className=" text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
+          ₦{row.original.costPrice}
+        </span>
+      ),
+    },
+
+    {
       header: "Selling Price",
       accessorKey: "Amount",
-      enableSorting: false, 
+      enableSorting: false,
       cell: ({ row }) => (
-        <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
-          {row.original.Amount}
+        <span className=" text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
+      ₦{row.original.Amount}
+        </span>
+      ),
+    },
+    {
+      header: "Margin",
+      accessorKey: "margin",
+      enableSorting: false,
+      cell: ({ row }) => (
+        <span className=" text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
+       ₦{row.original.margin}
         </span>
       ),
     },
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <span className="font-medium text-center">
           {props.row.original.stockLevel}
@@ -137,7 +160,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     {
       header: "Discount Status",
       accessorKey: "discountStatus",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         const status = props.row.original.discountStatus;
         return (
@@ -166,17 +189,20 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
         paginationData={paginationData}
         onPageChange={handlePageChange}
         length={8}
-        tableTitle={<div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <div className="flex gap-2.5 items-center">
-            <Text fw={500} size="xl" c="textSecondary.9">
-              Products
-            </Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{data.length}</Text>
+        tableTitle={
+          <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="flex gap-2.5 items-center">
+              <Text fw={500} size="xl" c="textSecondary.9">
+                Products
+              </Text>
+              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+                <Text c="customPrimary.10">{data.length}</Text>
+              </div>
             </div>
           </div>
-
-        </div>} tableType={"product"}      />
+        }
+        tableType={"product"}
+      />
     </main>
   );
 };

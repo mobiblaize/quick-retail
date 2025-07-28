@@ -1,23 +1,24 @@
-import { Text, } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import SalesProcessingReport from "../../../components/dashboard/pointOfSales/reportsPages/salesProcessingReport";
 import SalesOverviewReport from "../../../components/dashboard/pointOfSales/reportsPages/overviewSales";
 import SalesCustomerAnalysis from "../../../components/dashboard/pointOfSales/reportsPages/salesCustomerAnalysis";
-import {   useState } from "react";
+import { useState } from "react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { notifications } from "@mantine/notifications";
 import { formatDate } from "../../../utils/helpers";
 import Dropdown from "../../../components/General/dropdown";
+import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 
 const SalesProcessingReportPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { startDate, endDate, locationId, reportData } = location.state || {};
 
-  const [reportInfo,] = useState({
+  const [reportInfo] = useState({
     startDate,
     endDate,
     locationId,
@@ -29,10 +30,14 @@ const SalesProcessingReportPage = () => {
     { label: "PDF", value: "pdf" },
   ];
 
+  const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
 
-  
+  const selectedStore = storeData?.data?.stores?.data?.find(
+    (store: any) => store.locationID === locationId
+  );
+
   const handleBack = () => {
-    navigate(-2);
+    navigate(-1);
   };
 
   const exportFullPDF = () => {
@@ -146,7 +151,12 @@ const SalesProcessingReportPage = () => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "full-sales-report.csv");
+    const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
+    const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
+    const fileName = `full-sales-report_${formattedStart}_to_${formattedEnd}.csv`;
+    
+    link.setAttribute("download", fileName);
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -221,6 +231,18 @@ const SalesProcessingReportPage = () => {
 
   return (
     <PageContainer subHeaders={getSubHeaders()}>
+      <div className=" rounded-lg px-4 py-2 mb-2">
+        {isLoadingStores ? (
+          <Text>Loading store info...</Text>
+        ) : (
+          <Text>
+            Showing Report For:
+            <span className="font-semibold text-lg">
+              {selectedStore?.name || "All Stores"}
+            </span>
+          </Text>
+        )}
+      </div>
       <SalesOverviewReport reportInfo={reportInfo} />
       <SalesCustomerAnalysis reportInfo={reportInfo} />
       <SalesProcessingReport reportInfo={reportInfo} />
