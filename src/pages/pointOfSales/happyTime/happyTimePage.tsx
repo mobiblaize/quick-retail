@@ -84,7 +84,7 @@ const payload = {
     <div key="1">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <Text fw={500} size="xl" c="black">
-          Discount Promotion
+          Discounts
         </Text>
         <div className="flex flex-row gap-2 md:gap-4">
           {/* <Link to={ROUTES.happyDiscountAnalytics}>

@@ -9,7 +9,7 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 const TransactionPage = () => {
   const [, setDateRange] = useState<{
     startDate: string;
-    endDate: string;
+    endDate: string;  
   }>({
     startDate: "",
     endDate: "",
@@ -54,7 +54,7 @@ const TransactionPage = () => {
     <div key="1">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-          Transaction
+     Transactions
         </Text>
       </div>
     </div>,

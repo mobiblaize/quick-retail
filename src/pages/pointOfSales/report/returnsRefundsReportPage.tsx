@@ -11,6 +11,7 @@ import Dropdown from "../../../components/General/dropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatDate, truncateText } from "../../../utils/helpers";
+import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 
 
 
@@ -33,6 +34,11 @@ const RetunsRefundsReportPage = () => {
       { label: "CSV", value: "csv" },
       { label: "PDF", value: "pdf" },
     ];
+
+    const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
+    const selectedStore = storeData?.data?.stores?.data?.find(
+      (store: any) => store.locationID === locationId
+    );
   
      const handleBack = () => {
        navigate(-2);
@@ -173,7 +179,12 @@ const RetunsRefundsReportPage = () => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "full-sales-report.csv");
+    const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
+const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
+const fileName = `full-returns-report_${formattedStart}_to_${formattedEnd}.csv`;
+
+link.setAttribute("download", fileName);
+
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -249,6 +260,18 @@ const RetunsRefundsReportPage = () => {
    
      return (
       <PageContainer subHeaders={getSubHeaders()}>
+          <div className=" rounded-lg px-4 py-2 mb-2">
+    {isLoadingStores ? (
+      <Text>Loading store info...</Text>
+    ) : (
+      <Text>
+Showing Report For: 
+        <span className="font-semibold text-lg">
+          {selectedStore?.name || "All Stores"}
+        </span>
+      </Text>
+    )}
+  </div>
       <ReturnsReportAnalytics
       reportInfo={reportInfo} 
       />

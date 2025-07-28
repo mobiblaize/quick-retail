@@ -11,27 +11,30 @@ import Dropdown from "../../../components/General/dropdown";
 import DiscountOverviewReport from "../../../components/dashboard/pointOfSales/reportsPages/discountOverview";
 import DiscountAnalysis from "../../../components/dashboard/pointOfSales/reportsPages/DiscountManagement";
 import DiscountReportTable from "../../../components/dashboard/pointOfSales/reportsPages/DiscountReportTable";
+import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 
 const DiscountReportPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { startDate, endDate, locationId, reportData } = location.state || {};
 
-  const [reportInfo, ] = useState({
+  const [reportInfo] = useState({
     startDate,
     endDate,
     locationId,
     reportData,
   });
 
-//   useEffect(() => {
-//     console.log("Current reportInfo:", reportInfo);
-//   }, [reportInfo]);
-
   const exportOptions = [
     { label: "CSV", value: "csv" },
     { label: "PDF", value: "pdf" },
   ];
+
+  const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
+
+  const selectedStore = storeData?.data?.stores?.data?.find(
+    (store: any) => store.locationID === locationId
+  );
 
   const handleBack = () => {
     navigate(-2);
@@ -66,21 +69,27 @@ const DiscountReportPage = () => {
     });
 
     autoTable(doc, {
-        //@ts-ignore
-        startY: doc.lastAutoTable.finalY + 10,
-        head: [
-          ["Product Name", "Selling Price", "Total Discount Value", "Total Redemptions"],
+      //@ts-ignore
+      startY: doc.lastAutoTable.finalY + 10,
+      head: [
+        [
+          "Product Name",
+          "Selling Price",
+          "Total Discount Value",
+          "Total Redemptions",
         ],
-        body: (Object.values(reportData?.data?.top_discounted_products || [])).map((c: any) => [
+      ],
+      body: Object.values(reportData?.data?.top_discounted_products || []).map(
+        (c: any) => [
           c.product_name,
           c.selling_price,
           c.total_discount_value,
           c.total_redemptions,
-        ]),
-        theme: "grid",
-        headStyles: orangeHeaderStyle,
-      });
-      
+        ]
+      ),
+      theme: "grid",
+      headStyles: orangeHeaderStyle,
+    });
 
     autoTable(doc, {
       //@ts-ignore
@@ -105,7 +114,7 @@ const DiscountReportPage = () => {
         s["Redemption"],
         s["Status"],
       ]),
-      
+
       theme: "grid",
       headStyles: orangeHeaderStyle,
     });
@@ -135,16 +144,20 @@ const DiscountReportPage = () => {
       ],
       [],
 
-    [
-        "Product Name", "Selling Price", "Total Discount Value", "Total Redemptions"
+      [
+        "Product Name",
+        "Selling Price",
+        "Total Discount Value",
+        "Total Redemptions",
       ],
-      ...(Object.values(reportData?.data?.top_discounted_products || [])).map((c: any) => [
-        c.product_name,
-        c.selling_price,
-        c.total_discount_value,
-        c.total_redemptions,
-      ]),
-      
+      ...Object.values(reportData?.data?.top_discounted_products || []).map(
+        (c: any) => [
+          c.product_name,
+          c.selling_price,
+          c.total_discount_value,
+          c.total_redemptions,
+        ]
+      ),
 
       [
         "Discount name",
@@ -164,7 +177,6 @@ const DiscountReportPage = () => {
         s["Redemption"],
         s["Status"],
       ]),
-      
     ];
     const csvContent = rows.map((r) => r.map(escapeValue).join(",")).join("\n");
 
@@ -172,7 +184,12 @@ const DiscountReportPage = () => {
     const url = window.URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    link.setAttribute("download", "full-discount-report.csv");
+    const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
+    const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
+    const fileName = `full-discount-report_${formattedStart}_to_${formattedEnd}.csv`;
+    
+    link.setAttribute("download", fileName);
+    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -247,6 +264,18 @@ const DiscountReportPage = () => {
 
   return (
     <PageContainer subHeaders={getSubHeaders()}>
+      <div className=" rounded-lg px-4 py-2 mb-2">
+        {isLoadingStores ? (
+          <Text>Loading store info...</Text>
+        ) : (
+          <Text>
+            Showing Report For:
+            <span className="font-semibold text-lg">
+              {selectedStore?.name || "All Stores"}
+            </span>
+          </Text>
+        )}
+      </div>
       <DiscountOverviewReport reportInfo={reportInfo} />
       <DiscountAnalysis reportInfo={reportInfo} />
       <DiscountReportTable reportInfo={reportInfo} />

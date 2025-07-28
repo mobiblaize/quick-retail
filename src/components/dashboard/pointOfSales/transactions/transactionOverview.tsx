@@ -59,7 +59,7 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
           <Text size="xl" fw={600} c="textSecondary.9">
             Transaction overview
           </Text>
-          <Text size="sm">An overview of transaction of sales</Text>
+          <Text size="sm">An overview of sales transaction </Text>
         </div>
         <Group>
           <DateFilterMenu
