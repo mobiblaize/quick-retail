@@ -39,7 +39,7 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
           </div>
 
           <div className="flex flex-col">
-            <Text fw={"500"}>Order Number</Text>
+            <Text fw={"500"}>Order ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
               {shortenTransactionId(order.orderID || "N/A")}
             </Text>
@@ -112,6 +112,25 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
                   ₦{returnedData?.data?.total_amount_refunded || "N/A"}
                 </Text>
               </Text>
+            </Text>
+          </div>
+          <div className="flex flex-col">
+            <Text fw={"500"}>Returned Type</Text>
+            <Text size="lg" c={"black"} fw={"400"}>
+              <Text size="lg" c={"black"} fw={"400"}>
+                <Text size="lg" c={"black"} fw={"400"}>
+                  {returnedData?.data?.refund_type || "N/A"}
+                </Text>
+              </Text>
+            </Text>
+          </div>
+          <div className="flex flex-col">
+            <Text fw={"500"}>Cashier</Text>
+            <Text size="lg" c={"black"} fw={"400"}>
+              {returnedData?.data?.staff?.firstname &&
+              returnedData?.data?.staff?.lastname
+                ? `${returnedData.data.staff.firstname} ${returnedData.data.staff.lastname}`
+                : "N/A"}
             </Text>
           </div>
         </div>

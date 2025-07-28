@@ -85,7 +85,7 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveReturns,
   },
   {
-    label: "Customer",
+    label: "Customers",
     href: ROUTES.customer,
     inactiveIcon: InActiveCustomer,
     activeIcon: ActiveCustomer,

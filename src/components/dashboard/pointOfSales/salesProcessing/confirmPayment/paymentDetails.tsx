@@ -7,7 +7,6 @@ import { useFetchSingleSale } from "../../../../../hooks/backendApis/pos/salesPr
 import { formatMoney } from "../../../../../utils/helpers";
 import { NumericFormat } from "react-number-format";
 
-
 type PaymentItem = {
   label: string;
   amount: string;
@@ -40,6 +39,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
   const [balance, setBalance] = useState<string>("");
   const [selectedMethod, setSelectedMethod] = useState<string>(method);
   const [localAmount, setLocalAmount] = useState<string>(amount);
+  const [amountError, setAmountError] = useState<string>("");
 
   const safeOrderId = orderId ?? "";
   const { data: fetchedOrderData } = useFetchSingleSale(safeOrderId);
@@ -47,7 +47,9 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
   useEffect(() => {
     if (fetchedOrderData) {
       const saleData = fetchedOrderData;
-      const normalizedMethod = normalizePaymentMethod(saleData.data.payment_method);
+      const normalizedMethod = normalizePaymentMethod(
+        saleData.data.payment_method
+      );
       setSelectedMethod(normalizedMethod);
     }
   }, [fetchedOrderData]);
@@ -62,25 +64,22 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     return "";
   };
 
-
   const handleMethodChange = (val: string) => {
     setSelectedMethod(val);
     onPaymentChange(val, localAmount);
   };
 
-
-
   const sanitizeAmount = (str: string) => {
     if (!str) return "0";
     return str.replace(/[₦,]/g, "").trim();
   };
-  
+
   useEffect(() => {
     const numericTotal = parseFloat(sanitizeAmount(total));
     const numericAmount = parseFloat(localAmount || "0");
-  
+
     if (!isNaN(numericTotal)) {
-      const calcBalance = numericTotal - (isNaN(numericAmount) ? 0 : numericAmount);
+      const calcBalance = numericAmount - numericTotal;
       if (selectedMethod === "cash") {
         setBalance(calcBalance.toFixed(2));
       } else {
@@ -90,7 +89,6 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
       setBalance("");
     }
   }, [localAmount, total, selectedMethod]);
-  
 
   useEffect(() => {
     setLocalAmount(amount);
@@ -100,10 +98,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     setSelectedMethod(method);
   }, [method]);
 
-  useEffect(() => {
-
-  }, [localAmount, selectedMethod, total]);
-  
+  useEffect(() => {}, [localAmount, selectedMethod, total]);
 
   return (
     <main className="w-full h-auto rounded-lg bg-white">
@@ -138,28 +133,39 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
 
         {selectedMethod === "cash" && (
           <>
-        
-        <div className="w-full">
-  <label className="block text-sm font-medium text-gray-700 mb-2">
-    Amount Collected
-  </label>
-  <NumericFormat
-    value={localAmount}
-    onValueChange={(values) => {
-      setLocalAmount(values.value);
-      onPaymentChange(selectedMethod, values.value);
-    }}
-    thousandSeparator
-    prefix="₦"
-    allowNegative={false}
-    decimalScale={2}
-    fixedDecimalScale
-    allowLeadingZeros={false}
-    className={`
+            <div className="w-full">
+              <label className="block text-sm font-medium text-gray-700 mb-2">
+                Amount Collected
+              </label>
+              <NumericFormat
+                value={localAmount}
+                onValueChange={(values) => {
+                  const numericAmount = parseFloat(values.value || "0");
+                  const numericTotal = parseFloat(sanitizeAmount(total));
+
+                  if (numericAmount < numericTotal) {
+                    setAmountError(
+                      "Collected amount cannot be less than total"
+                    );
+                  } else {
+                    setAmountError("");
+                  }
+
+                  setLocalAmount(values.value);
+                  onPaymentChange(selectedMethod, values.value);
+                }}
+                thousandSeparator
+                prefix="₦"
+                allowNegative={false}
+                decimalScale={2}
+                fixedDecimalScale
+                allowLeadingZeros={false}
+                placeholder="Enter the amount customer paid in cash"
+                className={`
       w-full
       text-gray-900
       border
-      border-gray-300
+      ${amountError ? "border-red-500" : "border-gray-300"}
       rounded-md
       px-3
       py-2
@@ -167,17 +173,30 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
       shadow-sm
       focus:outline-none
       focus:ring-2
-      focus:ring-blue-500
-      focus:border-blue-500
+      ${
+        amountError
+          ? "focus:ring-red-500 focus:border-red-500"
+          : "focus:ring-blue-500 focus:border-blue-500"
+      }
       disabled:bg-gray-200
     `}
-  />
-</div>
-        <FormInput
+              />
+              {amountError && (
+                <p className="text-sm text-red-600 mt-1">{amountError}</p>
+              )}
+            </div>
+
+            <FormInput
               type="text"
               label="Customer Balance"
               className="w-full"
-              value={formatMoney(balance)}
+              value={
+                balance !== ""
+                  ? `${parseFloat(balance) > 0 ? "+" : ""}${formatMoney(
+                      balance
+                    )}`
+                  : ""
+              }
               readOnly
               leftPrefix="₦"
             />
@@ -196,7 +215,10 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
                   <Text fw={500}>
                     {item.label}
                     {item.label === "Service fee" && (
-                      <CircleHelp size={16} className="inline-block ml-2 text-[#2E90FA]" />
+                      <CircleHelp
+                        size={16}
+                        className="inline-block ml-2 text-[#2E90FA]"
+                      />
                     )}
                   </Text>
                 </div>

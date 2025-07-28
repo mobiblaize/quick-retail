@@ -73,7 +73,7 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           onError: (error: any) => {
             notifications.show({
               title: 'Error',
-              message: error?.response?.data?.message || 'Failed to create customer',
+              message: error?.response?.data?.message || 'Failed to edit customer',
               color: 'red',
             });
           },
@@ -91,7 +91,7 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           <Text size="1.8rem" c="black" fw={800}>
             Edit Customer
           </Text>
-          <Text mt="5">Enter the details below to add a new customer</Text>
+          <Text mt="5">Edit customer details here</Text>
         </div>
       }
       centered

@@ -51,7 +51,7 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data ,   setDateRan
       altText: "resolved-complaints",
     },
     {
-      title: "Complaints Resolved",
+      title: "Complaints Declined",
       value: data?.declined_complaints ?? 0,
       icon: redBox,
       iconColor: "#E17036",
@@ -67,7 +67,7 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data ,   setDateRan
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Returns overview
+            Returns and refund overview
           </Text>
           <Text size="sm">An overview of returns and refunds</Text>
         </div>

@@ -71,7 +71,7 @@ const Decline = ({ opened, onClose, returnID }: DeclineProps) => {
               fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
             }}
           >
-            Complaints Declined
+            Complaint Declined
           </Text>
           <Text
             mt="5"

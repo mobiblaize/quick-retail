@@ -1,7 +1,7 @@
 
-import {  useState } from "react";
+import {  useEffect, useState } from "react";
 import { Text, Button } from "@mantine/core";
-import { Link } from "react-router";
+import { Link, useLocation } from "react-router";
 import PageContainer from "../../../layout/pageContainer";
 import CustomerOrdersTable from "../../../components/dashboard/pointOfSales/dashboard/orderTable";
 import { ROUTES } from "../../../constants/routes";
@@ -20,7 +20,17 @@ const SalesProcessingPage = () => {
   });
 
 
+  const location = useLocation();
 
+  useEffect(() => {
+    if (location.state?.reload) {
+      // Reload logic here
+      setCurrentPage(1);
+      setAppliedFilters(null);
+      window.history.replaceState({}, document.title); // clear state
+    }
+  }, [location.state?.reload]);
+  
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
 
