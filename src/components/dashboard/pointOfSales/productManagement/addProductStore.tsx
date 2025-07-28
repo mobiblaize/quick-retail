@@ -43,6 +43,7 @@ type FormData = {
   color?: string; // Optional field
   variation_attributes?: VariationAttribute[]; 
   notes?: string; // Optional field for additional notes
+  productID?: string; 
 };
 
 // Step 2: Use the type for your initial state
@@ -78,7 +79,9 @@ export const initialFormState: FormData = {
   color: "",
   variation_attributes: [],
   notes: "",
+  productID: "", 
 };
+
 
 // Step 3: Define the store interface
 interface FormState {

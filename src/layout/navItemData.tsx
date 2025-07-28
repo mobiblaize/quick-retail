@@ -54,13 +54,13 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Product Management",
+    label: "Products",
     href: ROUTES.productManagement,
     inactiveIcon: InActiveProductIcon,
     activeIcon: ActiveProductIcon,
   },
   {
-    label: "Sale Processing",
+    label: "Sales",
     href: ROUTES.sales,
     inactiveIcon: InActiveSalesIcon,
     activeIcon: ActiveSalesIcon,
