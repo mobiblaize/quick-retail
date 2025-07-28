@@ -29,6 +29,9 @@ import { useDeleteData, useFetchPostData, useGetData, useGetExportData, usePostD
     search: string;
     [key: string]: any;
   }
+export const useFetchProductVariations = (productId?: string, enabled = true) => {
+  return useGetData(`pos/product/edit-product/${productId}`, {}, enabled);
+};
 
 export const useCreateProduct = () => {
   return usePostData("pos/product/add-product");
