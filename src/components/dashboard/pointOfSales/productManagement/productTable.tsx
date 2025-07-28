@@ -124,6 +124,7 @@ const ProductTable = ({
       originalStatus: stockStatus, // for debugging
     };
   });
+  
 
 
 

@@ -13,6 +13,7 @@ import {
   useUpdateProduct,
 } from "../../../../hooks/backendApis/pos/products";
 import { Input } from "@mantine/core";
+import { Trash2 } from "lucide-react";
 
 interface Variant {
   id: number;
@@ -25,6 +26,8 @@ interface Variant {
   size?: string;
   color?: string;
   location_id?: string;
+  productID?: string; 
+  has_variations?: number;
 }
 
 const initialVariants: Variant[] = [
@@ -44,9 +47,7 @@ const EditProductForm = () => {
   const { form_data } = useStore();
 
   const [formData, setFormData] = useState({ ...form_data });
-  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct(
-    formData.variationID
-  );
+  const { mutate: updateProduct, isPending: isLoading } = useUpdateProduct();
   const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
   const [serverImages, setServerImages] = useState<string[]>([]);
@@ -72,17 +73,17 @@ const EditProductForm = () => {
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0
       ? categories.map((cat: { name: string; id: number }) => ({
-          label: cat.name,
-          value: cat.id,
-        }))
+        label: cat.name,
+        value: cat.id,
+      }))
       : [];
 
   const subCategoryOptions =
     Array.isArray(subCategories) && subCategories.length > 0
       ? subCategories.map((cat: { name: string; id: number }) => ({
-          label: cat.name,
-          value: cat.id,
-        }))
+        label: cat.name,
+        value: cat.id,
+      }))
       : [];
 
   useEffect(() => {
@@ -135,7 +136,7 @@ const EditProductForm = () => {
     fileInputRef.current?.click();
   };
 
-  
+
   const [variants, setVariants] = useState<Variant[]>(initialVariants);
 
   const handleUpdateSubmit = () => {
@@ -145,9 +146,15 @@ const EditProductForm = () => {
       sub_category_id: Number(formData.sub_category_id),
       image: formData.image,
       name: formData.product_name,
+      has_variations:
+    formData?.product?.has_variations !== undefined
+      ? Number(formData.product.has_variations)
+      : formData.has_variations ?? 0,
     };
 
     console.log("forms", formData);
+
+   
 
     updateProduct(
       {
@@ -175,7 +182,9 @@ const EditProductForm = () => {
 
   console.log("formData", form_data?.has_variations);
   console.log("formData obj", form_data);
-  
+  console.log("formData variations", form_data?.variations);
+   console.log("bring", form_data?.product);
+
 
   const handleAddVariant = () => {
     const newId = variants.length + 1;
@@ -189,6 +198,10 @@ const EditProductForm = () => {
       reorder_level: "",
     };
     setVariants((prev) => [...prev, newVariant]);
+  };
+
+  const handleDeleteVariant = (id: number) => {
+    setVariants((prev) => prev.filter((variant) => variant.id !== id));
   };
 
 
@@ -633,101 +646,115 @@ const EditProductForm = () => {
             }
           />
         </div>
-          
+
 
         {form_data?.product?.has_variations === 1 && (
-        <div className="overflow-auto">
-          <div className="min-w-[1000px]">
-            <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
-              {/* <div className="col-span-2">Product Variant</div> */}
-              <div>Cost Price</div>
-              <div>Selling Price</div>
-              <div>Reorder Level</div>
-              <div>Size</div>
-              <div>Color</div>
+          <div className="overflow-auto">
+            <div className="min-w-[1000px]">
+              <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
+                {/* <div className="col-span-2">Product Variant</div> */}
+                <div>Cost Price</div>
+                <div>Selling Price</div>
+                <div>Reorder Level</div>
+                <div>Size</div>
+                <div>Color</div>
+              </div>
+
+              {variants.map((variant) => (
+                <div
+                  key={variant.id}
+                  className="grid grid-cols-8 gap-4 items-center px-4 py-3 border-b border-gray-200 relative group"
+                >
+                  {/* Inputs for cost price, selling price, etc. */}
+                  <Input
+                    placeholder="Enter cost price"
+                    value={variant.cost_price}
+                    onChange={(e: any) =>
+                      setVariants((prev) =>
+                        prev.map((v) =>
+                          v.id === variant.id
+                            ? { ...v, cost_price: e.target.value }
+                            : v
+                        )
+                      )
+                    }
+                  />
+                  <Input
+                    placeholder="Enter selling price"
+                    value={variant.selling_price}
+                    onChange={(e: any) =>
+                      setVariants((prev) =>
+                        prev.map((v) =>
+                          v.id === variant.id
+                            ? { ...v, selling_price: e.target.value }
+                            : v
+                        )
+                      )
+                    }
+                  />
+                  <Input
+                    type="number"
+                    placeholder="Reorder Level"
+                    value={variant.reorder_level}
+                    onChange={(e: any) =>
+                      setVariants((prev) =>
+                        prev.map((v) =>
+                          v.id === variant.id
+                            ? { ...v, reorder_level: e.target.value }
+                            : v
+                        )
+                      )
+                    }
+                  />
+                  <Input
+                    placeholder="Size"
+                    value={variant.size}
+                    onChange={(e: any) =>
+                      setVariants((prev) =>
+                        prev.map((v) =>
+                          v.id === variant.id ? { ...v, size: e.target.value } : v
+                        )
+                      )
+                    }
+                  />
+                  <Input
+                    placeholder="Color"
+                    value={variant.color}
+                    onChange={(e: any) =>
+                      setVariants((prev) =>
+                        prev.map((v) =>
+                          v.id === variant.id ? { ...v, color: e.target.value } : v
+                        )
+                      )
+                    }
+                  />
+
+                  {/* Delete Button */}
+                  <div className="flex justify-end pr-2">
+                    <button
+                      type="button"
+                      onClick={() => handleDeleteVariant(variant.id)}
+                      className="text-red-500 hover:text-red-700"
+                      aria-label="Delete variant"
+                    >
+                      <Trash2 size={18} />
+                    </button>
+                  </div>
+                </div>
+              ))}
+
             </div>
 
-            {variants.map((variant) => (
-              <div
-                key={variant.id}
-                className="grid grid-cols-8 gap-4 items-center px-4 py-3 border-b border-gray-200"
+            <div className="flex justify-end mt-4">
+              <button
+                className="flex items-center px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-medium rounded transition"
+                onClick={handleAddVariant}
               >
-                {/* <div className="col-span-2 flex items-center gap-3">
-                <input type="checkbox" className="accent-orange-500" />
-                <img
-                  src={variant.image}
-                  alt="variant"
-                  className="w-10 h-10 rounded object-cover"
-                />
-                <span className="truncate">{variant.name}</span>
-              </div> */}
-                {/* <Input
-                placeholder="Quantity"
-                value={formData.quantity}
-                onChange={(e: any) =>
-                  setFormData({ ...formData, quantity: e.target.value })
-                }
-              /> */}
-                <Input
-                  placeholder="Enter cost price"
-                  value={formData.cost_price}
-                  onChange={(e: any) =>
-                    setFormData({ ...formData, cost_price: e.target.value })
-                  }
-                />
-                <Input
-                  placeholder="Enter selling price"
-                  value={formData.selling_price}
-                  onChange={(e: any) =>
-                    setFormData({ ...formData, selling_price: e.target.value })
-                  }
-                />
-                <Input
-                  type="number"
-                  placeholder="Reorder Level"
-                  value={formData.reorder_level}
-                  onChange={(e: any) =>
-                    setFormData({ ...formData, reorder_level: e.target.value })
-                  }
-                />
-                <Input
-                  placeholder="Size"
-                  value={
-                    Array.isArray(formData?.variation_attributes) &&
-                    formData.variation_attributes.length > 0
-                      ? formData?.variation_attributes[0]?.option_value
-                      : formData?.size
-                  }
-                  onChange={(e: any) =>
-                    setFormData({ ...formData, size: e.target.value })
-                  }
-                />
-                <Input
-                  placeholder="Color"
-                  value={
-                    Array.isArray(formData?.variation_attributes) &&
-                    formData?.variation_attributes?.length > 0
-                      ? formData?.variation_attributes[1]?.option_value
-                      : formData?.color
-                  }
-                  onChange={(e: any) =>
-                    setFormData({ ...formData, color: e.target.value })
-                  }
-                />
-              </div>
-            ))}
+                <Plus className="w-4 h-4 mr-2" />
+                Add Variation
+              </button>
+            </div>
           </div>
-
-          <div className="flex justify-end mt-4">
-            <button
-              className="flex items-center px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-medium rounded transition"
-              onClick={handleAddVariant}
-            >
-              <Plus className="w-4 h-4 mr-2" />
-              Add Variation
-            </button>
-          </div>
-        </div>
         )}
       </div>
 

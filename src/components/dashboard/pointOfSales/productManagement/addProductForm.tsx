@@ -246,7 +246,7 @@ const AddProductForm = () => {
 
           <FormInput
             type="number"
-            label="Unit Price"
+            label="Cost Price"
             placeholder="₦"
             value={formData.cost_price}
             onChange={(e: any) =>
