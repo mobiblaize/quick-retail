@@ -112,15 +112,13 @@ const TanTable = <T extends Record<string, any>>({
   const tableData = useMemo(() => data, [data]);
   const columns = useMemo(() => columnData, [columnData]);
 
-  const currentPage = serverSidePagination 
-    ? (paginationData?.current_page || 1) - 1 
+  const currentPage = serverSidePagination
+    ? (paginationData?.current_page || 1) - 1
     : pageIndex;
-    
-  const totalPages = serverSidePagination 
-    ? paginationData?.last_page || 1 
+
+  const totalPages = serverSidePagination
+    ? paginationData?.last_page || 1
     : Math.ceil(data.length / length);
-
-
 
   const table = useReactTable({
     data: tableData,
@@ -144,45 +142,79 @@ const TanTable = <T extends Record<string, any>>({
   // Generate pagination buttons based on server or client pagination
   const paginationButtons = useMemo(() => {
     if (totalPages <= 1) return [];
-    
-    const buttons: JSX.Element[] = [];
-    const maxVisiblePages = 5;
-    let startPage = Math.max(0, currentPage - Math.floor(maxVisiblePages / 2));
-    let endPage = Math.min(totalPages - 1, startPage + maxVisiblePages - 1);
-    
-    // Adjust start if we're near the end
-    if (endPage - startPage < maxVisiblePages - 1) {
-      startPage = Math.max(0, endPage - maxVisiblePages + 1);
-    }
 
-    for (let i = startPage; i <= endPage; i++) {
+    const buttons: JSX.Element[] = [];
+    // const visibleCount = 3;
+    const lastIndex = totalPages - 1;
+
+    const createButton = (i: number) => (
+      <button
+        key={i}
+        onClick={() => {
+          const pageToSet = i;
+          if (serverSidePagination) {
+            onPageChange?.(pageToSet + 1); // +1 because backend pages are 1-based
+          } else {
+            table.setPageIndex(pageToSet);
+            setPageIndex(pageToSet);
+          }
+        }}
+        style={{
+          border: i === currentPage ? "2px solid red" : "none",
+          backgroundColor: "transparent",
+          color: i === currentPage ? "#000" : "#98A2B3",
+          fontWeight: 600,
+          minWidth: "36px",
+          height: "36px",
+          cursor: "pointer",
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "center",
+          fontSize: "14px",
+          borderRadius: "6px",
+        }}
+      >
+        {i + 1}
+      </button>
+    );
+
+    // Always show the first page
+    buttons.push(createButton(0));
+
+    // Show second page if current is close to start
+    if (currentPage > 2) {
       buttons.push(
-        <button
-          key={i}
-          onClick={() => {
-            if (serverSidePagination) {
-              onPageChange?.(i + 1); 
-            } else {
-              table.setPageIndex(i);
-              setPageIndex(i);
-            }
-          }}
-          style={{
-            color: i === currentPage ? "black" : "#98A2B3",
-            backgroundColor: "transparent",
-            display: "flex",
-            alignItems: "center",
-            fontSize: "1.2rem",
-            fontWeight: "600",
-            cursor: "pointer",
-            marginLeft: "0.2rem",
-            marginRight: "0.2rem",
-          }}
-        >
-          {i + 1}
-        </button>
+        <span key="start-ellipsis" style={{ padding: "0 6px" }}>
+          ...
+        </span>
       );
     }
+
+    // Pages around the current one
+    for (
+      let i = Math.max(1, currentPage - 1);
+      i <= Math.min(lastIndex - 1, currentPage + 1);
+      i++
+    ) {
+      if (i !== 0 && i !== lastIndex) {
+        buttons.push(createButton(i));
+      }
+    }
+
+    // Show ellipsis before last page if needed
+    if (currentPage < lastIndex - 2) {
+      buttons.push(
+        <span key="end-ellipsis" style={{ padding: "0 6px" }}>
+          ...
+        </span>
+      );
+    }
+
+    // Always show the last page
+    if (lastIndex > 0) {
+      buttons.push(createButton(lastIndex));
+    }
+
     return buttons;
   }, [currentPage, totalPages, serverSidePagination, onPageChange, table]);
 
@@ -223,42 +255,42 @@ const TanTable = <T extends Record<string, any>>({
     }
   };
 
-  const canPreviousPage = serverSidePagination 
-    ? !!paginationData?.prev_page_url 
+  const canPreviousPage = serverSidePagination
+    ? !!paginationData?.prev_page_url
     : table.getCanPreviousPage();
-    
-  const canNextPage = serverSidePagination 
-    ? !!paginationData?.next_page_url 
+
+  const canNextPage = serverSidePagination
+    ? !!paginationData?.next_page_url
     : table.getCanNextPage();
   // Define all possible sort options
-const baseSortOptions: SortOption[] = [
-  { label: "All", key: "" },
-  { label: "Recent", key: "recent" },
-  { label: "Oldest", key: "oldest" },
-  { label: "A-Z", key: "a-z" },
-  { label: "Z-A", key: "z-a" },
-];
+  const baseSortOptions: SortOption[] = [
+    { label: "All", key: "" },
+    { label: "Recent", key: "recent" },
+    { label: "Oldest", key: "oldest" },
+    { label: "A-Z", key: "a-z" },
+    { label: "Z-A", key: "z-a" },
+  ];
 
-// Define table types that should exclude A-Z and Z-A
-const tablesWithoutAZSort = ["transaction", "returns"];
+  // Define table types that should exclude A-Z and Z-A
+  const tablesWithoutAZSort = ["transaction", "returns"];
 
-const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
-  ? baseSortOptions.filter(opt => opt.key !== "a-z" && opt.key !== "z-a")
-  : baseSortOptions;
+  const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
+    ? baseSortOptions.filter((opt) => opt.key !== "a-z" && opt.key !== "z-a")
+    : baseSortOptions;
 
   // useEffect(() => {
   //   console.log("filtersApplied changed:", filtersApplied);
   // }, [filtersApplied]);
-  
+
   const isFilterActive = (filters: FilterValues): boolean => {
-    return Object.entries(filters).some(([ value]) => {
+    return Object.entries(filters).some(([value]) => {
       if (typeof value === "string") {
         return value.trim() !== "" && value !== "All" && value !== "all";
       }
       return !!value;
     });
   };
-  
+
   return (
     <Box className="font-sans">
       <Box
@@ -367,42 +399,50 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                       justifyContent: "center",
                     }}
                   >
-                    {(!filtersApplied || !["inventory", "product", "sales", "returns", "discount", "audit"].includes(tableType || "")) ? (
-  <div
-    style={{
-      display: "flex",
-      flexDirection: "column",
-      gap: "2px",
-    }}
-  >
-    <span
-      style={{
-        display: "block",
-        width: "16px",
-        height: "2px",
-        background: "white",
-      }}
-    />
-    <span
-      style={{
-        display: "block",
-        width: "16px",
-        height: "2px",
-        background: "white",
-      }}
-    />
-    <span
-      style={{
-        display: "block",
-        width: "16px",
-        height: "2px",
-        background: "white",
-      }}
-    />
-  </div>
-) : (
-  <span className="whitespace-nowrap">Reset Filter</span>
-)}
+                    {!filtersApplied ||
+                    ![
+                      "inventory",
+                      "product",
+                      "sales",
+                      "returns",
+                      "discount",
+                      "audit",
+                    ].includes(tableType || "") ? (
+                      <div
+                        style={{
+                          display: "flex",
+                          flexDirection: "column",
+                          gap: "2px",
+                        }}
+                      >
+                        <span
+                          style={{
+                            display: "block",
+                            width: "16px",
+                            height: "2px",
+                            background: "white",
+                          }}
+                        />
+                        <span
+                          style={{
+                            display: "block",
+                            width: "16px",
+                            height: "2px",
+                            background: "white",
+                          }}
+                        />
+                        <span
+                          style={{
+                            display: "block",
+                            width: "16px",
+                            height: "2px",
+                            background: "white",
+                          }}
+                        />
+                      </div>
+                    ) : (
+                      <span className="whitespace-nowrap">Reset Filter</span>
+                    )}
                   </button>
 
                   {showFilterDropdown && (
@@ -418,7 +458,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                         padding: "1rem",
                       }}
                     >
-                       {tableType === "sales" && (
+                      {tableType === "sales" && (
                         <ReusableFilterComponent
                           // onFilterChange={(filters) => {
                           //   onFilterChange?.(filters);
@@ -429,9 +469,13 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
-                        
+
                             const hasFilters = isFilterActive(filters);
-                            console.log("Filter sales applied:", filters, hasFilters);
+                            console.log(
+                              "Filter sales applied:",
+                              filters,
+                              hasFilters
+                            );
                             setFiltersApplied(hasFilters);
                           }}
                           showPrice={true}
@@ -439,7 +483,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                           filterType={"sales"}
                         />
                       )}
-                      
+
                       {tableType === "inventory" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {
@@ -499,7 +543,6 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
                         />
                       )}
 
-                     
                       {tableType === "audit" && (
                         <ReusableFilterComponent
                           onFilterChange={(filters) => {
@@ -523,7 +566,7 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
           <div className="mb-4"></div>
         </div>
       </Box>
-      
+
       <Box
         style={{
           backgroundColor: "var(--mantine-color-gray-0)",
@@ -531,64 +574,54 @@ const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
           color: "var(--mantine-color-gray-7)",
         }}
       >
- {loadingState ? (
-  <Box
-    style={{
-      display: "flex",
-      alignItems: "center",
-      justifyContent: "center",
-      padding: "2.5rem 0",
-    }}
-  >
-    Loading...
-  </Box>
-) : (
-  (
-    table.getFilteredRowModel().rows.length === 0 &&
-    (searchTerm || data.length === 0)
-  )
-  
-  
-  
-    ? (
-      <Box
-        style={{
-          padding: "3rem 1rem",
-          textAlign: "center",
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          gap: "0.25rem",
-        }}
-      >
-        <img
-          src={EmptyStateImage}
-          alt="No data"
-          style={{ width: "160px", height: "auto", opacity: 0.8 }}
-        />
-        <Text fw={600} size="lg" c="#1D2739">
-          Not found
-        </Text>
-        <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-          We couldn't find what you are
-        </Text>
-        <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-          looking for. Try entering a correct
-        </Text>
-        <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-          data
-        </Text>
-      </Box>
-    )
-    : (
-      <TanBody
-        table={table}
-        loadingState={loadingState}
-        onClick={onClick}
-      />
-    )
-)}
-
+        {loadingState ? (
+          <Box
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              padding: "2.5rem 0",
+            }}
+          >
+            Loading...
+          </Box>
+        ) : table.getFilteredRowModel().rows.length === 0 &&
+          (searchTerm || data.length === 0) ? (
+          <Box
+            style={{
+              padding: "3rem 1rem",
+              textAlign: "center",
+              display: "flex",
+              flexDirection: "column",
+              alignItems: "center",
+              gap: "0.25rem",
+            }}
+          >
+            <img
+              src={EmptyStateImage}
+              alt="No data"
+              style={{ width: "160px", height: "auto", opacity: 0.8 }}
+            />
+            <Text fw={600} size="lg" c="#1D2739">
+              Not found
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              Sorry, we couldn’t find what you
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              are looking for. Try entering a
+            </Text>
+            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+              correct keyword.
+            </Text>
+          </Box>
+        ) : (
+          <TanBody
+            table={table}
+            loadingState={loadingState}
+            onClick={onClick}
+          />
+        )}
       </Box>
 
       {showSeeAllToggle && !showAll && data.length > length && (

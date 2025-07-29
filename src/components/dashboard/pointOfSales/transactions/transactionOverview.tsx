@@ -1,6 +1,6 @@
 import { Group, Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
-import dollar from "../../../../assets/images/dollarSign.png";
+import dollar from "../../../../assets/images/orangeNaira.png";
 import orders from "../../../../assets/images/orders.png";
 import DateFilterMenu from "../../../General/filterMenu";
 
@@ -13,12 +13,13 @@ interface TransactionData {
 interface TransactionOverviewProps {
   data: TransactionData;
   isLoading: boolean;
-  setDateRange: (range: { startDate: string; endDate: string }) => void;
+  // setDateRange: (range: { startDate: string; endDate: string }) => void;
+  onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
 }
 
 const TransactionOverview: React.FC<TransactionOverviewProps> = ({
   data,
-  setDateRange,
+  onDateRangeChange,
   // isLoading,
 }) => {
   const currencySymbol = "₦";
@@ -56,18 +57,18 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
-          <Text size="xl" fw={600} c="textSecondary.9">
-            Transaction overview
+          <Text size="xl" fw={500} c="textSecondary.9">
+            Transaction Overview
           </Text>
           <Text size="sm">An overview of sales transaction </Text>
         </div>
         <Group>
           <DateFilterMenu
              onDateFilterChange={({ startDate, endDate }) =>
-             setDateRange({
-               startDate: startDate?.toISOString().split("T")[0] || "",
-               endDate: endDate?.toISOString().split("T")[0] || "",
-             })
+             onDateRangeChange({
+              startDate: startDate?.toISOString().split("T")[0] || "",
+              endDate: endDate?.toISOString().split("T")[0] || "",
+            })
            }
           />
         </Group>

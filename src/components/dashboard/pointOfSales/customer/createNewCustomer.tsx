@@ -4,6 +4,9 @@ import { notifications } from '@mantine/notifications';
 import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import FormInput from "../../../General/formInput";
 
+// Strict validation for Nigerian phone numbers
+const phoneNumberRegex = /^(?:\+234|0)(701|702|703|704|705|706|707|708|709|70[1-9]|80[1-9]|81[0-9]|90[1-9])[0-9]{6}$/;
+
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
@@ -22,6 +25,20 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
   const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
 
   const handleSave = () => {
+    // Remove any non-numeric characters from the phone number
+    const sanitizedPhoneNumber = phoneNumber.replace(/[^0-9]/g, "");
+
+    // Validate that the phone number matches the Nigerian format and is exactly 11 digits
+    if (!phoneNumberRegex.test(sanitizedPhoneNumber)) {
+      notifications.show({
+        title: 'Validation error',
+        message: 'Please enter a valid Nigerian phone number.',
+        color: 'red',
+      });
+      return;
+    }
+
+    // If the form is not valid, show an error
     if (!isFormValid) {
       notifications.show({
         title: 'Validation error',
@@ -35,14 +52,14 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
         {
           customer_name: `${firstName.trim()} ${lastName.trim()}`,
           customer_email: email,
-          customer_phone: phoneNumber,
+          customer_phone: sanitizedPhoneNumber,  // Use the sanitized phone number
           customer_address: address,
         },
         {
           onSuccess: () => {
             notifications.show({
               title: 'New Customer Saved!',
-              message: 'New Customer succesfully added.',
+              message: 'New Customer successfully added.',
               color: 'green',
             });
       
@@ -67,7 +84,18 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
           },
         }
       );
-      
+  };
+
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove any non-numeric characters
+    let value = e.target.value.replace(/[^0-9]/g, "");
+
+    // Restrict the length to 11 digits
+    if (value.length > 11) {
+      value = value.slice(0, 11); // Truncate to 11 digits
+    }
+
+    setPhoneNumber(value);
   };
 
   return (
@@ -117,7 +145,7 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
           placeholder="Enter phone number"
           paddingY={6}
           value={phoneNumber}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+          onChange={handlePhoneNumberChange} // Updated handler
         />
         <FormInput
           label="Address (Optional)"

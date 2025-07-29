@@ -207,8 +207,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       className="w-full border rounded p-2 text-sm border-gray-200"
     >
       <option value="all">All</option>
-      <option value="amount">Amount</option>
-      <option value="percentage">Percentage</option>
+      <option value="amount">Amount Off</option>
+      <option value="percentage">Percentage Off</option>
     </select>
   </div>
 )}

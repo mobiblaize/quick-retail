@@ -63,9 +63,9 @@ const Pagination = ({
         disabled={prevDisabled}
         style={{
           backgroundColor: "#ffffff",
-          border: "1px solid #D1D5DB",
-          borderRadius: "6px 0 0 6px", // Only left corners rounded
-          borderRight: "none", // Remove right border for connected look
+          // border: "1px solid #D1D5DB",
+          borderRadius: "6px 0 0 6px",
+          borderRight: "none",
           padding: "8px 12px",
           cursor: prevDisabled ? "not-allowed" : "pointer",
           opacity: prevDisabled ? 0.5 : 1,
@@ -95,7 +95,7 @@ const Pagination = ({
                 display: "flex",
                 alignItems: "center",
                 backgroundColor: "#ffffff",
-                border: "1px solid #D1D5DB",
+                // border: "1px solid #D1D5DB",
                 borderLeft: index === 0 ? "1px solid #D1D5DB" : "none", // Only first button has left border
                 borderRight: "none", // Remove right border for connected look
                 height: "36px",
@@ -115,7 +115,7 @@ const Pagination = ({
         disabled={nextDisabled}
         style={{
           backgroundColor: "#ffffff",
-          border: "1px solid #D1D5DB",
+          // border: "1px solid #D1D5DB",
           borderRadius: "0 6px 6px 0", // Only right corners rounded
           padding: "8px 12px",
           cursor: nextDisabled ? "not-allowed" : "pointer",

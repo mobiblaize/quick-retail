@@ -42,6 +42,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationDa
     {
       header: "Category",
       accessorKey: "name",
+      enableSorting: false,
       cell: ({ row }) => (
         <Text c="textSecondary.9" fw={500}>
           {row.original.name}
@@ -51,6 +52,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationDa
     {
       header: "Total Products",
       accessorKey: "totalProduct",
+        enableSorting: false,
       cell: ({ row }) => (
         <Text c="textSecondary.9" fw={500}>
           {row.original.total_products}
@@ -60,6 +62,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationDa
     {
       header: "Total Amount",
       accessorKey: "totalAmount",
+      enableSorting: false,
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
   ₦{Number(row.original.total_amount ?? 0).toFixed(2)}
@@ -70,6 +73,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationDa
     {
       header: "Date Modified",
       accessorKey: "created_at",
+      enableSorting: false,
       cell: ({ row }) => {
         const createdAt = row.original.created_at;
 
@@ -123,7 +127,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationDa
     {
       header: "",
       accessorKey: "action",
-
+      enableSorting: false,
       cell: ({ row }) => {
         const navigate = useNavigate();
         const category = row.original;
