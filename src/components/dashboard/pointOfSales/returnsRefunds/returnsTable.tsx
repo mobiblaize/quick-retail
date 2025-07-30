@@ -75,6 +75,7 @@ const ReturnsTable = ({
     {
       header: "Return ID",
       accessorKey: "returnId",
+        enableSorting: false,
       cell: ({ row }) => (
         <span className="text-sm text-gray-900 font-medium">
           {row.original.returnId}
@@ -84,6 +85,7 @@ const ReturnsTable = ({
     {
       header: "Name",
       accessorKey: "name",
+      enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -110,6 +112,7 @@ const ReturnsTable = ({
     {
       header: "Date Returned",
       accessorKey: "dateReturned",
+      enableSorting: false,
       cell: ({ row }) => (
         <Text c="textSecondary.7">
           {" "}
@@ -122,6 +125,7 @@ const ReturnsTable = ({
     {
       header: "Customer",
       accessorKey: "customer",
+        enableSorting: false,
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
           {row.original.customer}
@@ -131,10 +135,12 @@ const ReturnsTable = ({
     {
       header: "Returned Reason",
       accessorKey: "returnedReason",
+      enableSorting: false,
     },
     {
       header: "Complaint Status",
       accessorKey: "complaintStatus",
+      enableSorting: false,
       cell: ({ row }) => {
         const status = row.original.complaintStatus;
         let bgColor = "";
@@ -168,6 +174,7 @@ const ReturnsTable = ({
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false,
       cell: ({ row }: any) => (
         <Link
           to={ROUTES.viewReturns}

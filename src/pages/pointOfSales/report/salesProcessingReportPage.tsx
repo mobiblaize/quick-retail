@@ -197,13 +197,13 @@ const SalesProcessingReportPage = () => {
       >
         <div className="flex gap-8 items-center">
           {backButton}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <Text>Reports</Text>
             <span className="mx-2">/</span>
             <Text c="black" fw={500}>
               Sales Report
             </Text>
-          </div>
+          </div> */}
         </div>
         <div className="flex items-center gap-3">
           <Dropdown

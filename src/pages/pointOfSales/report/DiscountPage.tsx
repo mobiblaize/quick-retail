@@ -37,7 +37,7 @@ const DiscountReportPage = () => {
   );
 
   const handleBack = () => {
-    navigate(-2);
+    navigate(-1);
   };
 
   const exportFullPDF = () => {

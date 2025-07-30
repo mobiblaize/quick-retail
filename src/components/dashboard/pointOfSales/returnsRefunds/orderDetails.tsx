@@ -87,15 +87,27 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
             <Text fw={"500"}>Refund Status</Text>
             <Text
               size="lg"
-              c={"#B54708"}
               fw={"400"}
-              className="text-[#B54708] "
+              style={{
+                color:
+                // @ts-ignore 
+                  {
+                    // @ts-ignore 
+                    resolved: "#099137", 
+                    // @ts-ignore 
+                    declined: "#CB1A14",
+                    // @ts-ignore 
+                    pending: "#B54708", 
+                    // @ts-ignore 
+                  }[returnData?.complaintStatus?.toLowerCase()] || "#6B7280",
+              }}
             >
-              {/* @ts-ignore */}
+              {/* @ts-ignore  */}
               {returnData?.complaintStatus || "N/A"}
             </Text>
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full gap-3 md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Discount Status</Text>

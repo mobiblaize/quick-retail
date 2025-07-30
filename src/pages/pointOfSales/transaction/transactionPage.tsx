@@ -7,13 +7,14 @@ import { useState } from "react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 const TransactionPage = () => {
-  const [, setDateRange] = useState<{
+  const [tempDateRange, setTempDateRange] = useState<{
     startDate: string;
-    endDate: string;  
+    endDate: string;
   }>({
     startDate: "",
     endDate: "",
   });
+  
 
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
@@ -62,11 +63,31 @@ const TransactionPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+     
       <TransactionOverview
-        data={data?.data}
-        isLoading={isLoading}
-        setDateRange={setDateRange}
-      />
+  data={data?.data}
+  isLoading={isLoading}
+  onDateRangeChange={({ startDate, endDate }) => {
+    const updatedRange = {
+      startDate: startDate || tempDateRange.startDate,
+      endDate: endDate || tempDateRange.endDate,
+    };
+
+    setTempDateRange(updatedRange);
+
+    // Only apply filter when both are set
+    if (updatedRange.startDate && updatedRange.endDate) {
+      const newFilters = {
+        ...appliedFilters,
+        startDate: updatedRange.startDate,
+        endDate: updatedRange.endDate,
+      };
+      setAppliedFilters(newFilters);
+      setCurrentPage(1);
+    }
+  }}
+/>
+
       <AllTransactionTable
         data={transactionsArray}
         isLoading={isLoading}

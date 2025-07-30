@@ -29,7 +29,7 @@ interface SearchProductProps {
   initialItems?: SelectedItem[];
 }
 
-const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
+const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
@@ -108,18 +108,18 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
     };
     
 
-  const handleQuantityChange = (itemKey: any, value: number) => {
-         /* @ts-ignore */
-    setSelectedItems((prev) =>
-      prev.map((item) =>
-           /* @ts-ignore */
-        (item.custom ? `custom-${item.name}` : item.variationID) === itemKey
-             /* @ts-ignore */
-          ? { ...item, quantity: value }
-          : item
-      )
-    );
-  };
+  // const handleQuantityChange = (itemKey: any, value: number) => {
+  //        /* @ts-ignore */
+  //   setSelectedItems((prev) =>
+  //     prev.map((item) =>
+  //          /* @ts-ignore */
+  //       (item.custom ? `custom-${item.name}` : item.variationID) === itemKey
+  //            /* @ts-ignore */
+  //         ? { ...item, quantity: value }
+  //         : item
+  //     )
+  //   );
+  // };
   useEffect(() => {
   }, [initialItems]);
   
@@ -240,7 +240,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
               const quantity = item.quantity ?? 0;
                    /* @ts-ignore */
               const unitPrice = Number(item.selling_price || 0);
-              const totalPrice = unitPrice * quantity;
+              // const totalPrice = unitPrice * quantity;
 
               return (
                 <li
@@ -287,43 +287,19 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
 
                     /* Unit Price */}
                     <div className="flex flex-col items-center min-w-[70px]">
-                      <span className="text-xs text-gray-800">Unit Price</span>
-                      <span className="font-medium">
+                      <span className="text-xs text-gray-700">Unit Price</span>
+                      <span className="font-medium text-gray-700">
                       ₦ {formatMoney(unitPrice.toFixed(2))}
                       </span>
                     </div>
 
-                    {/* Quantity Input */}
-                    <div className="min-w-[70px]">
-                      <span className="text-xs text-gray-800">Quantity</span>
-                      <FormInput
-                        type="number"
-                        min={1}
-                             /* @ts-ignore */
-                        value={item.quantity?.toString() ?? ""}
-                        onChange={(e: { target: { value: any; }; }) => {
-                          const val = e.target.value;
+               
 
-                          if (val === "") {
-                            // @ts-ignore
-                            handleQuantityChange(itemKey, ""); 
-                            return;
-                          }
-
-                          const parsed = parseInt(val, 10);
-                          if (!isNaN(parsed) && parsed >= 1) {
-                            handleQuantityChange(itemKey, parsed);
-                          }
-                        }}
-                        className="w-16 font-medium"
-                      />
-                    </div>
-
-                    {/* Total Price */}
+                    {/* Stock */}
                     <div className="flex flex-col items-center min-w-[70px]">
-                      <span className="text-xs text-gray-900">Total Price</span>
-                      <span className="font-semibold text-[#2E90FA]">
-                      ₦ {formatMoney(totalPrice.toFixed(2))}
+                      <span className="text-xs text-gray-700">Stock Quantity</span>
+                      <span className="font-medium text-gray-700">
+                      {item.quantity_available}
                       </span>
                     </div>
 
@@ -357,5 +333,6 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
   );
 };
 
-export default SearchProduct;
+export default DiscountSearchProduct;
+
 

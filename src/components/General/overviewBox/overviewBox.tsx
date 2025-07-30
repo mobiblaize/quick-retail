@@ -2,7 +2,7 @@ import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../filterMenu";
 import AnalyticsCard from "../card";
 import { useEffect, useState } from "react";
-import dollar from "../../../assets/images/dollarSign.png";
+import dollar from "../../../assets/images/orangeNaira.png";
 import orders from "../../../assets/images/orders.png";
 import customer from "../../../assets/images/customers.png";
 import { useFetchAnalysisOverview } from "../../../hooks/backendApis/pos/dashboard";
