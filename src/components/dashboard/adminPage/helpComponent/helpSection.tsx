@@ -1,4 +1,4 @@
-import { useState } from 'react';
+// import { useState } from 'react';
 // import { Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../../../constants/routes';
@@ -19,11 +19,7 @@ const helpArticles = [
 ];
 
 const HelpSection = () => {
-    const [search, setSearch] = useState('');
-
-    const filteredArticles = helpArticles.filter((article) =>
-        article.title.toLowerCase().includes(search.toLowerCase())
-    );
+    const filteredArticles = helpArticles;
 
     return (
         <section className="p-6 bg-white rounded-xl">
