@@ -143,6 +143,18 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
           )}
         </div>
 
+        {errorMessage && (
+          <Text c="red" size="sm" className="mt-1 text-center">
+            {errorMessage}
+          </Text>
+        )}
+
+        {successMessage && (
+          <Text c="green" size="sm" className="mt-1 text-center">
+            {successMessage}
+          </Text>
+        )}
+
         <div className="flex gap-4 mt-[2em] justify-center rounded-lg">
           <Button variant="outline" onClick={onClose}>
             No
