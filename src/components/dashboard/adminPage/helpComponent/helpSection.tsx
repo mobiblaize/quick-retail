@@ -29,7 +29,7 @@ const HelpSection = () => {
         <section className="p-6 bg-white rounded-xl">
             <div className="flex justify-between items-center mb-[3em] flex-wrap gap-4">
                 <h2 className="text-[20px] font-[500] text-[#101828]">Need Assistance?</h2>
-                <div className="relative w-full max-w-xs">
+                {/* <div className="relative w-full max-w-xs">
                     <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
                     <input
                         type="text"
@@ -38,7 +38,7 @@ const HelpSection = () => {
                         onChange={(e) => setSearch(e.target.value)}
                         className="pl-10 pr-4 py-2 w-full border-[#D0D5DD] border rounded-lg text-[#98A2B3] text-sm"
                     />
-                </div>
+                </div> */}
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">

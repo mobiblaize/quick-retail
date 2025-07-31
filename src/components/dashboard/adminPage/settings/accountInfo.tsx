@@ -65,7 +65,7 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
       {/* Profile Header */}
       <div className="bg-white rounded-lg s p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div className="flex items-center gap-4">
-          <div className="w-20 h-20 border-4 border-orange-500 rounded-full overflow-hidden">
+          <div className="w-50 h-50 border-4 border-orange-500 rounded-full overflow-hidden">
             <img
               src={localImage || "/avatar-placeholder.jpg"}
               alt="Profile"
@@ -73,11 +73,11 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
             />
           </div>
           <div>
-          <p className="text-sm font-normal text-[#ffffff] shadow-md bg-orange-500 py-1 pl-1 pr-1 rounded-lg">
+          <p className="text-sm font-normal text-[#ffffff] shadow-md bg-orange-500 py-1 pl-1 pr-1 rounded-lg mb-[1em]">
               User ID: #{shortenTransactionId(user_id)}
             </p>
-            <h2 className="text-xl font-medium text-gray-800">{company_name}</h2>
-            <p className="text-sm font-normal text-gray-500">{email}</p>
+            <h2 className="text-xl font-medium text-gray-800 mb-[1em]">{company_name}</h2>
+            <p className="text-sm font-normal text-gray-500 mb-[1em]">{email}</p>
             <button
               className="border border-gray-300 text-sm font-semibold text-gray-900 px-4 py-2 rounded hover:bg-gray-100 cursor-pointer"
               onClick={() => fileInputRef.current?.click()}

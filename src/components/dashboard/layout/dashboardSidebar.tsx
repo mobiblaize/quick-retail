@@ -84,23 +84,23 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             </List>
           </div>
         </div>
-        <div className="px-3">
-          {/* <div className="mt-5">
-            <Divider my="lg" />
-          </div> */}
-          {activeSection === "Admin" && (
-            <NavItem
-              href={ROUTES.adminSettings}
-              label="Settings"
-              inactiveIcon={Settings}
-              activeIcon={Settings}
-            />
-          )}
+      <div className="px-3">
+  {activeSection === "Admin" && (
+    <div className="mb-6"> {/* Adds spacing below Settings */}
+      <NavItem
+        href={ROUTES.adminSettings}
+        label="Settings"
+        inactiveIcon={Settings}
+        activeIcon={Settings}
+      />
+    </div>
+  )}
 
-          <List className=" gap-4 mt-9">
-            <LogoutModal />
-          </List>
-        </div>
+  <List className="gap-4 mt-9">
+    <LogoutModal />
+  </List>
+</div>
+
       </div>
     </Card>
   );
