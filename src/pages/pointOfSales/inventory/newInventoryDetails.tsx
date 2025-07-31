@@ -41,8 +41,8 @@ const NewInventoryDetails = ({
 
         <FormInput
           type="text"
-          label="Reason for Update"
-          placeholder="Enter reason for update"
+          label="Reason for Reorder"
+          placeholder="Enter reason for reorder"
           optional
           paddingY={"0.7rem"}
           value={reason_for_update}

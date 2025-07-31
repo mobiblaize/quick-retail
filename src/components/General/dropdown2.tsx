@@ -47,7 +47,7 @@ const Dropdown2 = ({
   return (
     <div className={`relative w-full`} ref={dropdownRef}>
       {label && (
-        <label className={`block mb-1 font-medium text-gray-700`}>
+        <label className="block mb-1 text-sm font-medium text-gray-700">
           {label}
           {required && <span className="text-red-600 ml-1">*</span>}
         </label>
@@ -55,9 +55,7 @@ const Dropdown2 = ({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`w-full text-left px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 ${
-          textColorClass || "text-black"
-        }`}
+        className={`w-full text-left px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-sans text-sm ${textColorClass || "text-black"}`}
       >
         {selectedOption ? selectedOption.label : <span className="text-gray-400">{placeholder}</span>}
         <span className="float-right">▾</span>

@@ -5,6 +5,8 @@ import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
 
+
+
 const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
   const { reportData } = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
@@ -48,26 +50,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
     setCurrentPage(page);
   };
   const columns: ColumnDef<TableRowData>[] = [
-    // {
-    //   id: "select",
-    //   header: ({ table }) => (
-    //     <input
-    //       type="checkbox"
-    //       checked={table.getIsAllRowsSelected()}
-    //       onChange={table.getToggleAllRowsSelectedHandler()}
-    //     />
-    //   ),
-    //   cell: ({ row }) => (
-    //     <input
-    //       type="checkbox"
-    //       checked={row.getIsSelected()}
-    //       onChange={row.getToggleSelectedHandler()}
-    //     />
-    //   ),
-    //   enableSorting: false,
-    //   enableColumnFilter: false,
-    //   size: 10,
-    // },
+   
     {
       header: "Name",
       accessorKey: "name",
@@ -185,7 +168,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
         data={data}
         showSearch={false}
         showSortFilter={false}
-        serverSidePagination
+        serverSidePagination={true}
         paginationData={paginationData}
         onPageChange={handlePageChange}
         length={8}

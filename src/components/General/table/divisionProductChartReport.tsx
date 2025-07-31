@@ -63,13 +63,15 @@ const DivisionProductChartReport = ({ categories }: Props) => {
     return (
       <text x={x} y={y} fill="black" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
         {(percent * 100).toFixed(1)}%
+        {/* {(percent * 100)} */}
       </text>
     );
   };
 
   return (
     <main className="flex flex-col md:flex-row mt-6">
-      <div className="w-72 h-72 md:w-80 md:h-80 flex items-center justify-center mb-4 md:mb-0 ml-[4em]">
+    {/* // <main className="flex flex-col md:flex-row mt-6 gap-4 md:gap-12"> */}
+      <div className="w-72 h-72 md:w-80 md:h-80 flex items-center justify-center mb-4 md:mb-0 ml-[2em] gap-6">
 
           {pieData.length > 0 ? (
             <ResponsiveContainer width="110%" height="100%">

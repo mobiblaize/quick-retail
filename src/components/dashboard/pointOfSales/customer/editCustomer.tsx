@@ -1,7 +1,7 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { notifications } from '@mantine/notifications';
-import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
+import { useUpdateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import FormInput from "../../../General/formInput";
 
 interface ResolveProps {
@@ -18,9 +18,12 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
 
-  const { mutate, isPending } = useCreateCustomer();
+
+
+  const { mutate: updateCustomer, isPending } = useUpdateCustomer(customer?.id);;
 
   const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
+  
   useEffect(() => {
     if (customer) {
       // Split name if needed
@@ -32,7 +35,7 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
       setAddress(customer.address || '');
     }
   }, [customer]);
-  
+
   const handleSave = () => {
     if (!isFormValid) {
       notifications.show({
@@ -43,43 +46,43 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
       return;
     }
 
-    mutate(
-        {
-          customer_name: `${firstName.trim()} ${lastName.trim()}`,
-          customer_email: email,
-          customer_phone: phoneNumber,
-          customer_address: address,
+    updateCustomer(
+      {
+        customer_name: `${firstName.trim()} ${lastName.trim()}`,
+        customer_email: email,
+        customer_phone: phoneNumber,
+        customer_address: address,
+      },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: 'Customer Updated!',
+            message: 'Customer details successfully updated.',
+            color: 'green',
+          });
+
+          // Reset form fields after save
+          setFirstName('');
+          setLastName('');
+          setEmail('');
+          setPhoneNumber('');
+          setAddress('');
+
+          if (onCreated) {
+            onCreated();
+          } else {
+            onClose();
+          }
         },
-        {
-          onSuccess: () => {
-            notifications.show({
-              title: 'New Customer Saved!',
-              message: 'New Customer succesfully added.',
-              color: 'green',
-            });
-      
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setPhoneNumber('');
-            setAddress('');
-      
-            if (onCreated) {
-              onCreated();
-            } else {
-              onClose();
-            }
-          },
-          onError: (error: any) => {
-            notifications.show({
-              title: 'Error',
-              message: error?.response?.data?.message || 'Failed to edit customer',
-              color: 'red',
-            });
-          },
-        }
-      );
-      
+        onError: (error: any) => {
+          notifications.show({
+            title: 'Error',
+            message: error?.response?.data?.message || 'Failed to update customer',
+            color: 'red',
+          });
+        },
+      }
+    );
   };
 
   return (

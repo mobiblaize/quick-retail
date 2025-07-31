@@ -1,6 +1,6 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Loader, Text } from "@mantine/core";
+import {  Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import TanTable, { PaginationData } from "../../../General/table";
@@ -42,6 +42,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     discountCode: item.code || "-",
     discountType: item.type || "-",
     value: item.value || 0,
+    redemption: item.redemption_count || 0,
     dateFrom: item.from?.split("T")[0] || "-",
     dateTo: item.to?.split("T")[0] || "-",
     status: item.status === "active" ? "Active" : "Inactive",
@@ -52,31 +53,25 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
   const columns: ColumnDef<TableRowData>[] = [
    
     {
-      header: "Product",
+      header: "Discount Name",
       accessorKey: "name",
       enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
-          <Avatar
+          {/* <Avatar
            // @ts-ignore
             src={row.original.image || imageSrc}
             alt={row.original.name as string}
             radius="md"
             size={40}
-          />
+          /> */}
           <Text fw={500} c="black">
             {row.original.name}
           </Text>
         </div>
       ),
     },
-    // {
-    //   header: "Discount Code",
-    //   accessorKey: "discountCode",
-    //   cell: ({ row }) => (
-    //     <Text c="textSecondary.7">{row.original.discountCode}</Text>
-    //   ),
-    // },
+   
     {
       header: "Percent Off",
       accessorKey: "percent",
@@ -103,6 +98,11 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     {
       header: "Date To",
       accessorKey: "dateTo",
+      enableSorting: false, 
+    },
+    {
+      header: "Redemption",
+      accessorKey: "redemption",
       enableSorting: false, 
     },
     {

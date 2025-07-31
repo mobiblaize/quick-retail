@@ -41,7 +41,7 @@ const RetunsRefundsReportPage = () => {
     );
   
      const handleBack = () => {
-       navigate(-2);
+       navigate(-1);
      };
 
 
