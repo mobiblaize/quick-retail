@@ -1,26 +1,55 @@
 import { Button, Menu, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import { ChevronDown, Plus } from "lucide-react";
+import { ChevronDown, ChevronLeft, Plus } from "lucide-react";
 import ViewUserForm from "../../../components/dashboard/adminPage/userManagement/viewUserForm";
 import ActivateUserModal from "../../../components/dashboard/adminPage/userManagement/modal/activateUser";
 import { useState } from "react";
 import EditUserModal from "../../../components/dashboard/adminPage/userManagement/modal/editUserForm";
 import DeactiveUserModal from "../../../components/dashboard/adminPage/userManagement/modal/deactivateUser";
+import { useNavigate } from "react-router";
 
 const ViewUser = () => {
   const [modalOpen, setModalOpen] = useState(false);
   const [deactiveModalOpen, setDeactiveModalOpen] = useState(false);
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
-  
+
 
   const isPending = selectedUser?.status?.toLowerCase() === "pending";
   const isActive = selectedUser?.status?.toLowerCase() === "active";
+  const navigate = useNavigate();
+
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const backButton = (
+    <button
+      onClick={handleBack}
+      className="flex cursor-pointer gap-2 items-center"
+    >
+      <ChevronLeft />
+      <Text fw={500} c="black">
+        Back
+      </Text>
+    </button>
+  );
 
   const subHeaders = [
+    <>
+     <div key="1" className="py-2.5">
+        <div className="hidden sm:flex gap-8 items-center">
+          {backButton}
+        </div>
+
+        <div className="flex sm:hidden gap-2 items-center">{backButton}</div>
+      </div>
     <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0" key="header">
+     
+
+
       <Text fw={500} size="xl" c="black">
-        View Users
+        View User
       </Text>
       <div className="flex flex-row gap-2 md:gap-4">
         <div className="hidden sm:block">
@@ -146,7 +175,8 @@ const ViewUser = () => {
           </Menu>
         </div>
       </div>
-    </div>,
+    </div>
+    </>
   ];
 
   return (

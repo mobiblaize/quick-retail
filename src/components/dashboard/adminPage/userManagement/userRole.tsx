@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MoreVertical } from "lucide-react";
+// import { MoreVertical } from "lucide-react";
 import { useToggleRoleStatus } from "../../../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 
@@ -15,7 +15,7 @@ interface RoleCardProps {
 
 const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
     id,
-    initials,
+    // initials,
     title,
     userCount,
     description,
@@ -52,9 +52,9 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
     return (
         <div className="bg-[#F9F9FB] rounded-lg p-4 shadow-sm relative">
             {/* 3-dot menu */}
-            <div className="absolute top-3 right-3 text-gray-400 cursor-pointer">
+            {/* <div className="absolute top-3 right-3 text-gray-400 cursor-pointer">
                 <MoreVertical size={18} />
-            </div>
+            </div> */}
 
             {/* Badge + Title */}
             <div className="gap-3 mb-1">
@@ -62,7 +62,13 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
                     className="w-10 h-10 border-1 border-[#E16635] rounded-full text-[#E16635] text-xs font-semibold flex items-center justify-center"
                     style={{ backgroundColor: color }}
                 >
-                    {initials}
+                    {title
+                        .split(" ")
+                        .slice(0, 2)
+                        .map((word) => word[0])
+                        .join("")
+                        .toUpperCase()
+                        .padEnd(2, title[0]?.toUpperCase())}
                 </div>
             </div>
 
