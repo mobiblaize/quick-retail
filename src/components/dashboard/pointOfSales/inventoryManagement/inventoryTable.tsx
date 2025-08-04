@@ -9,7 +9,7 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
 import { formatDate, truncateText } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
-import {  useState } from "react";
+import { useState } from "react";
 
 const InventoryTable = () => {
   // const { data, isLoading } = useFetchAllProducts();
@@ -39,8 +39,6 @@ const InventoryTable = () => {
     per_page: perPage.toString(),
   });
 
- 
-
   const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
     null
   );
@@ -51,7 +49,7 @@ const InventoryTable = () => {
     per_page: perPage.toString(),
   };
 
-  const { data, isLoading,  } = useFetchAllProducts(payload);
+  const { data, isLoading } = useFetchAllProducts(payload);
 
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
@@ -67,7 +65,7 @@ const InventoryTable = () => {
     status: product.stock_status,
     image: product.image_path,
     variationID: product.variationID,
-    price: product.selling_price, 
+    price: product.selling_price,
     ...product,
   }));
 
@@ -75,7 +73,6 @@ const InventoryTable = () => {
     setAppliedFilters(filters);
     // setShowFilter(false);
   };
-
 
   const paginationData = data?.data?.products
     ? {
@@ -103,7 +100,6 @@ const InventoryTable = () => {
     // @ts-ignore
     setAppliedFilters(updatedFilters);
   };
-  
 
   const locations = Array.from(
     new Set(
@@ -117,7 +113,7 @@ const InventoryTable = () => {
     {
       header: "Product",
       accessorKey: "name",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -140,17 +136,17 @@ const InventoryTable = () => {
     {
       header: "SKU",
       accessorKey: "sku",
-      enableSorting: false, 
+      enableSorting: false,
     },
     {
       header: "Location",
       accessorKey: "location",
-      enableSorting: false, 
+      enableSorting: false,
     },
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         const available = props.row.original.stockLevel;
         const supplied = props.row.original.quantitySupplied;
@@ -179,11 +175,11 @@ const InventoryTable = () => {
         </Text>
       ),
     },
-    
+
     {
       header: "Date",
       accessorKey: "date",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <div className="text-gray-600 whitespace-nowrap break-words ">
           {/* @ts-ignore */}
@@ -196,11 +192,11 @@ const InventoryTable = () => {
       accessorKey: "stock_status", // ✅ Correct key
       enableSorting: false,
       cell: (props) => {
-        // @ts-ignore  
+        // @ts-ignore
         const status = props.row.original.stock_status?.toLowerCase();
-    
+
         const statusStyles = {
-          "available": {
+          available: {
             bg: "bg-[#ECFDF3]",
             text: "text-[#027A48]",
             dot: <PaidDot />,
@@ -216,13 +212,13 @@ const InventoryTable = () => {
             dot: <UnpaidDot />,
           },
         };
-        // @ts-ignore  
+        // @ts-ignore
         const { bg, text, dot } = statusStyles[status] || {
           bg: "bg-gray-100",
           text: "text-gray-600",
           dot: <UnpaidDot />,
         };
-    
+
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bg} ${text}`}
@@ -232,13 +228,12 @@ const InventoryTable = () => {
           </div>
         );
       },
-    }
-    
-,    
+    },
+
     {
       header: "",
       accessorKey: "action",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         return (
           <Link
@@ -286,12 +281,11 @@ const InventoryTable = () => {
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">
-                {mappedProducts.length}
-                <span className="ml-2">Product</span>
+                {paginationData?.total} <span className="ml-2">Product</span>
               </Text>
             </div>
           </div>
-        } 
+        }
       />
     </main>
   );

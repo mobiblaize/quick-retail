@@ -1,4 +1,4 @@
-import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer } from "recharts";
+import { PieChart, Pie, Cell, Tooltip, ResponsiveContainer,  } from "recharts";
 import { Divider, Text } from "@mantine/core";
 
 interface Customer {
@@ -72,7 +72,8 @@ const DivisionSaleChartReport = ({ customers }: Props) => {
     outerRadius,
     percent,
   }: any) => {
-    if (percent === 0) return null;
+    // if (percent === 0) return null;
+    if (percent < 0.1) return null;
 
     const RADIAN = Math.PI / 180;
     const radius = outerRadius + 1.2;
@@ -86,7 +87,7 @@ const DivisionSaleChartReport = ({ customers }: Props) => {
         fill="black"
         textAnchor={x > cx ? "start" : "end"}
         dominantBaseline="central"
-        fontSize={12}
+        fontSize={16}
       >
         {(percent * 100).toFixed(1)}%
       </text>
@@ -120,6 +121,11 @@ const DivisionSaleChartReport = ({ customers }: Props) => {
                   `₦${Number(value).toLocaleString()}`
                 }
               />
+              {/* <LabelList
+    dataKey="name"
+    position="outside"
+    style={{ fontSize: 12 }}
+  /> */}
             </PieChart>
           </ResponsiveContainer>
         ) : (

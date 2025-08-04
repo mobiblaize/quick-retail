@@ -84,7 +84,18 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
       }
     );
   };
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove any non-numeric characters
+    let value = e.target.value.replace(/[^0-9]/g, "");
 
+    // Restrict the length to 11 digits
+    if (value.length > 11) {
+      value = value.slice(0, 11); // Truncate to 11 digits
+    }
+
+    setPhoneNumber(value);
+  };
+  
   return (
     <Modal
       opened={opened}
@@ -132,7 +143,8 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           placeholder="Enter phone number"
           paddingY={6}
           value={phoneNumber}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+          onChange={handlePhoneNumberChange} 
         />
         <FormInput
           label="Address (Optional)"

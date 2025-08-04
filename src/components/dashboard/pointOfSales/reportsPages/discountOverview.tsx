@@ -69,7 +69,7 @@ const DiscountOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
           <Text size="xl" fw={600} c="textSecondary.9">
             Discount overview
           </Text>
-          <Text size="sm">An overview of discounts on your stores.</Text>
+          <Text size="sm" className="text-gray-600 font-normal mb-4">An overview of discounts on your stores.</Text>
         </div>
       </header>
 

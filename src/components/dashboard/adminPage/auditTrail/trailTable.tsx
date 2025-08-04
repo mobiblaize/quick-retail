@@ -63,7 +63,7 @@ const TrailTable = ({
         )
       );   
       
-      console.log("📦 modules", modules);
+     
 
   const columns: ColumnDef<any>[] = [
     {

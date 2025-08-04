@@ -40,7 +40,7 @@ const RefundAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
         <Text size="xl" fw={600} c="textSecondary.9" mb={2}>
           Most Returned Products (Pie Chart)
         </Text>
-        <Text className="secondary font-normal mb-4">
+        <Text size="sm" className="text-gray-600 font-normal mb-4">
           See which products are most frequently returned.
         </Text>
         <DivisionReturnsChartReport
@@ -52,10 +52,10 @@ const RefundAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
       {!locationId && (
         <div className="w-full lg:w-[50%] h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
           <Text size="xl" fw={600} c="textSecondary.9" mb={2}>
-            Returns by Store (Bar Chart)
+            Returns
           </Text>
-          <Text className="secondary font-normal mb-4">
-            See resolved and declined returns stacked for each store.
+          <Text size="sm" className="text-gray-600 font-normal mb-4">
+          See how your products are being returned in stores.
           </Text>
           {/* @ts-ignore */}
           <LocationBarChart data={Stores} />
@@ -68,7 +68,7 @@ const RefundAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
           <Text size="xl" fw={600} c="textSecondary.9" mb={2}>
             Returns
           </Text>
-          <Text className="secondary font-normal mb-4">
+          <Text size="sm" className="text-gray-600 font-normal mb-4">
             See how your products are being returned .
           </Text>
 
