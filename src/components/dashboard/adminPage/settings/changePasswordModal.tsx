@@ -1,4 +1,10 @@
-import { Modal, Button, Text, Box, PasswordInput } from "@mantine/core";
+import {
+  Modal,
+  Button,
+  Text,
+  Box,
+  PasswordInput,
+} from "@mantine/core";
 import { useState } from "react";
 import { useChangePassword } from "../../../../hooks/backendApis/admin/settings";
 
@@ -11,9 +17,11 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
   const [currentPassword, setCurrentPassword] = useState("");
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
-  const [, setErrorMessage] = useState("");
-  const [, setSuccessMessage] = useState("");
-  //   @ts-ignore
+  const [errorMessage, setErrorMessage] = useState("");
+  const [successMessage, setSuccessMessage] = useState("");
+  const [passwordMismatchError, setPasswordMismatchError] = useState("");
+
+  // @ts-ignore
   const { mutate, isLoading } = useChangePassword();
 
   const isValid =
@@ -25,6 +33,12 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
   const handleSubmit = () => {
     setErrorMessage("");
     setSuccessMessage("");
+    setPasswordMismatchError("");
+
+    if (newPassword !== confirmPassword) {
+      setPasswordMismatchError("Passwords do not match.");
+      return;
+    }
 
     mutate(
       {
@@ -107,25 +121,42 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
           classNames={sharedLabel}
         />
 
-        <PasswordInput
-          label="Confirm New Password"
-          placeholder="Re-enter new password"
-          value={confirmPassword}
-          onChange={(e) => setConfirmPassword(e.currentTarget.value)}
-          withAsterisk
-          radius="md"
-          size="md"
-          styles={sharedStyles}
-          classNames={sharedLabel}
-        />
-
-        <div className="flex justify-center gap-[2em] mt-8">
-          <Button
-            variant="outline"
-            onClick={onClose}
+        <div>
+          <PasswordInput
+            label="Confirm New Password"
+            placeholder="Re-enter new password"
+            value={confirmPassword}
+            onChange={(e) => {
+              setConfirmPassword(e.currentTarget.value);
+              setPasswordMismatchError(""); // Clear error on typing
+            }}
+            withAsterisk
+            radius="md"
             size="md"
-            className="px-6 py-3 text-base min-w-[150px] rounded-lg"
-          >
+            styles={sharedStyles}
+            classNames={sharedLabel}
+          />
+          {passwordMismatchError && (
+            <Text c="red" size="sm" className="mt-1">
+              {passwordMismatchError}
+            </Text>
+          )}
+        </div>
+
+        {errorMessage && (
+          <Text c="red" size="sm" className="mt-1 text-center">
+            {errorMessage}
+          </Text>
+        )}
+
+        {successMessage && (
+          <Text c="green" size="sm" className="mt-1 text-center">
+            {successMessage}
+          </Text>
+        )}
+
+        <div className="flex gap-4 mt-[2em] justify-center rounded-lg">
+          <Button variant="outline" onClick={onClose}>
             No
           </Button>
 
@@ -133,8 +164,6 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
             onClick={handleSubmit}
             disabled={!isValid || isLoading}
             loading={isLoading}
-            size="md"
-            className="px-6 py-3 text-base min-w-[150px] rounded-lg"
           >
             Save
           </Button>

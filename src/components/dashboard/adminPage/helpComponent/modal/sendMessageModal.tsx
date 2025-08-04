@@ -31,10 +31,16 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
   const [concern, setConcern] = useState("");
   const [message, setMessage] = useState("");
   const [file, setFile] = useState<File | null>(null);
+  const [error, setError] = useState("");
+
+  const validateEmail = (value: string) => {
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    return emailRegex.test(value);
+  };
 
   const isValid =
     email.trim() !== "" && concern !== "" && message.trim() !== "";
-    //@ts-ignore
+  //@ts-ignore
   const { mutate: sendHelp, isLoading } = useHelp();
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -58,6 +64,15 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
       }
     }
 
+    if (!validateEmail(email)) {
+      setError("Please enter a valid email address.");
+      return;
+    }
+
+    // Proceed with your action here (e.g., submit form)
+    console.log("Valid email:", email);
+    setError("");
+
     const payload = {
       email,
       message,
@@ -65,42 +80,42 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
       file: base64File,
     };
 
-//     sendHelp(payload, {
-//         onSuccess: () => {
-//           notifications.show({
-//             title: "Success",
-//             message: "Message sent successfully",
-//             color: "green",
-//           });
-      
-//           // clear and close
-//           setEmail("");
-//           setConcern("");
-//           setMessage("");
-//           setFile(null);
-//           onClose();
-//         },
-//         onError: (err) => {
-//           console.error("Support request failed", err);
-//         },
-//       });
-      
-//   };
+    //     sendHelp(payload, {
+    //         onSuccess: () => {
+    //           notifications.show({
+    //             title: "Success",
+    //             message: "Message sent successfully",
+    //             color: "green",
+    //           });
 
-sendHelp(payload, {
-    onSuccess: () => {
-      // clear and close
-      setEmail("");
-      setConcern("");
-      setMessage("");
-      setFile(null);
-      onClose();
-    },
-    onError: (err) => {
-      console.error("Support request failed", err);
-    },
-  });
-};
+    //           // clear and close
+    //           setEmail("");
+    //           setConcern("");
+    //           setMessage("");
+    //           setFile(null);
+    //           onClose();
+    //         },
+    //         onError: (err) => {
+    //           console.error("Support request failed", err);
+    //         },
+    //       });
+
+    //   };
+
+    sendHelp(payload, {
+      onSuccess: () => {
+        // clear and close
+        setEmail("");
+        setConcern("");
+        setMessage("");
+        setFile(null);
+        onClose();
+      },
+      onError: (err) => {
+        console.error("Support request failed", err);
+      },
+    });
+  };
 
   return (
     <Modal
@@ -110,19 +125,30 @@ sendHelp(payload, {
         <Text fw={600} size="lg" c="#101928">
           Contact Support
           <Text fw={600} size="sm" c="#667185">
-          Fill the information below to contact support.
-        </Text>
+            Fill the information below to contact support.
+          </Text>
         </Text>
       }
       radius="lg"
       centered
     >
       <Box className="space-y-4">
-        <TextInput
+        {/* <TextInput
           label="Email"
           placeholder="Enter email"
           value={email}
           onChange={(e) => setEmail(e.currentTarget.value)}
+          required
+        /> */}
+        <TextInput
+          label="Email"
+          placeholder="Enter email"
+          value={email}
+          onChange={(e) => {
+            setEmail(e.currentTarget.value);
+            if (error) setError(""); // Clear error on change
+          }}
+          error={error}
           required
         />
 
@@ -190,7 +216,7 @@ sendHelp(payload, {
         </div>
 
         {/* Footer buttons */}
-        <div key="buttons" className="flex gap-4 mt-[2em] justify-center">
+        <div key="buttons" className="flex mt-[2em] justify-between items-center m-auto w-[60%]">
           <Button variant="outline-primary" onClick={onClose}>
             No
           </Button>
@@ -201,7 +227,7 @@ sendHelp(payload, {
             disabled={!isValid || isLoading}
             loading={isLoading}
           >
-            Save
+            Send
           </Button>
         </div>
       </Box>

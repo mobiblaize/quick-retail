@@ -4,7 +4,7 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
-import { , truncateText } from "../../../../utils/helpers";
+import { truncateText } from "../../../../utils/helpers";
 
 
 const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {

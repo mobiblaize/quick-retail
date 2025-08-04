@@ -5,7 +5,7 @@ import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import TanTable from "../../../General/table";
 import { useEffect, useState } from "react";
-import { , shortenTransactionId } from "../../../../utils/helpers";
+import { shortenTransactionId } from "../../../../utils/helpers";
 import { TableRowData } from "../../../../types";
 
 const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
