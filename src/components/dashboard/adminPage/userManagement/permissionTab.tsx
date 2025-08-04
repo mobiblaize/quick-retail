@@ -2,10 +2,10 @@ import { Lock } from "lucide-react";
 
 const tabs = [
   { label: "Point of Sales", locked: false },
-  { label: "Finance Management", locked: true },
-  { label: "Procurement", locked: true },
-  { label: "Asset Management", locked: true },
-  { label: "Reports", locked: true },
+  // { label: "Finance Management", locked: true },
+  // { label: "Procurement", locked: true },
+  // { label: "Asset Management", locked: true },
+  // { label: "Reports", locked: true },
 ];
 
 export default function PermissionsTab({ active, onChange }: { active: string; onChange: (val: string) => void }) {
