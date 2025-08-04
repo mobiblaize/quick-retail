@@ -50,7 +50,7 @@ const ReturnsTable = ({
     pending: "Pending",
     declined: "Declined",
   };
-  
+
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
     productCode: item.product_variation?.sku || "N/A",
@@ -220,7 +220,8 @@ const ReturnsTable = ({
                 Logged Returns
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{mappedReturns.length}</Text>
+                <Text c="customPrimary.10">{paginationData?.total}</Text>
+      
               </div>
             </div>
           }

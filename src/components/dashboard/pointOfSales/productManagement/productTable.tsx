@@ -236,43 +236,7 @@ const ProductTable = ({
       accessorKey: "action",
       enableSorting: false, 
       cell: (props) => (
-        // <Menu shadow="md" width={150} position="bottom-end">
-        //   <Menu.Target>
-        //     <Button variant="subtle" size="xs" p={1}>
-        //       <MoreVertical size={20} className="cursor-pointer" />
-        //     </Button>
-        //   </Menu.Target>
-
-        //   <Menu.Dropdown>
-        //     <Menu.Item>
-        //       <Link
-        //         to={ROUTES.viewProduct}
-        //         state={{ variationID: props.row.original.variationID }}
-        //       >
-        //         View
-        //       </Link>
-        //     </Menu.Item>
-        //     <Menu.Item>
-        //       <Link
-        //         to={ROUTES.editProduct}
-        //         state={{ variationID: props.row.original.variationID }}
-        //         onClick={() => handleProductEdit(props.row.original)}
-        //       >
-        //         Edit
-        //       </Link>
-        //     </Menu.Item>
-        //     <Menu.Item
-        //       color="red"
-        //       onClick={() => {
-        //         //@ts-ignore
-        //         setSelectedId(props.row.original.variationID); // Ensure the correct product is selected
-        //         setIsDeleteOpen(true);
-        //       }}
-        //     >
-        //       Delete
-        //     </Menu.Item>
-        //   </Menu.Dropdown>
-        // </Menu>
+       
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <Button variant="subtle" size="xs" p={1}>
@@ -353,7 +317,7 @@ const ProductTable = ({
                   Products
                 </Text>
                 <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                  <Text c="customPrimary.10">{products.length}</Text>
+                <Text c="customPrimary.10">{paginationData?.total}</Text>
                 </div>
               </div>
             }

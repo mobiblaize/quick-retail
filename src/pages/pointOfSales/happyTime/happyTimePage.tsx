@@ -39,7 +39,7 @@ const HappyTimePage = () => {
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     status: mapOrderStatus(filters.discountStatus),
-    types: filters.type === 'all' || !filters.type ? "" : filters.type, 
+    types: filters.type === undefined ? "" : filters.type,
     page: currentPage.toString(), 
   });
   

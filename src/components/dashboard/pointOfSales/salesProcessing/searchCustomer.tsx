@@ -5,6 +5,8 @@ import { useState, useEffect, ReactNode } from "react";
 import { useSearchAllCustomers } from "../../../../hooks/backendApis/pos/products";
 import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import { notifications } from "@mantine/notifications";
+import { useOrderStore } from "../../../../hooks/useOrderStore";
+
 
 interface CustomerData {
   customer_phone: ReactNode;
@@ -24,9 +26,12 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   initialCustomerId,
   initialCustomerName,
 }) => {
+  const { customer, setCustomer } = useOrderStore();
   const [isExpanded, setIsExpanded] = useState(true);
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
-  const [searchTerm, setSearchTerm] = useState(initialCustomerName || "");
+  // const [searchTerm, setSearchTerm] = useState(initialCustomerName || "");
+  const [searchTerm, setSearchTerm] = useState(initialCustomerName || customer?.name || "");
+
 
   const [newCustomer, setNewCustomer] = useState({
     customer_name: "",
@@ -57,7 +62,11 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
           setSearchTerm(newCustomer.customer_name);
           setIsAddingCustomer(false);
 
-          // ✅ Show success notification
+          setCustomer({
+            id: customerID,
+            name: newCustomer.customer_name,
+          });
+
           notifications.show({
             title: "Customer Created",
             message: `${newCustomer.customer_name} has been added successfully.`,
@@ -77,8 +86,13 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   };
 
   // const [searchTerm, setSearchTerm] = useState("");
+  // const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
+  //   null
+  // );
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
-    null
+    customer?.id
+      ? { customerID: customer.id, customer_name: customer.name, customer_email: '', customer_phone: '' }
+      : null
   );
 
   const toggleExpand = () => setIsExpanded(!isExpanded);
@@ -111,7 +125,12 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   const handleSelectCustomer = (customer: CustomerData) => {
     setSelectedCustomer(customer);
     setSearchTerm(customer.customer_name);
-    onCustomerSelect(customer.customerID); // <-- Pass customerID to parent here
+    onCustomerSelect(customer.customerID);
+
+    setCustomer({
+      id: customer.customerID,
+      name: customer.customer_name,
+    });
   };
   return (
     <main className="w-full h-auto rounded-lg bg-white">

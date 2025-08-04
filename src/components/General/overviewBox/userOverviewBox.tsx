@@ -2,12 +2,10 @@ import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../filterMenu";
 import AnalyticsCard from "../card";
 import { useEffect, useState } from "react";
-// import dollar from "../../../assets/images/dollarSign.png";
-// import orders from "../../../assets/images/orders.png";
-import customer from "../../../assets/images/customers.png";
+import customer from "../../../assets/images/RedBodies.png";
 import { useFetchUsers } from "../../../hooks/backendApis/admin/userManagement";
 
-const UserOverviewBox = () => {
+const  UserOverviewBox = () => {
   const [isMobile, setIsMobile] = useState(false);
   const [dateRange, setDateRange] = useState<{
     start_date: string;
@@ -28,7 +26,7 @@ const UserOverviewBox = () => {
     checkScreenSize();
     window.addEventListener("resize", checkScreenSize);
     return () => window.removeEventListener("resize", checkScreenSize);
-  }, []);
+  }, [])
 
   const stats = data?.data?.stats || {
     totalUsers: 0,

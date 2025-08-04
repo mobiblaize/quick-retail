@@ -96,7 +96,7 @@ const RetunsRefundsReportPage = () => {
       head: [["Approved", "Store", "Total Refunded"]],
       body: (reportData?.data?.location_status || []).map((p: any) => [
         p.approved,
-        p.store,
+        p.location_name,
         p.total_refunded,
       ]),
       theme: "grid",
@@ -158,7 +158,7 @@ const RetunsRefundsReportPage = () => {
       ["Approved", "Store", "Total Refunded"],
       ...(reportData?.data?.location_status || []).map((p: any) => [
         p.approved,
-        p.store,
+        p.location_name,
         p.total_refunded,
       ]),
       [],

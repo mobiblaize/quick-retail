@@ -4,7 +4,7 @@ import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
-import { shortenTransactionId, truncateText } from "../../../../utils/helpers";
+import { truncateText } from "../../../../utils/helpers";
 
 
 const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
@@ -16,18 +16,19 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
 
   useEffect(() => {
     const returnsArray = reportData?.data?.returns?.data;
-
+    const storeName = reportData?.data?.location_status?.[0]?.location_name || "N/A";
     if (Array.isArray(returnsArray)) {
       const formattedData = returnsArray.map((item: any) => ({
         fullOrderId: item["Order ID"],
-        id: shortenTransactionId(item["Order ID"]),
-        productId: shortenTransactionId(item["Product ID"]),
+        id: (item["Order ID"]),
+        productId:(item["Product ID"]),
         items: 1,
         dateReturned: item["Date Returned"],
         customer: item["Customer Name"],
         product: item["Product name"],
         returnedReason: item["Reason"],
         imageUrl: item["Image"],
+        store: storeName,
         complaintStatus:
           item["Status"] === "Approved"
             ? "Resolved"
@@ -79,7 +80,7 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
     //   size: 10,
     // },
     {
-      header: "Name",
+      header: "Product Returned",
       accessorKey: "name",
       enableSorting: false, 
       cell: ({ row }) => (
@@ -102,6 +103,15 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
             </Text>
           </div>
         </div>
+      ),
+    },
+
+    {
+      header: "Store",
+      accessorKey: "store",
+      enableSorting: false, 
+      cell: ({ row }) => (
+        <Text c="textSecondary.7">{row.original.store}</Text> 
       ),
     },
 

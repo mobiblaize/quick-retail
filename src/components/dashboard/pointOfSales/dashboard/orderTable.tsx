@@ -66,7 +66,8 @@ const CustomerOrdersTable = ({
       };
     })
   : [];
-  
+
+
 
   const navigate = useNavigate();
 
@@ -79,6 +80,31 @@ const CustomerOrdersTable = ({
       console.warn("Unhandled order status:", status);
     }
   };
+  
+  const defaultFilterValues: FilterValues = {
+    startDate: "",
+    endDate: "",
+    location: "",
+    category: "",
+    stockFrom: "",
+    stockTo: "",
+    orderStatus: "All",
+    priceFrom: "",
+    priceTo: "",
+    paymentStatus: "All",
+    productStatus: "All",
+    reason: "all",
+    type: "all",
+    discountStatus: "All",
+    returnStatus: "All",
+    role: "",
+    module: "",
+  };
+  
+  // const [appliedFilters, setAppliedFilters] = useState<FilterValues>(defaultFilterValues);
+  
+  const isFilterActive = JSON.stringify(appliedFilters) !== JSON.stringify(defaultFilterValues);
+  
    
   const columns: ColumnDef<any>[] = [
    
@@ -200,12 +226,13 @@ const CustomerOrdersTable = ({
         onSortChange={handleSortChange}
         activeSort={sortBy} 
         length={8}   
+        
         tableType="sales"
         onFilterChange={onFilterChange}
         serverSidePagination={true}
         paginationData={paginationData}
         onPageChange={onPageChange}
-                     
+        isFilterActive={isFilterActive}           
         // sortOptions={[
         //   {
         //     key: "products",
@@ -222,7 +249,7 @@ const CustomerOrdersTable = ({
               Orders
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{tableData.length}</Text>
+            <Text c="customPrimary.10">{paginationData?.total}</Text>
             </div>
           </div>
         }
