@@ -61,13 +61,14 @@ const DivisionDiscountChartReport = ({ discounts }: Props) => {
   const renderCustomizedLabel = ({
     cx, cy, midAngle, outerRadius, percent
   }: any) => {
+    if (percent < 0.1) return null;
     const RADIAN = Math.PI / 180;
     const radius = outerRadius + 20;
     const x = cx + radius * Math.cos(-midAngle * RADIAN);
     const y = cy + radius * Math.sin(-midAngle * RADIAN);
 
     return (
-      <text x={x} y={y} fill="black" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={12}>
+      <text x={x} y={y} fill="black" textAnchor={x > cx ? "start" : "end"} dominantBaseline="central" fontSize={16}>
         {(percent * 100).toFixed(1)}%
       </text>
     );

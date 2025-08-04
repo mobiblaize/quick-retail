@@ -2,12 +2,12 @@ import { FC } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch, Loader } from "@mantine/core";
 import TanTable, { PaginationData } from "../../../General/table";
-import { storeTargetOrder } from "../../../../utils/mockData";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { TableRowData } from "../../../../types";
 import { useToggleStore } from "../../../../hooks/backendApis/pos/storeManagement";
 import { shortenTransactionId } from "../../../../utils/helpers";
+import { notifications } from '@mantine/notifications';
 
 type StoreData = {
   id: string;
@@ -140,15 +140,27 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
         const handleSwitchToggle = () => {
           toggleMutation.mutate(undefined, {
             onSuccess: () => {
-              props.row.original.is_active = isActive ? 0 : 1;
-
+              const newStatus = isActive ? 0 : 1;
+              props.row.original.is_active = newStatus;
               refetchStores?.();
+        
+              notifications.show({
+                title: 'Store status updated',
+                message: `Store ${newStatus === 1 ? 'Activated' : 'Deactivated'}.`,
+                color: newStatus === 1 ? 'green' : 'red', 
+              });
             },
             onError: (err) => {
               console.error("Toggle failed", err);
+              notifications.show({
+                title: 'Error',
+                message: 'Failed to update store status. Please try again.',
+                color: 'red',
+              });
             },
           });
         };
+        
 
         const dotClass = isActive ? "bg-[#27ae60]" : "bg-[#94a3b8]";
         const statusText = isActive ? "Active" : "Inactive";
@@ -214,7 +226,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
                 Stores Overview
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{storeTargetOrder.length}</Text>
+              <Text c="customPrimary.10">{paginationData?.total}</Text>
               </div>
             </div>
           }

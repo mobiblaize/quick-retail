@@ -74,7 +74,7 @@ const ReturnsReportAnalytics = ({ reportInfo }: SalesOverviewReportProps) => {
           <Text size="xl" fw={600} c="textSecondary.9">
             Returns overview
           </Text>
-          <Text size="sm">An overview of returns and refunds</Text>
+          <Text size="sm" className="text-gray-600 font-normal mb-4">An overview of returns and refunds</Text>
         </div>
       </header>
 

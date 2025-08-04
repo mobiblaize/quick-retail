@@ -54,7 +54,7 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
             <Text size="xl" fw={600} c="textSecondary.9">
               Sales by Customers
             </Text>
-            <Text size="lg" fw={600} c="gray">
+            <Text size="sm" className="text-gray-600 font-normal mb-4">
               See how your customers are buying
             </Text>
           </div>
@@ -70,7 +70,7 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
           <Text size="xl" fw={600} c="textSecondary.9">
             Sales by Product
           </Text>
-          <Text className="secondary font-normal">
+          <Text size="sm" className="text-gray-600 font-normal mb-4">
             See how your products are selling.
           </Text>
         </div>

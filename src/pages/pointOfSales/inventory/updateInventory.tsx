@@ -43,36 +43,7 @@ const UpdateInventory = () => {
     })
   );
 
-  // const handleActivateInventory = () => {
-  //   const locationID = inventories?.product?.location?.locationID || "";
-  //   activateInventory.mutate(
-  //     {
-  //       locationID,
-  //       current_level,
-  //       new_stock_level,
-  //       new_reorder_level,
-  //       reason_for_update,
-  //     },
-  //     {
-  //       onSuccess: () => {
-  //         notifications.show({
-  //           title: "Trigger Reorder Sent",
-  //           message: "A reorder request has been sent to procurement. You will be notified when product has been restocked. ",
-  //           color: "green",
-  //         });
-  //         window.scrollTo({ top: 0, behavior: "smooth" });
-  //       },
-  //       onError: (error: any) => {
-  //         notifications.show({
-  //           title: "Error",
-  //           message:
-  //             error?.response?.data?.message || "Failed to activate inventory",
-  //           color: "red",
-  //         });
-  //       },
-  //     }
-  //   );
-  // };
+
 
   const navigate = useNavigate();
   const subHeaders = () => {

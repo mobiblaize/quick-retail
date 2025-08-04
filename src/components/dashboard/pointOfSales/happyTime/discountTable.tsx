@@ -30,7 +30,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
     const updatedFilters = {
       ...appliedFilters,
       sortBy: sortKey,
-    };
+    }; 
 
     setAppliedFilters(updatedFilters);
     onFilterChange(updatedFilters);
@@ -163,7 +163,9 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
               Discounted Products
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{discounts.length}</Text>
+
+
+              <Text c="customPrimary.10">{paginationData?.total}</Text>
             </div>
           </div>
         }

@@ -222,15 +222,9 @@ const ProductReportPage = () => {
         key="1"
         className="py-2.5 flex flex-wrap justify-between items-center gap-3  "
       >
-        <div className="flex gap-8 items-center">
+        <div className="flex gap-[3em] items-center">
           {backButton}
-          {/* <div className="flex items-center">
-            <Text>Reports</Text>
-            <span className="mx-2">/</span>
-            <Text c="black" fw={500}>
-            Products Report
-            </Text>
-          </div> */}
+        
         </div>
         <div className="flex items-center gap-3 pr-[3em]">
           <Dropdown
@@ -268,7 +262,7 @@ const ProductReportPage = () => {
               {selectedStore?.name || "All Stores"}
             </span>
           </Text>
-        )}c
+        )}
       </div>
       <ProductOverviewReport reportInfo={reportInfo} />
       <ProductCustomerAnalysis reportInfo={reportInfo} />

@@ -23,7 +23,7 @@ const AllOrders: React.FC<AllOrdersProps> = ({ store }) => {
   return (
     <main className="grid grid-cols-1 gap-6">
      <StoreOverview store={store} statData={statData?.data?.stats} />
-      <StoreDetails store={store} />
+     <StoreDetails store={{ ...store, locationID: store?.locationID }} />
       <StoreOrderTable
         locationId={store?.locationID}
         // startDate={start.toISOString().split("T")[0]}

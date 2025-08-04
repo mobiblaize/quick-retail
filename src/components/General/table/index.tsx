@@ -71,6 +71,7 @@ export interface TanTableProps<T extends Record<string, any>> {
   paginationData?: PaginationData;
   onPageChange?: (page: number) => void;
   serverSidePagination?: boolean;
+  isFilterActive?:  boolean;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -100,6 +101,8 @@ const TanTable = <T extends Record<string, any>>({
   paginationData,
   onPageChange,
   serverSidePagination = false,
+  isFilterActive = true,
+
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
@@ -107,7 +110,7 @@ const TanTable = <T extends Record<string, any>>({
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
   const [showAll, setShowAll] = useState<boolean>(false);
   const [showFilterDropdown, setShowFilterDropdown] = useState(false);
-  const [filtersApplied, setFiltersApplied] = useState(false);
+  const [filtersApplied, setFiltersApplied] = useState(isFilterActive);
 
   const tableData = useMemo(() => data, [data]);
   const columns = useMemo(() => columnData, [columnData]);
@@ -222,7 +225,6 @@ const TanTable = <T extends Record<string, any>>({
     if (!selectedFilter || typeof selectedFilter !== "string") {
       return;
     }
-    // For server-side pagination, you might want to trigger a search API call here
     setPageIndex(0);
   };
 
@@ -248,7 +250,7 @@ const TanTable = <T extends Record<string, any>>({
   const handleNextPage = () => {
     if (serverSidePagination) {
       if (paginationData?.next_page_url) {
-        onPageChange?.(currentPage + 2); // +2 because currentPage is 0-based and we want next page
+        onPageChange?.(currentPage + 2);
       }
     } else {
       table.nextPage();
@@ -277,19 +279,37 @@ const TanTable = <T extends Record<string, any>>({
   const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
     ? baseSortOptions.filter((opt) => opt.key !== "a-z" && opt.key !== "z-a")
     : baseSortOptions;
+    
 
-  // useEffect(() => {
-  //   console.log("filtersApplied changed:", filtersApplied);
-  // }, [filtersApplied]);
 
-  const isFilterActive = (filters: FilterValues): boolean => {
-    return Object.entries(filters).some(([value]) => {
-      if (typeof value === "string") {
-        return value.trim() !== "" && value !== "All" && value !== "all";
-      }
-      return !!value;
+    useEffect(() => {
+      setFiltersApplied(isFilterActive);
+    }, [isFilterActive]);
+
+  const resetFilter = () => {
+    onFilterChange?.({
+      startDate: "",
+      endDate: "",
+      location: "",
+      category: "",
+      stockFrom: "",
+      stockTo: "",
+      orderStatus: "All",
+      priceFrom: "",
+      priceTo: "",
+      paymentStatus: "All",
+      productStatus: "All",
+      reason: "all",
+      type: "all",
+      discountStatus: "All",
+      returnStatus: "All",
+      role: "",
+      module: "",
     });
+    setFiltersApplied(false);
+    setShowFilterDropdown(false);
   };
+  console.log("filtersApplied:", filtersApplied);
 
   return (
     <Box className="font-sans">
@@ -362,29 +382,11 @@ const TanTable = <T extends Record<string, any>>({
                   <button
                     onClick={() => {
                       if (filtersApplied) {
-                        onFilterChange?.({
-                          startDate: "",
-                          endDate: "",
-                          location: "",
-                          category: "",
-                          stockFrom: "",
-                          stockTo: "",
-                          orderStatus: "All",
-                          priceFrom: "",
-                          priceTo: "",
-                          paymentStatus: "All",
-                          productStatus: "All",
-                          reason: "all",
-                          type: "all",
-                          discountStatus: "All",
-                          returnStatus: "All",
-                          role: "",
-                          module: "",
-                        });
-                        setFiltersApplied(false);
-                        setShowFilterDropdown(false);
+                        resetFilter();
+                     
                       } else {
                         setShowFilterDropdown((prev) => !prev);
+                        setFiltersApplied(false);
                       }
                     }}
                     style={{
@@ -399,15 +401,9 @@ const TanTable = <T extends Record<string, any>>({
                       justifyContent: "center",
                     }}
                   >
-                    {!filtersApplied ||
-                    ![
-                      "inventory",
-                      "product",
-                      "sales",
-                      "returns",
-                      "discount",
-                      "audit",
-                    ].includes(tableType || "") ? (
+                    {filtersApplied ? (
+                      <span className="whitespace-nowrap">Reset Filter</span>
+                    ) : (
                       <div
                         style={{
                           display: "flex",
@@ -440,8 +436,6 @@ const TanTable = <T extends Record<string, any>>({
                           }}
                         />
                       </div>
-                    ) : (
-                      <span className="whitespace-nowrap">Reset Filter</span>
                     )}
                   </button>
 
@@ -460,27 +454,15 @@ const TanTable = <T extends Record<string, any>>({
                     >
                       {tableType === "sales" && (
                         <ReusableFilterComponent
-                          // onFilterChange={(filters) => {
-                          //   onFilterChange?.(filters);
-                          //   setShowFilterDropdown(false);
-                          //   console.log("Filter salesapplied:", filters);
-                          //   setFiltersApplied(true);
-                          // }}
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
-
-                            const hasFilters = isFilterActive(filters);
-                            console.log(
-                              "Filter sales applied:",
-                              filters,
-                              hasFilters
-                            );
-                            setFiltersApplied(hasFilters);
+                            setFiltersApplied(true);
                           }}
                           showPrice={true}
                           showPaymentStatus={true}
                           filterType={"sales"}
+                       
                         />
                       )}
 
@@ -504,7 +486,6 @@ const TanTable = <T extends Record<string, any>>({
                           onFilterChange={(filters) => {
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
-                            console.log("Filter productapplied:", filters);
                             setFiltersApplied(true);
                           }}
                           locations={locations}
@@ -523,6 +504,7 @@ const TanTable = <T extends Record<string, any>>({
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
                             setFiltersApplied(true);
+                            console.log("FILTERS SELECTED:", filters);
                           }}
                           showDiscountType={true}
                           showDiscountStatus={true}

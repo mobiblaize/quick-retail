@@ -70,7 +70,7 @@ const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
           <Text size="xl" fw={600} c="textSecondary.9">
             Sales overview
           </Text>
-          <Text size="sm">This is an overview summarizing sales</Text>
+          <Text size="sm" className="text-gray-600 font-normal mb-4">This is an overview summarizing sales</Text>
         </div>
       </header>
 
