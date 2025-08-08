@@ -1,7 +1,8 @@
-import { Checkbox, Card, Group, Text, Box, Button } from "@mantine/core";
+import { Checkbox, Card, Group, Text, Box, Button, Tooltip } from "@mantine/core";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { HelpCircle } from "lucide-react";
 import { useEffect, useState } from "react";
+import { Modal } from "@mantine/core";
 import {
   billingTypeStore,
   totalPrice,
@@ -10,9 +11,11 @@ import {
 import { notifications } from "@mantine/notifications";
 
 const SubscriptionPlans = ({ data }: any) => {
+
   const setSelectedSub = useSetAtom(selectedSubs);
   const setTotal = useSetAtom(totalPrice);
   const selected = useAtomValue(selectedSubs);
+
 
   console.log(data);
 
@@ -76,6 +79,8 @@ const SubscriptionPlanCard = ({ data }: any) => {
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
   const setTotalPrice = useSetAtom(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
+  const [seatInfoOpen, setSeatInfoOpen] = useState(false);
+
 
   const isChecked = selectedSub.some((item: any) => item.id === data.id);
   const posIsSelected = selectedSub.some(
@@ -170,10 +175,13 @@ const SubscriptionPlanCard = ({ data }: any) => {
               : billingType === "monthly"
               ? "Month"
               : "Year"}
+            <Tooltip label="This indicates how often you will be billed for this subscription.">
             <HelpCircle
-              size={16}
-              style={{ display: "inline", verticalAlign: "middle" }}
-            />
+            size={16}
+             style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
+              onClick={() => setSeatInfoOpen(true)}
+             />
+            </Tooltip>
           </Text>
           {billingType === "trial" ? (
             <Text fw={500} c="#48464E">
@@ -189,12 +197,17 @@ const SubscriptionPlanCard = ({ data }: any) => {
         {/* Free Seats */}
         <Box style={{ minWidth: 120, textAlign: "center" }}>
           <Text size="sm" c="#6C6975" mb={2}>
-            User Seat (Free){" "}
-            <HelpCircle
-              size={16}
-              style={{ display: "inline", verticalAlign: "middle" }}
-            />
-          </Text>
+          User Seat (Free){" "}
+           <Tooltip label="This refers to the number of users that can access the application at no extra cost under your current plan.">
+  <HelpCircle
+    size={16}
+    style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
+    onClick={() => setSeatInfoOpen(true)}
+  />
+</Tooltip>
+
+</Text>
+
           <Text fw={600} c="#48464E">
             {data?.application?.free_access_users} Seats
           </Text>
@@ -207,10 +220,14 @@ const SubscriptionPlanCard = ({ data }: any) => {
         >
           <Text size="sm" c="#6C6975" mb={2}>
             Additional User Seat{" "}
+            <Tooltip label="These are extra user slots beyond the free seats provided. You can purchase these for a fee to allow more users access.">
             <HelpCircle
-              size={16}
-              style={{ display: "inline", verticalAlign: "middle" }}
-            />
+            size={16}
+             style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
+              onClick={() => setSeatInfoOpen(true)}
+             />
+</Tooltip>
+
           </Text>
           <Text fw={500} c="#48464E">
             (N {data?.price_per_seat} per seat)
@@ -267,6 +284,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
           </Group>
         </Box>
       </div>
+
     </Card>
   );
 };
