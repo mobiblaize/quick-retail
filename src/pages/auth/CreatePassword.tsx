@@ -5,6 +5,7 @@ import {
   Box,
   Text,
   Select,
+  Tooltip,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { usePostData } from "../../hooks/useApis";
@@ -89,7 +90,7 @@ const CreatePassword = () => {
 
   return (
     <AuthLayout>
-      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10 border border-gray-200">
+      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-15 border border-gray-200">
         {/* Logo */}
 
         {/* Title */}
@@ -122,6 +123,7 @@ const CreatePassword = () => {
               },
             }}
           />
+          <span className="font-light text-xs text-red-600">Password must contain at least 8 Characters, Uppercase, Lowercase, Symbol and Number  </span>
           <PasswordInput
             label="Confirm Password"
             placeholder="Confirm Password"
