@@ -1,6 +1,6 @@
 import { Checkbox, Card, Group, Text, Box, Button } from "@mantine/core";
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { HelpCircle } from "lucide-react";
+import { HelpCircle } from 'lucide-react';
 import { useEffect, useState } from "react";
 import {
   billingTypeStore,
@@ -13,27 +13,23 @@ const SubscriptionPlans = ({ data }: any) => {
   const setSelectedSub = useSetAtom(selectedSubs);
   const setTotal = useSetAtom(totalPrice);
   const selected = useAtomValue(selectedSubs);
-
   console.log(data);
 
   // 👉 Auto-select POS on mount if available
   useEffect(() => {
     if (!data) return;
-
     const posApp = data.find(
       (item: any) =>
         item?.application?.name === "Point of Sales Management System"
     );
-
-    if (posApp && !selected.some((s) => s.id === posApp.id)) {
+    if (posApp && !selected.some((s: any) => s.id === posApp.id)) {
       const updated = [
         ...selected,
         { ...posApp, additional_user_seat_number: 0 },
       ];
       setSelectedSub(updated);
-
       const total = updated.reduce(
-        (sum, item) =>
+        (sum: number, item: any) =>
           sum +
           (Number(item.amount || 0) +
             Number(item.additional_user_seat_number || 0) *
@@ -42,7 +38,7 @@ const SubscriptionPlans = ({ data }: any) => {
       );
       setTotal(total);
     }
-  }, [data]);
+  }, [data, selected, setSelectedSub, setTotal]); // Added dependencies for useEffect
 
   return (
     <Box
@@ -61,7 +57,7 @@ const SubscriptionPlans = ({ data }: any) => {
       >
         {data?.map((item: any) => (
           <Box key={item?.id} w="100%">
-            <SubscriptionPlanCard data={item} allPlans={data} />
+            <SubscriptionPlanCard data={item} /> {/* billingType is read from Jotai inside the card */}
           </Box>
         ))}
       </Group>
@@ -75,7 +71,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
   const [adminSeat, setAdminSeat] = useState(0);
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
   const setTotalPrice = useSetAtom(totalPrice);
-  const billingType = useAtomValue(billingTypeStore);
+  const billingType = useAtomValue(billingTypeStore); // billingType is correctly read here
 
   const isChecked = selectedSub.some((item: any) => item.id === data.id);
   const posIsSelected = selectedSub.some(
@@ -111,7 +107,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
     }
   };
 
-  const handleCheckboxChange = (e: any) => {
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => { // Added type for event
     let updated;
     if (e.target.checked) {
       updated = [
@@ -127,7 +123,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
   useEffect(() => {
     recalcTotal(selectedSub);
-  }, [billingType]);
+  }, [billingType, selectedSub, recalcTotal]); // Added dependencies for useEffect
 
   return (
     <Card
@@ -160,7 +156,6 @@ const SubscriptionPlanCard = ({ data }: any) => {
             </Text>
           </Box>
         </div>
-
         {/* Billing Info */}
         <Box style={{ minWidth: 120, textAlign: "center" }}>
           <Text size="sm" c="#6C6975" mb={2}>
@@ -181,11 +176,14 @@ const SubscriptionPlanCard = ({ data }: any) => {
             </Text>
           ) : (
             <Text fw={400} c="#48464E">
-              ( N {data?.amount?.toLocaleString()})
+              ( N{" "}
+              {billingType === "monthly"
+                ? Number(data?.total_monthly_amount || 0).toLocaleString()
+                : Number(data?.total_yearly_amount || 0).toLocaleString()
+              })
             </Text>
           )}
         </Box>
-
         {/* Free Seats */}
         <Box style={{ minWidth: 120, textAlign: "center" }}>
           <Text size="sm" c="#6C6975" mb={2}>
@@ -199,7 +197,6 @@ const SubscriptionPlanCard = ({ data }: any) => {
             {data?.application?.free_access_users} Seats
           </Text>
         </Box>
-
         {/* Additional Seats */}
         <Box
           style={{ minWidth: 180, textAlign: "center" }}

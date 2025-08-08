@@ -215,18 +215,18 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
           )}
         </div>
 
-        {/* Footer buttons */}
-        <div key="buttons" className="flex mt-[2em] justify-between items-center m-auto w-[60%]">
+
+
+
+        <div className="flex gap-4 mt-[2em] justify-center">
           <Button variant="outline-primary" onClick={onClose}>
             No
           </Button>
 
-          <Button
-            variant="filled-primary"
+          <Button variant="filled-primary"
             onClick={handleSubmit}
             disabled={!isValid || isLoading}
-            loading={isLoading}
-          >
+            loading={isLoading}>
             Send
           </Button>
         </div>

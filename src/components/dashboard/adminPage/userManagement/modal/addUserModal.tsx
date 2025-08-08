@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { X } from "lucide-react";
 import { useState } from "react";
 import {
@@ -58,7 +58,7 @@ export default function AddUserModal({ opened, onClose }: Props) {
 
     const validatePhoneNumber = (phone: string) => {
         const cleaned = phone.replace(/\D/g, ""); // remove non-digit characters
-        if (cleaned.length !== 10) {
+        if (cleaned.length !== 11) {
             return "Phone number must be exactly 10 digits";
         }
         return "";
@@ -118,10 +118,10 @@ export default function AddUserModal({ opened, onClose }: Props) {
                 </button>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Add New User</h2>
-                    <p className="text-sm text-gray-500 mb-6">
+                    <Text size="lg" fw={600} c="textSecondary.9">Add New User</Text>
+                    <Text size="sm" c="dimmed" mb="xl">
                         Enter the details below to add a new user
-                    </p>
+                    </Text>
 
                     <div className="space-y-4">
                         {/* Name */}

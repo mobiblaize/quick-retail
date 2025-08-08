@@ -96,3 +96,7 @@ export const useCreateRole = () => {
     },
   });
 };
+
+export const useFetchRoleUserCount = () => {
+  return useGetData("admin/roles/user-roles");
+};
