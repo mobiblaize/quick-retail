@@ -2,6 +2,8 @@ import { useState } from "react";
 // import { MoreVertical } from "lucide-react";
 import { useToggleRoleStatus } from "../../../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
+import { useFetchRoleUserCount } from "../../../../hooks/backendApis/admin/userManagement";
+import { Text } from "@mantine/core";
 
 interface RoleCardProps {
     initials: string;
@@ -17,13 +19,19 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
     id,
     // initials,
     title,
-    userCount,
     description,
     status: initialStatus,
     date,
     color = "#F9E0D7",
 }) => {
     const [status, setStatus] = useState(initialStatus);
+
+    // Fetch all role data
+    const { data: rolesData, isLoading: loadingCount } = useFetchRoleUserCount();
+
+    // Find this role's user count
+    const userCount =
+        rolesData?.data?.find((role: any) => role.id === Number(id))?.users_count ?? 0;
 
     const toggleRoleStatusMutation = useToggleRoleStatus();
     const isLoading = toggleRoleStatusMutation.status === "pending";
@@ -32,7 +40,7 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
         toggleRoleStatusMutation.mutate(Number(id), {
             onSuccess: (data) => {
                 const newStatus = data?.data?.is_active === 1;
-                setStatus(newStatus); // ✅ update local state
+                setStatus(newStatus);
                 notifications.show({
                     title: "Success",
                     message: data.message || "Role status updated successfully.",
@@ -72,18 +80,37 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
                 </div>
             </div>
 
-            <h3 className="text-sm font-semibold text-[#48464E] mb-2">{title}</h3>
+            <Text
+                component="h3"
+                size="sm"
+                fw={600}
+                c="#48464E"
+                mb="xs"
+            >
+                {title}
+            </Text>
 
-            <p className="text-[16px] text-[#908C9C] mb-2">
+            {/* <p className="text-[16px] text-[#908C9C] mb-2">
                 User Count: <span className="font-semibold text-[#48464E]">{userCount} People</span>
-            </p>
+            </p> */}
+            <Text fz="16px" c="#666" size="md" fw={400}>
+                User Count:{" "}
+                {/* <Text size="md" c="#48464E"> */}
+                {loadingCount ? "..." : `${userCount} People`}
+                {/* </Text> */}
+            </Text>
 
-            <p className="text-[16px] text-[#908C9C] mb-4">{description}</p>
+            <div className="mt-2">
+                <Text fz="16px" c="#908C9C" mb="md">
+                    {description}
+                </Text>
+            </div>
+
 
             {/* Status + Date */}
             <div className="flex justify-between items-center text-[16px] text-[#908C9C] mb-4">
                 <div>
-                    <p>Status:</p>
+                    <Text fw={600} size="md" c="#48464E" mb={2}>Status:</Text>
                 </div>
                 <div className="flex items-center gap-2">
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -101,8 +128,12 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
             </div>
 
             <div className="flex items-center justify-between">
-                <p className="text-[16px] text-[#908C9C]">Date Added:</p>
-                <p className="text-[#48464E]">{date}</p>
+                <Text fz="16px" c="#908C9C">
+                    Date Added:
+                </Text>
+                <Text c="#48464E">
+                    {date}
+                </Text>
             </div>
         </div>
     );

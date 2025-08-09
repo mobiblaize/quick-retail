@@ -3,6 +3,7 @@ import { useState } from "react";
 import { Link } from "react-router-dom";
 import CancelSubscriptionModal from "./cancelSubscription";
 import changeSub from "../../../../assets/images/changeSub.png";
+import { Flex, Text } from "@mantine/core";
 
 export default function ManageSubscription() {
   const [showCancel, setShowACancel] = useState(false);
@@ -30,10 +31,14 @@ export default function ManageSubscription() {
 
   return (
     <div className="bg-white rounded-lg shadow p-6 w-full lg:w-1/2">
-      <h2 className="text-lg font-medium mb-4">MANAGE SUBSCRIPTION</h2>
-      <p className="text-sm text-gray-500 mb-4">
-        Manage your subscription plans here
-      </p>
+      <div className="mb-4">
+        <Text size="lg" fw={600} c="secondary.9">MANAGE SUBSCRIPTION</Text>
+      </div>
+
+      <div className="mb-4">
+        <Text size="sm" fw={600} c="secondary.9">Manage your subscription plans here</Text>
+      </div>
+
       <div className="space-y-4">
         {actions.map((action) =>
           action.path ? (
@@ -42,13 +47,21 @@ export default function ManageSubscription() {
               to={action.path}
               className="flex items-center w-full border border-gray-300 px-4 py-3 rounded hover:bg-gray-50 text-left"
             >
-              <span className="mr-3 text-orange-500">{action.icon}</span>
-              <span className="text-sm text-gray-800">{action.label}</span>
+              {/* <span className="mr-3 text-orange-500">{action.icon}</span>
+              <span className="text-sm text-gray-800">{action.label}</span> */}
+              <Flex align="center"> 
+                <Text c="#F97316" mr={12}> 
+                  {action.icon}
+                </Text>
+                <Text size="sm" c="#1F2937"> 
+                  {action.label}
+                </Text>
+              </Flex>
             </Link>
           ) : (
             <button
               key={action.label}
-            //   @ts-ignore
+              //   @ts-ignore
               onClick={action.onClick}
               className="flex items-center w-full border border-gray-300 px-4 py-3 rounded hover:bg-gray-50 text-left"
             >

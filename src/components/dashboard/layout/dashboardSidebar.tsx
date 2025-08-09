@@ -1,4 +1,4 @@
-import { Card, List } from "@mantine/core";
+import { Card, List, Text } from "@mantine/core";
 import logo from "../../../assets/images/logo.png";
 import NavItem from "../../../layout/navItem";
 import {
@@ -60,12 +60,8 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
 
         <div className="mt-8 px-3 overflow-y-auto hide-scrollbar flex-1">
           <div className="mb-6 px-3 bg-[#F0F2F5] p-4 rounded-lg">
-            <div className="text-[#101928] font-medium text-lg">
-              {user?.firstname} {user?.lastname}
-            </div>
-            <div className="text-[#667185] text-md mt-1">
-              {user?.locations?.[0]?.name}
-            </div>
+            <Text size="lg" fw={600} c="textSecondary.9">{user?.firstname} {user?.lastname}</Text>
+            <Text fw={400} size="md" c="secondary">  {user?.locations?.[0]?.name}</Text>
           </div>
 
 

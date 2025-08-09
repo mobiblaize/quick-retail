@@ -36,9 +36,7 @@ const DivisionSalesOverview = () => {
             <Text size="xl" fw={600} c="textSecondary.9">
               Division Sale Overview
             </Text>
-            <span className="text-gray-400 font-normal">
-              An overview of sales made
-            </span>
+             <Text size="md" fw={400} c="secondary">An overview of sales made</Text>
           </div>
           <div className="flex items-center gap-2 sm:gap-4">
             <Group className="w-auto">

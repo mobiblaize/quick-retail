@@ -1,3 +1,5 @@
+import { Text } from "@mantine/core";
+
 interface ProfileDetailsProps {
   profile: {
     name: string;
@@ -31,13 +33,13 @@ export default function ProfileDetails({ profile }: ProfileDetailsProps) {
   return (
     <div className="bg-white rounded-lg shadow mt-6">
       <div className="border-b px-6 py-3 border-gray-200">
-        <h3 className="text-sm font-medium text-gray-700">PROFILE DETAILS</h3>
+        <Text size="lg" fw={600} c="secondary.9">PROFILE DETAILS</Text>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 gap-6 p-6 text-sm">
         {profileInfo.map(({ label, value }) => (
           <div key={label}>
-            <p className="text-gray-500">{label}</p>
-            <p className="font-medium text-gray-800">{value}</p>
+            <Text size="lg" fw={600} c="textSecondary.9">{label}</Text>
+            <Text size="md" fw={600} c="secondary">{value}</Text>
           </div>
         ))}
       </div>

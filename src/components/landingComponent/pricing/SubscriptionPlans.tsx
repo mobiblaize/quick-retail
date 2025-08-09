@@ -1,138 +1,60 @@
-import { Checkbox, Card, Group, Text, Box, Button, Tooltip } from "@mantine/core";
-import { useAtom, useAtomValue, useSetAtom } from "jotai";
-import { HelpCircle } from "lucide-react";
-import { useEffect, useState } from "react";
-import { Modal } from "@mantine/core";
-import {
-  billingTypeStore,
-  totalPrice,
-  selectedSubs,
-} from "../../../store/subscriptionStore";
-import { notifications } from "@mantine/notifications";
-
-const SubscriptionPlans = ({ data }: any) => {
-
-  const setSelectedSub = useSetAtom(selectedSubs);
-  const setTotal = useSetAtom(totalPrice);
-  const selected = useAtomValue(selectedSubs);
-
-
-  console.log(data);
-
-  // 👉 Auto-select POS on mount if available
-  useEffect(() => {
-    if (!data) return;
-
-    const posApp = data.find(
-      (item: any) =>
-        item?.application?.name === "Point of Sales Management System"
-    );
-
-    if (posApp && !selected.some((s) => s.id === posApp.id)) {
-      const updated = [
-        ...selected,
-        { ...posApp, additional_user_seat_number: 0 },
-      ];
-      setSelectedSub(updated);
-
-      const total = updated.reduce(
-        (sum, item) =>
-          sum +
-          (Number(item.amount || 0) +
-            Number(item.additional_user_seat_number || 0) *
-              Number(item.price_per_seat || 0)),
-        0
-      );
-      setTotal(total);
-    }
-  }, [data]);
-
-  return (
-    <Box
-      w="100%"
-      style={{
-        borderBottom: "2px solid #EAECF0",
-        paddingBottom: 32,
-        width: "100%",
-      }}
-    >
-      <Group
-        align="flex-start"
-        gap={4}
-        w="100%"
-        className="divide-y divide-gray-200"
-      >
-        {data?.map((item: any) => (
-          <Box key={item?.id} w="100%">
-            <SubscriptionPlanCard data={item} allPlans={data} />
-          </Box>
-        ))}
-      </Group>
-    </Box>
-  );
-};
-
-export default SubscriptionPlans;
+import { Checkbox, Card, Group, Text, Box, Button, Tooltip, Modal } from "@mantine/core" // Import Modal
+import { useAtom, useAtomValue, useSetAtom } from "jotai"
+import { HelpCircle } from "lucide-react"
+import { useEffect, useState } from "react"
+import { billingTypeStore, totalPrice, selectedSubs } from "../../../store/subscriptionStore"
+import { notifications } from "@mantine/notifications"
 
 const SubscriptionPlanCard = ({ data }: any) => {
-  const [adminSeat, setAdminSeat] = useState(0);
-  const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
-  const setTotalPrice = useSetAtom(totalPrice);
-  const billingType = useAtomValue(billingTypeStore);
-  const [seatInfoOpen, setSeatInfoOpen] = useState(false);
+  const [adminSeat, setAdminSeat] = useState(0)
+  const [selectedSub, setSelectedSub] = useAtom(selectedSubs)
+  const setTotalPrice = useSetAtom(totalPrice)
+  const billingType = useAtomValue(billingTypeStore)
+  const [seatInfoOpen, setSeatInfoOpen] = useState(false) // This state will now be used
 
-
-  const isChecked = selectedSub.some((item: any) => item.id === data.id);
-  const posIsSelected = selectedSub.some(
-    (item: any) =>
-      item?.application?.name === "Point of Sales Management System"
-  );
-  const thisIsPOS =
-    data?.application?.name === "Point of Sales Management System";
-  const shouldBeDisabled = posIsSelected && !thisIsPOS;
+  const isChecked = selectedSub.some((item: any) => item.id === data.id)
+  const posIsSelected = selectedSub.some((item: any) => item?.application?.name === "Point of Sales Management System")
+  const thisIsPOS = data?.application?.name === "Point of Sales Management System"
+  const shouldBeDisabled = posIsSelected && !thisIsPOS
 
   const recalcTotal = (subs: any[]) => {
     const total = subs.reduce(
       (sum, item) =>
         sum +
-        (Number(item.amount || 0) +
-          Number(item.additional_user_seat_number || 0) *
-            Number(item.price_per_seat || 0)),
-      0
-    );
-    setTotalPrice(total);
-  };
+        (Number(item.amount || 0) + Number(item.additional_user_seat_number || 0) * Number(item.price_per_seat || 0)),
+      0,
+    )
+    setTotalPrice(total)
+  }
 
   const handleSeatChange = (newSeat: number) => {
-    setAdminSeat(newSeat);
+    setAdminSeat(newSeat)
     if (isChecked) {
       const updated = selectedSub.map((item: any) =>
-        item.id === data.id
-          ? { ...item, additional_user_seat_number: newSeat }
-          : item
-      );
-      setSelectedSub(updated);
-      recalcTotal(updated);
+        item.id === data.id ? { ...item, additional_user_seat_number: newSeat } : item,
+      )
+      setSelectedSub(updated)
+      recalcTotal(updated)
     }
-  };
+  }
 
-  const handleCheckboxChange = (e: any) => {
-    let updated;
+  const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    let updated
     if (e.target.checked) {
       updated = [
         ...selectedSub.filter((item: any) => item.id !== data.id),
         { ...data, additional_user_seat_number: adminSeat },
-      ];
+      ]
     } else {
-      updated = selectedSub.filter((item: any) => item.id !== data.id);
+      updated = selectedSub.filter((item: any) => item.id !== data.id)
     }
-    setSelectedSub(updated);
-    recalcTotal(updated);
-  };
+    setSelectedSub(updated)
+    recalcTotal(updated)
+  }
 
   useEffect(() => {
-    recalcTotal(selectedSub);
-  }, [billingType]);
+    recalcTotal(selectedSub)
+  }, [billingType, selectedSub]) // Removed recalcTotal from dependencies
 
   return (
     <Card
@@ -165,22 +87,16 @@ const SubscriptionPlanCard = ({ data }: any) => {
             </Text>
           </Box>
         </div>
-
         {/* Billing Info */}
         <Box style={{ minWidth: 120, textAlign: "center" }}>
           <Text size="sm" c="#6C6975" mb={2}>
-            Billed /{" "}
-            {billingType === "trial"
-              ? "Days"
-              : billingType === "monthly"
-              ? "Month"
-              : "Year"}
+            Billed / {billingType === "trial" ? "Days" : billingType === "monthly" ? "Month" : "Year"}{" "}
             <Tooltip label="This indicates how often you will be billed for this subscription.">
-            <HelpCircle
-            size={16}
-             style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
-              onClick={() => setSeatInfoOpen(true)}
-             />
+              <HelpCircle
+                size={16}
+                style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
+                onClick={() => setSeatInfoOpen(true)} // This opens the modal
+              />
             </Tooltip>
           </Text>
           {billingType === "trial" ? (
@@ -189,45 +105,41 @@ const SubscriptionPlanCard = ({ data }: any) => {
             </Text>
           ) : (
             <Text fw={400} c="#48464E">
-              ( N {data?.amount?.toLocaleString()})
+              ( N{" "}
+              {billingType === "monthly"
+                ? Number(data?.total_monthly_amount || 0).toLocaleString()
+                : Number(data?.total_yearly_amount || 0).toLocaleString()}{" "}
+              )
             </Text>
           )}
         </Box>
-
         {/* Free Seats */}
         <Box style={{ minWidth: 120, textAlign: "center" }}>
           <Text size="sm" c="#6C6975" mb={2}>
-          User Seat (Free){" "}
-           <Tooltip label="This refers to the number of users that can access the application at no extra cost under your current plan.">
-  <HelpCircle
-    size={16}
-    style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
-    onClick={() => setSeatInfoOpen(true)}
-  />
-</Tooltip>
-
-</Text>
-
+            User Seat (Free){" "}
+            <Tooltip label="This refers to the number of users that can access the application at no extra cost under your current plan.">
+              <HelpCircle
+                size={16}
+                style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
+                onClick={() => setSeatInfoOpen(true)} // This opens the modal
+              />
+            </Tooltip>
+          </Text>
           <Text fw={600} c="#48464E">
             {data?.application?.free_access_users} Seats
           </Text>
         </Box>
-
         {/* Additional Seats */}
-        <Box
-          style={{ minWidth: 180, textAlign: "center" }}
-          className="space-y-2"
-        >
+        <Box style={{ minWidth: 180, textAlign: "center" }} className="space-y-2">
           <Text size="sm" c="#6C6975" mb={2}>
             Additional User Seat{" "}
             <Tooltip label="These are extra user slots beyond the free seats provided. You can purchase these for a fee to allow more users access.">
-            <HelpCircle
-            size={16}
-             style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
-              onClick={() => setSeatInfoOpen(true)}
-             />
-</Tooltip>
-
+              <HelpCircle
+                size={16}
+                style={{ display: "inline", verticalAlign: "middle", cursor: "pointer" }}
+                onClick={() => setSeatInfoOpen(true)} // This opens the modal
+              />
+            </Tooltip>
           </Text>
           <Text fw={500} c="#48464E">
             (N {data?.price_per_seat} per seat)
@@ -238,9 +150,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
               color="#F56630"
               radius="xl"
               size="xs"
-              onClick={() =>
-                handleSeatChange(adminSeat > 0 ? adminSeat - 1 : 0)
-              }
+              onClick={() => handleSeatChange(adminSeat > 0 ? adminSeat - 1 : 0)}
               style={{ width: 32, height: 32, padding: 0 }}
               disabled={shouldBeDisabled}
             >
@@ -269,12 +179,11 @@ const SubscriptionPlanCard = ({ data }: any) => {
                 if (adminSeat >= data?.additional_user_seat_limit) {
                   notifications.show({
                     title: "Maximum additional user seat limit reached",
-                    message:
-                      "You have reached the maximum additional user seat limit",
-                  });
-                  return;
+                    message: "You have reached the maximum additional user seat limit",
+                  })
+                  return
                 }
-                handleSeatChange(adminSeat + 1);
+                handleSeatChange(adminSeat + 1)
               }}
               style={{ width: 32, height: 32, padding: 0 }}
               disabled={shouldBeDisabled}
@@ -285,6 +194,73 @@ const SubscriptionPlanCard = ({ data }: any) => {
         </Box>
       </div>
 
+      {/* Seat Info Modal - Controlled by seatInfoOpen */}
+      <Modal
+        opened={seatInfoOpen}
+        onClose={() => setSeatInfoOpen(false)}
+        title={<Text fw={600}>Seat Information</Text>}
+        centered
+        radius="md"
+      >
+        <Text size="sm" mb="md">
+          This modal provides detailed information about user seats.
+        </Text>
+        <Text size="sm" mb="md">
+          **Free Seats:** These are included with your base subscription plan and allow a certain number of users to
+          access the application without additional charges.
+        </Text>
+        <Text size="sm">
+          **Additional User Seats:** If you need more users to access the application beyond your free allocation, you
+          can purchase additional seats at the specified price per seat.
+        </Text>
+        <Group justify="flex-end" mt="lg">
+          <Button onClick={() => setSeatInfoOpen(false)}>Close</Button>
+        </Group>
+      </Modal>
     </Card>
-  );
-};
+  )
+}
+
+// The SubscriptionPlans component remains unchanged
+const SubscriptionPlans = ({ data }: any) => {
+  const setSelectedSub = useSetAtom(selectedSubs)
+  const setTotal = useSetAtom(totalPrice)
+  const selected = useAtomValue(selectedSubs)
+  console.log(data)
+  // 👉 Auto-select POS on mount if available
+  useEffect(() => {
+    if (!data) return
+    const posApp = data.find((item: any) => item?.application?.name === "Point of Sales Management System")
+    if (posApp && !selected.some((s: any) => s.id === posApp.id)) {
+      const updated = [...selected, { ...posApp, additional_user_seat_number: 0 }]
+      setSelectedSub(updated)
+      const total = updated.reduce(
+        (sum: number, item: any) =>
+          sum +
+          (Number(item.amount || 0) + Number(item.additional_user_seat_number || 0) * Number(item.price_per_seat || 0)),
+        0,
+      )
+      setTotal(total)
+    }
+  }, [data, selected, setSelectedSub, setTotal]) // Added dependencies for useEffect
+  return (
+    <Box
+      w="100%"
+      style={{
+        borderBottom: "2px solid #EAECF0",
+        paddingBottom: 32,
+        width: "100%",
+      }}
+    >
+      <Group align="flex-start" gap={4} w="100%" className="divide-y divide-gray-200">
+        {data?.map((item: any) => (
+          <Box key={item?.id} w="100%">
+            <SubscriptionPlanCard data={item} /> {/* billingType is read from Jotai inside the card */}
+          </Box>
+        ))}
+      </Group>
+    </Box>
+  )
+}
+
+export default SubscriptionPlans

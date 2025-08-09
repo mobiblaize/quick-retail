@@ -40,9 +40,11 @@ const  UserOverviewBox = () => {
       value: stats.totalUsers.toString(),
       icon: customer,
       iconColor: "#FFFFFF",
-      textColor: "white",
-      cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
+      // textColor: "white",
+      // cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
+      cardBgColor: "#F4F3FF",
       percentageValue: 0,
+       borderColor: "#98A2B3",
       altText: "dollar-sign",
     },
     {
@@ -109,7 +111,7 @@ const  UserOverviewBox = () => {
                 <img src={card.icon} alt={card.title} className="w-6 h-6" />
               }
               iconColor={card.iconColor}
-              textColor={card.textColor}
+              // textColor={card.textColor}
               cardBgColor={card.cardBgColor}
               borderColor={card.borderColor}
             />
