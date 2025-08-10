@@ -36,15 +36,15 @@ const StoreTarget = () => {
 
   const paginationData = data?.data?.stores
     ? {
-        current_page: data.data.stores.current_page,
-        last_page: data.data.stores.last_page,
-        per_page: data.data.stores.per_page,
-        total: data.data.stores.total,
-        from: data.data.stores.from,
-        to: data.data.stores.to,
-        next_page_url: data.data.stores.next_page_url,
-        prev_page_url: data.data.stores.prev_page_url,
-      }
+      current_page: data.data.stores.current_page,
+      last_page: data.data.stores.last_page,
+      per_page: data.data.stores.per_page,
+      total: data.data.stores.total,
+      from: data.data.stores.from,
+      to: data.data.stores.to,
+      next_page_url: data.data.stores.next_page_url,
+      prev_page_url: data.data.stores.prev_page_url,
+    }
     : undefined;
 
   const handlePageChange = (page: number) => {
@@ -54,7 +54,7 @@ const StoreTarget = () => {
 
   const subHeaders = [
     <div key="1" className="w-full">
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+      {/* <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <Text fw={500} size="xl" c="#1D2739">
           Stores
         </Text>
@@ -69,7 +69,25 @@ const StoreTarget = () => {
             <Plus />
           </Button>
         </div>
+      </div> */}
+
+      <div className="flex flex-row flex-wrap items-center justify-between gap-4">
+        <Text fw={500} size="xl" c="#1D2739">
+          Stores
+        </Text>
+        <div className="flex gap-4 overflow-x-auto pb-2">
+          <Button
+            variant="filled-primary"
+            className="flex gap-1.5 items-center whitespace-nowrap"
+            style={{ padding: "0.8rem 1rem" }}
+            onClick={() => setIsAddNewStoreOpen(true)}
+          >
+            Add New Store
+            <Plus />
+          </Button>
+        </div>
       </div>
+
     </div>,
   ];
 
@@ -93,7 +111,7 @@ const StoreTarget = () => {
         onSortChange={(sortKey) => {
           const newFilters = { ...appliedFilters, sortBy: sortKey };
           setAppliedFilters(newFilters);
-          setSortBy(sortKey); 
+          setSortBy(sortKey);
           setCurrentPage(1);
         }}
         paginationData={paginationData}

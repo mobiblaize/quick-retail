@@ -44,20 +44,20 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
     reader.readAsDataURL(file);
   };
   const [modalOpen, setModalOpen] = useState(false);
-    const [modalOpen2, setModalOpen2] = useState(false);
+  const [modalOpen2, setModalOpen2] = useState(false);
   return (
     <div className="bg-white p-6">
       <ChangePasswordModal
         opened={modalOpen}
         onClose={() => setModalOpen(false)}
       />
-       <SecurityQuestionModal
+      <SecurityQuestionModal
         opened={modalOpen2}
         onClose={() => setModalOpen2(false)}
       />
       {/* Profile Header */}
       <div className="bg-white  p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-        <div className="flex items-center gap-4">
+        {/* <div className="flex items-center gap-4">
           <div className="w-20 h-20 border-4 border-orange-500 rounded-full overflow-hidden">
             <img
               src={localImage || "/avatar-placeholder.jpg"}
@@ -85,7 +85,40 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
               onChange={handleFileChange}
             />
           </div>
+        </div> */}
+        <div className="grid grid-cols-1 md:grid-cols-[auto_1fr] items-center gap-4">
+          {/* Image */}
+          <div className="w-20 h-20 border-4 border-orange-500 rounded-full overflow-hidden mx-auto md:mx-0">
+            <img
+              src={localImage || "/avatar-placeholder.jpg"}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          </div>
+
+          {/* Info */}
+          <div className="text-center md:text-left">
+            <h2 className="text-xl font-medium text-gray-800">
+              {company_name}
+            </h2>
+            <p className="text-sm font-normal text-gray-500">{email}</p>
+            <button
+              className="border border-gray-300 text-sm font-semibold text-gray-900 px-4 py-2 rounded hover:bg-gray-100 cursor-pointer mt-2"
+              onClick={() => fileInputRef.current?.click()}
+              disabled={isLoading}
+            >
+              {isLoading ? "Uploading..." : "Change profile picture"}
+            </button>
+            <input
+              type="file"
+              accept="image/*"
+              ref={fileInputRef}
+              className="hidden"
+              onChange={handleFileChange}
+            />
+          </div>
         </div>
+
       </div>
 
       {/* Tabs */}
@@ -94,11 +127,10 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
           unstyled
           fw={500}
           size="xl"
-          className={`cursor-pointer border-b-2 pb-1 ${
-            activeTab === "account"
+          className={`cursor-pointer border-b-2 pb-1 ${activeTab === "account"
               ? "text-[#F16722] border-orange-500"
               : "text-gray-400 border-transparent"
-          }`}
+            }`}
           onClick={() => setActiveTab("account")}
         >
           Account
@@ -107,11 +139,10 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
           unstyled
           fw={500}
           size="xl"
-          className={`cursor-pointer border-b-2 pb-1 ${
-            activeTab === "security"
+          className={`cursor-pointer border-b-2 pb-1 ${activeTab === "security"
               ? "text-orange-500 border-orange-500"
               : "text-gray-400 border-transparent"
-          }`}
+            }`}
           onClick={() => setActiveTab("security")}
         >
           Security
@@ -122,31 +153,31 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
       <div className="border p-3 border-gray-200 rounded-lg mt-[2em]">
         <h3 className="text-lg font-normal mb-4 text-[#101928]">SECURITY</h3>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <div
-      className="flex justify-between items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 cursor-pointer hover:bg-gray-50"
-      onClick={() => setModalOpen(true)}
-    >
-      <div className="flex items-center gap-2">
-        <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
-        Change my Password
-      </div>
-      <IconChevronRight size={18} className="text-gray-400 ml-2" />
-    </div>
+          <div
+            className="flex justify-between items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 cursor-pointer hover:bg-gray-50"
+            onClick={() => setModalOpen(true)}
+          >
+            <div className="flex items-center gap-2">
+              <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
+              Change my Password
+            </div>
+            <IconChevronRight size={18} className="text-gray-400 ml-2" />
+          </div>
 
-    {/* Security Question */}
-    <div
-      className="flex justify-between items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 cursor-pointer hover:bg-gray-50"
-      onClick={() => setModalOpen2(true)}
-    >
-      <div className="flex items-center gap-2">
-        <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
-        Security Question
-      </div>
-      <IconChevronRight size={18} className="text-gray-400 ml-2" />
-    </div>
+          {/* Security Question */}
+          <div
+            className="flex justify-between items-center text-sm text-gray-600 mb-1 border border-gray-200 p-4 cursor-pointer hover:bg-gray-50"
+            onClick={() => setModalOpen2(true)}
+          >
+            <div className="flex items-center gap-2">
+              <img src={EditIcon} alt="lock icon" className="w-5 h-5" />
+              Security Question
+            </div>
+            <IconChevronRight size={18} className="text-gray-400 ml-2" />
+          </div>
 
-  </div>
-</div>
+        </div>
+      </div>
     </div>
   );
 }

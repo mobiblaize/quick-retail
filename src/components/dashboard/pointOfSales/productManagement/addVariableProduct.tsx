@@ -90,7 +90,10 @@ const AddVariableForm = () => {
       promotional_end_date: form_data.promotional_end_date,
       safety_instructions: form_data.safety_instructions,
       certificates: form_data.certificates,
-      image_path: form_data.image_path || [],
+      // image_path: form_data.image_path || [],
+
+      // image_path: form_data.image_path || [],
+      image_path: form_data.image_path ? [form_data.image_path] : [],
       variations: variants.map((v) => ({
         cost_price: Number(v.cost_price),
         selling_price: Number(v.selling_price),
