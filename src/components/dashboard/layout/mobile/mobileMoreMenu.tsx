@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Avatar, Drawer, List, Text } from "@mantine/core";
+import { Drawer, List, Text } from "@mantine/core";
 import NavItem from "../../../../layout/navItem";
 import {
   PointOfSale,
@@ -11,9 +11,10 @@ import {
   AssetManagement,
 } from "../../../../layout/navItemData";
 import { useDashboard } from "../../../../layout/dashboardContext";
-import { MoreIcon, LogoutBlack } from "../../../../assets/svg";
+import { MoreIcon } from "../../../../assets/svg";
 import { Link, useLocation } from "react-router-dom";
-import avatar from "../../../../assets/images/Avatars.png";
+// import avatar from "../../../../assets/images/Avatars.png";
+import LogoutModal from "../../../LogoutModal";
 
 const MobileMoreMnu = () => {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
@@ -124,7 +125,7 @@ const MobileMoreMnu = () => {
             ))}
           </div>
         </List>
-        <div className="mt-3 bg-[#F0F2F5] rounded-full w-fit m-auto p-2">
+        {/* <div className="mt-3 bg-[#F0F2F5] rounded-full w-fit m-auto p-2">
           <div className="flex items-center gap-3">
             <Avatar src={avatar} alt="avatar" radius="md" size={50} />
             <div className="flex flex-col">
@@ -135,7 +136,10 @@ const MobileMoreMnu = () => {
             </div>
             <LogoutBlack />
           </div>
-        </div>
+        </div> */}
+        <List className="gap-4 mt-9">
+          <LogoutModal />
+        </List>
       </Drawer>
     </>
   );
