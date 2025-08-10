@@ -65,7 +65,10 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Payment Method</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {order.payment_method || "N/A"}
+            {order.payment_method
+      ? order.payment_method.charAt(0).toUpperCase() +
+        order.payment_method.slice(1).toLowerCase()
+      : "N/A"}
             </Text>
           </div>
           <div className="flex flex-col">
@@ -131,7 +134,10 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
             <Text size="lg" c={"black"} fw={"400"}>
               <Text size="lg" c={"black"} fw={"400"}>
                 <Text size="lg" c={"black"} fw={"400"}>
-                  {returnedData?.data?.refund_type || "N/A"}
+                {returnedData?.data?.refund_type
+      ? returnedData.data.refund_type.charAt(0).toUpperCase() +
+        returnedData.data.refund_type.slice(1).toLowerCase()
+      : "N/A"}
                 </Text>
               </Text>
             </Text>
@@ -156,7 +162,7 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
         <div className="flex md:flex-row flex-col w-full mt-3 gap-3">
           <img
             src={
-              returnedData?.data?.product_variation?.image_path ||
+              returnedData?.data?.image_path ||
               "/placeholder.png"
             }
             alt="product"

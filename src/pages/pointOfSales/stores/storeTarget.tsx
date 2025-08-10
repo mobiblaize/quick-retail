@@ -28,7 +28,8 @@ const StoreTarget = () => {
   });
 
   const payload = mapFiltersToPayload(appliedFilters);
-  const { data, isLoading } = useFetchStore(payload);
+  const { data, isLoading, refetch } = useFetchStore(payload);
+
 
   const stores = Array.isArray(data?.data?.stores?.data)
     ? data.data.stores.data
@@ -74,11 +75,23 @@ const StoreTarget = () => {
   ];
 
   // Unified refetch handler (optional)
-  const handleRefetchAll = async () => {
+  // const handleRefetchAll = async () => {
     // await refetchStores();
     // await refetchStats();
-  };
+  // };
 
+  const handleRefetchAll = async () => {
+    try {
+      await refetch();
+    } catch (err) {
+      console.error("Error refetching store list:", err);
+    }
+  };
+  
+  if (useFetchStore) {
+     useFetchStore(); 
+  }
+  
   return (
     <PageContainer subHeaders={subHeaders}>
       <AnalysisOverview

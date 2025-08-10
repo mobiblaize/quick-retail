@@ -34,7 +34,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   const handleViewClick = (orderID: string, payment_status: string) => {
     // console.log("Navigating with orderID:", orderID);
     if (payment_status === "paid") {
-      navigate(ROUTES. viewTransaction, { state: { orderID } });
+      navigate(ROUTES. previewTransaction, { state: { orderID } });
     } else if (payment_status === "pending") {
       navigate(ROUTES.viewOrderdraft, { state: { orderID } });
     } else {
@@ -177,7 +177,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
              All Transactions
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-            <Text c="customPrimary.10">{paginationData?.total}</Text>
+              <Text c="customPrimary.10">{data.length}</Text>
             </div>
           </div>
         }

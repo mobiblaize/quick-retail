@@ -60,7 +60,7 @@ const PreviewTransactionDownloadPage = () => {
     </div>,
     <div key="2" className="justify-between flex items-center">
       <Text fw={500} size="xl" c="black">
-        View Order
+      Preview Receipt
       </Text>
       <div key="customer-receipt-buttons" className="flex gap-4 justify-end">
         <Button variant="filled-primary" onClick={handleDownloadReceiptAsPDF}>
@@ -74,7 +74,7 @@ const PreviewTransactionDownloadPage = () => {
     <PageContainer subHeaders={subHeaders}>
       {/* Wrap ReceiptPreview in a div with ref */}
       <div ref={receiptRef}>
-        <PreviewTransaction order={order} />
+        <PreviewTransaction  />
       </div>
     </PageContainer>
   );
