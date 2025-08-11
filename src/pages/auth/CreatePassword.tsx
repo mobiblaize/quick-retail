@@ -90,7 +90,7 @@ const CreatePassword = () => {
 
   return (
     <AuthLayout>
-      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-15 border border-gray-200">
+      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-20 border border-gray-200">
         {/* Logo */}
 
         {/* Title */}

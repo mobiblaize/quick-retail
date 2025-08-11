@@ -80,9 +80,10 @@ const SubscriptionPlanCard = ({ data }: any) => {
   const setTotalPrice = useSetAtom(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
   const [seatInfoOpen, setSeatInfoOpen] = useState(false);
-
+  const [manuallyChecked, setManuallyChecked] = useState(false);
 
   const isChecked = selectedSub.some((item: any) => item.id === data.id);
+
   const posIsSelected = selectedSub.some(
     (item: any) =>
       item?.application?.name === "Point of Sales Management System"
@@ -117,8 +118,11 @@ const SubscriptionPlanCard = ({ data }: any) => {
   };
 
   const handleCheckboxChange = (e: any) => {
+    const checked = e.target.checked;
+    setManuallyChecked(checked);
+
     let updated;
-    if (e.target.checked) {
+    if (checked) {
       updated = [
         ...selectedSub.filter((item: any) => item.id !== data.id),
         { ...data, additional_user_seat_number: adminSeat },
@@ -132,7 +136,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
   useEffect(() => {
     recalcTotal(selectedSub);
-  }, [billingType]);
+  }, [billingType, selectedSub]);
 
   return (
     <Card
