@@ -71,7 +71,7 @@ const SubDetails = () => {
     setSelectedApps([]);
     setSelectedSub([]);
 
-    // console.log("working");
+    console.log("working");
   }, [activePlan]);
 
   return (
