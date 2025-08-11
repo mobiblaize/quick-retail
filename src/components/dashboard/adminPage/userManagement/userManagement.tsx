@@ -1,5 +1,6 @@
 import UserManagementTable from "./userManagementTable";
 import RoleGrid from "./roleGrid";
+import UserAnalyticsOverview from "./userAnalyticsOverview";
 
 type Props = {
   activeTab: "userManage" | "roleGrid";
@@ -32,7 +33,9 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
           User Role
         </button>
       </div>
-
+      
+      <UserAnalyticsOverview />
+      
       {/* Tab content */}
       {activeTab === "userManage" && <UserManagementTable />}
       {activeTab === "roleGrid" && <RoleGrid />}

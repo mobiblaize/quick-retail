@@ -337,6 +337,6 @@ export const otherMenu = [
 ];
 
 export const mobileOtherMenu = [
-  { label: "Norification", href: ROUTES.test, icon: NotificationIcon },
-  { label: "Settings", icon: Settings, href: ROUTES.test },
+  { label: "Norification", href: ROUTES.notificationPage, icon: NotificationIcon },
+  { label: "Settings", icon: Settings, href: ROUTES.adminSettings },
 ];

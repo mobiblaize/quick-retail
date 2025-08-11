@@ -2,8 +2,6 @@ import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../filterMenu";
 import AnalyticsCard from "../card";
 import { useEffect, useState } from "react";
-import dollar from "../../../assets/images/orangeBodies.png";
-import orders from "../../../assets/images/GreenBodies.png";
 import customer from "../../../assets/images/RedBodies.png";
 import { useFetchUsers } from "../../../hooks/backendApis/admin/userManagement";
 
@@ -40,17 +38,19 @@ const  UserOverviewBox = () => {
     {
       title: "Total Users",
       value: stats.totalUsers.toString(),
-      icon: dollar,
-      iconColor: "#E17036",
-      textColor: "white",
-      cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
+      icon: customer,
+      iconColor: "#FFFFFF",
+      // textColor: "white",
+      // cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
+      cardBgColor: "#F4F3FF",
       percentageValue: 0,
+       borderColor: "#98A2B3",
       altText: "dollar-sign",
     },
     {
       title: "Total Active Users",
       value: stats.activeUsers.toString(),
-      icon: orders,
+      icon: customer,
       iconColor: "#E17036",
       cardBgColor: "#EFF8FF",
       percentageValue: 0,
@@ -74,7 +74,7 @@ const  UserOverviewBox = () => {
       <header className="flex flex-row justify-between sm:items-center">
         <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
-            User overview
+            User Overview
           </Text>
           <Text size="sm">
             {isMobile
@@ -111,7 +111,7 @@ const  UserOverviewBox = () => {
                 <img src={card.icon} alt={card.title} className="w-6 h-6" />
               }
               iconColor={card.iconColor}
-              textColor={card.textColor}
+              // textColor={card.textColor}
               cardBgColor={card.cardBgColor}
               borderColor={card.borderColor}
             />

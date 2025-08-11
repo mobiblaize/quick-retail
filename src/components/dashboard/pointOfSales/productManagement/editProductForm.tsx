@@ -187,6 +187,20 @@ const EditProductForm = () => {
   };
 
 
+   const [hasVariationsEnabled, setHasVariationsEnabled] = useState(
+    Boolean(form_data.has_variations ?? form_data.product?.has_variations),
+  )
+
+   useEffect(() => {
+    if (Array.isArray(formData?.image)) {
+      setServerImages(formData.image)
+    } else {
+      setServerImages([])
+    }
+    // Initialize hasVariationsEnabled when formData changes (e.g., product data loads)
+    setHasVariationsEnabled(Boolean(formData.has_variations ?? formData.product?.has_variations))
+  }, [formData])
+
 
 
   // const handleAddVariant = () => {
@@ -291,7 +305,8 @@ const EditProductForm = () => {
           /> */}
         </div>
       </div>
-
+       
+        {!hasVariationsEnabled && (
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
         <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
           PRICING INFORMATION
@@ -356,6 +371,7 @@ const EditProductForm = () => {
           /> */}
         </div>
       </div>
+        )}
 
       {/* <div className="mt-12 bg-white p-6 rounded-lg shadow-md border border-gray-200">
         <div className="flex justify-between items-center max-w-full w-full">
@@ -650,6 +666,19 @@ const EditProductForm = () => {
               setFormData({ ...formData, location: e.target.value })
             }
           />
+
+           <FormInput
+            type="text"
+            label="Reorder Level"
+            paddingY={"0.7rem"}
+            placeholder="Enter a reorder level"
+            value={formData.reorder_level}
+            onChange={(e: any) =>
+              setFormData({ ...formData, notes: e.target.value })
+            }
+          />
+
+
         </div>
 
 

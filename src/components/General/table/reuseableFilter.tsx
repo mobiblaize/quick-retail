@@ -72,7 +72,6 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showRole = false,
   showModule = false,
   setFiltersApplied,
-
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
     startDate: '',

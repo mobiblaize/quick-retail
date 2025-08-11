@@ -38,13 +38,15 @@ const ViewUserForm = ({ setUser }: { setUser: (user: any) => void }) => {
                                         </div>
                                         <span
                                             className={`px-3 py-1 text-xs rounded-full font-medium ${user.status?.toLowerCase() === "active"
-                                                ? "text-green-600 bg-green-100"
-                                                : user.status?.toLowerCase() === "pending"
-                                                    ? "text-[#AD3307] bg-[#FFECE5]"
-                                                    : "text-gray-600 bg-gray-100"
+                                                    ? "text-green-600 bg-green-100"
+                                                    : user.status?.toLowerCase() === "pending"
+                                                        ? "text-[#AD3307] bg-[#FFECE5]"
+                                                        : "text-gray-600 bg-gray-100"
                                                 }`}
                                         >
-                                            {user.status}
+                                            {user.status
+                                                ? user.status.charAt(0).toUpperCase() + user.status.slice(1).toLowerCase()
+                                                : "—"}
                                         </span>
                                     </div>
                                     <h3 className="text-base font-medium text-gray-800">

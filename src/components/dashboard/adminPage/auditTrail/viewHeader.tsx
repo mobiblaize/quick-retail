@@ -59,10 +59,10 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
         />
         <div>
           <div className="flex gap-4">
-            <p className="text-sm font-normal text-[#AD3307] shadow-md bg-[#D0D5DD] py-1 px-2 bg-orange-100 rounded-lg">
+            <p className="text-sm font-normal text-[#AD3307] shadow-md  py-1 px-2 bg-orange-100 rounded-lg">
               User ID: #{id}
             </p>
-            <p className="text-sm font-normal text-[#04326B] shadow-md bg-[#D0D5DD] py-1 px-2 bg-[#E3EFFC] rounded-lg">
+            <p className="text-sm font-normal text-[#04326B] shadow-md  py-1 px-2 bg-[#E3EFFC] rounded-lg">
               Role :{" "}
               {roles.length === 0 ? (
                 <span>No roles</span>

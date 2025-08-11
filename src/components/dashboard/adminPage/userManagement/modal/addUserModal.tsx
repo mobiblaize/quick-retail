@@ -1,4 +1,4 @@
-import { Button } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { X } from "lucide-react";
 import { useState } from "react";
 import {
@@ -28,6 +28,8 @@ export default function AddUserModal({ opened, onClose }: Props) {
         applicationId: "",
     });
 
+    const [phoneError, setPhoneError] = useState("");
+
     const { mutate: createUser, isPending } = useCreateUser();
     const { data: locationData } = useFetchAllLocations();
     const { data: roleData } = useFetchAllRoles();
@@ -40,12 +42,10 @@ export default function AddUserModal({ opened, onClose }: Props) {
         }))
         : [];
 
-
     const locationOptions = Array.isArray(locationData?.data?.stores)
         ? locationData.data.stores.map((store: { locationID: string; name: string }) => ({
             label: store.name,
-            value: store.locationID
-            ,
+            value: store.locationID,
         }))
         : [];
 
@@ -56,10 +56,23 @@ export default function AddUserModal({ opened, onClose }: Props) {
         }))
         : [];
 
-
+    const validatePhoneNumber = (phone: string) => {
+        const cleaned = phone.replace(/\D/g, ""); // remove non-digit characters
+        if (cleaned.length !== 11) {
+            return "Phone number must be exactly 10 digits";
+        }
+        return "";
+    };
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
+
+        // Phone validation
+        if (name === "phone_number") {
+            const errorMsg = validatePhoneNumber(value);
+            setPhoneError(errorMsg);
+        }
+
         setFormValues((prev) => ({ ...prev, [name]: value }));
     };
 
@@ -105,10 +118,10 @@ export default function AddUserModal({ opened, onClose }: Props) {
                 </button>
 
                 <div className="space-y-4">
-                    <h2 className="text-lg font-semibold text-gray-900">Add New User</h2>
-                    <p className="text-sm text-gray-500 mb-6">
+                    <Text size="lg" fw={600} c="textSecondary.9">Add New User</Text>
+                    <Text size="sm" c="dimmed" mb="xl">
                         Enter the details below to add a new user
-                    </p>
+                    </Text>
 
                     <div className="space-y-4">
                         {/* Name */}
@@ -161,6 +174,9 @@ export default function AddUserModal({ opened, onClose }: Props) {
                                 placeholder="Enter phone number"
                                 className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
                             />
+                            {phoneError && (
+                                <p className="text-red-500 text-xs mt-1">{phoneError}</p>
+                            )}
                         </div>
 
                         {/* Role */}
@@ -208,8 +224,7 @@ export default function AddUserModal({ opened, onClose }: Props) {
                             </select>
                         </div>
 
-
-                        {/* APPLICATION */}
+                        {/* Application */}
                         <div>
                             <label className="text-sm text-gray-700 block mb-1">Select Application</label>
                             <select
@@ -232,7 +247,6 @@ export default function AddUserModal({ opened, onClose }: Props) {
                                     </option>
                                 ))}
                             </select>
-
                         </div>
                     </div>
 
@@ -250,7 +264,8 @@ export default function AddUserModal({ opened, onClose }: Props) {
                                 !formValues.lastname ||
                                 !formValues.email ||
                                 !formValues.role_id ||
-                                !formValues.locationID
+                                !formValues.locationID ||
+                                !!phoneError
                             }
                         >
                             Save

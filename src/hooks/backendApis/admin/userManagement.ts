@@ -3,18 +3,26 @@ import { useFetchPostData, useGetData, usePostData } from "../../useApis";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
 
 
-  const defaultPayload = {
-    search: "",
-    sort_by: "",
-    per_date: "",
-    limit: "",
-    paginate: false,
-  };
+const defaultPayload = {
+  search: "",
+  sort_by: "",
+  per_date: "",
+  limit: "",
+  paginate: false,
+};
 
+// export const useFetchUsers = (queryParams: Record<string, any> = {}) => {
+//   const queryString = new URLSearchParams(queryParams).toString();
+//   return useGetData(`admin/staff/all${queryString ? `?${queryString}` : ""}`);
+// };
 export const useFetchUsers = (queryParams: Record<string, any> = {}) => {
   const queryString = new URLSearchParams(queryParams).toString();
   return useGetData(`admin/staff/all${queryString ? `?${queryString}` : ""}`);
 };
+
+// export const useFetchUsers = (queryParams: Record<string, any> = {}) => {
+//   return useGetData("admin/staff/all", queryParams);
+// };
 
 export const useCreateUser = () => {
   return usePostData("admin/staff/add-staff");
@@ -27,7 +35,7 @@ export const useFetchAllRoles = (
   const payload = { ...defaultPayload, ...customPayload };
 
   return useFetchPostData("admin/roles/all-roles", payload);
-}; 
+};
 
 export const useFetchAllApplicationRoles = () => {
 
@@ -87,4 +95,8 @@ export const useCreateRole = () => {
       return response.data;
     },
   });
+};
+
+export const useFetchRoleUserCount = () => {
+  return useGetData("admin/roles/user-roles");
 };
