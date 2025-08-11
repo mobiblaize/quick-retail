@@ -1,6 +1,6 @@
 import { Button, Menu, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import { ChevronDown, ChevronLeft, Plus } from "lucide-react";
+import { ChevronDown, ChevronLeft, Plus } from 'lucide-react';
 import ViewUserForm from "../../../components/dashboard/adminPage/userManagement/viewUserForm";
 import ActivateUserModal from "../../../components/dashboard/adminPage/userManagement/modal/activateUser";
 import { useState } from "react";
@@ -14,9 +14,10 @@ const ViewUser = () => {
   const [editModalOpen, setEditModalOpen] = useState(false);
   const [selectedUser, setSelectedUser] = useState<any>(null);
 
-
-  const isPending = selectedUser?.status?.toLowerCase() === "pending";
+  // isPending is no longer needed for Activate User visibility, but kept if used elsewhere
+  // const isPending = selectedUser?.status?.toLowerCase() === "pending";
   const isActive = selectedUser?.status?.toLowerCase() === "active";
+
   const navigate = useNavigate();
 
   const handleBack = () => {
@@ -37,145 +38,138 @@ const ViewUser = () => {
 
   const subHeaders = [
     <>
-     <div key="1" className="py-2.5">
+      <div key="1" className="py-2.5">
         <div className="hidden sm:flex gap-8 items-center">
           {backButton}
         </div>
-
         <div className="flex sm:hidden gap-2 items-center">{backButton}</div>
       </div>
-    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0" key="header">
-     
-
-
-      <Text fw={500} size="xl" c="black">
-        View User
-      </Text>
-      <div className="flex flex-row gap-2 md:gap-4">
-        <div className="hidden sm:block">
-          <Menu>
-            <Menu.Target>
-              <Button variant="filled-primary">
-                Take Action
-                <ChevronDown className="ml-2" />
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown
-              style={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                padding: "10px",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Menu.Item
+      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0" key="header">
+        <Text fw={500} size="xl" c="black">
+          View User
+        </Text>
+        <div className="flex flex-row gap-2 md:gap-4">
+          <div className="hidden sm:block">
+            <Menu>
+              <Menu.Target>
+                <Button variant="filled-primary">
+                  Take Action
+                  <ChevronDown className="ml-2" />
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown
                 style={{
-                  fontSize: "14px",
-                  padding: "8px 16px",
-                  color: "#333",
-                }}
-                onClick={() => setEditModalOpen(true)}
-              >
-                Edit User
-              </Menu.Item>
-
-              {isPending && (
-                <Menu.Item
-                  style={{
-                    fontSize: "14px",
-                    padding: "8px 16px",
-                    color: "#333",
-                  }}
-                  onClick={() => setModalOpen(true)}
-                >
-                  Activate User
-                </Menu.Item>
-              )}
-
-              {isActive && (
-                <Menu.Item
-                  style={{
-                    fontSize: "14px",
-                    padding: "8px 16px",
-                    color: "#333",
-                  }}
-                  onClick={() => setDeactiveModalOpen(true)}
-                >
-                  Deactivate User
-                </Menu.Item>
-              )}
-            </Menu.Dropdown>
-          </Menu>
-        </div>
-
-        {/* Mobile dropdown */}
-        <div className="block sm:hidden">
-          <Menu>
-            <Menu.Target>
-              <Button
-                variant="filled-primary"
-                style={{
-                  width: "40px",
-                  height: "40px",
-                  padding: "0",
-                  borderRadius: "20%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "center",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
                 }}
               >
-                <Plus size={20} />
-              </Button>
-            </Menu.Target>
-            <Menu.Dropdown
-              style={{
-                backgroundColor: "white",
-                borderRadius: "8px",
-                padding: "10px",
-                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
-              }}
-            >
-              <Menu.Item
+                <Menu.Item
+                  style={{
+                    fontSize: "14px",
+                    padding: "8px 16px",
+                    color: "#333",
+                  }}
+                  onClick={() => setEditModalOpen(true)}
+                >
+                  Edit User
+                </Menu.Item>
+                {/* Show Activate User if the user is NOT active */}
+                {!isActive && (
+                  <Menu.Item
+                    style={{
+                      fontSize: "14px",
+                      padding: "8px 16px",
+                      color: "#333",
+                    }}
+                    onClick={() => setModalOpen(true)}
+                  >
+                    Activate User
+                  </Menu.Item>
+                )}
+                {isActive && (
+                  <Menu.Item
+                    style={{
+                      fontSize: "14px",
+                      padding: "8px 16px",
+                      color: "#333",
+                    }}
+                    onClick={() => setDeactiveModalOpen(true)}
+                  >
+                    Deactivate User
+                  </Menu.Item>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+          </div>
+          {/* Mobile dropdown */}
+          <div className="block sm:hidden">
+            <Menu>
+              <Menu.Target>
+                <Button
+                  variant="filled-primary"
+                  style={{
+                    width: "40px",
+                    height: "40px",
+                    padding: "0",
+                    borderRadius: "20%",
+                    display: "flex",
+                    alignItems: "center",
+                    justifyContent: "center",
+                  }}
+                >
+                  <Plus size={20} />
+                </Button>
+              </Menu.Target>
+              <Menu.Dropdown
                 style={{
-                  fontSize: "14px",
-                  padding: "8px 16px",
-                  color: "#333",
+                  backgroundColor: "white",
+                  borderRadius: "8px",
+                  padding: "10px",
+                  boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
                 }}
-                onClick={() => setEditModalOpen(true)}
               >
-                Edit User
-              </Menu.Item>
-
-              {isPending && (
                 <Menu.Item
                   style={{
                     fontSize: "14px",
                     padding: "8px 16px",
                     color: "#333",
                   }}
-                  onClick={() => setModalOpen(true)}
+                  onClick={() => setEditModalOpen(true)}
                 >
-                  Activate User
+                  Edit User
                 </Menu.Item>
-              )}
-
-              {isActive && (
-                <Menu.Item
-                  style={{
-                    fontSize: "14px",
-                    padding: "8px 16px",
-                    color: "#333",
-                  }}
-                  onClick={() => setDeactiveModalOpen(true)}
-                >
-                  Deactivate User
-                </Menu.Item>
-              )}
-            </Menu.Dropdown>
-          </Menu>
+                {/* Show Activate User if the user is NOT active */}
+                {!isActive && (
+                  <Menu.Item
+                    style={{
+                      fontSize: "14px",
+                      padding: "8px 16px",
+                      color: "#333",
+                    }}
+                    onClick={() => setModalOpen(true)}
+                  >
+                    Activate User
+                  </Menu.Item>
+                )}
+                {isActive && (
+                  <Menu.Item
+                    style={{
+                      fontSize: "14px",
+                      padding: "8px 16px",
+                      color: "#333",
+                    }}
+                    onClick={() => setDeactiveModalOpen(true)}
+                  >
+                    Deactivate User
+                  </Menu.Item>
+                )}
+              </Menu.Dropdown>
+            </Menu>
+          </div>
         </div>
       </div>
-    </div>
     </>
   ];
 

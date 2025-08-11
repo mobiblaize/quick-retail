@@ -1,30 +1,45 @@
 import { Badge, Paper, Text, Group, Stack, Loader } from "@mantine/core";
-import { Circle } from "lucide-react";
+import { Circle } from 'lucide-react';
 import { useNotifications } from "../../../../hooks/backendApis/admin/settings";
 import { useMarkAllNotificationsAsRead } from "../../../../hooks/backendApis/admin/settings";
 import { showNotification } from "@mantine/notifications";
+import { useQueryClient } from "@tanstack/react-query";
+import * as dayjs from "dayjs"; 
+import * as relativeTimeModule from "dayjs/plugin/relativeTime"; 
+
+
+const relativeTimePlugin = (relativeTimeModule as any).default || relativeTimeModule;
+
+
+const dayjsInstance = (dayjs as any).default || dayjs;
+dayjsInstance.extend(relativeTimePlugin);
+
 
 const getCategoryColor = (category: string) => {
-  switch (category) {
-    case "Finance":
+  switch (category.toLowerCase()) {
+    case "user":
       return "cyan";
-    case "Inventory":
+    case "inventory":
       return "orange";
-    case "Sales":
+    case "sales":
       return "pink";
+    case "role":
+      return "blue";
     default:
       return "gray";
   }
 };
 
 const getIndicatorColor = (category: string) => {
-  switch (category) {
-    case "Finance":
+  switch (category.toLowerCase()) {
+    case "user":
       return "text-red-500";
-    case "Inventory":
+    case "inventory":
       return "text-orange-500";
-    case "Sales":
+    case "sales":
       return "text-pink-500";
+    case "role":
+      return "text-blue-500";
     default:
       return "text-gray-500";
   }
@@ -33,6 +48,7 @@ const getIndicatorColor = (category: string) => {
 export default function NotificationsPanel() {
   const { data: notifications = [], isLoading, isError } = useNotifications();
   const markAllRead = useMarkAllNotificationsAsRead();
+  const queryClient = useQueryClient();
 
   return (
     <Paper className="w-full max-w-6xl bg-white" shadow="sm" radius="md" p="lg">
@@ -48,6 +64,13 @@ export default function NotificationsPanel() {
           onClick={() => {
             markAllRead.mutate(undefined, {
               onSuccess: () => {
+                // Update local cache so all dots disappear
+                queryClient.setQueryData(["notifications/all", undefined], (old: any) =>
+                  Array.isArray(old)
+                    ? old.map((n: any) => ({ ...n, is_read: 1 }))
+                    : old
+                );
+
                 showNotification({
                   title: "Success",
                   message: "All notifications marked as read",
@@ -66,7 +89,6 @@ export default function NotificationsPanel() {
         >
           Mark all as read
         </Text>
-
       </Group>
 
       {/* Loading or Error States */}
@@ -82,7 +104,7 @@ export default function NotificationsPanel() {
             <Group key={notification.id} align="flex-start" gap="sm" className="py-2">
               {/* Status Indicator */}
               <div className="flex items-center justify-center w-4 h-4 mt-1">
-                {!notification.isRead && (
+                {!notification.is_read && (
                   <Circle
                     size={8}
                     className={`fill-current ${getIndicatorColor(notification.category)}`}
@@ -96,7 +118,7 @@ export default function NotificationsPanel() {
                   {notification.title}
                 </Text>
                 <Text size="xs" c="dimmed" mt={2}>
-                  {notification.timestamp}
+                  {dayjsInstance(notification.created_at).fromNow()}
                 </Text>
               </div>
 
@@ -116,4 +138,3 @@ export default function NotificationsPanel() {
     </Paper>
   );
 }
-

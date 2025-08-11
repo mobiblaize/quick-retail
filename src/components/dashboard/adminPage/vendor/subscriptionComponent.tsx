@@ -2,6 +2,7 @@ import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchCurrentSub } from "../../../../hooks/backendApis/admin/profile";
+import { Text } from "@mantine/core";
 
 
 
@@ -41,20 +42,21 @@ export default function SubscriptionComponent() {
 
   return (
     <div className="bg-white rounded-lg shadow p-6 w-full lg:w-1/2">
-      <h2 className="text-lg font-medium mb-4">CURRENT PLAN</h2>
+      <Text size="lg" fw={600} c="secondary.9">CURRENT PLAN</Text>
 
       {/* Subscription Card */}
       <div className="border rounded-lg p-4 bg-orange-50 border-orange-700">
         <div className="flex justify-between items-center mb-2">
           <div>
-            <p className="text-sm font-semibold text-[#475367] capitalize">{plan} Plan</p>
-            <p className="text-2xl font-medium text-[#F56630]">{formattedAmount}</p>
+            <Text size="lg" fw={600} c="secondary.9">{plan} Plan</Text>
+            <Text size="xl" fw={500} c="#F56630">
+              {formattedAmount}
+            </Text>
           </div>
           <button
             onClick={handleRenewClick}
-            className={`text-sm ${
-              status === "Active" ? "text-gray-400 cursor-pointer bg-white" : "text-orange-600"
-            } border border-gray-200 rounded-lg px-3 py-1`}
+            className={`text-sm ${status === "Active" ? "text-gray-400 cursor-pointer bg-white" : "text-orange-600"
+              } border border-gray-200 rounded-lg px-3 py-1`}
             disabled={status === "Active"}
           >
             Renew Plan
@@ -63,19 +65,21 @@ export default function SubscriptionComponent() {
         <span className="inline-block bg-green-100 text-[#40B869] text-xs px-2 py-1 rounded-full">
           {status}
         </span>
-        <p className="text-xs text-gray-500 mt-1">Expires: {formattedExpiry}</p>
+        <Text size="xs" c="dimmed" mt="xs">
+          Expires: {formattedExpiry}
+        </Text>
       </div>
 
       {/* Features List */}
       <div className="mt-4">
-        <h3 className="text-sm font-medium mb-2 text-gray-600">Subscription Features</h3>
+        <Text size="lg" fw={600} c="secondary.9">Subscription Features</Text>
         <ul className="space-y-2">
-        {features.map((feature: any, index: number) => (
-  <li key={index} className="flex items-center text-sm text-gray-700">
-    <CheckCircle className="text-gray-300 mr-2" size={16} />
-    {typeof feature === "string" ? feature : feature?.name || "Unnamed Feature"}
-  </li>
-))}
+          {features.map((feature: any, index: number) => (
+            <li key={index} className="flex items-center text-sm text-gray-700">
+              <CheckCircle className="text-gray-300 mr-2" size={16} />
+              {typeof feature === "string" ? feature : feature?.name || "Unnamed Feature"}
+            </li>
+          ))}
 
         </ul>
       </div>

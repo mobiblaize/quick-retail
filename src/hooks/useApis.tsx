@@ -84,16 +84,31 @@ export const useLogout = () => {
 };
 
 // Update (PUT) Data
+// export const usePutData = (url: string) => {
+//   const mutation = useMutation({
+//     mutationFn: async (arg: any) => {
+//       const response = await axiosInstance.put(baseUrl + url, arg);
+//       return response.data;
+//     },
+//   });
+
+//   return mutation;
+// };
 export const usePutData = (url: string) => {
   const mutation = useMutation({
-    mutationFn: async (arg: any) => {
+    mutationFn: async (arg?: any) => {
       const response = await axiosInstance.put(baseUrl + url, arg);
+      // Make sure we treat this as success if error is false
+      if (response.data?.error) {
+        throw new Error(response.data.message || "Failed request");
+      }
       return response.data;
     },
   });
 
   return mutation;
 };
+
 
 // Update (PATCH) Data
 export const usePatchData = (url: string) => {

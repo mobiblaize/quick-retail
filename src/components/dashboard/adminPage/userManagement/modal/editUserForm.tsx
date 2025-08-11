@@ -1,7 +1,7 @@
 import { Button } from "@mantine/core";
 import { X } from "lucide-react";
 import { useEffect, useState } from "react";
-import { useUpdateUser, useFetchAllRoles, useFetchAllApplicationRoles } from "../../../../../hooks/backendApis/admin/userManagement";
+import { useUpdateUser, useFetchAllRoles } from "../../../../../hooks/backendApis/admin/userManagement";
 import { showNotification } from "@mantine/notifications";
 import { useFetchAllLocations } from "../../../../../hooks/backendApis/pos/products";
 
@@ -34,7 +34,7 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
     const { mutate: updateUser, isPending } = useUpdateUser(userUUID);
     const { data: roleData } = useFetchAllRoles();
     const { data: locationData } = useFetchAllLocations();
-    const { data: applicationData } = useFetchAllApplicationRoles();
+    // const { data: applicationData } = useFetchAllApplicationRoles();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
         const { name, value } = e.target;
@@ -94,12 +94,12 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
         }))
         : [];
 
-     const applicationOptions = Array.isArray(applicationData?.data)
-        ? applicationData.data.map((app: { id: number; name: string }) => ({
-            label: app.name,
-            value: String(app.id),
-        }))
-        : [];
+    //  const applicationOptions = Array.isArray(applicationData?.data)
+    //     ? applicationData.data.map((app: { id: number; name: string }) => ({
+    //         label: app.name,
+    //         value: String(app.id),
+    //     }))
+    //     : [];
 
 
     return (
@@ -202,7 +202,7 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
                     </div>
 
                     {/* Application */}
-                     <div>
+                     {/* <div>
                         <label className="text-sm text-gray-700 block mb-1">Select Application</label>
                         <select
                             name="applicationId"
@@ -217,7 +217,7 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
                                 </option>
                             ))}
                         </select>
-                    </div>
+                    </div> */}
 
                     {/* Buttons */}
                     <div className="flex gap-4 mt-6 justify-center">

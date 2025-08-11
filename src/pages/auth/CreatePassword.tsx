@@ -1,17 +1,16 @@
 import {
-  TextInput,
+  // TextInput,
   PasswordInput,
   Button,
   Box,
   Text,
-  Select,
-  Tooltip,
+  // Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { IconChevronDown } from "@tabler/icons-react";
+// import { IconChevronDown } from "@tabler/icons-react";
 import AuthLayout from "../../layout/AuthLayout";
 
 const CreatePassword = () => {
@@ -141,7 +140,7 @@ const CreatePassword = () => {
             }}
           />
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <Select
               label="Security Question"
               placeholder="Select Security Question"
@@ -161,15 +160,9 @@ const CreatePassword = () => {
             <p className="text-sm text-gray-500">
               Create an extra layer of security pass
             </p>
-          </div>
+          </div> */}
 
-          <TextInput
-            label="Security Answer"
-            placeholder="Security Answer"
-            {...form.getInputProps("security_answer")}
-            size="md"
-            radius="md"
-          />
+          {/* . */}
 
           <Button
             type="submit"

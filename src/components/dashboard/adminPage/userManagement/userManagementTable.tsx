@@ -7,6 +7,7 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchUsers } from "../../../../hooks/backendApis/admin/userManagement";
 import { useEffect, useState } from "react";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import * as dayjs from "dayjs"; // <--- Changed import to namespace import
 
 export interface UserRowData {
   user_uuid: string;
@@ -25,7 +26,7 @@ export interface UserRowData {
     updated_at: string;
   }[];
   locationID?: string;
-  updated_at?: string;
+  updated_at?: string; // This is correctly optional
   onFilterChange: (filters: FilterValues) => void;
 }
 
@@ -35,8 +36,6 @@ const UserManagementTable = () => {
   const { data, isLoading, isError } = useFetchUsers(queryParams);
   const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
-
-
 
   const users: UserRowData[] = data?.data?.users?.data || [];
   const paginationData: PaginationData | undefined = data?.data?.users ? {
@@ -64,17 +63,14 @@ const UserManagementTable = () => {
 
   const handleSortChange = (sortKey: string) => {
     setSortBy(sortKey);
-
     const backendSort = {
       sort: sortKey, // Backend expects 'sort'
       order: "asc", // or "desc" if needed
     };
-
     const updatedFilters = {
       ...appliedFilters,
       ...backendSort,
     };
-
     setAppliedFilters(updatedFilters);
     setQueryParams(prev => ({
       ...prev,
@@ -83,9 +79,9 @@ const UserManagementTable = () => {
     }));
   };
 
-
   // Extract stats for display
   const stats = data?.data?.stats;
+
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
     setQueryParams({ ...queryParams, page });
@@ -100,6 +96,9 @@ const UserManagementTable = () => {
     }
   }, [users]);
 
+  // Ensure dayjs is callable, handling potential .default export
+  const dayjsInstance = (dayjs as any).default || dayjs; // <--- ADDED THIS LINE
+
   const columns: ColumnDef<UserRowData>[] = [
     {
       header: "User Name",
@@ -109,7 +108,6 @@ const UserManagementTable = () => {
         <div>
           <Text fw={500} c="black">
             {`${row.original.firstname} ${row.original.lastname}`}
-            {row.original.email}
           </Text>
           <Text fw={500} c="grey">
             {row.original.email}
@@ -131,25 +129,28 @@ const UserManagementTable = () => {
       header: "Time Stamp",
       accessorKey: "updated_at",
       enableSorting: false,
-      cell: ({ row }) => (
+      // Simplified cell parameter type to directly use UserRowData
+      cell: ({ row }) => ( // <--- SIMPLIFIED CELL PARAMETER TYPE
         <Text fw={400} c="dimmed">
-          {row.original.updated_at || "—"}
+          {row.original.updated_at
+            ? dayjsInstance(row.original.updated_at).format('YYYY-MM-DD HH:mm:ss') // <--- USED dayjsInstance
+            : "—"}
         </Text>
       ),
     },
- {
-  header: "Role",
-  id: "role",
-  enableSorting: false,
-  cell: ({ row }) => {
-    const roleName = row.original.roles?.[0]?.name || "—";
-    const capitalized =
-      typeof roleName === "string"
-        ? roleName.charAt(0).toUpperCase() + roleName.slice(1)
-        : roleName;
-    return <Text>{capitalized}</Text>;
-  },
-},
+    {
+      header: "Role",
+      id: "role",
+      enableSorting: false,
+      cell: ({ row }) => {
+        const roleName = row.original.roles?.[0]?.name || "—";
+        const capitalized =
+          typeof roleName === "string"
+            ? roleName.charAt(0).toUpperCase() + roleName.slice(1)
+            : roleName;
+        return <Text>{capitalized}</Text>;
+      },
+    },
     {
       header: "Status",
       accessorKey: "status",
@@ -216,5 +217,3 @@ const UserManagementTable = () => {
 };
 
 export default UserManagementTable;
-
-

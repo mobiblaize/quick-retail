@@ -61,8 +61,8 @@ const LogoutModal = () => {
       <Button unstyled onClick={open} className="w-full ">
         <div className="flex items-center justify-between gap-[14px]  text-sm bg-[#F0F2F5] rounded-[10em] px-6 py-5 cursor-pointer">
           <div className="text-left">
-            <p className="font-[600] text-[14px] text-[#101928]">{customerName}</p>
-            <p className="font-[400] text-[14px] text-[#475367]">{customerEmail}</p>
+           <Text size="lg" fw={600} c="textSecondary.9">{customerName}</Text>
+           <Text fw={400} size="md" c="secondary">{customerEmail}</Text>
           </div>
           <LogOut className="w-4 h-4" />
         </div>
