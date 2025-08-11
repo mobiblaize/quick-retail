@@ -132,10 +132,10 @@ const CreateOrderPageContent: React.FC = () => {
       }
 
       notifications.show({
-        title: "Success",
+        title: "Order Saved to Draft",
         message:
           status === "completed"
-            ? "Draft saved successfully"
+            ? "Payment for this order wasn't confirmed by cashier"
             : "Payment for this order wasn't confirmed by cashier",
         color: "green",
       });

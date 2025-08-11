@@ -76,7 +76,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({ locationId }) => {
           <Text fw={400} className="text-sm">
             Total Item:{" "}
             {row.original.fees
-              ? JSON.parse(row.original.fees).sub_total
+              ? JSON.parse(row.original.fees).item_count
               : "N/A"}
           </Text>
         </div>

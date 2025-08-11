@@ -58,7 +58,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
       onSuccess: () => {
         notifications.show({
           title: "Update Successful",
-          message: `${name} has been successfully done.`,
+          message: `${name} has been updated successfully.`,
           color: "green",
           autoClose: 4000,
         });

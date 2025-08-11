@@ -281,7 +281,7 @@ const InventoryTable = () => {
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">
-                {paginationData?.total} <span className="ml-2">Product</span>
+                {paginationData?.total} <span className="ml-2"></span>
               </Text>
             </div>
           </div>

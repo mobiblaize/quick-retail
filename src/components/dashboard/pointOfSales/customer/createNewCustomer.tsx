@@ -5,7 +5,7 @@ import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import FormInput from "../../../General/formInput";
 
 // Strict validation for Nigerian phone numbers
-const phoneNumberRegex = /^(?:\+234|0)(701|702|703|704|705|706|707|708|709|70[1-9]|80[1-9]|81[0-9]|90[1-9])[0-9]{6}$/;
+const phoneNumberRegex = /^(?:\+234|234|0)(7[0-9]|8[0-9]|9[0-9])[0-9]{8}$/;
 
 interface ResolveProps {
   opened: boolean;
