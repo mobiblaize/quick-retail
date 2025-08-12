@@ -132,10 +132,10 @@ const CreateOrderPageContent: React.FC = () => {
       }
 
       notifications.show({
-        title: "Order Saved to Draft",
+        title: "Order Successful",
         message:
           status === "completed"
-            ? "Payment for this order wasn't confirmed by cashier"
+            ? "Payment confirmed by cashier"
             : "Payment for this order wasn't confirmed by cashier",
         color: "green",
       });
@@ -164,7 +164,7 @@ const CreateOrderPageContent: React.FC = () => {
         console.warn(`Invalid status: ${status}`);
       }
     });
-  }, [paymentDetails]);
+  }, []);
 
   const registerSubmitHandler = (handler: (status: string) => void) => {
     setSubmitHandler(() => handler);
