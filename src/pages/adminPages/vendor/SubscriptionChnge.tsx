@@ -75,8 +75,8 @@ const SubscriptionChangePage = () => {
   const handlePaySuccess = async (ref: string) => {
     const payload = {
       billing_type: billingType?.toLowerCase(),
-      paystack_complete_callback: "http://localhost:5173/dashboard/change-plan",
-      // paystack_complete_callback: "https://quickretail-application.vercel.app/dashboard/change-plan",
+      // paystack_complete_callback: "http://localhost:5173/dashboard/change-plan",
+      paystack_complete_callback: "https://quickretail-application.vercel.app/dashboard/change-plan",
       paystack_reference: ref,
       applications: items.map((item: any) => ({
         subscription_id: item.subscription_id,

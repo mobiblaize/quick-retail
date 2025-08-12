@@ -2,7 +2,7 @@ import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchCurrentSub } from "../../../../hooks/backendApis/admin/profile";
-import { Text } from "@mantine/core";
+import { List, Text, ThemeIcon } from "@mantine/core";
 
 
 
@@ -73,15 +73,22 @@ export default function SubscriptionComponent() {
       {/* Features List */}
       <div className="mt-4">
         <Text size="lg" fw={600} c="secondary.9">Subscription Features</Text>
-        <ul className="space-y-2">
+        <List spacing="xs">
           {features.map((feature: any, index: number) => (
-            <li key={index} className="flex items-center text-sm text-gray-700">
-              <CheckCircle className="text-gray-300 mr-2" size={16} />
-              {typeof feature === "string" ? feature : feature?.name || "Unnamed Feature"}
-            </li>
+            <List.Item
+              key={index}
+              icon={
+                <ThemeIcon color="gray" variant="light" radius="xl" size={20}>
+                  <CheckCircle size={14} />
+                </ThemeIcon>
+              }
+            >
+              <Text size="sm" color="dark">
+                {typeof feature === "string" ? feature : feature?.name || "Unnamed Feature"}
+              </Text>
+            </List.Item>
           ))}
-
-        </ul>
+        </List>
       </div>
     </div>
   );

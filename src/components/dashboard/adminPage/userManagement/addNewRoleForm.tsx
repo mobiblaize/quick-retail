@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import FormInput from "../../../General/formInput";
 import PermissionsPanel from "./permissionPanel";
-import { Button, Modal } from "@mantine/core";
+import { Button, Modal, Text, Title } from "@mantine/core";
 import { useCreateRole } from "../../../../hooks/backendApis/admin/userManagement";
 import { showNotification } from "@mantine/notifications";
 
@@ -46,23 +46,37 @@ const AddNewRoleForm = () => {
       <div className="md:grid-cols-3 gap-8">
         <div className="md:col-span-2 space-y-8 w-full">
           <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
+            <Title
+              order={2}
+              style={{
+                fontSize: '1.125rem',
+                fontWeight: 600,
+                color: '#374151',
+                marginBottom: '1rem',
+                borderBottom: '1px solid #E5E7EB',
+                paddingBottom: '0.5rem',
+              }}
+            >
               BASIC INFORMATION
-            </h2>
+            </Title>
 
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
+              <Text size="sm" c="gray.6" mb={1}>
+                Role Name
+              </Text>
               <FormInput
                 type="text"
-                label="Role Name"
                 placeholder="Enter role name"
                 paddingY="0.7rem"
                 value={name}
                 onChange={(e: any) => setName(e.target.value)}
               />
 
+              <Text size="sm" c="gray.6" mb={1}>
+                Role Description
+              </Text>
               <FormInput
                 type="text"
-                label="Role Description"
                 placeholder="Enter role description"
                 paddingY="0.7rem"
                 value={description}

@@ -79,7 +79,7 @@ const UserManagement = () => {
   className="flex flex-row items-center justify-between gap-4 overflow-x-auto"
 >
   <Text fw={500} size="xl" c="black" className="whitespace-nowrap">
-    User and Role Management
+    User Management
   </Text>
 
   <div className="flex flex-row gap-2 md:gap-4">
