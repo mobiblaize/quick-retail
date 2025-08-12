@@ -5,7 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import SubscriptionSummary1 from "../../../components/dashboard/adminPage/vendor/SubscriptionSummary1";
 import PaymentSummaryModal from "../../../components/dashboard/adminPage/vendor/paymentSummaryModal";
 import PaymentSuccessModal from "../../../components/dashboard/adminPage/vendor/paymentSuccessfulModal";
-import { useEffect, useRef, useState } from "react";
+import { useEffect,  useState } from "react";
 import { useFetchPaymentSummary } from "../../../hooks/backendApis/authentication/signupAuth";
 import {
   useSubmitSubscription,
@@ -25,21 +25,17 @@ const SubscriptionChangePage = () => {
     storedData = {};
   }
 
-  const {
-    items,
-    billingType,
-    totalPrice,
-    billingStart,
-    billingEnd,
-  } = location.state || storedData;
+  const { items, billingType, totalPrice, billingStart, billingEnd } =
+    location.state || storedData;
 
   const [modalOpen, setModalOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
   const [paymentSummary, setPaymentSummary] = useState();
   const { mutate: fetchPaymentSummary } = useFetchPaymentSummary();
   const { mutate: renewSubscription } = useSubmitSubscription();
-  const verifyPayment = useFetchVerifyPayment(); 
+  const verifyPayment = useFetchVerifyPayment();
   const [verifiedRef, setVerifiedRef] = useState<string>();
+  const [hasVerified, setHasVerified] = useState(false);
 
   const handleBack = () => navigate(-1);
 
@@ -79,8 +75,8 @@ const SubscriptionChangePage = () => {
   const handlePaySuccess = async (ref: string) => {
     const payload = {
       billing_type: billingType?.toLowerCase(),
-      // paystack_complete_callback: "http://localhost:5173/dashboard/admin/vendorPage",
-      paystack_complete_callback: "https://quickretail-application.vercel.app/dashboard/admin/vendorPage",
+      // paystack_complete_callback: "http://localhost:5173/dashboard/change-plan",
+      paystack_complete_callback: "https://quickretail-application.vercel.app/dashboard/change-plan",
       paystack_reference: ref,
       applications: items.map((item: any) => ({
         subscription_id: item.subscription_id,
@@ -105,43 +101,61 @@ const SubscriptionChangePage = () => {
     });
   };
 
-
   const [isVerifying, setIsVerifying] = useState(false);
 
-  const hasVerifiedRef = useRef(false);
 
   useEffect(() => {
-    if (!paymentRef || hasVerifiedRef.current) return;
-  
+    if (!paymentRef || hasVerified) return;
+
     const verify = async () => {
       setIsVerifying(true);
-      setSuccessOpen(true); 
-      hasVerifiedRef.current = true; 
-  
+
       try {
         const res = await verifyPayment(paymentRef);
-        setIsVerifying(false);
-  
-        if (res.success) {
+        if (!res.error) {
           setVerifiedRef(paymentRef);
           sessionStorage.setItem("registerEmail", res.email || "");
           sessionStorage.removeItem("subscriptionData");
+          setHasVerified(true);
+          setSuccessOpen(true);
+          const payload = {
+            billing_type: billingType?.toLowerCase(),
+            applications: items.map((item: any) => ({
+              subscription_id: item.subscription_id,
+              application_id: item.application_id,
+              amount: String(item.price || 0),
+              additional_seat: String(item.additionalSeats || 0),
+            })),
+          };
+
+          fetchPaymentSummary(payload, {
+            onSuccess: (res: any) => {
+              if (!res.error) {
+                setPaymentSummary(res.data);
+                // Optionally, open summary modal here
+              }
+            },
+            onError: (error) => {
+              console.error("Failed to fetch payment summary:", error);
+            },
+          });
+          setHasVerified(true);
         } else {
           console.error("Payment verification failed:", res);
-          setSuccessOpen(false); // Hide modal on failure
+          setSuccessOpen(false);
+          setHasVerified(true);
         }
       } catch (err) {
         setIsVerifying(false);
         console.error("Verification error:", err);
         setSuccessOpen(false);
+        setHasVerified(true);
       }
     };
-  
+
     verify();
   }, [paymentRef]);
-  
 
-  
 
   const subHeaders = [
     <div key="1">
@@ -156,6 +170,7 @@ const SubscriptionChangePage = () => {
       </div>
     </div>,
   ];
+  
 
   return (
     <PageContainer subHeaders={subHeaders}>
@@ -170,7 +185,7 @@ const SubscriptionChangePage = () => {
         />
       ) : (
         <p className="text-center text-sm text-gray-500 mt-10">
-          No subscription details found.
+          {/* No subscription details found. */}
         </p>
       )}
 
@@ -181,17 +196,15 @@ const SubscriptionChangePage = () => {
         summaryData={paymentSummary}
       />
       <PaymentSuccessModal
-  opened={successOpen}
-  onClose={() => {
-    setSuccessOpen(false);
-    navigate(ROUTES.vendorpage); 
-  }}
-  // @ts-ignore
-  reference={verifiedRef}
-  email={sessionStorage.getItem("registerEmail") || undefined}
-  loading={isVerifying}
-/>
-
+        opened={successOpen && !!verifiedRef}
+        onClose={() => {
+          setSuccessOpen(false);
+          navigate(ROUTES.vendorpage);
+        }}
+        reference={verifiedRef}
+        email={sessionStorage.getItem("registerEmail") || undefined}
+        loading={isVerifying}
+      />
     </PageContainer>
   );
 };

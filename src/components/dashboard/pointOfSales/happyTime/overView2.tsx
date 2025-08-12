@@ -1,17 +1,14 @@
 import { Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
-import { useFetchDiscountStat } from "../../../../hooks/backendApis/pos/discount";
 import house from "../../../../assets/images/house.png";
 import dollar from "../../../../assets/images/naira1.png";
-
-const AnalysisOverview1 = () => {
-  const { data,} = useFetchDiscountStat();
-
-  const statsData = data?.data
+// @ts-ignore
+const AnalysisOverview1 = ({ stats }) => { 
+  const statsData = stats
     ? [
         {
           title: "TOTAL DISCOUNT VALUE",
-          value: `₦${data.data.total_amount.toLocaleString()}`,       
+          value: `₦${Number(stats.total_discount_value).toLocaleString()}`,      
           icon: house, 
           altText: "dollar-sign",
           iconColor: "#E17036",
@@ -22,7 +19,7 @@ const AnalysisOverview1 = () => {
         },
         {
           title: "TOTAL DISCOUNTS",
-          value: data.data.total_redemption,
+          value: stats.total_discounts,
           icon: dollar,
           altText: "Discount Icon",
           iconColor: "#E17036",
@@ -32,7 +29,7 @@ const AnalysisOverview1 = () => {
         },
         {
           title: "REDEMPTION (USED DISCOUNTS)",
-          value: `₦${data.data.new_amount.toLocaleString()}`,
+          value: stats.total_redemptions,
           icon: dollar,
           iconColor: "#E17036",
           cardBgColor: "#F4F3FF",
