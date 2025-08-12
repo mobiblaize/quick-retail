@@ -1,6 +1,6 @@
 import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
-import { Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 
 
 interface ProfileHeaderProps {
@@ -47,29 +47,47 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
 
   return (
     <div className="bg-white rounded-lg shadow p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-      <div className="flex items-center gap-4">
-        <div className="w-50 h-50 border-4 border-orange-500 rounded-full overflow-hidden">
+      <div className="grid grid-cols-1 sm:flex sm:items-center gap-4">
+        <div className="w-32 h-32 border-4 border-orange-500 rounded-full overflow-hidden mx-auto sm:mx-0">
           <img
             src={localImage || "/avatar-placeholder.jpg"}
-            // alt="Profile"
             className="w-full h-full object-cover"
           />
         </div>
-        <div>
-          <div className="mb-[1em]">
-            <Text size="lg" fw={600} c="textSecondary.9">{company_name}</Text>
+
+        <div className="text-center sm:text-left">
+          <div className="mb-4">
+            <Text size="lg" fw={600} c="textSecondary.9">
+              {company_name}
+            </Text>
           </div>
-          <div className="mb-[1em]">
-            <Text fw={400} size="md" c="secondary">{email}</Text>
+          <div className="mb-4">
+            <Text fw={400} size="md" c="secondary">
+              {email}
+            </Text>
           </div>
-          
-          <button
-            className="border border-gray-300 text-sm font-semibold text-gray-900 px-4 py-2 rounded hover:bg-gray-100 cursor-pointer"
+
+          <Button
+            variant="outline"
+            color="gray"
+            radius="md"
+            size="sm"
+            fw={500}
             onClick={() => fileInputRef.current?.click()}
             disabled={isLoading}
+            styles={(theme) => ({
+              root: {
+                cursor: "pointer",
+                borderColor: theme.colors.gray[4],
+                "&:hover": {
+                  backgroundColor: theme.colors.gray[0],
+                },
+              },
+            })}
           >
             {isLoading ? "Uploading..." : "Change profile picture"}
-          </button>
+          </Button>
+
           <input
             type="file"
             accept="image/*"
@@ -79,6 +97,7 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
           />
         </div>
       </div>
+
     </div>
   );
 }

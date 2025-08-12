@@ -1,7 +1,7 @@
 import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import { Avatar, Loader, Text } from "@mantine/core";
+import {  Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { Link } from "react-router-dom";
@@ -60,6 +60,7 @@ const ReturnsTable = ({
     returnedReason: item.return_reason || "N/A",
     complaintStatus: statusMap[item.status] || "Unknown",
     returnId: item.returnID || "N/A",
+    imagePath: item.product_variation?.image_path || "Unknown",
   }));
   
 
@@ -88,12 +89,13 @@ const ReturnsTable = ({
       enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
-          <Avatar
-            src={imageSrc}
-            alt={row.original.name as string}
-            radius="md"
-            size={40}
-          />
+         <img
+    
+  src={row.original.imagePath || imageSrc} 
+  alt={row.original.name as string}
+  className="w-10 h-10 rounded-md object-cover"
+/>
+
           <div className="flex flex-col">
             <Text fw={500} c="black">
               {truncateText(String(row.original.name ?? ""))}

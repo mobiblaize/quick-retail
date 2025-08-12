@@ -1,6 +1,6 @@
 
 import {  useQueryClient } from "@tanstack/react-query";
-import axios from "axios";
+import { axiosInstance } from "../../../utils/axios-instance";
 import { useGetData, usePostData, usePutData } from "../../useApis";
 
 export interface ApplicationPayload {
@@ -46,16 +46,39 @@ export const useSubmitSubscription = () => {
   
     const verify = async (reference: string) => {
       const res = await queryClient.fetchQuery({
-        queryKey: ['verify-payment', reference],
+        queryKey: ["verify-payment", reference],
         queryFn: async () => {
-          const res = await axios.get(`/profile/verify-payment?reference=${reference}`);
-          return res.data;
+          const response = await axiosInstance.get("/profile/verify-payment", {
+            params: { reference },
+          });
+          return response.data;
         },
       });
+  
       return res;
     };
   
-    return verify; // ✅ this returns a function
+    return verify;
   };
   
+  // export const useFetchVerifyPayment = () => {
+  //   const queryClient = useQueryClient();
+  
+  //   const verify = async (reference: string) => {
+  //     return await queryClient.fetchQuery({
+  //       queryKey: ["verify-payment", reference],
+  //       queryFn: async () => {
+  //         const { data } = await axios.get(
+  //           `/profile/verify-payment?reference=${reference}`
+  //         );
+  //         return data;
+  //       },
+  //     });
+  //   };
+  
+  //   return { verifyPayment: verify };
+  // };
+  // export const useFetchVerifyPayment = () => {
+  //   return useMutation((ref: string) => api.verifyPayment(ref));
+  // };
   

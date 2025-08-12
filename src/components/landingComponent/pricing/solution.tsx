@@ -1,5 +1,6 @@
 import { ArrowUpRight } from "lucide-react";
 import { Point } from "../../../assets/svg";
+import { Text } from "@mantine/core";
 
 const Solution = () => {
   const softwareSolution = [
@@ -56,12 +57,34 @@ const Solution = () => {
             className={`p-4 rounded-lg border border-[#D0D5DD] max-w-[488px] shadow `}
           >
             <item.icon />
-            <p className="font-clash-medium text-sm sm:text-base my-3">
+            <Text
+              fw={500}
+              size="sm"
+              style={(theme) => ({
+                fontFamily: "'Clash Display', sans-serif",
+                [`@media (min-width: ${theme.breakpoints.sm})`]: {
+                  fontSize: theme.fontSizes.md,
+                },
+                marginTop: theme.spacing.sm,
+                marginBottom: theme.spacing.sm,
+              })}
+            >
               {item.label}
-            </p>
-            <span className="text-[#667085] font-normal font-sans text-xs sm:text-sm">
+            </Text>
+
+            <Text
+              c="#667085"
+              fw={400}
+              style={(theme) => ({
+                fontFamily: theme.fontFamily,
+                fontSize: theme.fontSizes.xs,
+                [`@media (min-width: ${theme.breakpoints.sm})`]: {
+                  fontSize: theme.fontSizes.sm,
+                },
+              })}
+            >
               {item.description}
-            </span>
+            </Text>
             <a
               href={item.to}
               className="text-[#667085] font-sans mt-1 sm:mt-2 flex items-center text-xs sm:text-sm hover:text-[#F16722] transition-colors"

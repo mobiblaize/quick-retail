@@ -1,3 +1,4 @@
+import { Stack, Text, Title } from "@mantine/core";
 import { ChevronDown, ChevronUp } from "lucide-react";
 import { useState } from "react";
 
@@ -23,12 +24,27 @@ export default function PermissionGroup({
         className="cursor-pointer w-full"
       >
         <div className="flex justify-between items-center">
-          <div>
-            <h4 className="text-sm font-medium text-[#48464E] font-[DM Sans]">
+          <Stack gap={8}>
+            <Title
+              order={4}
+              style={{
+                fontSize: '0.875rem', // text-sm
+                fontWeight: 500, // font-medium
+                color: '#48464E',
+                fontFamily: 'DM Sans, sans-serif',
+              }}
+            >
               {title}
-            </h4>
-            <p className="text-sm text-[#908C9C]">{description}</p>
-          </div>
+            </Title>
+            <Text
+              style={{
+                fontSize: '0.875rem', // text-sm
+                color: '#908C9C',
+              }}
+            >
+              {description}
+            </Text>
+          </Stack>
           {collapsible && (open ? <ChevronUp size={16} /> : <ChevronDown size={16} />)}
         </div>
       </div>

@@ -5,5 +5,5 @@ export const useCreateCustomer = () => {
   };
   
   export const useUpdateCustomer  = (customerId: number | string) => {
-    return usePutData(`pos/customer/update-custome/${customerId}`);
+    return usePutData(`pos/customer/update-customer/${customerId}`);
   };

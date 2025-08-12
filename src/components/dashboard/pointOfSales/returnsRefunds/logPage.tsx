@@ -9,6 +9,7 @@ import {
 import { notifications } from "@mantine/notifications";
 import { fileToBase64 } from "../../../../utils/helpers";
 import { useNavigate } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
 
 const LogOrder = () => {
   const [orderId, setOrderId] = useState<string>("");
@@ -106,7 +107,7 @@ const LogOrder = () => {
       });
       return;
     }
-
+  
     if (!returnReason) {
       notifications.show({
         title: "Validation Error",
@@ -115,7 +116,7 @@ const LogOrder = () => {
       });
       return;
     }
-
+  
     // Gather selected order details with quantity returned > 0
     const order_detail = Object.entries(selectedItems)
       .filter(
@@ -126,7 +127,7 @@ const LogOrder = () => {
         order_detail_id: orderDetailId,
         quantity_returned: quantitiesReturned[orderDetailId] || 0,
       }));
-
+  
     if (order_detail.length === 0) {
       notifications.show({
         title: "Validation Error",
@@ -136,7 +137,7 @@ const LogOrder = () => {
       });
       return;
     }
-
+  
     let defect_image: string[] = [];
     try {
       defect_image = await Promise.all(defectImages.map(fileToBase64));
@@ -148,7 +149,7 @@ const LogOrder = () => {
       });
       return;
     }
-
+  
     // Payload ready
     const payload = {
       order_id: submittedOrderId,
@@ -157,9 +158,9 @@ const LogOrder = () => {
       notes: notes || null,
       defect_image,
     };
-
+  
     console.log("Payload to send:", payload);
-
+  
     mutate(payload, {
       onSuccess: () => {
         notifications.show({
@@ -167,7 +168,7 @@ const LogOrder = () => {
           message: "Return information successfully submitted.",
           color: "green",
         });
-
+  
         // reset form states as needed
         setOrderId("");
         setSubmittedOrderId("");
@@ -176,6 +177,9 @@ const LogOrder = () => {
         setReturnReason("");
         setNotes("");
         setDefectImages([]);
+  
+     
+        navigate(ROUTES.returns); 
       },
       onError: (error: any) => {
         notifications.show({
@@ -186,6 +190,7 @@ const LogOrder = () => {
       },
     });
   };
+  
 
   return (
     <main className="w-full h-auto rounded-lg bg-white pb-[3em]">

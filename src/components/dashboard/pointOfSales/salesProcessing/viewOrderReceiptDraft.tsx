@@ -1,5 +1,5 @@
 import { Avatar, Text } from "@mantine/core";
-import { PaidDot } from "../../../../assets/svg";
+import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { formatMoney } from "../../../../utils/helpers";
 
@@ -71,10 +71,17 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
             <Text size="2rem" c="black" fw={600}>
               Order ID: {order.order_number}
             </Text>
-            <div className="inline-flex bg-[#ECFDF3] items-center px-3 py-1 rounded-full font-medium text-sm">
-              <PaidDot />
-              <span className="ml-2 capitalize">{order.payment_status}</span>
-            </div>
+            <div
+  className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+    order.payment_status?.toLowerCase() === "pending"
+      ? "bg-yellow-100 text-[#B54708]"
+      : "bg-green-100 text-green-800"
+  }`}
+>
+  {order.payment_status?.toLowerCase() === "pending" ? <UnpaidDot /> : <PaidDot />}
+  <span className="ml-2 capitalize">{order.payment_status}</span>
+</div>
+
           </div>
           <div className="flex flex-wrap mt-2 gap-5">
             <Text fw={400} className="text-xl">

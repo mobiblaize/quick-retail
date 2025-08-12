@@ -53,7 +53,7 @@ export const DashboardHeader = ({
     // },
     {
       label: "Admin" as DashboardSection,
-      to: ROUTES.adminDashboard,
+      to: ROUTES.vendorpage,
       active: activeSection === "Admin",
     },
   ];
