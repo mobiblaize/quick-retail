@@ -141,7 +141,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       ),
     },
     {
-      header: "Discount Status",
+      header: " Status",
       accessorKey: "discountStatus",
       enableSorting: false,
       cell: (props) => {

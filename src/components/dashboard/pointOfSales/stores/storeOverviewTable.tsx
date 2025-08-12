@@ -112,7 +112,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
       accessorKey: "totalCustomer",
       enableSorting: false, 
       cell: (props) => {
-        const totalCustomers = props.row.original.total_customers;
+        const totalCustomers = props.row.original.registered_customers;
         return (
           <Text
             c={typeof totalCustomers === "number" ? "black" : "dimmed"}
@@ -215,7 +215,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSortFilter
           onSortChange={onSortChange}
           activeSort={activeSort} 
-          searchPlaceholder="Search orders"
+          searchPlaceholder="Search stores"
           serverSidePagination={true}
           paginationData={paginationData}
           onPageChange={onPageChange}

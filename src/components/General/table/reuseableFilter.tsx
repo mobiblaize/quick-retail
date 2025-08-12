@@ -72,9 +72,6 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showRole = false,
   showModule = false,
   setFiltersApplied,
-  // setAppliedFilters,
-
-  // onResetFilter,
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
     startDate: '',
@@ -91,7 +88,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     productStatus: 'All',
     type: 'all',
     discountStatus: 'All',
-    returnStatus: 'All',
+     returnStatus: 'All',
     role: '',
     module: '',
   });
@@ -124,7 +121,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   
   useEffect(() => {
     const hasFilters = Object.entries(filters).some(
-      ([val]) => val && val !== '' && val !== 'All' && val !== 'all'
+      ([ val]) => val && val !== '' && val !== 'All' && val !== 'all'
     );
   
     setFiltersApplied?.(hasFilters);
