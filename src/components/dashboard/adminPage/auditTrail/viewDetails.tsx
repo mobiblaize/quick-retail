@@ -1,3 +1,5 @@
+import { Pill } from "@mantine/core";
+
 interface CauserProfile {
   store_name: string;
   roles: [];
@@ -6,7 +8,6 @@ interface CauserProfile {
   log_name: string;
   action_module: string;
   ip_address: string;
-
   store_address: string;
   action_type: string;
 }
@@ -17,7 +18,6 @@ interface ProfileHeaderProps {
 
 export default function ViewDetails({ profile }: ProfileHeaderProps) {
   const {
- 
     store_name,
     id,
     created_at,
@@ -28,11 +28,37 @@ export default function ViewDetails({ profile }: ProfileHeaderProps) {
     action_type,
   } = profile;
 
+  // Detect color dynamically from API value
+  const getColor = (status: string = ""): string => {
+    const normalized = status.trim().toLowerCase();
+
+    if (normalized.includes("success") || normalized.includes("completed")) {
+      return "green";
+    }
+    if (normalized.includes("fail") || normalized.includes("error")) {
+      return "red";
+    }
+    if (normalized.includes("pending") || normalized.includes("waiting")) {
+      return "yellow";
+    }
+    if (normalized.includes("code") || normalized.includes("generate")) {
+      return "blue";
+    }
+
+    return "gray"; // default for unknown statuses
+  };
+
+  const status = (
+    <Pill color={getColor(log_name)}>
+      {log_name}
+    </Pill>
+  );
+
   const profileInfo = [
     { label: "Audit ID", value: id },
     { label: "Timestamp", value: created_at },
     { label: "Activity", value: log_name },
-    { label: "Activity Status", value:log_name  },
+    { label: "Activity Status", value: status },
     { label: "Module", value: action_module },
     { label: "Store/Warehouse", value: store_name },
     { label: "IP Address", value: ip_address },
