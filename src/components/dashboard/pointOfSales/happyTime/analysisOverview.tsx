@@ -61,7 +61,7 @@ const AnalysisOverview = () => {
           />
         </Group> */}
       </header>
-      <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
+      <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
       {statsData.map((card, index) => (
             <AnalyticsCard
               key={index}

@@ -297,12 +297,12 @@ export const Reports: NavItem[] = [
 ];
 
 export const Admin: NavItem[] = [
-   {
-    label: "Dashboard",
-    href: ROUTES.adminDashboard,
-    inactiveIcon: InActiveDashboardIcon,
-    activeIcon: ActiveDashboardIcon,
-  },
+  //  {
+  //   label: "Dashboard",
+  //   href: ROUTES.adminDashboard,
+  //   inactiveIcon: InActiveDashboardIcon,
+  //   activeIcon: ActiveDashboardIcon,
+  // },
   {
     label: "Vendor Profile",
     href: ROUTES.vendorpage,
@@ -310,7 +310,7 @@ export const Admin: NavItem[] = [
     activeIcon: ActiveVendorProfile,
   },
   {
-    label: "User & Role Management",
+    label: "User Management",
     href: ROUTES.userManagement,
     inactiveIcon: InActiveVendorManagementIcon,
     activeIcon: ActiveVendorManagementIcon,

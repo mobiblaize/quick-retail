@@ -4,7 +4,7 @@ import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
-import { useFetchDashboardCustomers} from "../../../../hooks/backendApis/pos/dashboard";
+import { useFetchDashboardCustomers } from "../../../../hooks/backendApis/pos/dashboard";
 import {
   ReactElement,
   JSXElementConstructor,
@@ -36,31 +36,29 @@ const CustomerAnalysis = () => {
   return (
     <main className="flex flex-col lg:flex-row gap-6">
       <div className="w-full lg:w-[65%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
-        <div className="flex justify-between items-center">
-          <div className="flex-col">
+        <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+          <div className="flex flex-col mb-3 sm:mb-0">
             <Text size="xl" fw={600} c="textSecondary.9">
               Customer Analysis
             </Text>
           </div>
+
           <div className="flex items-center gap-2 sm:gap-4">
             <Group className="w-auto">
               <DateFilterMenu
-                // defaultFilter="This Month"
-                // buttonVariant="subtle"
-                // buttonSize="md"
-                // showIconOnly="sm"
                 onDateFilterChange={({ startDate, endDate }) =>
-              setDateRange({
-                // @ts-ignore
-                start_date: startDate.toISOString().split("T")[0],
-                      // @ts-ignore
-                end_date: endDate.toISOString().split("T")[0],
-              })
-            }
+                  setDateRange({
+                    // @ts-ignore
+                    start_date: startDate.toISOString().split("T")[0],
+                    // @ts-ignore
+                    end_date: endDate.toISOString().split("T")[0],
+                  })
+                }
               />
             </Group>
           </div>
         </div>
+
         <DivisionSaleChart
           newCustomers={stats?.new_customers ?? 0}
           existingCustomers={stats?.existing_customers ?? 0}
@@ -76,9 +74,9 @@ const CustomerAnalysis = () => {
           <Text size="xl" fw={600} c="textSecondary.9">
             Recent Customers
           </Text>
-          <span className="text-gray-400 font-normal">
+          <Text c="gray.6" fw={400}>
             An overview of sales made
-          </span>
+          </Text>
         </div>
         <div className="flex mt-4 flex-col gap-2">
           {customers
@@ -88,53 +86,53 @@ const CustomerAnalysis = () => {
                 data: {
                   usericon: JSX.IntrinsicAttributes;
                   customer_name:
+                  | string
+                  | number
+                  | bigint
+                  | boolean
+                  | ReactElement<unknown, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | Promise<
                     | string
                     | number
                     | bigint
                     | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
                     | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
+                    | ReactElement<
+                      unknown,
+                      string | JSXElementConstructor<any>
+                    >
+                    | Iterable<ReactNode>
                     | null
-                    | undefined;
+                    | undefined
+                  >
+                  | null
+                  | undefined;
                   customer_email:
+                  | string
+                  | number
+                  | bigint
+                  | boolean
+                  | ReactElement<unknown, string | JSXElementConstructor<any>>
+                  | Iterable<ReactNode>
+                  | ReactPortal
+                  | Promise<
                     | string
                     | number
                     | bigint
                     | boolean
-                    | ReactElement<unknown, string | JSXElementConstructor<any>>
-                    | Iterable<ReactNode>
                     | ReactPortal
-                    | Promise<
-                        | string
-                        | number
-                        | bigint
-                        | boolean
-                        | ReactPortal
-                        | ReactElement<
-                            unknown,
-                            string | JSXElementConstructor<any>
-                          >
-                        | Iterable<ReactNode>
-                        | null
-                        | undefined
-                      >
+                    | ReactElement<
+                      unknown,
+                      string | JSXElementConstructor<any>
+                    >
+                    | Iterable<ReactNode>
                     | null
-                    | undefined;
+                    | undefined
+                  >
+                  | null
+                  | undefined;
                 },
                 index: Key | null | undefined
               ) => (

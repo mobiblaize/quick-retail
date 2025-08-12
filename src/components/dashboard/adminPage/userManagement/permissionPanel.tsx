@@ -2,6 +2,7 @@ import { Info } from "lucide-react";
 import { useState } from "react";
 import PermissionsTab from "./permissionTab";
 import PointOfSalesPermissions from "./pointofSalesPermision";
+import { Flex, Text, ThemeIcon } from "@mantine/core";
 
 interface PermissionsPanelProps {
   selectedPermissions: number[];
@@ -44,10 +45,14 @@ export default function PermissionsPanel({
       <PermissionsTab active={activeTab} onChange={setActiveTab} />
 
       {activeTab === "Point of Sales" && (
-        <div className="mt-4 flex items-start gap-2 text-[16px] text-[#48464E]">
-          <Info size={16} className="mt-0.5 text-blue-600" />
-          Features with heavy and important data should be restricted to administrative roles
-        </div>
+        <Flex mt="md" align="flex-start" gap="xs">
+          <ThemeIcon variant="light" color="blue" size={24} radius="xl">
+            <Info size={16} />
+          </ThemeIcon>
+          <Text size="sm" color="dark.7">
+            Features with heavy and important data should be restricted to administrative roles
+          </Text>
+        </Flex>
       )}
 
       <div className="mt-6">{renderTabContent()}</div>

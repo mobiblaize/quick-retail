@@ -1,3 +1,4 @@
+import { Paper, Text } from "@mantine/core";
 import { useState, useRef, useEffect } from "react";
 
 interface Option {
@@ -47,10 +48,14 @@ const Dropdown2 = ({
   return (
     <div className={`relative w-full`} ref={dropdownRef}>
       {label && (
-        <label className="block mb-1 text-sm font-medium text-gray-700">
+        <Text size="sm" fw={500} c="gray.7" mb={4}>
           {label}
-          {required && <span className="text-red-600 ml-1">*</span>}
-        </label>
+          {required && (
+            <Text span c="red.6" ml={4}>
+              *
+            </Text>
+          )}
+        </Text>
       )}
       <button
         type="button"
@@ -62,27 +67,52 @@ const Dropdown2 = ({
       </button>
 
       {open && (
-        <ul
-          className="absolute z-10 mt-1 w-full bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto"
-          role="listbox"
+        <Paper
+          shadow="md"
+          withBorder
+          radius="md"
+          style={{
+            position: "absolute",
+            zIndex: 10,
+            marginTop: 4,
+            width: "100%",
+            maxHeight: 240,
+            overflowY: "auto",
+          }}
         >
           {options.map((opt) => (
-            <li
+            <Text
               key={opt.value}
-              className={`cursor-pointer select-none px-4 py-2 hover:bg-blue-600 hover:text-white ${
-                value === opt.value ? "bg-blue-500 text-white" : "text-black"
-              }`}
-              role="option"
               onClick={() => {
                 onChange(opt.value);
                 setOpen(false);
               }}
+              px="md"
+              py="xs"
+              style={{
+                cursor: "pointer",
+                backgroundColor:
+                  value === opt.value ? "#3b82f6" : "transparent",
+                color: value === opt.value ? "white" : "black",
+              }}
+              onMouseEnter={(e) => {
+                (e.currentTarget as HTMLElement).style.backgroundColor =
+                  "#2563eb";
+                (e.currentTarget as HTMLElement).style.color = "white";
+              }}
+              onMouseLeave={(e) => {
+                (e.currentTarget as HTMLElement).style.backgroundColor =
+                  value === opt.value ? "#3b82f6" : "transparent";
+                (e.currentTarget as HTMLElement).style.color =
+                  value === opt.value ? "white" : "black";
+              }}
             >
               {opt.label}
-            </li>
+            </Text>
           ))}
-        </ul>
+        </Paper>
       )}
+
     </div>
   );
 };

@@ -70,7 +70,7 @@ const OverviewBox = () => {
 
   return (
     <main className="w-full h-auto overflow-auto px-3 sm:px-6 py-4 sm:py-8 rounded-lg bg-white">
-      <header className="flex flex-row justify-between sm:items-center">
+      {/* <header className="flex flex-row justify-between sm:items-center">
         <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
             Analysis overview
@@ -95,7 +95,35 @@ const OverviewBox = () => {
             }
           />
         </Group>
+      </header> */}
+
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
+        <div className="flex flex-col mb-3 sm:mb-0">
+          <Text size="xl" fw={600} c="textSecondary.9">
+            Analysis overview
+          </Text>
+
+          <Text size="sm">
+            {isMobile
+              ? "An Overview of sales made"
+              : "This is an overview summarizing sales, highlighting key trends and strategies."}
+          </Text>
+        </div>
+
+        <Group className="mt-2 sm:mt-0">
+          <DateFilterMenu
+            onDateFilterChange={({ startDate, endDate }) =>
+              setDateRange({
+                //@ts-ignore
+                start_date: startDate.toISOString().split("T")[0],
+                //@ts-ignore
+                end_date: endDate.toISOString().split("T")[0],
+              })
+            }
+          />
+        </Group>
       </header>
+
 
       <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5">
         {isLoading ? (

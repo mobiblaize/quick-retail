@@ -48,7 +48,7 @@ const MobileDashboardHeader = () => {
     // },
     {
       label: "Admin" as DashboardSection,
-      to: ROUTES.dashboard,
+      to: ROUTES.vendorpage,
       active: activeSection === "Admin",
     },
   ];

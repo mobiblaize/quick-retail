@@ -1,6 +1,7 @@
 
 import { CheckCircle } from "lucide-react"
 import SubscriptionCard from "./subscriptionCard"
+import { List, Text, ThemeIcon } from "@mantine/core"
 
 const features = [
   "Point of sales management system",
@@ -16,15 +17,21 @@ export default function CurrentPlan() {
       <h2 className="text-lg font-semibold mb-4">CURRENT PLAN</h2>
       <SubscriptionCard />
       <div className="mt-4">
-        <h3 className="text-sm font-medium mb-2 text-gray-600">Subscription Features</h3>
-        <ul className="space-y-2">
-          {features.map((feature) => (
-            <li key={feature} className="flex items-center text-sm text-gray-700">
-              <CheckCircle className="text-green-500 mr-2" size={16} />
-              {feature}
-            </li>
-          ))}
-        </ul>
+       <Text size="lg" fw={600} c="secondary.9">Subscription Features</Text>
+       <List spacing="xs" size="sm" center>
+  {features.map((feature) => (
+    <List.Item
+      key={feature}
+      icon={
+        <ThemeIcon color="green" size={20} radius="xl">
+          <CheckCircle size={14} />
+        </ThemeIcon>
+      }
+    >
+      {feature}
+    </List.Item>
+  ))}
+</List>
       </div>
     </div>
   )
