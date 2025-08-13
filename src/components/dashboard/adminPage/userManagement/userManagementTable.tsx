@@ -87,7 +87,7 @@ const UserManagementTable = () => {
     setQueryParams({ ...queryParams, page });
   };
 
-  useEffect(() => {
+  useEffect(() => { 
     if (users.length > 0) {
       const locationID = users[0]?.locationID;
       if (locationID) {

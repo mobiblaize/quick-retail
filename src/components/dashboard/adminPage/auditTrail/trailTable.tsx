@@ -5,6 +5,7 @@ import TanTable from "../../../General/table";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { ROUTES } from "../../../../constants/routes";
 import { useNavigate } from "react-router-dom";
+// import { useEffect } from "react";
 
 interface TrailTableProps {
   logs: any[];
@@ -20,12 +21,18 @@ const TrailTable = ({
   error,
   onFilterChange,
 }: TrailTableProps) => {
-    const navigate = useNavigate();
-    
+    const navigate = useNavigate();    
     const handleViewClick = (uuid: string) => {
         navigate(ROUTES.viewTrail, { state: { uuid } }); 
       };
-
+      // useEffect(() => { 
+      //     if (logs.length > 0) {
+      //       const locationID = logs[0]?.locationID;
+      //       if (locationID) {
+      //         localStorage.setItem("viewUserLocationID", locationID);
+      //       }
+      //     }
+      //   }, [logs]);
 
       const roles = Array.from(
         new Set(
@@ -94,7 +101,7 @@ const TrailTable = ({
     },
     {
       header: "Role",
-      accessorKey: "roles",
+      accessorKey: "roles", 
       cell: ({ row }) => {
         const causer = row.original.causer;
         let roleDisplay = "N/A";
@@ -121,8 +128,7 @@ const TrailTable = ({
       header: "Activity",
       accessorKey: "description",
       cell: ({ row }) => (
-        // <Text fw={400} className="text-sm whitespace-normal" c="#667185">
-                   <Text fw={300} size="sm" className="text-sm " c="#667185">
+        <Text fw={300} size="sm" className="text-sm " c="#667185">
           {row.original.log_name}
         </Text>
       ),
@@ -182,7 +188,7 @@ const TrailTable = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search logs"
-          length={8}
+          length={-1}
           showFilter
           roles={roles}
           modules={modules}
