@@ -29,9 +29,7 @@ const ActivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
                 fontSize: "clamp(0.875rem, 2vw, 1rem)",
               }}
             >
-              Are you sure you want to activate this Categorie? Activated
-              Categories will appear when adding a product. You can also
-              deactivate this product later.
+             Are you sure you want to activate this category? Products under this category will become active.
             </Text>
           </div>
         }

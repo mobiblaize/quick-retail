@@ -32,18 +32,21 @@ const CreatePassword = () => {
       security_answer: "",
     },
     validate: {
+      // @ts-ignore
       password: (value) =>
         value.length < 8 ? "Password must have at least 8 letters" : null,
+      // @ts-ignore
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords do not match" : null,
-      security_question: (value) =>
-        value.length < 3
-          ? "Security question must be at least 3 characters"
-          : null,
-      security_answer: (value) =>
-        value.length < 3
-          ? "Security answer must be at least 3 characters"
-          : null,
+      // security_question: (value) =>
+      //   value.length < 3
+      //     ? "Security question must be at least 3 characters"
+      //     : null,
+      //     security_question: (value) =>
+      //     value && value.length < 3
+      //       ? "Security question must be at least 3 characters"
+      //       : null,
+        
     },
   });
 

@@ -1,4 +1,3 @@
-
 import { useState, useEffect, SetStateAction } from "react";
 import { Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
@@ -7,7 +6,6 @@ import { SqrCode } from "../../../../assets/svg";
 import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
 import { formatMoney } from "../../../../utils/helpers";
 import { useOrderStore } from "../../../../hooks/useOrderFormStore";
-
 
 interface SelectedItemPayload {
   variationId: string;
@@ -23,14 +21,17 @@ interface SelectedItem {
   [key: string]: any;
 }
 
-
 interface SearchProductProps {
   onSelect: (value: string | { custom: true; name: string }) => void;
   onItemsChange: (items: SelectedItemPayload[]) => void;
   initialItems?: SelectedItem[];
 }
 
-const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
+const SearchProduct = ({
+  onSelect,
+  onItemsChange,
+  initialItems = [],
+}: SearchProductProps) => {
   const { items, setItems } = useOrderStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
@@ -38,13 +39,12 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>(items);
   const [hasSetInitial, setHasSetInitial] = useState(false);
 
-  useEffect(() => {
-    // @ts-ignore
-    setItems(selectedItems);
-        // @ts-ignore
-    onItemsChange(selectedItems);
-  }, [selectedItems]);
-
+  // useEffect(() => {
+  //   // @ts-ignore
+  //   setItems(selectedItems);
+  //   // @ts-ignore
+  //   onItemsChange(selectedItems);
+  // }, [selectedItems]);
 
   useEffect(() => {
     if (!hasSetInitial && initialItems.length > 0) {
@@ -60,16 +60,20 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
       setHasSetInitial(true);
     }
   }, [initialItems, hasSetInitial]);
-  
 
-
+  // useEffect(() => {
+  //   //  @ts-ignore */
+  //   onItemsChange(selectedItems);
+  // }, [selectedItems, onItemsChange]);
 
   useEffect(() => {
-  //  @ts-ignore */
-    onItemsChange(selectedItems);
-  }, [selectedItems, onItemsChange]);
-
+    //  @ts-ignore
+    setItems(selectedItems); 
+    //  @ts-ignore
+    onItemsChange(selectedItems); 
+  }, [selectedItems]); 
   
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -88,52 +92,49 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
     ? [data.data]
     : [];
 
-
-    const handleSelect = (item: {
-      name: string;
-      custom: boolean;
-      variationId?: string;
-      [key: string]: any;
-    }) => {
-      const itemWithDefaultQuantity = {
-        ...item,
-        quantity: 1, 
-      };
-    
-      setSelectedItems((prev) => {
-        const exists = item.custom
-          ? prev.some((i) => i.custom && i.name === item.name)
-          : prev.some((i) => i.variationId === item.variationId);
-    
-        if (exists) return prev;
-        return [...prev, itemWithDefaultQuantity];
-      });
-    
-      if (item.custom) {
-        onSelect({ custom: true, name: item.name });
-      } else if (item.variationId) {
-        onSelect(item.variationId);
-      }
-    
-      setSearchTerm("");
+  const handleSelect = (item: {
+    name: string;
+    custom: boolean;
+    variationId?: string;
+    [key: string]: any;
+  }) => {
+    const itemWithDefaultQuantity = {
+      ...item,
+      quantity: 1,
     };
-    
+
+    setSelectedItems((prev) => {
+      const exists = item.custom
+        ? prev.some((i) => i.custom && i.name === item.name)
+        : prev.some((i) => i.variationId === item.variationId);
+
+      if (exists) return prev;
+      return [...prev, itemWithDefaultQuantity];
+    });
+
+    if (item.custom) {
+      onSelect({ custom: true, name: item.name });
+    } else if (item.variationId) {
+      onSelect(item.variationId);
+    }
+
+    setSearchTerm("");
+  };
 
   const handleQuantityChange = (itemKey: any, value: number) => {
-         /* @ts-ignore */
+    /* @ts-ignore */
     setSelectedItems((prev) =>
       prev.map((item) =>
-           /* @ts-ignore */
+        /* @ts-ignore */
         (item.custom ? `custom-${item.name}` : item.variationID) === itemKey
-             /* @ts-ignore */
-          ? { ...item, quantity: value }
+          ? /* @ts-ignore */
+            { ...item, quantity: value }
           : item
       )
     );
   };
-  useEffect(() => {
-  }, [initialItems]);
-  
+  useEffect(() => {}, [initialItems]);
+
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <div className="px-6 py-2">
@@ -170,55 +171,75 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                 sku?: any;
                 variation_attributes?: any;
                 product?: any;
+                quantity?: number;
+                quantity_available?: number;
                 custom?: any;
-              }) => (
-                <li
-                  key={item.variationID}
-                       /* @ts-ignore */
+              }) => {
+                const isOutOfStock =
+                  item.quantity === 0 ||
+                  item.quantity_available === 0 ||
+                  item.product?.total_quantity === 0;
 
-                  onClick={() =>
-                    handleSelect({
-                    //  @ts-ignore */
-                      name: item.name,
-                      custom: false,  
-                      variationId: item.variationID,
-                      image_path: item.image_path,
-                        //  @ts-ignore */
-                      selling_price: item.selling_price,
-                      sku: item.sku,
-                        /* @ts-ignore */
-                      ean: item.ean,
-                      quantity: 1, 
-                      ...item 
-                    })
+                return (
+                  <li
+                    key={item.variationID}
+                    onClick={() => {
+                      if (!isOutOfStock) {
+                        handleSelect({
+                          // @ts-ignore
+                          name: item.name,
+                          custom: false,
+                          variationId: item.variationID,
+                          image_path: item.image_path,
+                          // @ts-ignore
+                          selling_price: item.selling_price,
+                          sku: item.sku,
+                          // @ts-ignore
+                          ean: item.ean,
+                          quantity: 1,
+                          ...item,
+                        });
+                      }
+                    }}
+                    className={`flex items-center gap-4 px-4 py-3 rounded border 
+                      ${
+                        isOutOfStock
+                          ? "bg-red-50 border-red-200 cursor-not-allowed"
+                          : "hover:bg-gray-100 border-gray-200 cursor-pointer"
+                      }`}
+                  >
+                    <img
+                      src={item.image_path}
+                      alt={item.name}
+                      className="w-12 h-12 object-cover rounded"
+                    />
+                    <div className="flex flex-col">
+                      <span className="font-medium">{item.name}</span>
 
-                  
-                  }
-                  className="flex items-center gap-4 cursor-pointer px-4 py-3 rounded hover:bg-gray-100 border border-gray-200"
-                >
-                  <img
-                    src={item.image_path}
-                    alt={item.name}
-                    className="w-12 h-12 object-cover rounded"
-                  />
-                  <div className="flex flex-col">
-                    <span className="font-medium">{item.name}</span>
-                    <span className="text-sm text-gray-500">{item.sku}</span>
-                    <span className="text-sm text-gray-500">
-                      {item.variation_attributes
-                        ?.map(
-                          (attr: { option_type: any; option_value: any }) =>
-                            `${attr.option_type}: ${attr.option_value}`
-                        )
-                        .join(", ")}
-                    </span>
-                    <span className="text-xs text-gray-400">
-                      {item.product?.location?.name},{" "}
-                      {item.product?.location?.state}
-                    </span>
-                  </div>
-                </li>
-              )
+                      {/* Stock warning */}
+                      {isOutOfStock && (
+                        <span className="text-xs font-semibold text-red-500">
+                          No stock
+                        </span>
+                      )}
+
+                      <span className="text-sm text-gray-500">{item.sku}</span>
+                      <span className="text-sm text-gray-500">
+                        {item.variation_attributes
+                          ?.map(
+                            (attr: { option_type: any; option_value: any }) =>
+                              `${attr.option_type}: ${attr.option_value}`
+                          )
+                          .join(", ")}
+                      </span>
+                      <span className="text-xs text-gray-400">
+                        {item.product?.location?.name},{" "}
+                        {item.product?.location?.state}
+                      </span>
+                    </div>
+                  </li>
+                );
+              }
             )
           ) : (
             <li
@@ -237,36 +258,38 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
       {selectedItems.length > 0 && (
         <section className="px-6 py-4 mt-6 border-t border-gray-300 w-full">
           <Text size="md" fw={600} c="black" className="mb-3">
-          SELECTED PRODUCTS ({selectedItems.length})
+            SELECTED PRODUCTS ({selectedItems.length})
           </Text>
           <ul className="">
             {selectedItems.map((item) => {
-                   {/* @ts-ignore */}
+              {
+                /* @ts-ignore */
+              }
               const itemKey = item.custom
-                   /* @ts-ignore */
-                ? `custom-${item.name}`
-                     /* @ts-ignore */
-                : item.variationId;
-                     /* @ts-ignore */
+                ? /* @ts-ignore */
+                  `custom-${item.name}`
+                : /* @ts-ignore */
+                  item.variationId;
+              /* @ts-ignore */
               const quantity = item.quantity ?? 0;
-                   /* @ts-ignore */
+              /* @ts-ignore */
               const unitPrice = Number(item.selling_price || 0);
               const totalPrice = unitPrice * quantity;
 
               return (
                 <li
-                     /* @ts-ignore */
+                  /* @ts-ignore */
                   key={itemKey}
                   className="flex items-center gap-4 p-3 rounded bg-gray-50"
                 >
                   {/* Image */}
-                        {/* @ts-ignore  */}
+                  {/* @ts-ignore  */}
                   {!item.custom && (
-                         /* @ts-ignore */
+                    /* @ts-ignore */
                     <img
-                         /* @ts-ignore */
+                      /* @ts-ignore */
                       src={item.image_path}
-                           /* @ts-ignore */
+                      /* @ts-ignore */
                       alt={item.name}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -274,33 +297,35 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
 
                   {/* Name, color, sku */}
                   <div className="flex justify-around gap-[2em] w-full">
-                        {/* /* @ts-ignore */ 
-                    <div className="flex flex-col ">
-                      <span className="font-medium text-gray-900">
-                       {/* @ts-ignore */}
-                        {item.name}
-                      </span>
-                      {/* @ts-ignore */}
-                      {item.ean && (
-                        <span className="text-sm text-gray-600">
+                    {
+                      /* /* @ts-ignore */
+                      <div className="flex flex-col ">
+                        <span className="font-medium text-gray-900">
                           {/* @ts-ignore */}
-                          EAN: <span className="font-medium">{item.ean}</span>
+                          {item.name}
                         </span>
-                      )}
-                      {/* @ts-ignore */}
-                      {item.sku && (
-                        <span className="text-sm text-gray-600">
-                          {/* @ts-ignore */}
-                          SKU:  <span className="font-medium">{item.sku}</span>
-                        </span>
-                      )}
-                    </div>
+                        {/* @ts-ignore */}
+                        {item.ean && (
+                          <span className="text-sm text-gray-600">
+                            {/* @ts-ignore */}
+                            EAN: <span className="font-medium">{item.ean}</span>
+                          </span>
+                        )}
+                        {/* @ts-ignore */}
+                        {item.sku && (
+                          <span className="text-sm text-gray-600">
+                            {/* @ts-ignore */}
+                            SKU: <span className="font-medium">{item.sku}</span>
+                          </span>
+                        )}
+                      </div>
 
-                    /* Unit Price */}
+                      /* Unit Price */
+                    }
                     <div className="flex flex-col items-center min-w-[70px]">
                       <span className="text-xs text-gray-800">Unit Price</span>
                       <span className="font-medium">
-                      ₦ {formatMoney(unitPrice.toFixed(2))}
+                        ₦ {formatMoney(unitPrice.toFixed(2))}
                       </span>
                     </div>
 
@@ -310,14 +335,14 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                       <FormInput
                         type="number"
                         min={1}
-                             /* @ts-ignore */
+                        /* @ts-ignore */
                         value={item.quantity?.toString() ?? ""}
-                        onChange={(e: { target: { value: any; }; }) => {
+                        onChange={(e: { target: { value: any } }) => {
                           const val = e.target.value;
 
                           if (val === "") {
                             // @ts-ignore
-                            handleQuantityChange(itemKey, ""); 
+                            handleQuantityChange(itemKey, "");
                             return;
                           }
 
@@ -334,7 +359,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                     <div className="flex flex-col items-center min-w-[70px]">
                       <span className="text-xs text-gray-900">Total Price</span>
                       <span className="font-semibold text-[#2E90FA]">
-                      ₦ {formatMoney(totalPrice.toFixed(2))}
+                        ₦ {formatMoney(totalPrice.toFixed(2))}
                       </span>
                     </div>
 
@@ -343,12 +368,12 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
                       onClick={() => {
                         setSelectedItems((prev) =>
                           prev.filter((i) =>
-                          // @ts-ignore
+                            // @ts-ignore
                             item.custom
-                              // @ts-ignore
-                              ? !(i.custom && i.name === item.name)
-                                // @ts-ignore
-                              : i.variationID !== item.variationID
+                              ? // @ts-ignore
+                                !(i.custom && i.name === item.name)
+                              : // @ts-ignore
+                                i.variationID !== item.variationID
                           )
                         );
                       }}
@@ -369,4 +394,3 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
 };
 
 export default SearchProduct;
-
