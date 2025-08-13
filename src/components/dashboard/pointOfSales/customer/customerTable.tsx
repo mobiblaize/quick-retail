@@ -12,6 +12,7 @@ interface CategoriesTableProps {
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
   activeSort?: string;
+  onRefetch: () => void;
 }
 
 const CustomerTable = ({
@@ -21,11 +22,12 @@ const CustomerTable = ({
   paginationData,
   onPageChange,
   activeSort,
+  onRefetch ,
 }: CategoriesTableProps) => {
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
-  console.log(customers);
+
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Name",
@@ -180,6 +182,7 @@ const CustomerTable = ({
         onClose={() => setIsCreateCategoryOpen(false)}
         onCreated={() => {
           setIsCreateCategoryOpen(false);
+          onRefetch();
         }}
         customer={selectedCustomer}
       />
