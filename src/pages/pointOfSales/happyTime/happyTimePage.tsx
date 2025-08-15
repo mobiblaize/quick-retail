@@ -41,7 +41,7 @@ const HappyTimePage = () => {
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     status: mapOrderStatus(filters.discountStatus),
-    types: filters.type === undefined ? "" : filters.type,
+    discount_type: filters.type === undefined ? "" : filters.type,
     page: currentPage.toString(),
   });
 
@@ -106,7 +106,7 @@ const HappyTimePage = () => {
   </div>
 </div>
 
-      <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
+      {/* <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <Text fw={500} size="xl" c="black">
           Discounts
         </Text>
@@ -122,7 +122,7 @@ const HappyTimePage = () => {
             </Button>
           </Link>
         </div>
-      </div>
+      </div> */}
     </div>,
   ];
   return (

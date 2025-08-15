@@ -72,6 +72,7 @@ const CustomerPage = () => {
           setSortBy(sortKey); 
         }}
         activeSort={sortBy}
+        onRefetch={refetch}
       />
       <CreateNewCustomer
         opened={isCreateCategoryOpen}

@@ -1,4 +1,3 @@
-
 import { Text, Loader } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { ChevronLeft } from "lucide-react";
@@ -12,13 +11,13 @@ import Papa from "papaparse";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
-
 const ViewAuditPage = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const { uuid } = location.state || {};
 
-  const { data, isLoading, error } = useFetchSingleAudit(uuid); 
+  const { data, isLoading, error } = useFetchSingleAudit(uuid);
+  console.log(data);
 
   const exportOptions = [
     { label: "CSV", value: "csv" },
@@ -30,26 +29,28 @@ const ViewAuditPage = () => {
 
   const handleExport = (format: string) => {
     const log = data?.data?.log;
-  
+
     if (!log) return;
-  
+
     const causer = log.causer || {};
     const roles = (causer.roles || []).join(", ") || "N/A";
-  
-    const tableData = [{
-      "User ID": causer.id || "N/A",
-      "Name": `${causer.firstname || ""} ${causer.lastname || ""}`,
-      "Email": causer.email || "N/A",
-      "Roles": roles,
-      "Activity": log.log_name || "",
-      "Module": log.action_module || "",
-      "Store Name": log.store_name || "",
-      "Store Address": log.store_address || "",
-      "IP Address": log.ip_address || "",
-      "Browser": log.action_type || "",
-      "Timestamp": new Date(log.created_at).toLocaleString(),
-    }];
-  
+
+    const tableData = [
+      {
+        "User ID": causer.id || "N/A",
+        Name: `${causer.firstname || ""} ${causer.lastname || ""}`,
+        Email: causer.email || "N/A",
+        Roles: roles,
+        Activity: log.log_name || "",
+        Module: log.action_module || "",
+        "Store Name": log.store_name || "",
+        "Store Address": log.store_address || "",
+        "IP Address": log.ip_address || "",
+        Browser: log.action_type || "",
+        Timestamp: new Date(log.created_at).toLocaleString(),
+      },
+    ];
+
     if (format === "csv") {
       const csv = Papa.unparse(tableData);
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -61,13 +62,13 @@ const ViewAuditPage = () => {
       link.click();
       document.body.removeChild(link);
     }
-  
+
     if (format === "pdf") {
       const doc = new jsPDF();
       doc.setTextColor(241, 103, 34); // Orange header
       doc.setFontSize(18);
       doc.text("Audit Trail Log", 14, 22);
-  
+
       autoTable(doc, {
         startY: 30,
         head: [["Field", "Value"]],
@@ -75,11 +76,10 @@ const ViewAuditPage = () => {
         theme: "grid",
         headStyles: { fillColor: [241, 103, 34] }, // Orange header background
       });
-  
+
       doc.save(`audit_log_${log.id}.pdf`);
     }
   };
-  
 
   const backButton = (
     <button
@@ -101,17 +101,17 @@ const ViewAuditPage = () => {
           View Audit Trail
         </Text>
         <div className="flex items-center gap-3">
-      <Dropdown
-        //@ts-ignore
-        options={exportOptions}
-        //@ts-ignore
-        onChange={(val) => handleExport(val)}
-        placeholder="Export"
-        inputSizeClass="py-1"
-        bgColorClass="bg-[#F16722]"
-        textColorClass="text-white"
-      />
-    </div>
+          <Dropdown
+            //@ts-ignore
+            options={exportOptions}
+            //@ts-ignore
+            onChange={(val) => handleExport(val)}
+            placeholder="Export"
+            inputSizeClass="py-1"
+            bgColorClass="bg-[#F16722]"
+            textColorClass="text-white"
+          />
+        </div>
       </div>
     </div>,
   ];
@@ -126,18 +126,21 @@ const ViewAuditPage = () => {
 
   if (error || !data || !data.data) {
     return (
-        <div className="flex justify-center items-center h-[60vh]">
+      <div className="flex justify-center items-center h-[60vh]">
         <Loader color="orange" size="lg" />
       </div>
     );
   }
 
-  
   return (
     <PageContainer subHeaders={subHeaders}>
       <>
-      <ViewHeader profile={{ ...data.data.log, ...data.data.log.causer }} />
-        <ViewDetails profile={{ ...data.data.log, ...data.data.log.causer }} />
+        <ViewHeader
+          profile={{ ...data.data.log, ...data.data.log.causer, ...data.data }}
+        />
+        <ViewDetails
+          profile={{ ...data.data.log, ...data.data.log.causer, ...data.data }}
+        />
       </>
     </PageContainer>
   );

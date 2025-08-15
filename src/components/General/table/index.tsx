@@ -504,7 +504,7 @@ const TanTable = <T extends Record<string, any>>({
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
                             setFiltersApplied(true);
-                            console.log("FILTERS SELECTED:", filters);
+                            // console.log("FILTERS SELECTED:", filters);
                           }}
                           showDiscountType={true}
                           showDiscountStatus={true}

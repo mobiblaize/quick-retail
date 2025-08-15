@@ -1,8 +1,9 @@
 import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
+import Avatar from "../../../../assets/images/Avatar.png"
 
 interface CauserProfile {
-  profile_pic: string;
+  profile_picture: string;
   firstname: string;
   lastname: string;
   email: string;
@@ -16,12 +17,12 @@ interface ProfileHeaderProps {
 }
 
 export default function ViewHeader({ profile }: ProfileHeaderProps) {
-  const { profile_pic, firstname, lastname, email, store_name, id, roles } =
+  const { profile_picture, firstname, lastname, email, store_name, id, roles } =
     profile;
   const { mutate: updatePhoto } = useFetchPhoto();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
-  const [localImage, setLocalImage] = useState(profile_pic);
-
+  const [localImage, setLocalImage] = useState<string | null>(null);
+console.log(profile)
   const handleImageClick = () => {
     fileInputRef.current?.click();
   };
@@ -45,7 +46,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
           onClick={handleImageClick}
         >
           <img
-            src={localImage || "/avatar-placeholder.jpg"}
+            src={localImage || profile_picture || Avatar}
             alt="Profile"
             className="w-full h-full object-cover"
           />
@@ -57,7 +58,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
           onChange={handleFileChange}
           className="hidden"
         />
-        <div>
+        <div className="flex flex-col gap-3">
           <div className="flex gap-4">
             <p className="text-sm font-normal text-[#AD3307] shadow-md  py-1 px-2 bg-orange-100 rounded-lg">
               User ID: #{id}
