@@ -49,11 +49,11 @@ export default function ManageSubscription() {
             >
               {/* <span className="mr-3 text-orange-500">{action.icon}</span>
               <span className="text-sm text-gray-800">{action.label}</span> */}
-              <Flex align="center"> 
-                <Text c="#F97316" mr={12}> 
+              <Flex align="center">
+                <Text c="#F97316" mr={12}>
                   {action.icon}
                 </Text>
-                <Text size="sm" c="#1F2937"> 
+                <Text size="sm" c="#1F2937">
                   {action.label}
                 </Text>
               </Flex>
@@ -65,8 +65,12 @@ export default function ManageSubscription() {
               onClick={action.onClick}
               className="flex items-center w-full border border-gray-300 px-4 py-3 rounded hover:bg-gray-50 text-left"
             >
-              <span className="mr-3 text-orange-500">{action.icon}</span>
-              <span className="text-sm text-gray-800">{action.label}</span>
+              <Text mr="sm" c="orange.5">
+                {action.icon}
+              </Text>
+              <Text size="sm" c="gray.8">
+                {action.label}
+              </Text>
             </button>
           )
         )}
