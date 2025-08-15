@@ -16,7 +16,8 @@ import { useCreateProduct } from "../../../../hooks/backendApis/pos/products";
 
 interface Variant {
   id: number;
-  image?: string;
+  // image?: string;
+  image?: string | null;
   name?: string;
   quantity?: string;
   cost_price?: string;
@@ -59,6 +60,7 @@ const AddVariableForm = () => {
       return;
     }
 
+    // Validate selling price > cost price in all variants
     const invalidVariation = variants.find((v) => {
       const sellingPrice = Number(v.selling_price);
       const costPrice = Number(v.cost_price);
@@ -68,8 +70,17 @@ const AddVariableForm = () => {
     if (invalidVariation) {
       notifications.show({
         title: "Validation error",
-        message:
-          "Selling price must be greater than cost price in all variations.",
+        message: "Selling price must be greater than cost price in all variations.",
+        color: "red",
+      });
+      return;
+    }
+
+    // Ensure first variant image exists and is a non-empty string (base64)
+    if (!variants[0]?.image) {
+      notifications.show({
+        title: "Validation error",
+        message: "Please upload an image for the first variant.",
         color: "red",
       });
       return;
@@ -90,10 +101,10 @@ const AddVariableForm = () => {
       promotional_end_date: form_data.promotional_end_date,
       safety_instructions: form_data.safety_instructions,
       certificates: form_data.certificates,
-      // image_path: form_data.image_path || [],
 
-      // image_path: form_data.image_path || [],
-      image_path: form_data.image_path ? [form_data.image_path] : [],
+      // IMPORTANT: directly assign image_path from variants state
+      image_path: [variants[0].image],
+
       variations: variants.map((v) => ({
         cost_price: Number(v.cost_price),
         selling_price: Number(v.selling_price),
@@ -101,7 +112,7 @@ const AddVariableForm = () => {
         reorder_level: Number(v.reorder_level),
         size: v.size,
         colour: v.color,
-        image: v.image, // already base64
+        image: v.image,
       })),
     };
 
@@ -117,8 +128,6 @@ const AddVariableForm = () => {
         });
         resetForm();
         window.scrollTo({ top: 0, behavior: "smooth" });
-
-        // 🔁 Navigate back to the previous page
         navigate(-1);
       },
       onError: (error: any) => {
@@ -130,8 +139,9 @@ const AddVariableForm = () => {
         });
       },
     });
-
   };
+
+
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>(
     ""
@@ -189,21 +199,33 @@ const AddVariableForm = () => {
     return;
   }
 
+
+
   const handleImageChange = (id: number, file: File | null) => {
     if (!file) return;
 
     const reader = new FileReader();
     reader.onloadend = () => {
       const base64String = reader.result?.toString() || "";
+
       setVariants((prev) =>
         prev.map((variant) =>
           variant.id === id ? { ...variant, image: base64String } : variant
         )
       );
+
+      if (id === 0) {
+        updateForm({
+          ...form_data,
+          image_path: [base64String],
+        });
+      }
     };
 
     reader.readAsDataURL(file);
   };
+
+
 
   const handleAddVariant = () => {
     const newId = variants.length + 1;
@@ -416,7 +438,7 @@ const AddVariableForm = () => {
                 </div>
 
                 {/* Image Upload */}
-                <div className="flex flex-col">
+                {/* <div className="flex flex-col">
                   <div className="flex items-center gap-2  border border-[#CED4DA] px-3 py-[0.60em] rounded">
                     <label
                       htmlFor={`image-${variant.id}`}
@@ -461,7 +483,55 @@ const AddVariableForm = () => {
                       }
                     />
                   </div>
+                </div> */}
+                <div className="flex flex-col">
+                  <div className="flex items-center gap-2 border border-[#CED4DA] px-3 py-[0.60em] rounded">
+                    <label
+                      htmlFor={`image-${variant.id}`} // ✅ Corrected template literal usage
+                      className="text-xs text-[#999] cursor-pointer max-w-[140px] truncate"
+                      title={variant.image || ""}
+                    >
+                      {variant.image
+                        ? variant.image.length > 12
+                          ? `${variant.image.slice(0, 12)}...` // ✅ Corrected template literal usage
+                          : variant.image
+                        : "Click to upload"}
+                    </label>
+
+                    {variant.image ? (
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setVariants((prev) =>
+                            prev.map((v) =>
+                              v.id === variant.id ? { ...v, image: "" } : v
+                            )
+                          )
+                        }
+                        className="text-red-500 hover:text-red-700"
+                      >
+                        <X className="w-4 h-4" />
+                      </button>
+                    ) : (
+                      <Upload className="w-4 h-4 text-orange-500" />
+                    )}
+
+                    <Input
+                      type="file"
+                      accept="image/*"
+                      id={`image-${variant.id}`} // ✅ Corrected template literal usage
+                      className="hidden"
+                      onChange={(e) =>
+                        handleImageChange(
+                          variant.id,
+                          e.target.files?.[0] || null
+                        )
+                      }
+                    />
+                  </div>
                 </div>
+
+
 
                 {/* Delete Row */}
                 <div className="flex items-end justify-center">
