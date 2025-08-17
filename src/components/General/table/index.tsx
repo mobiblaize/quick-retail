@@ -54,6 +54,7 @@ export interface TanTableProps<T extends Record<string, any>> {
   onFilterChange?: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
+  onSearchChange?: (search: string) => void;
   roles?: string[];
   modules?: string[];
   reasons?: [];
@@ -102,6 +103,7 @@ const TanTable = <T extends Record<string, any>>({
   onPageChange,
   serverSidePagination = false,
   isFilterActive = true,
+  onSearchChange,
 
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -232,6 +234,9 @@ const TanTable = <T extends Record<string, any>>({
     setPageIndex(0);
   }, [searchTerm]);
 
+
+  
+
   useEffect(() => {
     setPageIndex(0);
   }, [data]);
@@ -310,7 +315,17 @@ const TanTable = <T extends Record<string, any>>({
     setShowFilterDropdown(false);
   };
   console.log("filtersApplied:", filtersApplied);
-
+  
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setPageIndex(0); // reset pagination
+    if (serverSidePagination) {
+      onPageChange?.(1); // go back to first page
+    }
+    if (onSearchChange) onSearchChange(term);
+  };
+  
+  
   return (
     <Box className="font-sans">
       <Box
@@ -332,15 +347,17 @@ const TanTable = <T extends Record<string, any>>({
 
           <div className="lg:hidden flex md:flex-row  md:gap-[2rem] md:w-[600px] w-[300px] md:items-center gap-4 justify-between whitespace-nowrap">
             {showSearch && (
+            
               <SearchComp
-                setSearchTerm={setSearchTerm}
-                setPageIndex={setPageIndex}
-                searchTerm={searchTerm}
-                handleFilterChange={handleFilterChange}
-                filterList={filterList}
-                placeholder={searchPlaceholder}
-                maxWidth={searchMaxWidth}
-              />
+  setSearchTerm={handleSearchChange}
+  setPageIndex={setPageIndex}
+  searchTerm={searchTerm}
+  handleFilterChange={handleFilterChange}
+  filterList={filterList}
+  placeholder={searchPlaceholder}
+  maxWidth={searchMaxWidth}
+/>
+
             )}
 
             {showSortFilter && (
@@ -355,15 +372,17 @@ const TanTable = <T extends Record<string, any>>({
             <div className="flex flex-row items-center gap-4 flex-wrap">
               {showSearch && (
                 <div className="min-w-[250px]">
+                 
                   <SearchComp
-                    setSearchTerm={setSearchTerm}
-                    setPageIndex={setPageIndex}
-                    searchTerm={searchTerm}
-                    handleFilterChange={handleFilterChange}
-                    filterList={filterList}
-                    placeholder={searchPlaceholder}
-                    maxWidth={searchMaxWidth}
-                  />
+  setSearchTerm={handleSearchChange}
+  setPageIndex={setPageIndex}
+  searchTerm={searchTerm}
+  handleFilterChange={handleFilterChange}
+  filterList={filterList}
+  placeholder={searchPlaceholder}
+  maxWidth={searchMaxWidth}
+/>
+
                 </div>
               )}
 

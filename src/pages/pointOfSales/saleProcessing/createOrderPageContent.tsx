@@ -203,7 +203,7 @@ const CreateOrderPageContent: React.FC = () => {
         console.warn(`Invalid status: ${status}`);
       }
     });
-  }, []); // Register once
+  }, [paymentDetails]); // Register once
 
   const formatCurrency = (amount: number) => {
     if (isNaN(amount)) return "₦ 0";

@@ -16,6 +16,8 @@ const InventoryTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [sortBy, setSortBy] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
+
   const mapOrderStatus = (status: string | undefined) => {
     if (!status) return undefined;
     if (status === "Paid") return "paid";
@@ -47,6 +49,7 @@ const InventoryTable = () => {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     page: currentPage.toString(),
     per_page: perPage.toString(),
+    search: searchTerm,
   };
 
   const { data, isLoading } = useFetchAllProducts(payload);
@@ -272,6 +275,7 @@ const InventoryTable = () => {
         onPageChange={handlePageChange}
         serverSidePagination={true}
         tableType="inventory"
+        onSearchChange={setSearchTerm}
         //@ts-ignore
         locations={locations}
         tableTitle={

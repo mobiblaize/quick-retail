@@ -5,166 +5,129 @@ import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import { useEffect, useState } from "react";
 import { truncateText } from "../../../../utils/helpers";
-
+import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
 
 const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
+  const { reportData, startDate, endDate, locationId, reportType, per_page = 10 } = reportInfo || {};
+  const generateReport = useGenerateReport();
 
-  const { reportData} = reportInfo || {};
   const [data, setData] = useState<TableRowData[]>([]);
+  const [paginationData, setPaginationData] = useState(reportData?.data?.returns);
+  const [, setLoading] = useState(false);
 
-  const [, setCurrentPage] = useState(reportData?.data?.returns?.current_page || 1);
+  const formatData = (returnsArray: any[], storeName: string) =>
+    returnsArray.map((item: any) => ({
+      fullOrderId: item["Order ID"],
+      id: item["Order ID"],
+      productId: item["Product ID"],
+      items: 1,
+      dateReturned: item["Date Returned"],
+      customer: item["Customer Name"],
+      product: item["Product name"],
+      returnedReason: item["Reason"],
+      imageUrl: item["Image"],
+      store: storeName,
+      complaintStatus:
+        item["Status"] === "Approved"
+          ? "Resolved"
+          : item["Status"] === "Pending"
+          ? "Pending"
+          : "Declined",
+    }));
 
+  // Initial load
   useEffect(() => {
     const returnsArray = reportData?.data?.returns?.data;
     const storeName = reportData?.data?.location_status?.[0]?.location_name || "N/A";
     if (Array.isArray(returnsArray)) {
-      const formattedData = returnsArray.map((item: any) => ({
-        fullOrderId: item["Order ID"],
-        id: (item["Order ID"]),
-        productId:(item["Product ID"]),
-        items: 1,
-        dateReturned: item["Date Returned"],
-        customer: item["Customer Name"],
-        product: item["Product name"],
-        returnedReason: item["Reason"],
-        imageUrl: item["Image"],
-        store: storeName,
-        complaintStatus:
-          item["Status"] === "Approved"
-            ? "Resolved"
-            : item["Status"] === "Pending"
-            ? "Pending"
-            : "Declined",
-      }));
-      setData(formattedData);
+      setData(formatData(returnsArray, storeName));
+      setPaginationData(reportData?.data?.returns);
     }
-  }, [reportData]);  
+  }, [reportData]);
 
+  const fetchPage = async (page: number) => {
+    setLoading(true);
+    try {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        report_type: reportType || "returns",
+        locationId,
+        paginate: true,
+        per_page,
+        page,
+      };
 
-  
-  const paginationData = {
-    current_page: reportData?.data?.returns?.current_page,
-    last_page: reportData?.data?.returns?.last_page,
-    per_page: reportData?.data?.returns?.per_page,
-    total: reportData?.data?.returns?.total,
-    from: reportData?.data?.returns?.from,
-    to: reportData?.data?.returns?.to,
-    next_page_url: reportData?.data?.returns?.next_page_url,
-    prev_page_url: reportData?.data?.returns?.prev_page_url,
-  };  
-  
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
+      const response = await generateReport.mutateAsync(payload);
+      const returnsObj = response.data.data.returns;
+      const storeName = response.data.data.location_status?.[0]?.location_name || "N/A";
 
+      if (Array.isArray(returnsObj.data)) {
+        setData(formatData(returnsObj.data, storeName));
+        setPaginationData(returnsObj);
+      }
+    } catch (err) {
+      console.error("Pagination fetch failed:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
   const columns: ColumnDef<TableRowData>[] = [
-    // {
-    //   id: "select",
-    //   header: ({ table }) => (
-    //     <input
-    //       type="checkbox"
-    //       checked={table.getIsAllRowsSelected()}
-    //       onChange={table.getToggleAllRowsSelectedHandler()}
-    //     />
-    //   ),
-    //   cell: ({ row }) => (
-    //     <input
-    //       type="checkbox"
-    //       checked={row.getIsSelected()}
-    //       onChange={row.getToggleSelectedHandler()}
-    //     />
-    //   ),
-    //   enableSorting: false,
-    //   enableColumnFilter: false,
-    //   size: 10,
-    // },
     {
       header: "Product Returned",
       accessorKey: "name",
-      enableSorting: false, 
+      enableSorting: false,
       cell: ({ row }) => (
         <div className="flex items-center gap-3">
-          <Avatar
-            //@ts-ignore
-            src={row.original.imageUrl ?? undefined}
-            alt={row.original.name as string}
-            radius="md"
-            size={40}
-          />
+          {/* @ts-ignore */}
+          <Avatar src={row.original.imageUrl ?? undefined} alt={row.original.name as string} radius="md" size={40} />
           <div className="flex flex-col">
             <Text fw={500} c="black" title={String(row.original.product ?? "")}>
               {truncateText(String(row.original.product ?? ""))}
             </Text>
-
             <Text fw={500} className="text-sm">
-              ID:{" "}
-              <span className="text-[#F16722]">{row.original.productId}</span>
+              ID: <span className="text-[#F16722]">{row.original.productId}</span>
             </Text>
           </div>
         </div>
       ),
     },
-
     {
       header: "Store",
       accessorKey: "store",
-      enableSorting: false, 
-      cell: ({ row }) => (
-        <Text c="textSecondary.7">{row.original.store}</Text> 
-      ),
+      cell: ({ row }) => <Text c="textSecondary.7">{row.original.store}</Text>,
     },
-
     {
       header: "Date Returned",
       accessorKey: "dateReturned",
-      enableSorting: false, 
-      cell: ({ row }) => (
-        <Text c="textSecondary.7">{row.original.dateReturned}</Text>
-      ),
+      cell: ({ row }) => <Text c="textSecondary.7">{row.original.dateReturned}</Text>,
     },
     {
       header: "Order ID",
       accessorKey: "id",
-      enableSorting: false, 
       cell: (props) => (
         <div className="flex flex-col">
-          <Text fw={500} c="black">
-            {props.row.original.id}
-          </Text>
+          <Text fw={500} c="black">{props.row.original.id}</Text>
         </div>
       ),
     },
-
     {
       header: "Customer",
       accessorKey: "customer",
-      enableSorting: false, 
-      cell: ({ row }) => (
-        <span className=" text-gray-900 text-sm font-medium">
-          {row.original.customer}
-        </span>
-      ),
+      cell: ({ row }) => <span className=" text-gray-900 text-sm font-medium">{row.original.customer}</span>,
     },
     {
       header: "Returned Reason",
       accessorKey: "returnedReason",
-      enableSorting: false, 
-      cell: ({ row }) => (
-        <span className=" text-gray-900 text-sm font-medium">
-          {row.original.returnedReason}
-        </span>
-      ),
+      cell: ({ row }) => <span className=" text-gray-900 text-sm font-medium">{row.original.returnedReason}</span>,
     },
     {
       header: "Complaint Status",
       accessorKey: "complaintStatus",
-      enableSorting: false, 
       cell: ({ row }) => {
         const status = row.original.complaintStatus;
-        let bgClass = "";
-        let textClass = "";
-        let icon = null;
+        let bgClass = "", textClass = "", icon = null;
 
         if (status === "Resolved") {
           bgClass = "bg-[#ECFDF3]";
@@ -175,16 +138,13 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
           textClass = "text-[#0369A1]";
           icon = <UnpaidDot />;
         } else {
-          // Declined
           bgClass = "bg-[#FFFAEB]";
           textClass = "text-[#B54708]";
           icon = <UnpaidDot />;
         }
 
         return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bgClass} ${textClass}`}
-          >
+          <div className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bgClass} ${textClass}`}>
             {icon}
             <span className="ml-2">{status}</span>
           </div>
@@ -202,20 +162,30 @@ const ReturnsRefundsReport = ({ reportInfo }: { reportInfo: any }) => {
         showSortFilter={false}
         length={8}
         serverSidePagination
-        paginationData={paginationData}
-        onPageChange={handlePageChange}
-        tableTitle={<div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-          <div className="flex gap-2.5 items-center">
-            <Text fw={500} size="xl" c="textSecondary.9">
-              Logged Returns
-            </Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{data.length}</Text>
+        // loading={loading}
+        paginationData={{
+          current_page: paginationData?.current_page,
+          last_page: paginationData?.last_page,
+          per_page: paginationData?.per_page,
+          total: paginationData?.total,
+          from: paginationData?.from,
+          to: paginationData?.to,
+          next_page_url: paginationData?.next_page_url,
+          prev_page_url: paginationData?.prev_page_url,
+        }}
+        onPageChange={fetchPage}
+        tableTitle={
+          <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
+            <div className="flex gap-2.5 items-center">
+              <Text fw={500} size="xl" c="textSecondary.9">Logged Returns</Text>
+              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+                <Text c="customPrimary.10">{paginationData?.total || 0}</Text>
+              </div>
             </div>
           </div>
-
-
-        </div>} tableType={"returns"}      />
+        }
+        tableType="returns"
+      />
     </main>
   );
 };

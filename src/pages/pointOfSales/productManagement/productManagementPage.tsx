@@ -30,7 +30,7 @@ const ProductManagementPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
-
+  const [searchTerm, setSearchTerm] = useState("");
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     if (status.toLowerCase() === "active") return "active";
@@ -41,6 +41,7 @@ const ProductManagementPage = () => {
   const mapFiltersToPayload = (filters: FilterValues) => ({
     // @ts-ignore
     search: filters.search ?? "",
+      // search: searchTerm, 
     // @ts-ignore
     sort_by: filters.sortBy ?? "",
     per_page: "",
@@ -66,6 +67,7 @@ const ProductManagementPage = () => {
     ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage, 
+    search: searchTerm,
   };
   
   // @ts-ignore
@@ -233,6 +235,7 @@ const ProductManagementPage = () => {
         // @ts-ignore
         paginationData={paginationData}
         onPageChange={handlePageChange}
+        onSearchChange={setSearchTerm}
       />
       <AddProduct
         opened={isLogComplaintsOpen}

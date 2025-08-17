@@ -21,6 +21,7 @@ interface ProductTableProps {
   onFilterChange: (filters: FilterValues) => void;
   paginationData: PaginationData;
   onPageChange: (page: number) => void;
+  onSearchChange?: (search: string) => void; 
 }
 
 const ProductTable = ({
@@ -29,6 +30,7 @@ const ProductTable = ({
   onFilterChange,
   paginationData,
   onPageChange,
+  onSearchChange,
 }: ProductTableProps) => {
 
   const [ sortBy, setSortBy] = useState<string>("");
@@ -302,6 +304,7 @@ const ProductTable = ({
             onSortChange={handleSortChange}
             activeSort={sortBy}
             length={8}
+            onSearchChange={onSearchChange}
             //@ts-ignore
             locations={locations}
             //@ts-ignore

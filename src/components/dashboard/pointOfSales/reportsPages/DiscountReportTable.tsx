@@ -1,124 +1,135 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import {  Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
+import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
+
 
 const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
-  const { reportData } = reportInfo || {};
+  const { reportData, startDate, endDate, locationId, reportType,  per_page = 10  } = reportInfo || {};
+  const generateReport = useGenerateReport();
+
   const [data, setData] = useState<TableRowData[]>([]);
-  const [, setCurrentPage] = useState(reportData?.data?.discounts?.current_page || 1);
+  const [paginationData, setPaginationData] = useState(reportData?.data?.discounts);
+  const [, setLoading] = useState(false);
 
-  useEffect(() => {
-    // console.log("reportData", reportData);
-    // console.log(
-    //   "reportData.data.discounts.data",
-    //   reportData?.data?.discounts?.data
-    // );
+  const getProductsSection = (obj: any) =>
+  obj?.data?.data?.data?.discounts ??
+  obj?.data?.data?.discounts ??
+  obj?.data?.discounts;
 
-    const discountsArray = reportData?.data?.discounts?.data;
 
-    if (Array.isArray(discountsArray)) {
-      const formattedData = discountsArray.map((item: any) => ({
-        discountName: item["Discount name"],
-        dateFrom: item["Date From"],
-        dateTo: item["Date To"],
-        priceOff: item["Price Off"],
-        percentOff: item["Percent Off"],
-        redemption: item["Redemption"],
-        status: item["Status"],
-      }));
+const initialSection = useMemo(
+  () => getProductsSection(reportData),
+  [reportData]
+);
 
-      setData(formattedData);
+// const [data, setData] = useState<TableRowData[]>([]);
+// const [paginationData, setPaginationData] = useState<any>(initialSection);
+// const [, setLoading] = useState(false);
+
+
+const formatProducts = (list: any[]) =>
+  list.map((item: any) => ({
+    discountName: item["Discount name"],
+    dateFrom: item["Date From"],
+    dateTo: item["Date To"],
+    priceOff: item["Price Off"],
+    percentOff: item["Percent Off"],
+    redemption: item["Redemption"],
+    status: item["Status"],
+  }));
+
+// Load page 1 from passed-in data
+useEffect(() => {
+  if (Array.isArray(initialSection?.data)) {
+    setData(formatProducts(initialSection.data));
+    setPaginationData(initialSection);
+  }
+}, [initialSection]);
+
+  const fetchPage = async (page: number) => {
+    setLoading(true);
+    try {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        report_type: reportType || "discounts",
+        locationId,
+        paginate: true,
+        per_page,
+        page,
+      };
+
+      const response = await generateReport.mutateAsync(payload);
+      const discountsArray = response.data.data.discounts.data;
+
+      setPaginationData(response.data.data.discounts);
+
+      if (Array.isArray(discountsArray)) {
+        setData(
+          discountsArray.map((item: any) => ({
+            discountName: item["Discount name"],
+            dateFrom: item["Date From"],
+            dateTo: item["Date To"],
+            priceOff: item["Price Off"],
+            percentOff: item["Percent Off"],
+            redemption: item["Redemption"],
+            status: item["Status"],
+          }))
+        );
+      }
+    } catch (err) {
+      console.error(err);
+    } finally {
+      setLoading(false);
     }
-  }, [reportData]);
-
-  const paginationData = {
-    current_page: reportData?.data?.discounts?.current_page,
-    last_page: reportData?.data?.discounts?.last_page,
-    per_page: reportData?.data?.discounts?.per_page,
-    total: reportData?.data?.discounts?.total,
-    from: reportData?.data?.discounts?.from,
-    to: reportData?.data?.discounts?.to,
-    next_page_url: reportData?.data?.discounts?.next_page_url,
-    prev_page_url: reportData?.data?.discounts?.prev_page_url,
-  };  
-  
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-
   };
+
+
 
   const columns: ColumnDef<TableRowData>[] = [
     {
       header: "Discount Name",
       accessorKey: "discountName",
-      enableSorting: false, 
-      cell: (props) => (
-        <Text fw={500} c="black">
-          {props.row.original.discountName}
-        </Text>
-      ),
+      cell: (props) => <Text fw={500} c="black">{props.getValue() as string}</Text>,
     },
     {
       header: "Percent Off",
       accessorKey: "percentOff",
-      enableSorting: false, 
-      cell: (props) => <Text>{props.row.original.percentOff}</Text>,
+      cell: (props) => <Text>{props.getValue() as string}</Text>,
     },
     {
-        header: "Price Off",
-        accessorKey: "priceOff",
-        enableSorting: false, 
-        cell: (props) => {
-          const priceOff = props.row.original.priceOff;
-          const percentOff = props.row.original.percentOff;
-      
-          if (priceOff === "-" && percentOff !== "-") {
-            // There is a percent discount instead of price
-            return <Text>-</Text>;
-          }
-      
-          const priceNum = Number(priceOff);
-          return (
-            <Text>
-              { !isNaN(priceNum) 
-                ? `₦${priceNum.toLocaleString()}`
-                : "-" }
-            </Text>
-          );
-        },
+      header: "Price Off",
+      accessorKey: "priceOff",
+      cell: (props) => {
+        const priceOff = props.getValue() as string;
+        return (
+          <Text>
+            {priceOff !== "-" && !isNaN(Number(priceOff))
+              ? `₦${Number(priceOff).toLocaleString()}`
+              : "-"}
+          </Text>
+        );
       },
-      
+    },
     {
       header: "Date From",
       accessorKey: "dateFrom",
-      enableSorting: false, 
-      cell: (props) => (
-        <Text c="textSecondary.7">
-            {/* @ts-ignore */}
-          {new Date(props.row.original.dateFrom).toLocaleDateString()}
-        </Text>
-      ),
+      cell: (props) => <Text c="textSecondary.7">{new Date(props.getValue() as string).toLocaleDateString()}</Text>,
     },
     {
       header: "Date To",
       accessorKey: "dateTo",
-      enableSorting: false, 
-      cell: (props) => (
-        <Text c="textSecondary.7">
-                     {/* @ts-ignore */}
-          {new Date(props.row.original.dateTo).toLocaleDateString()}
-        </Text>
-      ),
+      cell: (props) => <Text c="textSecondary.7">{new Date(props.getValue() as string).toLocaleDateString()}</Text>,
     },
     {
       header: "Status",
       accessorKey: "status",
-      enableSorting: false, 
       cell: (props) => {
-        const status = props.row.original.status;
+        const status = props.getValue() as string;
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
@@ -133,12 +144,10 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
         );
       },
     },
-
     {
       header: "Redemption",
       accessorKey: "redemption",
-      enableSorting: false, 
-      cell: (props) => <Text>{props.row.original.redemption}</Text>,
+      cell: (props) => <Text>{props.getValue() as string}</Text>,
     },
   ];
 
@@ -149,10 +158,18 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
         data={data}
         showSearch={false}
         showSortFilter={false}
-        length={8}
         serverSidePagination
-        paginationData={paginationData}
-        onPageChange={handlePageChange}
+        paginationData={{
+          current_page: paginationData?.current_page,
+          last_page: paginationData?.last_page,
+          per_page: paginationData?.per_page,
+          total: paginationData?.total,
+          from: paginationData?.from,
+          to: paginationData?.to,
+          next_page_url: paginationData?.next_page_url,
+          prev_page_url: paginationData?.prev_page_url,
+        }}
+        onPageChange={fetchPage}
         tableTitle={
           <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex gap-2.5 items-center">
@@ -160,12 +177,12 @@ const DiscountReportTable = ({ reportInfo }: { reportInfo: any }) => {
                 Discounted Products
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{data.length}</Text>
+              <Text c="customPrimary.10">{paginationData?.total}</Text>
               </div>
             </div>
           </div>
         }
-        tableType={"discount"}
+        tableType="discount"
       />
     </main>
   );

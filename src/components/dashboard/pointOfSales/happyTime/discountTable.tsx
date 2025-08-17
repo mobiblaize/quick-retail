@@ -16,9 +16,23 @@ import { useState } from "react";
 // };
 
 
-const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationData,
-  onPageChange }: { rawDiscounts: any[], isLoading:any,  onFilterChange: (filters: FilterValues) => void; paginationData?: PaginationData;
-    onPageChange: (page: number) => void;}) => {
+type DiscountTableProps = {
+  rawDiscounts: any[];
+  isLoading: boolean;
+  onFilterChange: (filters: FilterValues) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  onSearchChange?: (search: string) => void;
+};
+
+const DiscountTable = ({
+  rawDiscounts,
+  isLoading,
+  onFilterChange,
+  paginationData,
+  onPageChange,
+  onSearchChange,
+}: DiscountTableProps) => {
 
   const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
@@ -230,6 +244,7 @@ const DiscountTable = ({ rawDiscounts, isLoading,   onFilterChange,  paginationD
         tableType="discount"
         // types={types}
         onFilterChange={onFilterChange}
+        onSearchChange={onSearchChange}
         serverSidePagination={true}
         paginationData={paginationData}
         onPageChange={onPageChange}

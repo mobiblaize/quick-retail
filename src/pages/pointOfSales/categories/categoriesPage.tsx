@@ -14,6 +14,7 @@ const CategoriesPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
   const [sortBy, setSortBy] = useState<string>(""); 
+  const [searchTerm, setSearchTerm] = useState("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
@@ -22,10 +23,16 @@ const CategoriesPage = () => {
     page: currentPage.toString(),
     per_page: perPage.toString(),
   });
-
-  const { data, isLoading, refetch } = useFetchAllCategories(
-    mapFiltersToPayload(appliedFilters)
-  );
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    // ...(startDate ? { start_date: startDate } : {}),
+    // ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
+    search: searchTerm,
+  };
+  // @ts-ignore
+  const { data, isLoading, refetch } = useFetchAllCategories(payload) || {};
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
   const paginationData = data?.data
   ? {
@@ -115,6 +122,7 @@ const handlePageChange = (page: number) => {
         paginationData={paginationData}
         onPageChange={handlePageChange}
         activeSort={sortBy} 
+        onSearchChange={setSearchTerm}
       />
       <CreateNewCategory
         opened={isCreateCategoryOpen}

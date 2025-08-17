@@ -21,6 +21,8 @@ const TransactionPage = () => {
   );
   const [sortBy, setSortBy] = useState<string>(""); 
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm, setSearchTerm] = useState("");
+
   const [perPage] = useState(10);
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
@@ -28,11 +30,19 @@ const TransactionPage = () => {
     end_date: filters.endDate ?? "",
     page: currentPage.toString(),
     per_page: perPage.toString(),
+    search: filters.search ?? "",
   });
+
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    // ...(startDate ? { start_date: startDate } : {}),
+    // ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
+    search: searchTerm,
+  };
   // @ts-ignore
-  const { data, isLoading } = useFetchAllTransactions(
-    mapFiltersToPayload(appliedFilters)
-  );
+  const { data, isLoading } = useFetchAllTransactions(payload) || {};
   const transactionsArray = data?.data?.transactions?.data ?? [];
 
   const paginationData = data?.data?.transactions
@@ -105,6 +115,7 @@ const TransactionPage = () => {
         paginationData={paginationData}
         onPageChange={handlePageChange}
         activeSort={sortBy} 
+        onSearchChange={setSearchTerm}
       />
       {!isLoading && (!data?.data || data.data.length === 0) && (
         <div>No transactions to display</div>

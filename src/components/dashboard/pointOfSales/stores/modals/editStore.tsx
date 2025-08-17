@@ -14,9 +14,9 @@ interface AddNewStoreModalProps {
 
 const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps) => {
   const [isEnabled, setIsEnabled] = useState(false);
-  console.log("stores", store);
+  // console.log("stores", store);
   const [name, setName] = useState("");
-  const [staff_no, setstaff_no] = useState("");
+  // const [staff_no, setstaff_no] = useState("");
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
@@ -30,7 +30,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
       setName(store.name || "");
 
       setCountry(store.country || "");
-      setstaff_no(store.staff_no || "");
+      // setstaff_no(store.staff_no || "");
       setStateVal(store.state || "");
       setLga(store.lga || "");
       setAddress(store.address || "");
@@ -177,7 +177,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 }
               />
             </div>
-            <div className="col-span-1 sm:col-span-2">
+            {/* <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
                 Number of Staff 
               </label>
@@ -191,7 +191,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
               }
               
               />
-            </div>
+            </div> */}
             {/* <div>
               <Text>Status</Text>
               <Switch

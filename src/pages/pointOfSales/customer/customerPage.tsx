@@ -15,14 +15,22 @@ const CustomerPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [sortBy, setSortBy] = useState<string>(""); 
+  const [searchTerm, setSearchTerm] = useState("");
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     page: currentPage.toString(),
     per_page: perPage.toString(),
   });
-  const { data, isLoading, refetch } = useFetchAllCustomers(
-    mapFiltersToPayload(appliedFilters)
-  );
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    // ...(startDate ? { start_date: startDate } : {}),
+    // ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
+    search: searchTerm,
+  };
+// @ts-ignore
+  const { data, isLoading, refetch } = useFetchAllCustomers(payload) || {};
   const customers = Array.isArray(data?.data?.customers?.data)
     ? data.data.customers.data
     : [];
@@ -73,6 +81,7 @@ const CustomerPage = () => {
         }}
         activeSort={sortBy}
         onRefetch={refetch}
+        onSearchChange={setSearchTerm}
       />
       <CreateNewCustomer
         opened={isCreateCategoryOpen}
