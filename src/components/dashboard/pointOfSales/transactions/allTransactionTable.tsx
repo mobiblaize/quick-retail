@@ -18,7 +18,7 @@ interface AllTransactionTableProps {
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
   activeSort?: string;
-
+  onSearchChange?: (search: string) => void; 
 }
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
@@ -27,7 +27,8 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   onSortChange,
   paginationData ,   
   onPageChange,
-  activeSort
+  activeSort,
+  onSearchChange,
 }) => {
   const navigate = useNavigate();
 
@@ -171,6 +172,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         serverSidePagination={true}
         paginationData={paginationData}
         onPageChange={onPageChange}
+        onSearchChange={onSearchChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">

@@ -3,7 +3,7 @@ import { truncateText } from "../../../../utils/helpers";
 import others from "../../../../assets/images/others.png";
 import DivisionDiscountChartReport from "../../../General/table/divisonDiscountChart";
 
-interface SalesCustomerAnalysisProps {
+interface DiscountCustomerAnalysisProps {
   reportInfo: {
     reportData: {
       data: {
@@ -23,7 +23,7 @@ interface SalesCustomerAnalysisProps {
   };
 }
 
-const DiscountAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
+const DiscountAnalysis = ({ reportInfo }: DiscountCustomerAnalysisProps) => {
   const rawProducts = reportInfo?.reportData?.data?.top_discounted_products;
   const productSales =
     rawProducts && typeof rawProducts === "object"

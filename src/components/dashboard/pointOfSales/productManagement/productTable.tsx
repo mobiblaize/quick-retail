@@ -21,6 +21,7 @@ interface ProductTableProps {
   onFilterChange: (filters: FilterValues) => void;
   paginationData: PaginationData;
   onPageChange: (page: number) => void;
+  onSearchChange?: (search: string) => void; 
 }
 
 const ProductTable = ({
@@ -29,6 +30,7 @@ const ProductTable = ({
   onFilterChange,
   paginationData,
   onPageChange,
+  onSearchChange,
 }: ProductTableProps) => {
 
   const [sortBy, setSortBy] = useState<string>("");
@@ -289,45 +291,50 @@ const ProductTable = ({
           <Loader color="orange" size="lg" />
         </div>
       )}
-     
-            <TanTable
-              columnData={columns}
-              data={mappedProducts}
-              showSearch
-              showSortFilter
-              showFilter
-              searchPlaceholder="Search Product Management"
-              onSortChange={handleSortChange}
-              activeSort={sortBy}
-              length={8}
-              locations={locations}
-              categories={categories}
-              tableType="product"
-              onFilterChange={onFilterChange}
-              serverSidePagination={true}
-              paginationData={paginationData}
-              onPageChange={onPageChange}
-              tableTitle={
-                <div className="flex gap-2.5 flex-wrap items-center">
-                  <Text
-                    fw={500}
-                    size="xl"
-                    c="textSecondary.9"
-                    className="text-sm sm:text-base md:text-xl"
-                  >
-                    Products
+  
+      <div className="w-full overflow-x-auto">
+        <div className="min-w-[1000px]">
+          <TanTable
+            columnData={columns}
+            data={mappedProducts}
+            showSearch
+            showSortFilter
+            showFilter
+            searchPlaceholder="Search Product Management"
+            onSortChange={handleSortChange}
+            activeSort={sortBy}
+            length={8}
+            onSearchChange={onSearchChange}
+            //@ts-ignore
+            locations={locations}
+            //@ts-ignore
+            categories={categories}
+            tableType="product"
+            onFilterChange={onFilterChange}
+            serverSidePagination={true}
+            paginationData={paginationData}
+            onPageChange={onPageChange}
+            tableTitle={
+              <div className="flex gap-2.5 flex-wrap items-center">
+                <Text
+                  fw={500}
+                  size="xl"
+                  c="textSecondary.9"
+                  className="text-sm sm:text-base md:text-xl"
+                >
+                  Products
+                </Text>
+                <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-2 sm:px-3">
+                  <Text c="customPrimary.10" className="text-xs sm:text-sm">
+                    {paginationData?.total}
                   </Text>
-                  <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-2 sm:px-3">
-                    <Text c="customPrimary.10" className="text-xs sm:text-sm">
-                      {paginationData?.total}
-                    </Text>
-                  </div>
                 </div>
-              }
-            />
-       
-
-
+              </div>
+            }
+          />
+        </div>
+      </div>
+  
       <DeleteProduct
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
@@ -336,6 +343,5 @@ const ProductTable = ({
       />
     </main>
   );
-};
-
+          }  
 export default ProductTable;

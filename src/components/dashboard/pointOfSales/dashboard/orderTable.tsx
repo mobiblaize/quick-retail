@@ -15,7 +15,7 @@ interface CustomerOrdersTableProps {
   isLoading: boolean;
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
-  
+  onSearchChange?: (search: string) => void; 
 }
 
 const CustomerOrdersTable = ({
@@ -24,6 +24,7 @@ const CustomerOrdersTable = ({
   isLoading,
   paginationData,
   onPageChange,
+  onSearchChange,
 }: CustomerOrdersTableProps) => {
   const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
@@ -225,8 +226,8 @@ const CustomerOrdersTable = ({
         searchPlaceholder="Search orders"
         onSortChange={handleSortChange}
         activeSort={sortBy} 
-        length={8}   
-        
+        length={8}    
+        onSearchChange={onSearchChange}
         tableType="sales"
         onFilterChange={onFilterChange}
         serverSidePagination={true}

@@ -19,15 +19,29 @@ const StoreTarget = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [sortBy, setSortBy] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
+  
+
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     page: currentPage.toString(),
     per_page: perPage.toString(),
+    search: filters.search ?? "",
   });
 
-  const payload = mapFiltersToPayload(appliedFilters);
+  // const payload = mapFiltersToPayload(appliedFilters);
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    // ...(startDate ? { start_date: startDate } : {}),
+    // ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
+    search: searchTerm,
+  };
+  // @ts-ignore
+  
   const { data, isLoading, refetch } = useFetchStore(payload);
 
 
@@ -130,6 +144,7 @@ const StoreTarget = () => {
         paginationData={paginationData}
         onPageChange={handlePageChange}
         activeSort={sortBy}
+        onSearchChange={setSearchTerm}
       />
       <AddNewStore
         opened={isAddNewStoreOpen}

@@ -177,8 +177,7 @@ const SearchProduct = ({
               }) => {
                 const isOutOfStock =
                   item.quantity === 0 ||
-                  item.quantity_available === 0 ||
-                  item.product?.total_quantity === 0;
+                  item.quantity_available === 0;
 
                 return (
                   <li

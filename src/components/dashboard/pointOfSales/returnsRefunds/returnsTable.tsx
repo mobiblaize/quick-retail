@@ -20,6 +20,7 @@ interface ReturnsTableProps {
   onFilterChange: (filters: FilterValues) => void;
   paginationData: PaginationData;
   onPageChange: (page: number) => void;
+  onSearchChange?: (search: string) => void; 
 }
 
 const ReturnsTable = ({
@@ -28,6 +29,7 @@ const ReturnsTable = ({
   onFilterChange,
   paginationData,
   onPageChange,
+  onSearchChange,
 }: ReturnsTableProps) => {
   const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
@@ -214,6 +216,7 @@ const ReturnsTable = ({
           onSortChange={handleSortChange}
           activeSort={sortBy}
           serverSidePagination={true}
+          onSearchChange={onSearchChange}
           paginationData={paginationData}
           onPageChange={onPageChange}
           tableTitle={

@@ -13,9 +13,10 @@ interface CategoriesTableProps {
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
   activeSort?: string;
+  onSearchChange?: (search: string) => void; 
 }
 
-const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationData ,   onPageChange,   activeSort}: CategoriesTableProps) => {
+const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationData ,   onPageChange,   activeSort,   onSearchChange,}: CategoriesTableProps) => {
 
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -171,6 +172,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationDa
         searchPlaceholder="Search categories"
         length={8}
         serverSidePagination={true}
+        onSearchChange={onSearchChange}
         paginationData={paginationData}
         onPageChange={onPageChange}
          tableTitle={
