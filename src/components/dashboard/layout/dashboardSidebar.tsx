@@ -18,12 +18,49 @@ import {
   Settings,
 } from "../../../assets/svg";
 import { useUserStore } from "../../../hooks/useUserStore";
+import { useLocation } from "react-router";
+
+// const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
+//   const { activeSection } = useDashboard();
+//   const { user, } = useUserStore();
+
+//   const getSidebarItems = () => {
+//     if (location.pathname.startsWith("/dashboard/admin")) {
+//       return Admin;
+//     }
+//   // console.log(user)
+//   const getSidebarItems = () => {
+//     switch (activeSection) {
+//       case "Point of Sales":
+//         return PointOfSale;
+//       case "Financial Management":
+//         return FinancialManagement;
+//       case "Procurement":
+//         return Procurement;
+//       case "Asset Management":
+//         return AssetManagement;
+//       case "Reports":
+//         return Reports;
+//       case "Admin":
+//         return Admin;
+//       case "Overview":
+//       default:
+//         return PointOfSale;
+//     }
+//   };
+
+//   const sidebarItems = getSidebarItems();
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
-  const { user, } = useUserStore();
-  console.log(user)
+  const { user } = useUserStore();
+  const location = useLocation();
+
   const getSidebarItems = () => {
+    if (location.pathname.startsWith("/dashboard/admin")) {
+      return Admin;
+    }
+
     switch (activeSection) {
       case "Point of Sales":
         return PointOfSale;
