@@ -33,7 +33,7 @@ const ProductTable = ({
   onSearchChange,
 }: ProductTableProps) => {
 
-  const [ sortBy, setSortBy] = useState<string>("");
+  const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
 
@@ -126,7 +126,7 @@ const ProductTable = ({
       originalStatus: stockStatus, // for debugging
     };
   });
-  
+
 
 
 
@@ -141,7 +141,7 @@ const ProductTable = ({
     {
       header: "Name",
       accessorKey: "name",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
@@ -168,7 +168,7 @@ const ProductTable = ({
     {
       header: "Product Code",
       accessorKey: "productCode",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <Text c="textSecondary.7">{props.row.original.productCode}</Text>
       ),
@@ -176,12 +176,12 @@ const ProductTable = ({
     {
       header: "Location",
       accessorKey: "location",
-      enableSorting: false, 
+      enableSorting: false,
     },
     {
       header: "Category",
       accessorKey: "category",
-      enableSorting: false, 
+      enableSorting: false,
       cell: ({ row }) => (
         <span className="bg-gray-100 text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
           {row.original.category}
@@ -191,12 +191,12 @@ const ProductTable = ({
     {
       header: "Selling Price",
       accessorKey: "sellingPrice",
-      enableSorting: false, 
+      enableSorting: false,
     },
     {
       header: "Stock Level",
       accessorKey: "stockLevel",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <span className="font-medium text-center">
           {props.row.original.stockLevel}
@@ -206,7 +206,7 @@ const ProductTable = ({
     {
       header: "Status",
       accessorKey: "status",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         const originalStatus = props.row.original.originalStatus;
         const normalizedStatus =
@@ -236,9 +236,9 @@ const ProductTable = ({
     {
       header: "",
       accessorKey: "action",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
-       
+
         <Menu shadow="md" width={150} position="bottom-end">
           <Menu.Target>
             <Button variant="subtle" size="xs" p={1}>
@@ -285,13 +285,13 @@ const ProductTable = ({
   ];
 
   return (
-    <main className="relative w-full h-auto py-6 rounded-lg bg-white">
+    <main className="relative w-full h-auto py-6 rounded-lg bg-white mt-[2em]">
       {isLoading && (
         <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-50">
           <Loader color="orange" size="lg" />
         </div>
       )}
-
+  
       <div className="w-full overflow-x-auto">
         <div className="min-w-[1000px]">
           <TanTable
@@ -315,18 +315,26 @@ const ProductTable = ({
             paginationData={paginationData}
             onPageChange={onPageChange}
             tableTitle={
-              <div className="flex gap-2.5">
-                <Text fw={500} size="xl" c="textSecondary.9">
+              <div className="flex gap-2.5 flex-wrap items-center">
+                <Text
+                  fw={500}
+                  size="xl"
+                  c="textSecondary.9"
+                  className="text-sm sm:text-base md:text-xl"
+                >
                   Products
                 </Text>
-                <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">{paginationData?.total}</Text>
+                <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-2 sm:px-3">
+                  <Text c="customPrimary.10" className="text-xs sm:text-sm">
+                    {paginationData?.total}
+                  </Text>
                 </div>
               </div>
             }
           />
         </div>
       </div>
+  
       <DeleteProduct
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
@@ -335,6 +343,5 @@ const ProductTable = ({
       />
     </main>
   );
-};
-
+          }  
 export default ProductTable;

@@ -12,7 +12,7 @@ import {
   useFetchAllLocations,
   useCreateProduct,
 } from "../../../../hooks/backendApis/pos/products";
-import { Button } from "@mantine/core";
+import { Button, Divider, Text, Title } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
 
@@ -164,202 +164,263 @@ const AddProductForm = () => {
 
     setLoading(true);
 
-  mutate(payload, {
-  onSuccess: () => {
-    setLoading(false);
-    notifications.show({
-      title: "Success",
-      message: "Product added successfully",
-      color: "green",
-    });
-    setFormData({ ...initialFormState }); // reset form
-    window.scrollTo({ top: 0, behavior: "smooth" });
+    mutate(payload, {
+      onSuccess: () => {
+        setLoading(false);
+        notifications.show({
+          title: "Success",
+          message: "Product added successfully",
+          color: "green",
+        });
+        setFormData({ ...initialFormState }); // reset form
+        window.scrollTo({ top: 0, behavior: "smooth" });
 
-    // ✅ Navigate back after success
-    navigate(-1);
-  },
-  onError: (error: any) => {
-    setLoading(false);
-    notifications.show({
-      title: "Error",
-      message: error?.response?.data?.message || "Failed to add product",
-      color: "red",
+        // ✅ Navigate back after success
+        navigate(-1);
+      },
+      onError: (error: any) => {
+        setLoading(false);
+        notifications.show({
+          title: "Error",
+          message: error?.response?.data?.message || "Failed to add product",
+          color: "red",
+        });
+      },
     });
-  },
-});
 
   };
 
   return (
     <div>
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
+        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
           BASIC INFORMATION
-        </h2>
+        </Title>
+        <Divider mb="md" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormInput
-            type="text"
-            label="Product Name"
-            placeholder="Enter product name"
-            paddingY={"0.7rem"}
-            value={formData.product_name}
-            onChange={(e: any) =>
-              setFormData({ ...formData, product_name: e.target.value })
-            }
-          />
+          {/* Product Name */}
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Product Name
+            </Text>
+            <FormInput
+              type="text"
+              placeholder="Enter product name"
+              paddingY={"0.7rem"}
+              value={formData.product_name}
+              onChange={(e: any) =>
+                setFormData({ ...formData, product_name: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="text"
-            label="SKU (Store Keeping Unit)"
-            placeholder="Enter SKU"
-            paddingY={"0.7rem"}
-            value={formData.sku}
-            onChange={(e: any) =>
-              setFormData({ ...formData, sku: e.target.value })
-            }
-          />
+          {/* SKU */}
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              SKU (Store Keeping Unit)
+            </Text>
+            <FormInput
+              type="text"
+              placeholder="Enter SKU"
+              paddingY={"0.7rem"}
+              value={formData.sku}
+              onChange={(e: any) =>
+                setFormData({ ...formData, sku: e.target.value })
+              }
+            />
+          </div>
 
-          <FormSelect
-            label="Category"
-            placeholder="Select product category"
-            options={categoryOptions}
-            name="category"
-            paddingY="4"
-            value={selectedCategoryId}
-            onChange={(e: any) => {
-              setSelectedCategoryId(Number(e.target.value));
-              setFormData({ ...formData, category_id: e.target.value });
-            }}
-          />
+          {/* Category */}
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Category
+            </Text>
+            <FormSelect
+              placeholder="Select product category"
+              options={categoryOptions}
+              name="category"
+              paddingY="4"
+              value={selectedCategoryId}
+              onChange={(e: any) => {
+                setSelectedCategoryId(Number(e.target.value));
+                setFormData({ ...formData, category_id: e.target.value });
+              }}
+            />
+          </div>
 
-          <FormSelect
-            label="Sub-category"
-            placeholder="Select sub-category"
-            options={subCategoryOptions}
-            name="sub-category"
-            paddingY="4"
-            value={formData.sub_category_id}
-            onChange={(e: any) =>
-              setFormData({ ...formData, sub_category_id: e.target.value })
-            }
-          />
+          {/* Sub-category */}
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Sub-category
+            </Text>
+            <FormSelect
+              placeholder="Select sub-category"
+              options={subCategoryOptions}
+              name="sub-category"
+              paddingY="4"
+              value={formData.sub_category_id}
+              onChange={(e: any) =>
+                setFormData({ ...formData, sub_category_id: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="number"
-            label="Cost Price"
-            placeholder="₦"
-            value={formData.cost_price}
-            onChange={(e: any) =>
-              setFormData({ ...formData, cost_price: e.target.value })
-            }
-          />
+          {/* Cost Price */}
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Cost Price
+            </Text>
+            <FormInput
+              type="number"
+              placeholder="₦"
+              value={formData.cost_price}
+              onChange={(e: any) =>
+                setFormData({ ...formData, cost_price: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="number"
-            label="Selling Price"
-            placeholder="₦"
-            value={formData.selling_price}
-            onChange={(e: any) =>
-              setFormData({ ...formData, selling_price: e.target.value })
-            }
-          />
+          {/* Selling Price */}
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Selling Price
+            </Text>
+            <FormInput
+              type="number"
+              placeholder="₦"
+              value={formData.selling_price}
+              onChange={(e: any) =>
+                setFormData({ ...formData, selling_price: e.target.value })
+              }
+            />
+          </div>
         </div>
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
           INVENTORY DETAILS
-        </h2>
+        </Title>
+        <Divider mb="md" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormInput
-            type="number"
-            label="Quantity"
-            paddingY={"0.7rem"}
-            placeholder="Enter Quantity"
-            value={formData.quantity}
-            onChange={(e: any) =>
-              setFormData({ ...formData, quantity: e.target.value })
-            }
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Quantity
+            </Text>
+            <FormInput
+              type="number"
+              placeholder="Enter Quantity"
+              paddingY={"0.7rem"}
+              value={formData.quantity}
+              onChange={(e: any) =>
+                setFormData({ ...formData, quantity: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="number"
-            label="Re-order Level"
-            paddingY={"0.7rem"}
-            placeholder="Enter Quantity"
-            value={formData.reorder_level}
-            onChange={(e: any) =>
-              setFormData({ ...formData, reorder_level: e.target.value })
-            }
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Re-order Level
+            </Text>
+            <FormInput
+              type="number"
+              placeholder="Enter Quantity"
+              paddingY={"0.7rem"}
+              value={formData.reorder_level}
+              onChange={(e: any) =>
+                setFormData({ ...formData, reorder_level: e.target.value })
+              }
+            />
+          </div>
 
-          <Dropdown
-            label="Location"
-            options={locationOptions}
-            value={formData.location_id}
-            onChange={
-              // @ts-ignore
-              (val) => setFormData({ ...formData, location_id: val })
-            }
-            required
-            textColorClass="text-gray-800"
-            placeholder="Select location"
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Location
+            </Text>
+            <Dropdown
+              options={locationOptions}
+              value={formData.location_id}
+              onChange={
+                // @ts-ignore
+                (val) => setFormData({ ...formData, location_id: val })
+              }
+              required
+              textColorClass="text-gray-800"
+              placeholder="Select location"
+            />
+          </div>
         </div>
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4">
+        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
           ADDITIONAL INFORMATION
-        </h2>
+        </Title>
+        <Divider mb="md" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-          <FormInput
-            type="text"
-            label="Short Description"
-            paddingY={"0.7rem"}
-            placeholder="Enter short product description"
-            value={formData.short_description}
-            onChange={(e: any) =>
-              setFormData({ ...formData, short_description: e.target.value })
-            }
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Short Description
+            </Text>
+            <FormInput
+              type="text"
+              placeholder="Enter short product description"
+              paddingY={"0.7rem"}
+              value={formData.short_description}
+              onChange={(e: any) =>
+                setFormData({ ...formData, short_description: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="text"
-            label="Long Description"
-            paddingY={"0.7rem"}
-            placeholder="Enter detailed product description"
-            optional
-            value={formData.long_description}
-            onChange={(e: any) =>
-              setFormData({ ...formData, long_description: e.target.value })
-            }
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Long Description
+            </Text>
+            <FormInput
+              type="text"
+              placeholder="Enter detailed product description"
+              paddingY={"0.7rem"}
+              optional
+              value={formData.long_description}
+              onChange={(e: any) =>
+                setFormData({ ...formData, long_description: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="text"
-            label="Tags"
-            paddingY={"0.7rem"}
-            placeholder="Enter tags"
-            value={formData.tags}
-            onChange={(e: any) =>
-              setFormData({ ...formData, tags: e.target.value })
-            }
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Tags
+            </Text>
+            <FormInput
+              type="text"
+              placeholder="Enter tags"
+              paddingY={"0.7rem"}
+              value={formData.tags}
+              onChange={(e: any) =>
+                setFormData({ ...formData, tags: e.target.value })
+              }
+            />
+          </div>
 
-          <FormInput
-            type="text"
-            label="Notes"
-            paddingY={"0.7rem"}
-            placeholder="Enter random notes on product, supplier or inventory"
-            optional
-            value={formData.notes}
-            onChange={(e: any) =>
-              setFormData({ ...formData, notes: e.target.value })
-            }
-          />
+          <div>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+              Notes
+            </Text>
+            <FormInput
+              type="text"
+              placeholder="Enter random notes on product, supplier or inventory"
+              paddingY={"0.7rem"}
+              optional
+              value={formData.notes}
+              onChange={(e: any) =>
+                setFormData({ ...formData, notes: e.target.value })
+              }
+            />
+          </div>
         </div>
 
         {/* Product Images Upload Section */}

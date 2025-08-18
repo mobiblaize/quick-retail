@@ -26,37 +26,21 @@ const NavItem = ({
   const location = useLocation();
   const [opened, setOpened] = useState(false);
 
-  // const isActive = (() => {
-  //   if (href === "/dashboard" && location.pathname === "/dashboard") {
-  //     return true;
-  //   }
-
-  //   if (href !== "/dashboard") {
-  //     const pathSegments = location.pathname.split("/").filter(Boolean);
-  //     const hrefSegments = href.split("/").filter(Boolean);
-  //     return hrefSegments.every(
-  //       (segment, index) => pathSegments[index] === segment
-  //     );
-  //   }
-
-  //   return false;
-  // })();
-
   const isActive = (() => {
-    // Special case for dashboard
-    if (href === "/dashboard") {
-      return location.pathname === "/dashboard";
-    }
-  
-    // Exact match
-    if (location.pathname === href) {
+    if (href === "/dashboard" && location.pathname === "/dashboard") {
       return true;
     }
-  
-    // Strict child match (must be followed by a slash, not just a substring)
-    return location.pathname.startsWith(href + "/");
+
+    if (href !== "/dashboard") {
+      const pathSegments = location.pathname.split("/").filter(Boolean);
+      const hrefSegments = href.split("/").filter(Boolean);
+      return hrefSegments.every(
+        (segment, index) => pathSegments[index] === segment
+      );
+    }
+
+    return false;
   })();
-  
 
   const isChildActive = () => {
     if (children.length === 0) return false;
