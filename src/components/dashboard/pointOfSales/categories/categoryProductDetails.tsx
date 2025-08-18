@@ -1,6 +1,6 @@
 import { Switch, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import {
   useActivateCategories,
   useDeactivateCategories,
@@ -46,11 +46,17 @@ const CategoryProductDetails = ({
     subCategory.id
   );
   const { data, } = useFetchSubCategory(subCategory.id, false);
-  // const isoDate = "2025-05-21T10:00:13.000000Z";
-  // const date = new Date(isoDate);
 
 
-  const [tableData, setTableData] = useState([{ status: "Active" }]);
+  const [tableData, setTableData] = useState([{ status: "Inactive" }]);
+
+useEffect(() => {
+  if (data?.data?.status) {
+    setTableData([{ status: data.data.status }]);
+  }
+}, [data]);
+
+  
   const [isActivateOpen, setIsActivateOpen] = useState(false);
   const [isDeactivateOpen, setIsDeactivateOpen] = useState(false);
   console.log("Category Data:", category);

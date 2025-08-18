@@ -56,7 +56,7 @@ const ReturnsTable = ({
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
     productCode: item.product_variation?.sku || "N/A",
-    dateReturned: item.date_returned || "N/A",
+    dateReturned: item.created_at || "N/A",
     orderId: item.sales_order?.orderID || "N/A",
     customer: item.customer?.customer_name || "N/A",
     returnedReason: item.return_reason || "N/A",
@@ -121,7 +121,7 @@ const ReturnsTable = ({
         <Text c="textSecondary.7">
           {" "}
           {/* @ts-ignore */}
-          {formatDate(row.original.dateReturned)}
+          {formatDate(row.original. dateReturned)}
         </Text>
       ),
     },
