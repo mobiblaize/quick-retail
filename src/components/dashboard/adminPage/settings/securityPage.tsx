@@ -1,5 +1,5 @@
 import { useRef, useState } from "react";
-import { Button, Group, Paper, rem, Text, Title } from "@mantine/core";
+import { Button, Group, Paper, Text, Title } from "@mantine/core";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
 import EditIcon from "../../../../assets/images/EditIcon.png";
 import ChangePasswordModal from "./changePasswordModal";
@@ -190,7 +190,7 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
           </Paper>
 
           {/* Security Question */}
-          <Paper
+          {/* <Paper
             withBorder
             p="md"
             radius="md"
@@ -205,8 +205,8 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
             onMouseLeave={(e) => {
               e.currentTarget.style.backgroundColor = "transparent";
             }}
-          >
-            <Group
+          > */}
+            {/* <Group
               justify="space-between"
               gap="sm" 
               style={{
@@ -224,8 +224,8 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
                 <Text>Security Question</Text>
               </Group>
               <IconChevronRight size={18} color="#9CA3AF" style={{ marginLeft: rem(8) }} />
-            </Group>
-          </Paper>
+            </Group> */}
+          {/* </Paper> */}
 
         </div>
       </div>
