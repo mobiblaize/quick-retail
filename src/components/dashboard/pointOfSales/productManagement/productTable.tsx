@@ -341,27 +341,18 @@
 // export default ProductTable;
 
 
-import {
-  Table,
-  Pagination,
-  Loader,
-  Text,
-  Box,
-  Badge,
-  ActionIcon,
-  Menu,
-  Avatar,
-  Group,
-} from "@mantine/core"
+
+
+import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core"
 import { MoreVertical } from "lucide-react"
+import { Link } from "react-router"
+import { ROUTES } from "../../../../constants/routes"
+import DeleteProduct from "../categories/modals/deleteProduct"
 import { useState } from "react"
+import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products"
+import GenericTable, { PaginationData } from "../../../General/genericTable"
+import ProductFilters from "./productFilters"
 import useStore from "./addProductStore"
-import { Link } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
-import { notifications } from "@mantine/notifications";
-import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
-import DeleteProduct from "../categories/modals/deleteProduct";
-import ProductFilters from "./productFilters";
 
 interface ApiProduct {
   id: string
@@ -374,21 +365,14 @@ interface ApiProduct {
   selling_price: string
   quantity: number
   reorder_level: string
-  image_path: string[] 
+  image_path: string[]
   status: string
   stock_status: string
   product: {
     productID: string
     product_name: string
-    category: {
-      id: string
-      name: string
-    }
-    location: {
-      id: string
-      name: string
-      locationID: string
-    }
+    category: { id: string; name: string }
+    location: { id: string; name: string; locationID: string }
   }
   variation_attributes: Array<{
     product_variation_id: number
@@ -397,503 +381,247 @@ interface ApiProduct {
   }>
 }
 
-interface PaginationData {
-  current_page: number
-  last_page: number
-  per_page?: number
-  total?: number
-}
-
 interface ProductTableProps {
   products: ApiProduct[]
   isLoading: boolean
-  page?: number
-  totalPages?: number
   paginationData?: PaginationData
   onPageChange: (page: number) => void
-  totalProducts?: number
 }
-
-// type Filters = {
-//   searchTerm: string;
-//   sortBy: string;
-// };
 
 export default function ProductTable({
   products,
   isLoading,
   paginationData,
   onPageChange,
-  totalProducts = 0,
 }: ProductTableProps) {
-  const { updateForm } = useStore()
-  const [selectedId, setSelectedId] = useState<string | number | null>(null);
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
-  const deleteMutation = useDeleteProuct(selectedId ?? "");
-
-  const handleFilterChange = (filters: any) => {
-    console.log("Updated filters:", filters);
-    // call API or update table here
-  };
+  const [selectedId, setSelectedId] = useState<string | number | null>(null)
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
+  const deleteMutation = useDeleteProuct(selectedId ?? "")
 
   const handleDelete = async () => {
-    if (!selectedId) return;
+    if (!selectedId) return
+    await deleteMutation.mutateAsync()
+    setIsDeleteOpen(false)
+  }
 
-    try {
-      await deleteMutation.mutateAsync();
-      notifications.show({
-        title: "Product Deleted!",
-        message: "This product has been successfully deleted!",
-        color: "red",
-      });
-      setIsDeleteOpen(false);
-      setSelectedId(null);
-      // refetch(); // <--- Refresh data
-    } catch (error) {
-      notifications.show({
-        title: "Error",
-        message:
-          (error && typeof error === "object" && "message" in error
-            ? (error as any).message
-            : "Failed to delete product"),
-        color: "red",
-      });
-    }
+  const formatPrice = (price: string) =>
+    `₦ ${Number.parseFloat(price).toLocaleString()}`
+
+    const { updateForm } = useStore();
+
+  const handleProductEdit = (product: any) => {
+    updateForm(product);
   };
 
-  // Helper function to format price
-  const formatPrice = (price: string): string => {
-    const numPrice = Number.parseFloat(price)
-    return numPrice > 0 ? `₦ ${numPrice.toLocaleString()}` : "₦ 0"
-  }
-
-  // --- STATUS HELPERS ---
-  const normalizeStatus = (s?: string) =>
-    (s ?? "").trim().toLowerCase().replace(/[\s-]+/g, "_")
-
-  const OUT_OF_STOCK_STATUSES = new Set([
-    "sold_out",
-    "out_of_stock",
-    "unavailable",
-  ])
-
-  const computeFrontendStatus = (p: ApiProduct) => {
-    const normalized = normalizeStatus(p.stock_status)
-    const outByFlag = OUT_OF_STOCK_STATUSES.has(normalized)
-    const outByQty = (p.quantity ?? 0) <= 0
-    return outByFlag || outByQty ? "Inactive" : "Active"
-  }
-
-
-  const getStatusBadge = (product: ApiProduct) => {
-    const raw = computeFrontendStatus(product)
-    const formattedStatus =
-      raw && raw.length > 0
-        ? raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase()
-        : raw
-
-    const isActive = formattedStatus.toLowerCase() === "active"
-
-    return (
-      <Badge
-        color={isActive ? "green" : "red"}
-        variant="light"
-        size="sm"
-        styles={{
-          root: {
-            backgroundColor: isActive ? "#dcfce7" : "#fee2e2",
-            color: isActive ? "#166534" : "#dc2626",
-            fontWeight: 500,
-            border: "none",
-            display: "flex",
-            flexDirection: "row", // ensure icon + text are side-by-side
-            alignItems: "center",
-            gap: "4px",
-            textTransform: "none", // IMPORTANT: prevent uppercase transform
-          },
-          // inner: {
-          //   display: "flex",
-          //   flexDirection: "row",
-          //   alignItems: "center",
-          //   gap: "4px",
-          //   textTransform: "none",
-          // },
-        }}
-      >
-        {/* If you want icons, uncomment and import PaidDot/UnpaidDot */}
-        {/* {isActive ? <PaidDot /> : <UnpaidDot />} */}
-        {formattedStatus}
-      </Badge>
-    )
-  }
-
-  const handleProductEdit = (product: ApiProduct) => {
-    updateForm({
-      id: product.id,
-      variationID: product.variationID,
-      name: product.name,
-      sku: product.sku,
-      ean: product.ean,
-      code: product.code,
-      cost_price: product.cost_price,
-      selling_price: product.selling_price,
-      quantity: product.quantity.toString(),
-      reorder_level: product.reorder_level,
-      image_path: product.image_path,
-      status: computeFrontendStatus(product), // use derived status
-      stock_status: product.stock_status,
-      productID: product.product.productID,
-      product_name: product.product.product_name,
-      category_id: product.product.category.id,
-      location_id: product.product.location.id,
-      variation_attributes: product.variation_attributes,
-      category: product.product.category.name,
-      sub_category_id: "",
-      short_description: "",
-      long_description: "",
-      has_variations: 0,
-      tags: "",
-      promotional_price: "",
-      promotional_start_date: "",
-      promotional_end_date: "",
-      safety_instructions: "",
-      certificates: "",
-      image: null,
-      variations: [],
-      updated_at: "",
-      location: product.product.location.name,
-    })
-  }
-
-  if (isLoading) {
-    return (
-      <Box style={{ display: "flex", justifyContent: "center", padding: "2rem" }}>
-        <Loader size="lg" />
-      </Box>
-    )
-  }
-
-  if (!products || products.length === 0) {
-    return (
-      <Box style={{ textAlign: "center", padding: "2rem" }}>
-        <Text size="lg" c="dimmed">
-          No products found
-        </Text>
-      </Box>
-    )
-  }
-
-  return (
-    <div
-      style={{
-        backgroundColor: "white",
-        borderRadius: "8px",
-        boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
-        marginTop: "2em",
-      }}
-    >
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "space-between",
-          padding: "20px 24px",
-          borderBottom: "1px solid #f1f5f9",
-        }}
-      >
-        <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-          <Text size="xl" fw={600} style={{ color: "#1e293b" }}>
-            Products
-          </Text>
-          <Badge
-            variant="filled"
+  const columns = [
+    {
+      key: "name",
+      header: "Name",
+      render: (p: ApiProduct) => (
+        <Group gap="sm">
+          <Avatar
+            src={Array.isArray(p.image_path) ? p.image_path[0] ?? "" : p.image_path}
+            size={32}
+            radius="sm"
             styles={{
               root: {
-                backgroundColor: "#fed7aa",
-                color: "#ea580c",
-                fontWeight: 600,
-                fontSize: "12px",
-                height: "20px",
-                minHeight: "20px",
-                paddingLeft: "8px",
-                paddingRight: "8px",
+                backgroundColor: "#f1f5f9",
+                border: "1px solid #e2e8f0",
+              },
+            }}
+          >
+            {p.product.product_name.charAt(0).toUpperCase()}
+          </Avatar>
+
+          <div>
+            <Text size="sm" fw={500}>
+              {p.product.product_name}
+            </Text>
+            <Text size="xs" c="dimmed">
+              {p.name}
+            </Text>
+          </div>
+        </Group>
+      ),
+    },
+    {
+      key: "code",
+      header: "Product Code",
+      render: (p: ApiProduct) => (
+        <Text size="sm" ff="monospace" style={{ color: "#475569" }}>
+          {p.code}
+        </Text>
+      ),
+    },
+    {
+      key: "location",
+      header: "Location",
+      render: (p: ApiProduct) => (
+        <Text size="sm" style={{ color: "#475569" }}>
+          {p.product.location.name}
+        </Text>
+      ),
+    },
+    {
+      key: "category",
+      header: "Category",
+      render: (p: ApiProduct) => (
+        <Text size="sm" style={{ color: "#475569" }}>
+          {p.product.category.name}
+        </Text>
+      ),
+    },
+    {
+      key: "price",
+      header: "Selling Price",
+      render: (p: ApiProduct) => (
+        <Text size="sm" fw={500} style={{ color: "#1e293b" }}>
+          {formatPrice(p.selling_price)}
+        </Text>
+      ),
+    },
+    {
+      key: "stock",
+      header: "Stock Level",
+      render: (p: ApiProduct) => (
+        <Text size="sm" style={{ color: "#475569" }}>
+          {p.quantity}
+        </Text>
+      ),
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (p: ApiProduct) => {
+        const isActive = (p.quantity ?? 0) > 0
+        const formattedStatus = isActive ? "Active" : "Inactive"
+
+        return (
+          <Badge
+            color={isActive ? "green" : "red"}
+            variant="light"
+            size="sm"
+            styles={{
+              root: {
+                backgroundColor: isActive ? "#dcfce7" : "#fee2e2",
+                color: isActive ? "#166534" : "#dc2626",
+                fontWeight: 500,
+                border: "none",
+                display: "flex",
+                flexDirection: "row",
+                alignItems: "center",
+                gap: "4px",
                 textTransform: "none",
               },
             }}
           >
-            {totalProducts}
+            {formattedStatus}
           </Badge>
-        </div>
+        )
+      },
+    },
+  ]
 
-        <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-          {/* <TextInput
-            placeholder="Search products"
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-            leftSection={<Search size={16} style={{ color: "#94a3b8" }} />}
-            styles={{
-              root: { width: "280px" },
-              input: {
-                border: "1px solid #e2e8f0",
-                borderRadius: "6px",
-                fontSize: "14px",
-                height: "36px",
-                "&:focus": {
-                  borderColor: "#f97316",
-                  boxShadow: "0 0 0 1px #f97316",
-                },
-              },
-            }}
-          />
+  const actions = (p: ApiProduct) => (
+    <Menu shadow="md" width={160}>
+      <Menu.Target>
+        <ActionIcon variant="subtle" color="gray" size="sm">
+          <MoreVertical size={16} />
+        </ActionIcon>
+      </Menu.Target>
+      <Menu.Dropdown>
+        <Menu.Item
+          component={Link}
+          to={ROUTES.viewProduct}
+          state={{ variationID: p.variationID }}
+        >
+          View
+        </Menu.Item>
+        <Menu.Item
+          component={Link}
+          to={ROUTES.editProduct}
+          state={{ variationID: p.variationID }}
+          onClick={() => handleProductEdit(p)}
+        >
+          Edit
+        </Menu.Item>
+        <Menu.Item
+          color="red"
+          onClick={() => {
+            setSelectedId(p.variationID)
+            setIsDeleteOpen(true)
+          }}
+        >
+          Delete
+        </Menu.Item>
+      </Menu.Dropdown>
+    </Menu>
+  )
 
-          <div style={{ display: "flex", alignItems: "center", gap: "8px" }}>
-            <Text
-              size="sm"
-              fw={500}
-              style={{ color: "#64748b", whiteSpace: "nowrap" }}
-            >
-              Sort By
-            </Text>
-            <Select
-              value={sortBy}
-              onChange={(value) => setSortBy(value || "all")}
-              data={[
-                { value: "all", label: "All" },
-                { value: "name", label: "Name" },
-                { value: "price", label: "Price" },
-                { value: "stock", label: "Stock" },
-              ]}
-              styles={{
-                root: { width: "80px" },
-                input: {
-                  border: "1px solid #e2e8f0",
-                  borderRadius: "6px",
-                  fontSize: "14px",
-                  height: "36px",
-                  "&:focus": {
-                    borderColor: "#f97316",
-                    boxShadow: "0 0 0 1px #f97316",
-                  },
-                },
-              }}
-            />
-          </div>
-
-          <Button
-            leftSection={<Plus size={16} />}
-            styles={{
-              root: {
-                backgroundColor: "#f97316",
-                border: "none",
-                borderRadius: "6px",
-                height: "36px",
-                fontSize: "14px",
-                fontWeight: 500,
-                "&:hover": {
-                  backgroundColor: "#ea580c",
-                },
-              },
-            }}
-          >
-            Add
-          </Button> */}
-          <ProductFilters onFilterChange={handleFilterChange} />
-        </div>
-      </div>
-
-      <Box>
-        <Table.ScrollContainer minWidth={800}>
-          <Table striped={false} highlightOnHover withTableBorder={false}>
-            <Table.Thead>
-              <Table.Tr style={{ backgroundColor: "#f8fafc" }}>
-                <Table.Th
-                  style={{
-                    fontWeight: 500,
-                    color: "#64748b",
-                    padding: "12px 16px",
-                    fontSize: "13px",
-                  }}
-                >
-                  Name
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Product Code
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Location
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Category
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Selling Price
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Stock Level
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Status
-                </Table.Th>
-                <Table.Th style={{ fontWeight: 500, color: "#64748b", fontSize: "13px" }}>
-                  Action
-                </Table.Th>
-              </Table.Tr>
-            </Table.Thead>
-            <Table.Tbody>
-              {products.map((product) => (
-                <Table.Tr
-                  key={product.id}
-                  styles={{
-                    tr: {
-                      "&:hover": { backgroundColor: "#f8fafc" },
-                      borderBottom: "1px solid #f1f5f9",
-                    },
-                  }}
-                >
-                  <Table.Td style={{ padding: "12px 16px" }}>
-                    <Group gap="sm">
-                      <Avatar
-                        src={Array.isArray(product.image_path) ? (product.image_path[0] ?? "") : product.image_path}
-                        size={32}
-                        radius="sm"
-                        styles={{
-                          root: {
-                            backgroundColor: "#f1f5f9",
-                            border: "1px solid #e2e8f0",
-                          },
-                        }}
-                      >
-                        {product.product.product_name.charAt(0).toUpperCase()}
-                      </Avatar>
-                      <div>
-                        <Text
-                          size="sm"
-                          fw={500}
-                          lineClamp={1}
-                          style={{ color: "#1e293b" }}
-                        >
-                          {product.product.product_name}
-                        </Text>
-                        <Text size="xs" c="dimmed" lineClamp={1}>
-                          {product.name !== product.product.product_name
-                            ? product.name
-                            : product.variation_attributes.length > 0
-                              ? product.variation_attributes
-                                .map((attr) => attr.option_value)
-                                .join(" | ")
-                              : "Green | Small"}
-                        </Text>
-                      </div>
-                    </Group>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text size="sm" ff="monospace" style={{ color: "#475569" }}>
-                      {product.code}
-                    </Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text size="sm" style={{ color: "#475569" }}>
-                      {product.product.location.name}
-                    </Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text size="sm" style={{ color: "#475569" }}>
-                      {product.product.category.name}
-                    </Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text size="sm" fw={500} style={{ color: "#1e293b" }}>
-                      {formatPrice(product.selling_price)}
-                    </Text>
-                  </Table.Td>
-                  <Table.Td>
-                    <Text size="sm" style={{ color: "#475569" }}>
-                      {product.quantity}
-                    </Text>
-                  </Table.Td>
-                  <Table.Td>{getStatusBadge(product)}</Table.Td>
-                  <Table.Td>
-                    <Menu shadow="md" width={160}>
-                      <Menu.Target>
-                        <ActionIcon variant="subtle" color="gray" size="sm">
-                          <MoreVertical size={16} />
-                        </ActionIcon>
-                      </Menu.Target>
-                      <Menu.Dropdown>
-                        <Menu.Item
-                          component={Link}
-                          to={ROUTES.viewProduct}
-                          state={{ variationID: product.variationID }}
-                        >
-                          View
-                        </Menu.Item>
-                        <Menu.Item
-                          component={Link}
-                          to={ROUTES.editProduct}
-                          state={{ variationID: product.variationID }}
-                          onClick={() => handleProductEdit(product)}
-                        >
-                          Edit
-                        </Menu.Item>
-                        <Menu.Item
-                          color="red"
-                          onClick={() => {
-                            setSelectedId(
-                              typeof product.variationID === "string" || typeof product.variationID === "number"
-                                ? product.variationID
-                                : null
-                            );
-                            setIsDeleteOpen(true);
-                          }}
-                        >
-                          Delete
-                        </Menu.Item>
-                      </Menu.Dropdown>
-                    </Menu>
-                  </Table.Td>
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
-
-        {paginationData && paginationData.last_page > 1 && (
-          <Box
+  return (
+    <>
+      <GenericTable
+        data={products}
+        isLoading={isLoading}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
+        columns={columns}
+        actions={actions}
+        emptyMessage="No products found"
+        titleSection={
+          <div
             style={{
               display: "flex",
-              justifyContent: "flex-end",
+              alignItems: "center",
+              justifyContent: "space-between",
+              width: "100%",
               padding: "16px 24px",
-              borderTop: "1px solid #f1f5f9",
+              borderBottom: "1px solid #f1f5f9",
+              backgroundColor: "white",
             }}
           >
-            <Pagination
-              total={paginationData.last_page}
-              value={paginationData.current_page}
-              onChange={onPageChange}
-              size="sm"
-              styles={{
-                control: {
-                  "&[data-active]": {
-                    backgroundColor: "#f97316",
-                    borderColor: "#f97316",
-                    color: "white",
+            {/* Left: Title + Total */}
+            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
+              <Text size="xl" fw={600} style={{ color: "#1e293b" }}>
+                Products
+              </Text>
+              <Badge
+                variant="filled"
+                styles={{
+                  root: {
+                    backgroundColor: "#fed7aa",
+                    color: "#ea580c",
+                    fontWeight: 600,
+                    fontSize: "12px",
+                    height: "20px",
+                    minHeight: "20px",
+                    paddingLeft: "8px",
+                    paddingRight: "8px",
+                    textTransform: "none",
                   },
-                  "&:hover:not([data-active])": {
-                    backgroundColor: "#f8fafc",
-                  },
-                },
-              }}
-            />
-          </Box>
-        )}
-      </Box>
+                }}
+              >
+                {paginationData?.total ?? 0}
+              </Badge>
+            </div>
+
+
+            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
+              <ProductFilters onFilterChange={() => { }} />
+            </div>
+          </div>
+        }
+      />
+
       <DeleteProduct
         opened={isDeleteOpen}
         onClose={() => setIsDeleteOpen(false)}
         handleDelete={handleDelete}
         id={selectedId}
       />
-    </div>
+    </>
   )
 }
+
+
 

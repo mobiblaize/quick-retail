@@ -38,6 +38,7 @@ export default function ProductFilters({ onFilterChange }: Props) {
                     onChange={(value) => handleChange({ sortBy: value as Filters["sortBy"] })}
                 />
             </div>
+            
         </Group>
     )
 }
