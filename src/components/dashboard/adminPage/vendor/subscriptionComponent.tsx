@@ -21,7 +21,7 @@ export default function SubscriptionComponent() {
   if (isLoading) return <p>Loading subscription...</p>;
 
   const subscription = data?.data ?? {};
-  const plan = subscription.plan ?? "Yes";
+  const plan = subscription.plan ?? "No";
   const amount = subscription.amount ?? 0;
   const status = subscription.status ?? "Inactive";
   const expires = subscription.expires ?? new Date().toISOString();

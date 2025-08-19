@@ -18,7 +18,6 @@ import {
   getSubscriptionEndDate,
 } from "../../../../utils/helpers";
 
-
 const subscriptionPlan = [
   // { id: 1, name: "Free Trial", slug: "trial" },
   { id: 2, name: "Billed Monthly", slug: "monthly" },
@@ -199,14 +198,12 @@ const SubscriptionPlan = () => {
                 state={{
                   items: selectedSub.map((item: any) => ({
                     title: item.application?.name || "Unnamed App",
-                    price:
-                      Number(item.amount || 0) +
-                      Number(item.additional_user_seat_number || 0) *
-                        Number(item.price_per_seat || 0),
+                    price: Number(item.amount || 0),
                     seats: Number(item.application?.free_access_users || 1),
                     additionalSeats: Number(
                       item.additional_user_seat_number || 0
-                    ),  subscription_id: item.id,
+                    ),
+                    subscription_id: item.id,
                     application_id: item.application_id,
                   })),
                   billingType:
@@ -217,6 +214,7 @@ const SubscriptionPlan = () => {
                       : "Free",
                   billingStart: billingStartFormatted,
                   billingEnd: billingEndFormatted,
+
                   totalPrice: totalPriceValue,
                 }}
               >

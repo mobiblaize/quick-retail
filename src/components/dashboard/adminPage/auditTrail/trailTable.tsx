@@ -188,7 +188,7 @@ const TrailTable = ({
           showSearch
           showSortFilter
           searchPlaceholder="Search logs"
-          length={-1}
+          length={8}
           showFilter
           roles={roles}
           modules={modules}

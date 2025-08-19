@@ -8,6 +8,7 @@ const HistoryTable = () => {
   const { data, isLoading, error } = useFetchAllSub();
 
   const subscriptions = data?.data?.data || [];
+  // const 
 
   const columns: ColumnDef<any>[] = [
     // {
@@ -33,6 +34,7 @@ const HistoryTable = () => {
     {
       header: "Transaction ID",
       accessorKey: "subscriptionID",
+      enableSorting: false,
       cell: ({ row }) => (
         <Text fw={400} className="text-sm" c="#667185">
           {row.original.subscriptionID}
@@ -42,6 +44,7 @@ const HistoryTable = () => {
     {
         header: "Plan",
         accessorKey: "billing_type",
+        enableSorting: false,
         cell: ({ row }) => (
           <Text fw={400} c="#667185">
             {row.original.billing_type} Plan
@@ -51,6 +54,8 @@ const HistoryTable = () => {
       {
         header: "Amount",
         accessorKey: "total_amount",
+        enableSorting: false,
+        sortingFn: "alphanumeric",
         cell: ({ row }) => (
           <Text fw={500} c="#667185">
             ₦{Number(row.original.total_amount).toLocaleString()}
@@ -60,6 +65,8 @@ const HistoryTable = () => {
     {
       header: "Date",
       accessorKey: "billing_start",
+      enableSorting: false, 
+    sortingFn: "datetime",
       cell: ({ row }) => (
         <Text fw={400} className="text-sm" c="#667185">
           {new Date(row.original.billing_start).toLocaleDateString()}
@@ -71,6 +78,8 @@ const HistoryTable = () => {
     {
         header: "Status",
         accessorKey: "status",
+      enableSorting: false, 
+
         cell: ({ row }) => {
           const status = row.original.status;
       
