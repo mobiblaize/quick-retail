@@ -20,6 +20,7 @@ interface ReturnsTableProps {
   onFilterChange: (filters: FilterValues) => void;
   paginationData: PaginationData;
   onPageChange: (page: number) => void;
+  onSearchChange?: (search: string) => void; 
 }
 
 const ReturnsTable = ({
@@ -28,6 +29,7 @@ const ReturnsTable = ({
   onFilterChange,
   paginationData,
   onPageChange,
+  onSearchChange,
 }: ReturnsTableProps) => {
   const [sortBy, setSortBy] = useState<string>("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
@@ -54,7 +56,7 @@ const ReturnsTable = ({
   const mappedReturns: TableRowData[] = returns.map((item: any) => ({
     name: item.product_variation?.name || "N/A",
     productCode: item.product_variation?.sku || "N/A",
-    dateReturned: item.date_returned || "N/A",
+    dateReturned: item.created_at || "N/A",
     orderId: item.sales_order?.orderID || "N/A",
     customer: item.customer?.customer_name || "N/A",
     returnedReason: item.return_reason || "N/A",
@@ -119,7 +121,7 @@ const ReturnsTable = ({
         <Text c="textSecondary.7">
           {" "}
           {/* @ts-ignore */}
-          {formatDate(row.original.dateReturned)}
+          {formatDate(row.original. dateReturned)}
         </Text>
       ),
     },
@@ -214,6 +216,7 @@ const ReturnsTable = ({
           onSortChange={handleSortChange}
           activeSort={sortBy}
           serverSidePagination={true}
+          onSearchChange={onSearchChange}
           paginationData={paginationData}
           onPageChange={onPageChange}
           tableTitle={

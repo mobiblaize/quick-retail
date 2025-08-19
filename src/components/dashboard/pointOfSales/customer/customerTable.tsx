@@ -13,6 +13,7 @@ interface CategoriesTableProps {
   onPageChange: (page: number) => void;
   activeSort?: string;
   onRefetch: () => void;
+  onSearchChange?: (search: string) => void; 
 }
 
 const CustomerTable = ({
@@ -23,6 +24,7 @@ const CustomerTable = ({
   onPageChange,
   activeSort,
   onRefetch ,
+  onSearchChange,
 }: CategoriesTableProps) => {
   const [selectedCustomer, setSelectedCustomer] = useState<any>(null);
 
@@ -164,6 +166,7 @@ const CustomerTable = ({
         activeSort={activeSort}
         serverSidePagination={true}
         paginationData={paginationData}
+        onSearchChange={onSearchChange}
         onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">

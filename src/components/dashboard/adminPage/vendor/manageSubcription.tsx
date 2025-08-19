@@ -12,13 +12,13 @@ export default function ManageSubscription() {
     {
       label: "Change Subscription Plan",
       icon: <img src={changeSub} alt="Settings" className="w-[18px] h-[18px]" />,
-      path: "/dashboard/subscription-plan",
+      path: "/dashboard/admin/subscription-plan",
       onClick: null,
     },
     {
       label: "Subscription History",
       icon: <img src={changeSub} alt="Settings" className="w-[18px] h-[18px]" />,
-      path: "/dashboard/subscription-history",
+      path: "/dashboard/admin/subscription-history",
       onClick: null,
     },
     {

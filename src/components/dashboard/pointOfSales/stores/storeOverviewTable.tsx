@@ -1,19 +1,29 @@
-import { FC } from "react";
+
+
+import { FC, useState } from "react";
 import { ColumnDef } from "@tanstack/react-table";
 import { Text, Switch, Loader } from "@mantine/core";
-import TanTable, { PaginationData } from "../../../General/table";
+import { notifications } from "@mantine/notifications";
 import { Link } from "react-router";
+
+import TanTable, { PaginationData } from "../../../General/table";
 import { ROUTES } from "../../../../constants/routes";
 import { TableRowData } from "../../../../types";
 import { useToggleStore } from "../../../../hooks/backendApis/pos/storeManagement";
 import { shortenTransactionId } from "../../../../utils/helpers";
-import { notifications } from '@mantine/notifications';
+import ConfirmStoreModal from "./modals/activateStore";
+
 
 type StoreData = {
   id: string;
   name: string;
   isActive: boolean;
-  // Add any other fields your store has
+  storeID?: string;
+  locationID?: string;
+  lga?: string;
+  created_at?: string | number;
+  registered_customers?: number;
+  is_active?: number;
 };
 
 type StoreOverviewTableProps = {
@@ -24,6 +34,7 @@ type StoreOverviewTableProps = {
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
   activeSort?: string;
+  onSearchChange?: (search: string) => void;
 };
 
 const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
@@ -31,10 +42,48 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
   loading = false,
   refetchStores,
   onSortChange,
-  paginationData ,  
-   onPageChange,
-   activeSort
+  paginationData,
+  onPageChange,
+  activeSort,
+  onSearchChange,
 }) => {
+  // UI state for modal
+  const [modalOpen, setModalOpen] = useState(false);
+  const [selectedStore, setSelectedStore] = useState<StoreData | null>(null);
+  const [actionType, setActionType] = useState<"activate" | "deactivate" | null>(null);
+
+  // Mutation hook
+  const toggleMutation = useToggleStore(selectedStore?.locationID ?? "");
+
+  // Handles confirm inside modal
+  const handleConfirmAction = () => {
+    if (!selectedStore || !actionType) return;
+
+    toggleMutation.mutate(undefined, {
+      onSuccess: () => {
+        const newStatus = actionType === "activate" ? 1 : 0;
+        selectedStore.is_active = newStatus;
+        refetchStores?.();
+
+        notifications.show({
+          title: "Store status updated",
+          message: `Store ${newStatus === 1 ? "Activated" : "Deactivated"}.`,
+          color: newStatus === 1 ? "green" : "red",
+        });
+
+        setModalOpen(false);
+        setSelectedStore(null);
+      },
+      onError: () => {
+        notifications.show({
+          title: "Error",
+          message: "Failed to update store status. Please try again.",
+          color: "red",
+        });
+      },
+    });
+  };
+
   if (loading) {
     return (
       <div className="flex justify-center items-center p-10">
@@ -48,44 +97,36 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
 
   if (!stores.length) return <p>No stores available.</p>;
 
-
   const columns: ColumnDef<TableRowData>[] = [
-   
     {
       header: "Store Name",
       accessorKey: "name",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
             {props.row.original.name}
           </Text>
           <Text fw={400} className="text-sm">
-          Store ID: {shortenTransactionId(String(props.row.original.storeID ?? ""))}
+            Store ID: {shortenTransactionId(String(props.row.original.storeID ?? ""))}
           </Text>
         </div>
       ),
     },
-   
     {
       header: "Store Location",
       accessorKey: "location",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         const location = props.row.original.lga;
-        return (
-          <Text>
-            {/* @ts-ignore */}
-            {location && location.trim() !== "" ? location : "No location available"}
-          </Text>
-        );
+        // @ts-ignore
+        return <Text>{location?.trim() ? location : "No location available"}</Text>;
       },
     },
-    
     {
       header: "Date Created",
       accessorKey: "dateCreated",
-      enableSorting: false, 
+      enableSorting: false,
       cell: ({ row }) => {
         const createdAt = row.original.created_at;
 
@@ -97,11 +138,9 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
             year: "numeric",
           } as const;
 
-          const datePart = new Intl.DateTimeFormat("en-GB", optionsDate).format(
-            dateObj
-          );
+          const datePart = new Intl.DateTimeFormat("en-GB", optionsDate).format(dateObj);
 
-          return <Text>{`${datePart}`}</Text>;
+          return <Text>{datePart}</Text>;
         }
 
         return <Text>Invalid date</Text>;
@@ -110,7 +149,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     {
       header: "Customers",
       accessorKey: "totalCustomer",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         const totalCustomers = props.row.original.registered_customers;
         return (
@@ -123,44 +162,14 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           </Text>
         );
       },
-    },    
-
+    },
     {
       header: "Status",
       accessorKey: "status",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => {
         const store = props.row.original;
-        const locationId = store.locationID as string;
         const isActive = store.is_active === 1;
-        // const [isActive, setIsActive] = useState(store.is_active === 1);
-
-        const toggleMutation = useToggleStore(locationId);
-
-        const handleSwitchToggle = () => {
-          toggleMutation.mutate(undefined, {
-            onSuccess: () => {
-              const newStatus = isActive ? 0 : 1;
-              props.row.original.is_active = newStatus;
-              refetchStores?.();
-        
-              notifications.show({
-                title: 'Store status updated',
-                message: `Store ${newStatus === 1 ? 'Activated' : 'Deactivated'}.`,
-                color: newStatus === 1 ? 'green' : 'red', 
-              });
-            },
-            onError: (err) => {
-              console.error("Toggle failed", err);
-              notifications.show({
-                title: 'Error',
-                message: 'Failed to update store status. Please try again.',
-                color: 'red',
-              });
-            },
-          });
-        };
-        
 
         const dotClass = isActive ? "bg-[#27ae60]" : "bg-[#94a3b8]";
         const statusText = isActive ? "Active" : "Inactive";
@@ -174,15 +183,18 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
                   : "bg-[#F2F4F7] text-[#667085]"
               }`}
             >
-              <span
-                className={`inline-block w-3 h-3 rounded-full ${dotClass}`}
-              />
+              <span className={`inline-block w-3 h-3 rounded-full ${dotClass}`} />
               <span className="ml-2">{statusText}</span>
             </div>
 
             <Switch
               checked={isActive}
-              onChange={handleSwitchToggle}
+              onChange={() => {
+                    // @ts-ignore
+                setSelectedStore(store);
+                setActionType(isActive ? "deactivate" : "activate");
+                setModalOpen(true);
+              }}
               color="orange"
               size="md"
             />
@@ -190,11 +202,10 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
         );
       },
     },
-
     {
       header: "",
       accessorKey: "action",
-      enableSorting: false, 
+      enableSorting: false,
       cell: (props) => (
         <Link to={ROUTES.viewStore} state={{ store: props.row.original }}>
           <Text fw={600} c="customPrimary.10" className="cursor-pointer">
@@ -214,11 +225,12 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
           showSearch
           showSortFilter
           onSortChange={onSortChange}
-          activeSort={activeSort} 
+          activeSort={activeSort}
           searchPlaceholder="Search stores"
           serverSidePagination={true}
           paginationData={paginationData}
           onPageChange={onPageChange}
+          onSearchChange={onSearchChange}
           length={8}
           tableTitle={
             <div className="flex gap-2.5">
@@ -226,14 +238,24 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
                 Stores Overview
               </Text>
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{paginationData?.total}</Text>
+                <Text c="customPrimary.10">{paginationData?.total}</Text>
               </div>
             </div>
           }
         />
       </main>
+
+      {/* Confirmation modal */}
+      <ConfirmStoreModal
+        opened={modalOpen}
+        onClose={() => setModalOpen(false)}
+            // @ts-ignore
+        action={actionType}
+        onConfirm={handleConfirmAction}
+      />
     </div>
   );
 };
 
 export default StoreOverviewTable;
+

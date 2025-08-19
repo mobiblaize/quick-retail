@@ -18,7 +18,7 @@ const AllOrders: React.FC<AllOrdersProps> = ({ store }) => {
     // start_date: start.toISOString().split("T")[0],
     // end_date: end.toISOString().split("T")[0],
   });
-
+// console.log(data)
 
   return (
     <main className="grid grid-cols-1 gap-6">

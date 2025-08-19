@@ -17,6 +17,7 @@ interface StoreDetailsProps {
     address: string;
     is_active: number;
     staff_no: number;
+    registered_customers:number;
   };
 }
 
@@ -51,15 +52,15 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Registered Customers</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {/* 4,232 */}
+            {store.registered_customers}
             </Text>
           </div>
-          <div className="flex flex-col">
+          {/* <div className="flex flex-col">
             <Text fw={"500"}>Total Staff</Text>
             <Text size="lg" c={"black"} fw={"400"}>
               {store.staff_no}
             </Text>
-          </div>
+          </div> */}
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-4 space-y-5 md:gap-x-8 md:gap-y-10 w-full md:max-w-6xl">
