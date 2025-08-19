@@ -3,54 +3,80 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Avatar, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import { useEffect, useState } from "react";
-
-
+import { useEffect, useState, useMemo } from "react";
+import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
 
 const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
-  const { reportData } = reportInfo || {};
-  const [data, setData] = useState<TableRowData[]>([]);
-  const [, setCurrentPage] = useState(
-    reportData?.data?.products?.current_page || 1
+  const { reportData, startDate, endDate, locationId, reportType, per_page = 10 } =
+    reportInfo || {};
+  const generateReport = useGenerateReport();
+
+
+  const getProductsSection = (obj: any) =>
+    obj?.data?.data?.data?.products ??
+    obj?.data?.data?.products ??
+    obj?.data?.products;
+
+
+  const initialSection = useMemo(
+    () => getProductsSection(reportData),
+    [reportData]
   );
 
+  const [data, setData] = useState<TableRowData[]>([]);
+  const [paginationData, setPaginationData] = useState<any>(initialSection);
+  const [, setLoading] = useState(false);
+
+
+  const formatProducts = (list: any[]) =>
+    list.map((item: any) => ({
+      category: item["Category"],
+      costPrice: item["Cost price"],
+      margin: item["Margin"],
+      productCode: item["SKU"],
+      product: item["Product Name"],
+      stockLevel: item["Stock"],
+      Amount: item["Selling price"],
+      location: item["Location"],
+      discountStatus: item["Status"] === "Active" ? "Active" : "Inactive",
+      imageUrl: item["Image"],
+    }));
+
+  // Load page 1 from passed-in data
   useEffect(() => {
-    const productsArray = reportData?.data?.products?.data;
-
-    if (Array.isArray(productsArray)) {
-      const formattedData = productsArray.map((item: any) => ({
-        category: item["Category"],
-        costPrice: item["Cost price"],
-        margin: item["Margin"],
-        productCode: item["SKU"],
-        product: item["Product Name"],
-        stockLevel: item["Stock"],
-        Amount: item["Selling price"],
-        location: item["Location"],
-        discountStatus: item["Status"] === "Active" ? "Active" : "Inactive",
-        imageUrl: item["Image"],
-      }));
-
-      setData(formattedData);
+    if (Array.isArray(initialSection?.data)) {
+      setData(formatProducts(initialSection.data));
+      setPaginationData(initialSection);
     }
-  }, [reportData]);
+  }, [initialSection]);
 
-  const paginationData = {
-    current_page: reportData?.data?.products?.current_page,
-    last_page: reportData?.data?.products?.last_page,
-    per_page: reportData?.data?.products?.per_page,
-    total: reportData?.data?.products?.total,
-    from: reportData?.data?.products?.from,
-    to: reportData?.data?.products?.to,
-    next_page_url: reportData?.data?.products?.next_page_url,
-    prev_page_url: reportData?.data?.products?.prev_page_url,
+  // Fetch and update for a specific page
+  const fetchPage = async (page: number) => {
+    setLoading(true);
+    try {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        report_type: reportType || "products",
+        locationId,
+        paginate: true,
+        per_page,
+        page,
+      };
+
+      const res = await generateReport.mutateAsync(payload);
+      const section = getProductsSection(res);
+
+      setPaginationData(section);
+      setData(Array.isArray(section?.data) ? formatProducts(section.data) : []);
+    } catch (err) {
+      console.error("Pagination fetch failed:", err);
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
   const columns: ColumnDef<TableRowData>[] = [
-   
     {
       header: "Name",
       accessorKey: "name",
@@ -58,13 +84,12 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       cell: (props) => (
         <div className="flex items-center gap-3">
           <Avatar
-            //@ts-ignore
+                   /* @ts-ignore */
             src={props.row.original.imageUrl ?? undefined}
             alt={props.row.original.product as string}
             radius="md"
             size={40}
           />
-
           <div className="flex flex-col">
             <Text fw={500} c="black">
               {props.row.original.product}
@@ -77,17 +102,13 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       header: "Product Code",
       accessorKey: "productCode",
       enableSorting: false,
-      cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.productCode}</Text>
-      ),
+      cell: (props) => <Text c="textSecondary.7">{props.row.original.productCode}</Text>,
     },
     {
       header: "Location",
       accessorKey: "location",
       enableSorting: false,
-      cell: (props) => (
-        <Text c="textSecondary.7">{props.row.original.location}</Text>
-      ),
+      cell: (props) => <Text c="textSecondary.7">{props.row.original.location}</Text>,
     },
     {
       header: "Category",
@@ -109,14 +130,13 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
         </span>
       ),
     },
-
     {
       header: "Selling Price",
       accessorKey: "Amount",
       enableSorting: false,
       cell: ({ row }) => (
         <span className=" text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
-      ₦{row.original.Amount}
+          ₦{row.original.Amount}
         </span>
       ),
     },
@@ -126,7 +146,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       enableSorting: false,
       cell: ({ row }) => (
         <span className=" text-gray-900 px-3 py-1 rounded-full text-sm font-medium">
-       ₦{row.original.margin}
+          ₦{row.original.margin}
         </span>
       ),
     },
@@ -141,7 +161,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       ),
     },
     {
-      header: " Status",
+      header: "Status",
       accessorKey: "discountStatus",
       enableSorting: false,
       cell: (props) => {
@@ -161,6 +181,7 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
       },
     },
   ];
+
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
       <TanTable
@@ -169,9 +190,19 @@ const ProductManagementReport = ({ reportInfo }: { reportInfo: any }) => {
         showSearch={false}
         showSortFilter={false}
         serverSidePagination={true}
-        paginationData={paginationData}
-        onPageChange={handlePageChange}
+        paginationData={{
+          current_page: paginationData?.current_page,
+          last_page: paginationData?.last_page,
+          per_page: paginationData?.per_page,
+          total: paginationData?.total,
+          from: paginationData?.from,
+          to: paginationData?.to,
+          next_page_url: paginationData?.next_page_url,
+          prev_page_url: paginationData?.prev_page_url,
+        }}
+        onPageChange={fetchPage} // <-- real API call
         length={8}
+        // loading={loading}
         tableTitle={
           <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex gap-2.5 items-center">

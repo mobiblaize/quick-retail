@@ -812,7 +812,7 @@ export default function App() {
           <Route path={ROUTES.adminDashboard} element={<AdminDashboardPage />} />
           <Route path={ROUTES.userManagement} element={<UserManagement />} />
           {/* <Route path={ROUTES.viewUser} element={<ViewUser/>} /> */}
-          <Route path="/dashboard/user-management/view-user/:userId" element={<ViewUser />} />
+          <Route path="/dashboard/admin/user-management/view-user/:userId" element={<ViewUser />} />
           <Route path={ROUTES.addNewRole} element={<AddNewRole />} />
           <Route path={ROUTES.helpPage} element={<HelpPage />} />
           <Route path={`${ROUTES.learnMore}/:id`} element={<LearnMoreHelp />} />

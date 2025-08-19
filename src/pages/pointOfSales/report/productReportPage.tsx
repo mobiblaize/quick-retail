@@ -12,6 +12,7 @@ import autoTable from "jspdf-autotable";
 import { formatDate } from "../../../utils/helpers";
 import Dropdown from "../../../components/General/dropdown";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
+import { useGenerateReport } from "../../../hooks/backendApis/pos/reports";
 
 const ProductReportPage = () => {
   const navigate = useNavigate();
@@ -24,7 +25,6 @@ const ProductReportPage = () => {
     locationId,
     reportData,
   });
-  
 
   const exportOptions = [
     { label: "CSV", value: "csv" },
@@ -32,15 +32,48 @@ const ProductReportPage = () => {
   ];
 
   const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
-
+  const generateReport = useGenerateReport();
   const selectedStore = storeData?.data?.stores?.data?.find(
     (store: any) => store.locationID === locationId
   );
+
   const handleBack = () => {
     navigate(-1);
   };
 
-  const exportFullPDF = () => {
+  // helper to fetch ALL pages
+  const fetchAllProductPages = async () => {
+    let allProducts: any[] = [];
+    let page = 1;
+    let lastPage = 1;
+  
+    do {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        locationId,
+        report_type: "products",
+        paginate: true,
+        per_page: 50,
+        page,
+      };
+  
+      const res: any = await generateReport.mutateAsync(payload);
+      const productData = res?.data?.data?.products;
+      if (!productData?.data) break;
+  
+      allProducts = [...allProducts, ...productData.data];
+      lastPage = productData.last_page || 1;
+      page++;
+    } while (page <= lastPage);
+  
+    return allProducts;
+  };
+  
+
+  const exportFullPDF = async () => {
+    const allProducts = await fetchAllProductPages();
+
     const doc = new jsPDF();
     const orangeHeaderStyle = {
       fillColor: [241, 103, 34] as [number, number, number],
@@ -56,18 +89,14 @@ const ProductReportPage = () => {
       body: [
         ["Total Product Value", reportData?.data?.stats?.total_revenue || "0"],
         ["Active Products", reportData?.data?.stats?.active_products || "0"],
-        [
-          "Inactive Products",
-          reportData?.data?.stats?.inactive_products || "0",
-        ],
+        ["Inactive Products", reportData?.data?.stats?.inactive_products || "0"],
       ],
       theme: "grid",
       headStyles: orangeHeaderStyle,
     });
 
     autoTable(doc, {
-      //@ts-ignore
-      startY: doc.lastAutoTable.finalY + 10,
+      startY: 25,
       head: [["Category Name", "Total Quantity Sold", "Total Revenue"]],
       body: (reportData?.data?.customer_sales || []).map((c: any) => [
         c.category_name,
@@ -79,7 +108,7 @@ const ProductReportPage = () => {
     });
 
     autoTable(doc, {
-      //@ts-ignore
+            //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [["Product Name", "Total Sold", "Price"]],
       body: (reportData?.data?.product_sales || []).map((p: any) => [
@@ -92,7 +121,7 @@ const ProductReportPage = () => {
     });
 
     autoTable(doc, {
-      //@ts-ignore
+            //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [
         [
@@ -105,7 +134,7 @@ const ProductReportPage = () => {
           "Status",
         ],
       ],
-      body: (reportData?.data?.products?.data || []).map((s: any) => [
+      body: allProducts.map((s: any) => [
         s["Product Name"],
         s["SKU"],
         s["Location"],
@@ -127,8 +156,10 @@ const ProductReportPage = () => {
     });
   };
 
-  const exportFullCSV = () => {
-    const escapeValue = (val: any) => `"${String(val).replace(/"/g, '""')}"`; // handles quotes inside values too
+  const exportFullCSV = async () => {
+    const allProducts = await fetchAllProductPages();
+
+    const escapeValue = (val: any) => `"${String(val).replace(/"/g, '""')}"`;
 
     const rows = [
       ["Metric", "Value"],
@@ -136,7 +167,6 @@ const ProductReportPage = () => {
       ["Active Products", reportData?.data?.stats?.active_products || "0"],
       ["Inactive Products", reportData?.data?.stats?.inactive_products || "0"],
       [],
-
       ["Category Name", "Total Quantity Sold", "Total Revenue"],
       ...(reportData?.data?.customer_sales || []).map((c: any) => [
         c.category_name,
@@ -151,7 +181,6 @@ const ProductReportPage = () => {
         p.price,
       ]),
       [],
-
       [
         "Product Name",
         "SKU",
@@ -161,7 +190,7 @@ const ProductReportPage = () => {
         "Stock",
         "Status",
       ],
-      ...(reportData?.data?.products?.data || []).map((s: any) => [
+      ...allProducts.map((s: any) => [
         s["Product Name"],
         s["SKU"],
         s["Location"],
@@ -171,6 +200,7 @@ const ProductReportPage = () => {
         s["Status"],
       ]),
     ];
+
     const csvContent = rows.map((r) => r.map(escapeValue).join(",")).join("\n");
 
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
@@ -180,9 +210,7 @@ const ProductReportPage = () => {
     const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
     const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
     const fileName = `full-product-report_${formattedStart}_to_${formattedEnd}.csv`;
-
     link.setAttribute("download", fileName);
-
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -194,7 +222,6 @@ const ProductReportPage = () => {
       color: "green",
     });
   };
-  
 
   const handleExport = (val: "csv" | "pdf") => {
     if (val === "pdf") {
@@ -206,10 +233,7 @@ const ProductReportPage = () => {
 
   const getSubHeaders = () => {
     const backButton = (
-      <button
-        onClick={handleBack}
-        className="flex cursor-pointer gap-2 items-center"
-      >
+      <button onClick={handleBack} className="flex cursor-pointer gap-2 items-center">
         <ChevronLeft />
         <Text fw={500} c="black">
           Back
@@ -218,14 +242,8 @@ const ProductReportPage = () => {
     );
 
     return [
-      <div
-        key="1"
-        className="py-2.5 flex flex-wrap justify-between items-center gap-3  "
-      >
-        <div className="flex gap-[3em] items-center">
-          {backButton}
-        
-        </div>
+      <div key="1" className="py-2.5 flex flex-wrap justify-between items-center gap-3">
+        <div className="flex gap-[3em] items-center">{backButton}</div>
         <div className="flex items-center gap-3 pr-[3em]">
           <Dropdown
             //@ts-ignore
@@ -249,15 +267,15 @@ const ProductReportPage = () => {
       </div>,
     ];
   };
- 
+
   return (
     <PageContainer subHeaders={getSubHeaders()}>
-      <div className=" rounded-lg px-4 py-2 mb-2">
+      <div className="rounded-lg px-4 py-2 mb-2">
         {isLoadingStores ? (
           <Text>Loading store info...</Text>
         ) : (
           <Text>
-            Showing Report For:
+            Showing Report For:{" "}
             <span className="font-semibold text-lg">
               {selectedStore?.name || "All Stores"}
             </span>
@@ -272,3 +290,4 @@ const ProductReportPage = () => {
 };
 
 export default ProductReportPage;
+

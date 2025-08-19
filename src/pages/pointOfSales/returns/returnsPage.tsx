@@ -22,6 +22,7 @@ const ReturnsPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
+  const [searchTerm, setSearchTerm] = useState("");
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -67,6 +68,7 @@ const ReturnsPage = () => {
     ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage,
+    search: searchTerm,
   };
 
   const { data = {}, isLoading = false } = useFetchAllreturns(payload) || {};
@@ -137,6 +139,7 @@ const ReturnsPage = () => {
               // @ts-ignore
         paginationData={paginationData}
         onPageChange={handlePageChange}
+        onSearchChange={setSearchTerm}
       />
     </PageContainer>
   );

@@ -39,6 +39,14 @@ const ReportDateSelect = () => {
     }
   };
 
+  // const [pagination, setPagination] = useState({
+  //   current_page: 1,
+  //   last_page: 1,
+  //   next_page_url: null,
+  //   prev_page_url: null,
+  // });
+  
+
   const handleGenerate = async () => {
     if (!reportType) {
       notifications.show({
@@ -67,6 +75,8 @@ const ReportDateSelect = () => {
         end_date: endDate,
         report_type: mapReportType(reportType),
         locationId,
+        paginate:true,
+        per_page:10
       };
 
       const response = await generateReport.mutateAsync(payload);
