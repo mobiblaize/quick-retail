@@ -374,7 +374,7 @@ interface ApiProduct {
   selling_price: string
   quantity: number
   reorder_level: string
-  image_path: string
+  image_path: string[] 
   status: string
   stock_status: string
   product: {
@@ -753,7 +753,7 @@ export default function ProductTable({
                   <Table.Td style={{ padding: "12px 16px" }}>
                     <Group gap="sm">
                       <Avatar
-                        src={product.image_path}
+                        src={Array.isArray(product.image_path) ? (product.image_path[0] ?? "") : product.image_path}
                         size={32}
                         radius="sm"
                         styles={{

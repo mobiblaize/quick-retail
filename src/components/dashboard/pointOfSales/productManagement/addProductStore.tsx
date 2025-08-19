@@ -176,7 +176,7 @@ type FormData = {
   safety_instructions: string;
   certificates: string;
   image: string | ArrayBuffer | null;
-  image_path: string;
+  image_path: string[];
   variations: any[];
   variationID?: string;
   selling_price: string;
@@ -217,7 +217,7 @@ export const initialFormState: FormData = {
   safety_instructions: "",
   certificates: "",
   image: null,
-  image_path: "",
+  image_path: [],
   variations: [],
   variationID: "",
   selling_price: "",
