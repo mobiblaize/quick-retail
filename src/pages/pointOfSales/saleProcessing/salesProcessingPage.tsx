@@ -1,5 +1,5 @@
 
-import {  useEffect, useState } from "react";
+import {  SetStateAction, useEffect, useState } from "react";
 import { Text, Button } from "@mantine/core";
 import { Link, useLocation } from "react-router";
 import PageContainer from "../../../layout/pageContainer";
@@ -22,19 +22,22 @@ const SalesProcessingPage = () => {
 
   const location = useLocation();
 
+
   useEffect(() => {
     if (location.state?.reload) {
       // Reload logic here
       setCurrentPage(1);
+      // @ts-ignore
       setAppliedFilters(null);
-      window.history.replaceState({}, document.title); // clear state
+      window.history.replaceState({}, document.title); 
     }
   }, [location.state?.reload]);
   
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
   const [searchTerm, setSearchTerm] = useState("");
-
+  //@ts-ignore
+  // const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -65,7 +68,7 @@ const mapFiltersToPayload = (filters: FilterValues) => ({
   const startDate = dateRange.startDate || appliedFilters?.startDate || "";
 const endDate = dateRange.endDate || appliedFilters?.endDate || "";
 
-
+const [activeSort, setActiveSort] = useState("");
 const payload = {
   ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
   ...(startDate ? { start_date: startDate } : {}),
@@ -73,6 +76,7 @@ const payload = {
   page: currentPage,
   per_page: perPage, 
   search: searchTerm,
+  sort_by: activeSort,
 };
 // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllSales(payload) || {};
@@ -80,9 +84,9 @@ const payload = {
 
   const salesData = data?.data?.sales?.data ?? [];
 
-  // const handleFilterChange = (filters: FilterValues) => {
-  //   setAppliedFilters(filters);  
-  // };
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters);  
+  };
 
 
   
@@ -127,11 +131,26 @@ const payload = {
       />
         <CustomerOrdersTable
         salesData={salesData}
-        // onFilterChange={handleFilterChange}
+        onFilterChange={handleFilterChange}
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={handlePageChange}
         onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        
+        activeSort={activeSort}      
+        setSort={(sortBy: SetStateAction<string>) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
       />
     </PageContainer>
   );

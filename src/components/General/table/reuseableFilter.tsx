@@ -25,7 +25,7 @@ export interface FilterValues {
    [key: string]: string | undefined; 
 }
 
-interface ReusableFilterComponentProps {
+export interface ReusableFilterComponentProps {
   onFilterChange: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
@@ -431,24 +431,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
         </button>
         <button
           onClick={() => onFilterChange(filters)}
-          // // onClick={() => {
-          // //   console.log("Submitting filters:", filters);
-          // //   onFilterChange(filters);
-          // // }}
-          // // onClick={() => {
-          // //   const hasFilters = Object.entries(filters).some(
-          // //     ([key, val]) =>
-          // //       val && val !== '' && val !== 'All' && val !== 'all'
-          // //   );
-          
-          // //   if (hasFilters) {
-          // //     setFiltersApplied?.(true); // ✅ Notifies parent to show "Reset Filter"
-          // //   }
-          
-          // //   setAppliedFilters?.(filters); // Optional if you're tracking filters
-          // //   onFilterChange(filters);      // Pass current filters to parent
-          // // }}
-          // onClick={handleApplyFilters}
+       
           className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
         >
           Filter

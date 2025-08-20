@@ -21,7 +21,8 @@ const TransactionPage = () => {
   );
   // const [sortBy, setSortBy] = useState<string>(""); 
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
 
   const [perPage] = useState(10);
   const mapFiltersToPayload = (filters: FilterValues) => ({
@@ -40,6 +41,7 @@ const TransactionPage = () => {
     page: currentPage,
     per_page: perPage, 
     search: searchTerm,
+    sort_by: activeSort,
   };
   // @ts-ignore
   const { data, isLoading } = useFetchAllTransactions(payload) || {};
@@ -61,6 +63,9 @@ const TransactionPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+
+
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
@@ -101,21 +106,24 @@ const TransactionPage = () => {
       <AllTransactionTable
         data={transactionsArray}
         isLoading={isLoading}
-        // onSortChange={(sortKey) => {
-        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
-        //   setAppliedFilters(newFilters);
-        //   setCurrentPage(1);
-        // }}
-        // onSortChange={(sortKey) => {
-        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
-        //   setAppliedFilters(newFilters);
-        //   setSortBy(sortKey); 
-        //   setCurrentPage(1);
-        // }}
+       
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        // activeSort={sortBy} 
-        // onSearchChange={setSearchTerm}
+     
       />
       {!isLoading && (!data?.data || data.data.length === 0) && (
         <div>No transactions to display</div>

@@ -12,15 +12,15 @@ import { useNavigate } from "react-router";
 const ProductManagementPage = () => {
   const navigate = useNavigate();
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-;
+;const [searchTerm, setSearchTerm] = useState("");
+
 
   const handleAddBulkProducts = () => {
     navigate("/dashboard/product-management/add-bulk-product");
   };
+//@ts-ignore
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
 
-  const [appliedFilters] = useState<FilterValues | null>(
-    null
-  );
   const [dateRange, setDateRange] = useState<{
     startDate: string;
     endDate: string;
@@ -30,7 +30,7 @@ const ProductManagementPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
-  // const [searchTerm, setSearchTerm] = useState("");
+
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     if (status.toLowerCase() === "active") return "active";
@@ -44,7 +44,7 @@ const ProductManagementPage = () => {
       // search: searchTerm, 
     // @ts-ignore
     sort_by: filters.sortBy ?? "",
-    per_page: "",
+    per_page: perPage.toString(),
     paginate: true,
     location_name: filters.location,
     category_name: filters.category,
@@ -60,14 +60,16 @@ const ProductManagementPage = () => {
 
   const startDate = dateRange.startDate || appliedFilters?.startDate || "";
   const endDate = dateRange.endDate || appliedFilters?.endDate || "";
-  
+  const [activeSort, setActiveSort] = useState("");
+
   const payload = {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     ...(startDate ? { start_date: startDate } : {}),
     ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage, 
-    // search: searchTerm,
+     search: searchTerm,
+     sort_by: activeSort,
   };
   
   // @ts-ignore
@@ -94,34 +96,17 @@ const ProductManagementPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters);  
+  };
+
   
   const subHeaders = [
     <div className="justify-between flex items-center">
       <Text fw={500} size="xl" c="black">
         Product Management
       </Text>
-
-      {/* <div>
-        <div className="hidden sm:block">
-          <Button
-            onClick={() => setIsLogComplaintsOpen(true)}
-            variant="filled-primary"
-            className="flex gap-1.5"
-          >
-            Add a product
-          </Button>
-        </div>
-
-        <div className="block sm:hidden">
-          <Button
-            onClick={() => setIsLogComplaintsOpen(true)}
-            variant="filled-primary"
-            className="flex gap-1.5"
-          >
-            Add a product
-          </Button>
-        </div>
-      </div> */}
 
       <div>
         <div className="hidden sm:block">
@@ -232,6 +217,21 @@ const ProductManagementPage = () => {
         // @ts-ignore
         paginationData={paginationData}
         onPageChange={handlePageChange}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
+        onFilterChange={handleFilterChange}
       />
       <AddProduct
         opened={isLogComplaintsOpen}
@@ -242,3 +242,6 @@ const ProductManagementPage = () => {
 };
 
 export default ProductManagementPage;
+
+
+

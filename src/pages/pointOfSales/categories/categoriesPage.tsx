@@ -13,11 +13,12 @@ const CategoriesPage = () => {
   const [isCreateSubCategoryOpen, setIsSubCreateCategoryOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
-  const [sortBy, setSortBy] = useState<string>(""); 
+  const [, setSortBy] = useState<string>(""); 
   const [searchTerm, setSearchTerm] = useState("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
+  const [activeSort, setActiveSort] = useState("");
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     page: currentPage.toString(),
@@ -30,6 +31,7 @@ const CategoriesPage = () => {
     page: currentPage,
     per_page: perPage, 
     search: searchTerm,
+    sort_by: activeSort,
   };
   // @ts-ignore
   const { data, isLoading, refetch } = useFetchAllCategories(payload) || {};
@@ -121,8 +123,20 @@ const handlePageChange = (page: number) => {
         }}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        activeSort={sortBy} 
-        onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
       />
       <CreateNewCategory
         opened={isCreateCategoryOpen}
