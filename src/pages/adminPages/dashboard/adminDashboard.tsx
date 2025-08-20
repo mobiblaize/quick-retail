@@ -13,7 +13,7 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 
 const AdminDashboardPage = () => {
 
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+  const [appliedFilters] = useState<FilterValues | null>(null);
   const [dateRange, ] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
@@ -67,9 +67,9 @@ const payload = shouldFetch
 
   const salesData = data?.data?.sales?.data ?? [];
 
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);
-  };
+  // const handleFilterChange = (filters: Record<string, any>) => {
+  //   setAppliedFilters(filters as FilterValues);
+  // };
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -87,7 +87,7 @@ const payload = shouldFetch
       <SalesOverview />
       <CustomerAnalysis />
       <DivisionSalesOverview />
-      <CustomerOrdersTable salesData={salesData} onFilterChange={handleFilterChange} isLoading={false}  paginationData={data?.data?.sales}
+      <CustomerOrdersTable salesData={salesData} isLoading={false}  paginationData={data?.data?.sales}
         onPageChange={handlePageChange}/>
     </PageContainer>
   );
