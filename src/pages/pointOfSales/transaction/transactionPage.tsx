@@ -19,9 +19,9 @@ const TransactionPage = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
-  const [sortBy, setSortBy] = useState<string>(""); 
+  // const [sortBy, setSortBy] = useState<string>(""); 
   const [currentPage, setCurrentPage] = useState(1);
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm] = useState("");
 
   const [perPage] = useState(10);
   const mapFiltersToPayload = (filters: FilterValues) => ({
@@ -106,16 +106,16 @@ const TransactionPage = () => {
         //   setAppliedFilters(newFilters);
         //   setCurrentPage(1);
         // }}
-        onSortChange={(sortKey) => {
-          const newFilters = { ...appliedFilters, sortBy: sortKey };
-          setAppliedFilters(newFilters);
-          setSortBy(sortKey); 
-          setCurrentPage(1);
-        }}
+        // onSortChange={(sortKey) => {
+        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
+        //   setAppliedFilters(newFilters);
+        //   setSortBy(sortKey); 
+        //   setCurrentPage(1);
+        // }}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        activeSort={sortBy} 
-        onSearchChange={setSearchTerm}
+        // activeSort={sortBy} 
+        // onSearchChange={setSearchTerm}
       />
       {!isLoading && (!data?.data || data.data.length === 0) && (
         <div>No transactions to display</div>

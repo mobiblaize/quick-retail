@@ -283,7 +283,7 @@ export interface SaleRow {
 
 interface CustomerOrdersTableProps {
   salesData: any[];
-  onFilterChange: (filters: Record<string, any>) => void;
+  // onFilterChange: (filters: Record<string, any>) => void;
   isLoading: boolean;
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;

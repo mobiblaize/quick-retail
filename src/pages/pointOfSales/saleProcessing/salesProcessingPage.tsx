@@ -80,9 +80,9 @@ const payload = {
 
   const salesData = data?.data?.sales?.data ?? [];
 
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);  
-  };
+  // const handleFilterChange = (filters: FilterValues) => {
+  //   setAppliedFilters(filters);  
+  // };
 
 
   
@@ -127,7 +127,7 @@ const payload = {
       />
         <CustomerOrdersTable
         salesData={salesData}
-        onFilterChange={handleFilterChange}
+        // onFilterChange={handleFilterChange}
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={handlePageChange}
