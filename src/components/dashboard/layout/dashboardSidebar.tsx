@@ -1,4 +1,4 @@
-import { Card, List } from "@mantine/core";
+import { Card, List, Text } from "@mantine/core";
 import logo from "../../../assets/images/logo.png";
 import NavItem from "../../../layout/navItem";
 import {
@@ -14,13 +14,14 @@ import { X } from "lucide-react";
 import LogoutModal from "../../LogoutModal";
 import { ROUTES } from "../../../constants/routes";
 import {
+  InActiveNotification,
   Settings,
 } from "../../../assets/svg";
 import { useUserStore } from "../../../hooks/useUserStore";
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
-  const { user,  } = useUserStore();
+  const { user, } = useUserStore();
   console.log(user)
   const getSidebarItems = () => {
     switch (activeSection) {
@@ -58,14 +59,10 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         </div>
 
         <div className="mt-8 px-3 overflow-y-auto hide-scrollbar flex-1">
-  <div className="mb-6 px-3 bg-[#F0F2F5] p-4 rounded-lg">
-    <div className="text-[#101928] font-medium text-lg">
-      {user?.firstname} {user?.lastname}
-    </div>
-    <div className="text-[#667185] text-md mt-1">
-      {user?.locations?.[0]?.name}
-    </div>
-  </div>
+          <div className="mb-6 px-3 bg-[#F0F2F5] p-4 rounded-lg">
+            <Text size="lg" fw={600} c="textSecondary.9">{user?.firstname} {user?.lastname}</Text>
+            <Text fw={400} size="md" c="secondary">  {user?.locations?.[0]?.name}</Text>
+          </div>
 
 
           <div className="mb-6">
@@ -85,22 +82,29 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           </div>
         </div>
         <div className="px-3">
-          {/* <div className="mt-5">
-            <Divider my="lg" />
-          </div> */}
           {activeSection === "Admin" && (
-            <NavItem
-              href={ROUTES.adminSettings}
-              label="Settings"
-              inactiveIcon={Settings}
-              activeIcon={Settings}
-            />
+            <div className="mb-6"> {/* Adds spacing below Settings */}
+              <NavItem
+                href={ROUTES.notificationPage}
+                label="Notifications"
+
+                inactiveIcon={InActiveNotification}
+                activeIcon={InActiveNotification}
+              />
+              <NavItem
+                href={ROUTES.adminSettings}
+                label="Settings"
+                inactiveIcon={Settings}
+                activeIcon={Settings}
+              />
+            </div>
           )}
 
-          <List className=" gap-4 mt-9">
+          <List className="gap-4 mt-9">
             <LogoutModal />
           </List>
         </div>
+
       </div>
     </Card>
   );

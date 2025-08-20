@@ -18,6 +18,9 @@ const HappyTimePage = () => {
     endDate: "",
   });
 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10); 
+
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     if (status.toLowerCase() === "active") return "active";
@@ -26,18 +29,18 @@ const HappyTimePage = () => {
     return status.toLowerCase();
   };
   
-
   const mapFiltersToPayload = (filters: FilterValues) => ({
     // @ts-ignore
     search: filters.search ?? "",
        // @ts-ignore
     sort_by: filters.sortBy ?? "",
-    per_page: "500",
+    per_page: "",
     paginate: true,
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     status: mapOrderStatus(filters.discountStatus),
-    types: filters.type === 'all' || !filters.type ? "" : filters.type,  
+    types: filters.type === undefined ? "" : filters.type,
+    page: currentPage.toString(), 
   });
   
 
@@ -48,8 +51,10 @@ const payload = {
   ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
   ...(startDate ? { start_date: startDate } : {}),
   ...(endDate ? { end_date: endDate } : {}),
+  page: currentPage,
+  per_page: perPage,
 };
-
+// @ts-ignore
   const { data = {}, isLoading = false } =  useFetchAllDiscount(payload) || {};
 
   const rawDiscounts = data?.data?.discounts?.data || [];
@@ -57,13 +62,29 @@ const payload = {
     setAppliedFilters(filters);
   };
 
+  const paginationData = data?.data?.discounts
+  ? {
+      current_page: data.data.discounts.current_page,
+      last_page: data.data.discounts.last_page,
+      per_page: data.data.discounts.per_page,
+      total: data.data.discounts.total,
+      from: data.data.discounts.from,
+      to: data.data.discounts.to,
+      next_page_url: data.data.discounts.next_page_url,
+      prev_page_url: data.data.discounts.prev_page_url,
+    }
+  : undefined;
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
   
   const subHeaders = [
     <div key="1">
       <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
         <Text fw={500} size="xl" c="black">
-          Discount Promotion
+          Discounts
         </Text>
         <div className="flex flex-row gap-2 md:gap-4">
           {/* <Link to={ROUTES.happyDiscountAnalytics}>
@@ -99,6 +120,8 @@ const payload = {
         rawDiscounts={rawDiscounts}
         isLoading={isLoading}
         onFilterChange={handleFilterChange}
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
       />
       <CreateDiscountModal
         opened={isLogComplaintsOpen}

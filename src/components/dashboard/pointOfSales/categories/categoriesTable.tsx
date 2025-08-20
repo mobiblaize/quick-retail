@@ -1,4 +1,4 @@
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Loader, Text } from "@mantine/core";
@@ -10,9 +10,12 @@ interface CategoriesTableProps {
   categories: Array<any>;
   isLoading: boolean;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
 }
 
-const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTableProps) => {
+const CategoriesTable = ({ categories, isLoading,   onSortChange,   paginationData ,   onPageChange,   activeSort}: CategoriesTableProps) => {
 
 
   const columns: ColumnDef<TableRowData>[] = [
@@ -39,6 +42,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
     {
       header: "Category",
       accessorKey: "name",
+      enableSorting: false,
       cell: ({ row }) => (
         <Text c="textSecondary.9" fw={500}>
           {row.original.name}
@@ -46,8 +50,9 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
       ),
     },
     {
-      header: "Total Product",
+      header: "Total Products",
       accessorKey: "totalProduct",
+        enableSorting: false,
       cell: ({ row }) => (
         <Text c="textSecondary.9" fw={500}>
           {row.original.total_products}
@@ -57,6 +62,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
     {
       header: "Total Amount",
       accessorKey: "totalAmount",
+      enableSorting: false,
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
   ₦{Number(row.original.total_amount ?? 0).toFixed(2)}
@@ -67,6 +73,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
     {
       header: "Date Modified",
       accessorKey: "created_at",
+      enableSorting: false,
       cell: ({ row }) => {
         const createdAt = row.original.created_at;
 
@@ -120,7 +127,7 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
     {
       header: "",
       accessorKey: "action",
-
+      enableSorting: false,
       cell: ({ row }) => {
         const navigate = useNavigate();
         const category = row.original;
@@ -160,15 +167,19 @@ const CategoriesTable = ({ categories, isLoading,   onSortChange }: CategoriesTa
         showSearch
         showSortFilter
         onSortChange={onSortChange}
+        activeSort={activeSort} 
         searchPlaceholder="Search categories"
         length={8}
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
          tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              All Category
+              All Categories
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{categories.length}</Text>
+            <Text c="customPrimary.10">{paginationData?.total}</Text>
             </div>
           </div>
         }

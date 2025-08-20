@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 
 
 export type DiscountType = 'all' | 'amount' | 'percentage';
@@ -47,6 +47,9 @@ interface ReusableFilterComponentProps {
   showReturnStatus?: boolean;
   showRole?: boolean;
   showModule?: boolean;
+  setFiltersApplied?: (value: boolean) => void;
+  setAppliedFilters?: (filters: FilterValues) => void;
+  onResetFilter?: () => void;
 }
 
 const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
@@ -68,7 +71,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showReturnStatus = false,
   showRole = false,
   showModule = false,
-
+  setFiltersApplied,
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
     startDate: '',
@@ -85,7 +88,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     productStatus: 'All',
     type: 'all',
     discountStatus: 'All',
-    returnStatus: 'All',
+     returnStatus: 'All',
     role: '',
     module: '',
   });
@@ -112,10 +115,20 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     };
   
     setFilters(cleared);
-    onFilterChange(cleared); 
+
+    // onFilterChange(cleared); 
   };
   
+  useEffect(() => {
+    const hasFilters = Object.entries(filters).some(
+      ([ val]) => val && val !== '' && val !== 'All' && val !== 'all'
+    );
+  
+    setFiltersApplied?.(hasFilters);
+  }, [filters]);
+  
 
+  
   return (
     <div className="w-80 bg-white rounded-lg">
       <h2 className="text-lg font-semibold mb-4">FILTER</h2>
@@ -206,8 +219,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       className="w-full border rounded p-2 text-sm border-gray-200"
     >
       <option value="all">All</option>
-      <option value="amount">Amount</option>
-      <option value="percentage">Percentage</option>
+      <option value="amount">Amount Off</option>
+      <option value="percentage">Percentage Off</option>
     </select>
   </div>
 )}
@@ -328,7 +341,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
 
       {showProductStatus && (
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Discount Status</label>
+          <label className="block text-sm font-medium mb-1"> Status</label>
           <div className="flex justify-around gap-x-2 gap-y-2">
             {['All', 'Active', 'Inactive', ].map((status) => (
               <label key={status} className="flex items-center gap-1 text-sm">
@@ -390,7 +403,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       {/* Payment Status */}
       {showPaymentStatus && (
         <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Payment Status</label>
+          <label className="block text-sm font-medium mb-1">Order Status</label>
           <div className="flex justify-around  gap-x-2 gap-y-2">
             {['All', 'Pending', 'Paid'].map((status) => (
               <label key={status} className="flex items-center gap-1 text-sm">
@@ -418,6 +431,24 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
         </button>
         <button
           onClick={() => onFilterChange(filters)}
+          // // onClick={() => {
+          // //   console.log("Submitting filters:", filters);
+          // //   onFilterChange(filters);
+          // // }}
+          // // onClick={() => {
+          // //   const hasFilters = Object.entries(filters).some(
+          // //     ([key, val]) =>
+          // //       val && val !== '' && val !== 'All' && val !== 'all'
+          // //   );
+          
+          // //   if (hasFilters) {
+          // //     setFiltersApplied?.(true); // ✅ Notifies parent to show "Reset Filter"
+          // //   }
+          
+          // //   setAppliedFilters?.(filters); // Optional if you're tracking filters
+          // //   onFilterChange(filters);      // Pass current filters to parent
+          // // }}
+          // onClick={handleApplyFilters}
           className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
         >
           Filter

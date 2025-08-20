@@ -54,13 +54,13 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveDashboardIcon,
   },
   {
-    label: "Product Management",
+    label: "Products",
     href: ROUTES.productManagement,
     inactiveIcon: InActiveProductIcon,
     activeIcon: ActiveProductIcon,
   },
   {
-    label: "Sale Processing",
+    label: "Sales",
     href: ROUTES.sales,
     inactiveIcon: InActiveSalesIcon,
     activeIcon: ActiveSalesIcon,
@@ -85,7 +85,7 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveReturns,
   },
   {
-    label: "Customer",
+    label: "Customers",
     href: ROUTES.customer,
     inactiveIcon: InActiveCustomer,
     activeIcon: ActiveCustomer,
@@ -110,7 +110,7 @@ export const PointOfSale: NavItem[] = [
     activeIcon: ActiveStores,
   },
   {
-    label: "Report",
+    label: "Reports",
     href: ROUTES.report,
     inactiveIcon: InActiveReport,
     activeIcon: ActiveReport,
@@ -337,6 +337,6 @@ export const otherMenu = [
 ];
 
 export const mobileOtherMenu = [
-  { label: "Norification", href: ROUTES.test, icon: NotificationIcon },
-  { label: "Settings", icon: Settings, href: ROUTES.test },
+  { label: "Norification", href: ROUTES.notificationPage, icon: NotificationIcon },
+  { label: "Settings", icon: Settings, href: ROUTES.adminSettings },
 ];

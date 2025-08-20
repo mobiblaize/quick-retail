@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
-import dollar from "../../../../assets/images/dollarSign.png";
+import dollar from "../../../../assets/images/orangeNaira.png";
 import greenOrders from "../../../../assets/images/greenOrders.png";
 import orangePeople from "../../../../assets/images/orangePeople.png";
 
@@ -67,7 +67,7 @@ const ProductOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
           <Text size="xl" fw={600} c="textSecondary.9">
             Products overview
           </Text>
-          <Text size="sm">This is an overview of your products</Text>
+          <Text size="sm" className="text-gray-600 font-normal mb-4">This is an overview of your products</Text>
         </div>
       </header>
 

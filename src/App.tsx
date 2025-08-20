@@ -229,6 +229,7 @@ import ViewAuditPage from "./pages/adminPages/audit/viewAudit";
 import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 import SettingsPage from "./pages/adminPages/settings/settingsPage";
 import ScrollToTop from "./components/General/scrollTop";
+import NotificationPage from "./pages/adminPages/notifications/notificationPage";
 
 
 export default function App() {
@@ -820,7 +821,7 @@ export default function App() {
           <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
           <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
           <Route path={ROUTES.adminSettings} element={<SettingsPage />} />
-          {/* <Route path={ROUTES.adminSecurity} element={<SecurityPage />} /> */}
+          <Route path={ROUTES.notificationPage} element={<NotificationPage />} />
         </Route>
       </Routes>
     </Router>

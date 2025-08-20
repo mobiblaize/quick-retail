@@ -39,7 +39,7 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
           </div>
 
           <div className="flex flex-col">
-            <Text fw={"500"}>Order Number</Text>
+            <Text fw={"500"}>Order ID</Text>
             <Text size="lg" c={"black"} fw={"400"}>
               {shortenTransactionId(order.orderID || "N/A")}
             </Text>
@@ -65,7 +65,10 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Payment Method</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {order.payment_method || "N/A"}
+            {order.payment_method
+      ? order.payment_method.charAt(0).toUpperCase() +
+        order.payment_method.slice(1).toLowerCase()
+      : "N/A"}
             </Text>
           </div>
           <div className="flex flex-col">
@@ -87,15 +90,27 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
             <Text fw={"500"}>Refund Status</Text>
             <Text
               size="lg"
-              c={"#B54708"}
               fw={"400"}
-              className="text-[#B54708] "
+              style={{
+                color:
+                // @ts-ignore 
+                  {
+                    // @ts-ignore 
+                    resolved: "#099137", 
+                    // @ts-ignore 
+                    declined: "#CB1A14",
+                    // @ts-ignore 
+                    pending: "#B54708", 
+                    // @ts-ignore 
+                  }[returnData?.complaintStatus?.toLowerCase()] || "#6B7280",
+              }}
             >
-              {/* @ts-ignore */}
+              {/* @ts-ignore  */}
               {returnData?.complaintStatus || "N/A"}
             </Text>
           </div>
         </div>
+
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 w-full gap-3 md:max-w-6xl">
           <div className="flex flex-col">
             <Text fw={"500"}>Discount Status</Text>
@@ -114,6 +129,28 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
               </Text>
             </Text>
           </div>
+          <div className="flex flex-col">
+            <Text fw={"500"}>Returned Type</Text>
+            <Text size="lg" c={"black"} fw={"400"}>
+              <Text size="lg" c={"black"} fw={"400"}>
+                <Text size="lg" c={"black"} fw={"400"}>
+                {returnedData?.data?.refund_type
+      ? returnedData.data.refund_type.charAt(0).toUpperCase() +
+        returnedData.data.refund_type.slice(1).toLowerCase()
+      : "N/A"}
+                </Text>
+              </Text>
+            </Text>
+          </div>
+          <div className="flex flex-col">
+            <Text fw={"500"}>Cashier</Text>
+            <Text size="lg" c={"black"} fw={"400"}>
+              {returnedData?.data?.staff?.firstname &&
+              returnedData?.data?.staff?.lastname
+                ? `${returnedData.data.staff.firstname} ${returnedData.data.staff.lastname}`
+                : "N/A"}
+            </Text>
+          </div>
         </div>
       </section>
 
@@ -125,7 +162,7 @@ const OrderDetails = ({ orderId, returnData, returnId }: OrderDetailsProps) => {
         <div className="flex md:flex-row flex-col w-full mt-3 gap-3">
           <img
             src={
-              returnedData?.data?.product_variation?.image_path ||
+              returnedData?.data?.image_path ||
               "/placeholder.png"
             }
             alt="product"

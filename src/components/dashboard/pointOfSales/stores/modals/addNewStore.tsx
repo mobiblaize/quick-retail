@@ -21,7 +21,7 @@ const AddNewStore = ({
   const [name, setName] = useState("");
   // const [gla, setGla] = useState("");
   // const [gsa, setGsa] = useState("");
-  const [staff_no, setstaff_no] = useState();
+  const [staff_no, ] = useState();
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
@@ -162,7 +162,7 @@ const AddNewStore = ({
                 }
               />
             </div>
-            <div className="col-span-1 sm:col-span-2">
+            {/* <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
                 Number of Staff 
               </label>
@@ -175,7 +175,7 @@ const AddNewStore = ({
                   setstaff_no(Number(e.target.value))
                 }
               />
-            </div>
+            </div> */}
             {/* <div>
               <Text>Status</Text>
               <Switch

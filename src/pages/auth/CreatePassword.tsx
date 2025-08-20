@@ -1,16 +1,16 @@
 import {
-  TextInput,
+  // TextInput,
   PasswordInput,
   Button,
   Box,
   Text,
-  Select,
+  // Select,
 } from "@mantine/core";
 import { useForm } from "@mantine/form";
 import { usePostData } from "../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
 import { useNavigate } from "react-router-dom";
-import { IconChevronDown } from "@tabler/icons-react";
+// import { IconChevronDown } from "@tabler/icons-react";
 import AuthLayout from "../../layout/AuthLayout";
 
 const CreatePassword = () => {
@@ -89,7 +89,7 @@ const CreatePassword = () => {
 
   return (
     <AuthLayout>
-      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10 border border-gray-200">
+      <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-20 border border-gray-200">
         {/* Logo */}
 
         {/* Title */}
@@ -122,6 +122,7 @@ const CreatePassword = () => {
               },
             }}
           />
+          <span className="font-light text-xs text-red-600">Password must contain at least 8 Characters, Uppercase, Lowercase, Symbol and Number  </span>
           <PasswordInput
             label="Confirm Password"
             placeholder="Confirm Password"
@@ -139,7 +140,7 @@ const CreatePassword = () => {
             }}
           />
 
-          <div className="flex flex-col gap-2">
+          {/* <div className="flex flex-col gap-2">
             <Select
               label="Security Question"
               placeholder="Select Security Question"
@@ -159,15 +160,9 @@ const CreatePassword = () => {
             <p className="text-sm text-gray-500">
               Create an extra layer of security pass
             </p>
-          </div>
+          </div> */}
 
-          <TextInput
-            label="Security Answer"
-            placeholder="Security Answer"
-            {...form.getInputProps("security_answer")}
-            size="md"
-            radius="md"
-          />
+          {/* . */}
 
           <Button
             type="submit"

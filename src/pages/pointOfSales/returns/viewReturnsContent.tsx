@@ -11,7 +11,6 @@ import {
 import ReturnedProduct from "../../../components/dashboard/pointOfSales/returnsRefunds/returnedProduct";
 import Resolve from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/resolve";
 import Decline from "../../../components/dashboard/pointOfSales/returnsRefunds/modals/decline";
-import { Attachment } from "../../../assets/svg";
 import { shortenTransactionId } from "../../../utils/helpers";
 import SendMail, {
   SendMailRef,
@@ -49,7 +48,12 @@ const ViewReturnsContent: React.FC = () => {
   const { data: returnedData } = useFetchRetrun(returnId || "");
   const [salesOrderData, setSalesOrderData] = useState(null);
 
-  console.log(returnedData);
+
+  const statusColors = {
+    declined: "#CB1A14",
+    resolved: "#099137",
+    pending: "#B54708",
+  };
 
   const navigate = useNavigate();
   const { currentStep, prevStep } = useReturns();
@@ -67,7 +71,7 @@ const ViewReturnsContent: React.FC = () => {
   };
   const complaintStatus = (data.complaintStatus || "").toLowerCase();
   const isPending = complaintStatus === "pending";
-  
+
   const getSubHeaders = () => {
     const backButton = (
       <button
@@ -83,16 +87,7 @@ const ViewReturnsContent: React.FC = () => {
 
     return [
       <div key="1" className="py-2.5">
-        <div className="flex gap-8 items-center">
-          {backButton}
-          <div className="hidden md:flex items-center">
-            <Text>Returns and Refund</Text>
-            <span className="mx-2">/</span>
-            <Text c="black" fw={500}>
-              View Returns
-            </Text>
-          </div>
-        </div>
+        <div className="flex gap-8 items-center">{backButton}</div>
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
@@ -110,8 +105,30 @@ const ViewReturnsContent: React.FC = () => {
                   >
                     Returns: {shortenTransactionId(data.returnId)}
                   </Text>
-                  <div className="inline-flex items-center px-3 py-1 rounded-full font-medium text-sm bg-[#FFFAEB]  text-[#B54708]">
+                  {/* <div className="inline-flex items-center px-3 py-1 rounded-full font-medium text-sm bg-[#FFFAEB]  text-[#B54708]">
                     {data.complaintStatus}
+                  </div> */}
+                  <div className="inline-flex items-center gap-2">
+                    <span
+                      className="w-2 h-2 rounded-full"
+                      style={{
+                        backgroundColor:
+                        // @ts-ignore
+                          statusColors[data.complaintStatus?.toLowerCase()] ||
+                          "#D1D5DB",
+                      }}
+                    />
+                    <span
+                      className="capitalize text-sm font-medium"
+                      style={{
+                        color:
+                            // @ts-ignore
+                          statusColors[data.complaintStatus?.toLowerCase()] ||
+                          "#6B7280",
+                      }}
+                    >
+                      {data.complaintStatus}
+                    </span>
                   </div>
                 </div>
                 <div className="flex gap-3.5 items-center">
@@ -166,10 +183,10 @@ const ViewReturnsContent: React.FC = () => {
           key="confirm-payment-buttons"
           className="flex flex-col sm:flex-row w-full gap-4"
         >
-          <div className="flex items-center gap-2.5 w-full">
+          {/* <div className="flex items-center gap-2.5 w-full">
             <Attachment />
             <Text className="text-sm">Attached</Text>
-          </div>
+          </div> */}
           <div className="flex gap-3 justify-between sm:justify-end w-full">
             <Button
               variant="outline-primary"

@@ -39,6 +39,9 @@ const TanRows = <T extends Record<string, any>>({
               style={{
                 width: cell.column.getSize(),
                 padding: "0.75rem",
+                fontFamily: "inherit",
+    fontSize: "0.875rem",
+    color: "#333",
               }}
             >
               <div className="px-2">

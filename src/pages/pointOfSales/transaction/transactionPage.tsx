@@ -6,47 +6,109 @@ import { useFetchAllTransactions } from "../../../hooks/backendApis/pos/transact
 import { useState } from "react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
-
 const TransactionPage = () => {
-  const [, setDateRange] = useState<{
+  const [tempDateRange, setTempDateRange] = useState<{
     startDate: string;
     endDate: string;
   }>({
     startDate: "",
     endDate: "",
   });
+  
 
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
+  const [sortBy, setSortBy] = useState<string>(""); 
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10);
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
   });
-  
-  const { data, isLoading, } = useFetchAllTransactions(mapFiltersToPayload(appliedFilters));
+  // @ts-ignore
+  const { data, isLoading } = useFetchAllTransactions(
+    mapFiltersToPayload(appliedFilters)
+  );
   const transactionsArray = data?.data?.transactions?.data ?? [];
+
+  const paginationData = data?.data?.transactions
+    ? {
+        current_page: data.data.transactions.current_page,
+        last_page: data.data.transactions.last_page,
+        per_page: data.data.transactions.per_page,
+        total: data.data.transactions.total,
+        from: data.data.transactions.from,
+        to: data.data.transactions.to,
+        next_page_url: data.data.transactions.next_page_url,
+        prev_page_url: data.data.transactions.prev_page_url,
+      }
+    : undefined;
+
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
-          Transaction
+     Transactions
         </Text>
       </div>
     </div>,
   ];
 
-
   return (
     <PageContainer subHeaders={subHeaders}>
-  <TransactionOverview data={data?.data}  isLoading={isLoading} 
-         setDateRange={setDateRange}/>
-      <AllTransactionTable data={transactionsArray} isLoading={isLoading}  onSortChange={(sortKey) => {
-    const newFilters = { ...appliedFilters, sortBy: sortKey };
-    setAppliedFilters(newFilters);
-  }} />
+     
+      <TransactionOverview
+  data={data?.data}
+  isLoading={isLoading}
+  onDateRangeChange={({ startDate, endDate }) => {
+    const updatedRange = {
+      startDate: startDate || tempDateRange.startDate,
+      endDate: endDate || tempDateRange.endDate,
+    };
+
+    setTempDateRange(updatedRange);
+
+    // Only apply filter when both are set
+    if (updatedRange.startDate && updatedRange.endDate) {
+      const newFilters = {
+        ...appliedFilters,
+        startDate: updatedRange.startDate,
+        endDate: updatedRange.endDate,
+      };
+      setAppliedFilters(newFilters);
+      setCurrentPage(1);
+    }
+  }}
+/>
+
+      <AllTransactionTable
+        data={transactionsArray}
+        isLoading={isLoading}
+        // onSortChange={(sortKey) => {
+        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
+        //   setAppliedFilters(newFilters);
+        //   setCurrentPage(1);
+        // }}
+        onSortChange={(sortKey) => {
+          const newFilters = { ...appliedFilters, sortBy: sortKey };
+          setAppliedFilters(newFilters);
+          setSortBy(sortKey); 
+          setCurrentPage(1);
+        }}
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
+        activeSort={sortBy} 
+      />
       {!isLoading && (!data?.data || data.data.length === 0) && (
-  <div>No transactions to display</div>
-)}
+        <div>No transactions to display</div>
+      )}
     </PageContainer>
   );
 };

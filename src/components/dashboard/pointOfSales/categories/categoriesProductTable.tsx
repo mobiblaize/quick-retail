@@ -176,7 +176,7 @@ const CategoriesProductTable = ({
           data={tableData}
           showSearch
           showSortFilter
-          searchPlaceholder="Search orders"
+          searchPlaceholder="Search products"
           length={8}
           tableTitle={
             <div className="flex gap-2.5">

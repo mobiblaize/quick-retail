@@ -186,7 +186,6 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
       <TanTable
         columnData={columns}
         data={transformedProducts}
-        showSearch
         showSortFilter
         searchPlaceholder="Search orders"
         length={5}

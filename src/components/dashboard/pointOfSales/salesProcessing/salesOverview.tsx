@@ -1,7 +1,7 @@
 // components/SalesOverview.tsx
 import { Group, Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
-import dollar from "../../../../assets/images/dollarSign.png";
+import dollar from "../../../../assets/images/orangeNaira.png";
 import greenOrders from "../../../../assets/images/greenOrders.png";
 import orangePeople from "../../../../assets/images/orangePeople.png";
 import DateFilterMenu from "../../../General/filterMenu";

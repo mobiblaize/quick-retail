@@ -1,5 +1,6 @@
 import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
+import { Text } from "@mantine/core";
 
 
 interface ProfileHeaderProps {
@@ -41,38 +42,43 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
       );
     };
 
-    reader.readAsDataURL(file); 
+    reader.readAsDataURL(file);
   };
 
   return (
     <div className="bg-white rounded-lg shadow p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
-    <div className="flex items-center gap-4">
-      <div className="w-20 h-20 border-4 border-orange-500 rounded-full overflow-hidden">
-        <img
-          src={localImage || "/avatar-placeholder.jpg"}
-          // alt="Profile"
-          className="w-full h-full object-cover"
-        />
-      </div>
-      <div>
-        <h2 className="text-xl font-medium text-gray-800">{company_name}</h2>
-        <p className="text-sm font-normal text-gray-500">{email}</p>
-        <button
-          className="border border-gray-300 text-sm font-semibold text-gray-900 px-4 py-2 rounded hover:bg-gray-100 cursor-pointer"
-          onClick={() => fileInputRef.current?.click()}
-          disabled={isLoading}
-        >
-          {isLoading ? "Uploading..." : "Change profile picture"}
-        </button>
-        <input
-          type="file"
-          accept="image/*"
-          ref={fileInputRef}
-          className="hidden"
-          onChange={handleFileChange}
-        />
+      <div className="flex items-center gap-4">
+        <div className="w-50 h-50 border-4 border-orange-500 rounded-full overflow-hidden">
+          <img
+            src={localImage || "/avatar-placeholder.jpg"}
+            // alt="Profile"
+            className="w-full h-full object-cover"
+          />
+        </div>
+        <div>
+          <div className="mb-[1em]">
+            <Text size="lg" fw={600} c="textSecondary.9">{company_name}</Text>
+          </div>
+          <div className="mb-[1em]">
+            <Text fw={400} size="md" c="secondary">{email}</Text>
+          </div>
+          
+          <button
+            className="border border-gray-300 text-sm font-semibold text-gray-900 px-4 py-2 rounded hover:bg-gray-100 cursor-pointer"
+            onClick={() => fileInputRef.current?.click()}
+            disabled={isLoading}
+          >
+            {isLoading ? "Uploading..." : "Change profile picture"}
+          </button>
+          <input
+            type="file"
+            accept="image/*"
+            ref={fileInputRef}
+            className="hidden"
+            onChange={handleFileChange}
+          />
+        </div>
       </div>
     </div>
-  </div>
-);
+  );
 }

@@ -249,5 +249,6 @@ export const ROUTES = {
 auditTrail: "/dashboard/audit-trail",
 viewTrail: "/dashboard/view-trail",
 adminSettings: "/dashboard/settings-page",
+notificationPage: '/dashboard/notification-page',
 adminSecurity: "/dashboard/security-page",
 };

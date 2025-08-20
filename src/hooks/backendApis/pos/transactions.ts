@@ -8,7 +8,8 @@ export const useFetchAllTransactions = (customPayload?: SalesPayload) => {
       per_page: "500",
       paginate: true,
       start_date: "",
-      end_date:"",
+      end_date: "",
+  
     };
   
     const payload = { ...defaultPayload2, ...customPayload };

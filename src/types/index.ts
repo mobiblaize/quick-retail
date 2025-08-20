@@ -15,6 +15,7 @@ export interface SortOption {
 export interface TableRowData {
   [key: string]: string | number | boolean | null | undefined | React.ReactNode;
   name?: string;
+  imagePath?: string;
 }
 
 
@@ -111,14 +112,13 @@ export const defaultDashboardAnalysis = {
 
 
 export type SalesPayload = {
+  per_page: string;
+  end_date?: string;
+  start_date?: string;
   search?: string;
   sort_by?: string;
-  per_page?: string;
   paginate?: boolean;
-  start_date?: string;
-  end_date?: string;
-  status?: string,
-  priceFrom?: number;
-  priceTo?: number;
-  
+  status?: string;
+  price_from?: string | number;
+  price_to?: string | number; 
 };

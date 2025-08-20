@@ -3,10 +3,10 @@ import { Button, Modal, Text } from "@mantine/core";
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
-  onConfirm: () => void; 
+  onConfirm: () => void;
 }
 
-const DeactivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
+const DeactivateCategory = ({ opened, onClose, onConfirm }: ResolveProps) => {
   return (
     <>
       <Modal
@@ -21,7 +21,7 @@ const DeactivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
                 fontSize: "clamp(1.3rem, 4vw, 1.8rem)",
               }}
             >
-              Deactivate Category
+              Deactivate Sub-Category
             </Text>
             <Text
               mt="5"
@@ -29,9 +29,8 @@ const DeactivateCategory = ({ opened, onClose,   onConfirm }: ResolveProps) => {
                 fontSize: "clamp(0.875rem, 2vw, 1rem)",
               }}
             >
-              Are you sure you want to deactivate this Category? Deactivated
-              Categories will not appear when adding a product. You can also
-              activate this product later.
+              Are you sure you want to deactivate this sub-category? Products
+              under this category will be deactivated.
             </Text>
           </div>
         }

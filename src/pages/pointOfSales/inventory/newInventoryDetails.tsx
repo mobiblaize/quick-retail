@@ -1,9 +1,6 @@
 import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../components/General/formInput";
 
-
-
-
 const NewInventoryDetails = ({
   current_level,
   new_stock_level,
@@ -11,10 +8,7 @@ const NewInventoryDetails = ({
   setCurrentLevel,
   setNewStockLevel,
   setReasonForUpdate,
-
 }: any) => {
-  
-
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <div className="px-6 py-2 ">
@@ -34,24 +28,29 @@ const NewInventoryDetails = ({
           readOnly
         />
 
-        <FormInput
-          type="number"
-          label="New Stock Level"
-          paddingY={"0.7rem"}
-          value={new_stock_level}
-          onChange={(e: any) => setNewStockLevel(Number(e.target.value))}
-        />
+       
+<FormInput
+  type="number"
+  label="New Stock Level"
+  paddingY={"0.7rem"}
+  value={new_stock_level}
+  onChange={(e: any) => setNewStockLevel(Number(e.target.value))}
+/>
 
-      
+
 
         <FormInput
           type="text"
-          label="Reason for Update"
-          placeholder="Enter reason for update"
+          label="Reason for Reorder"
+          placeholder="Enter reason for reorder"
           optional
           paddingY={"0.7rem"}
           value={reason_for_update}
-          onChange={(e: any) => setReasonForUpdate(e.target.value)}
+          onChange={(e: any) => {
+            const input = e.target.value;
+            const onlyLetters = input.replace(/[^A-Za-z\s]/g, ""); 
+            setReasonForUpdate(onlyLetters);
+          }}
         />
       </section>
     </main>

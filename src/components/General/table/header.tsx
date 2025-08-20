@@ -26,7 +26,11 @@ const TanHeader = <T extends Record<string, any>>({ table }: HeaderProps<T>) => 
                   whiteSpace: "nowrap",
                   fontWeight: 500,
                   color: "black",
+                  fontFamily: "inherit", 
+                  fontSize: "0.875rem",
+                  lineHeight: "1.5", 
                 }}
+       
                 onClick={header?.column?.getToggleSortingHandler()}
               >
                 {header?.isPlaceholder ? null : (

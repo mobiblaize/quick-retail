@@ -6,6 +6,7 @@ import { Search } from "lucide-react";
 import { SqrCode } from "../../../../assets/svg";
 import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
 import { formatMoney } from "../../../../utils/helpers";
+import { useOrderStore } from "../../../../hooks/useOrderFormStore";
 
 
 interface SelectedItemPayload {
@@ -30,10 +31,20 @@ interface SearchProductProps {
 }
 
 const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
+  const { items, setItems } = useOrderStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+  // const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
+  const [selectedItems, setSelectedItems] = useState<SelectedItem[]>(items);
   const [hasSetInitial, setHasSetInitial] = useState(false);
+
+  useEffect(() => {
+    // @ts-ignore
+    setItems(selectedItems);
+        // @ts-ignore
+    onItemsChange(selectedItems);
+  }, [selectedItems]);
+
 
   useEffect(() => {
     if (!hasSetInitial && initialItems.length > 0) {
@@ -226,7 +237,7 @@ const SearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchPr
       {selectedItems.length > 0 && (
         <section className="px-6 py-4 mt-6 border-t border-gray-300 w-full">
           <Text size="md" fw={600} c="black" className="mb-3">
-            SELECTED PRODUCTS
+          SELECTED PRODUCTS ({selectedItems.length})
           </Text>
           <ul className="">
             {selectedItems.map((item) => {

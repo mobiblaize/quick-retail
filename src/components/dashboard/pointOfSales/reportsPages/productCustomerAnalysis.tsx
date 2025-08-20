@@ -56,6 +56,9 @@ const ProductCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => 
             <Text size="xl" fw={600} c="textSecondary.9">
    Product by Category
             </Text>
+            <Text size="sm" className="text-gray-600 font-normal mb-4">
+            See how your customers are buying
+            </Text>
           </div>
         </div>
 
@@ -69,65 +72,73 @@ const ProductCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => 
           <Text size="xl" fw={600} c="textSecondary.9">
       Product by Sales
           </Text>
-          <Text className="secondary font-normal">
+          <Text size="sm" className="text-gray-600 font-normal mb-4">
             See how your products are selling.
           </Text>
         </div>
 
         <div className="mt-6 flex flex-col gap-4">
-          {topProducts.map((product, index) => (
-            <div
-              key={index}
-              className="flex justify-between items-center px-2 py-2 hover:bg-gray-100 rounded"
-            >
-              <div className="flex gap-2 items-center">
-                <img
-                  src={product.image_path || "/placeholder.png"}
-                  className="w-10 h-10 rounded object-cover"
-                />
-                <div className="flex flex-col">
-                  <Text fw={500} size="sm" c="black">
-                    {truncateText(product.product_name || "Unnamed Product")}
-                  </Text>
-             
-                  <Text fw={500} size="sm">                   {/* @ts-ignore */}
-          
-                      {product.sku || "Unnamed Product"}
-                     </Text>
-                </div>
-              </div>
-              <Text fw={400} size="sm" c="black">
-                ₦{Number(product.price || 0).toLocaleString()}
-              </Text>
-              <Text fw={400} size="sm" c="black">
-                {Number(product.total_sold).toLocaleString()} sold
-              </Text>
-            </div>
-          ))}
-
-          {otherSummary.quantity_sold > 0 && (
-            <div className="flex justify-between items-center px-2 py-2 bg-gray-50 rounded">
-              <div className="flex gap-2 items-center">
-                <img
-                  src={others}
-                  alt="Other Products"
-                  className="w-10 h-10 rounded object-cover"
-                />
-                <div className="flex flex-col">
-                  <Text fw={500} size="sm" c="black">
-                    Other Products
-                  </Text>
-                </div>
-              </div>
-              <Text fw={400} size="sm" c="black">
-                ₦{otherSummary.total_price.toLocaleString()}
-              </Text>
-              <Text fw={400} size="sm" c="black">
-                {otherSummary.quantity_sold.toLocaleString()} sold
-              </Text>
-            </div>
-          )}
+  {topProducts.map((product, index) => (
+    <div
+      key={index}
+      className="flex justify-between items-center px-2 py-2 hover:bg-gray-100 rounded"
+    >
+      {/* Left: Image and Text */}
+      <div className="flex gap-2 items-center flex-1 min-w-0">
+        <img
+          src={product.image_path || "/placeholder.png"}
+          className="w-10 h-10 rounded object-cover"
+        />
+        <div className="flex flex-col truncate">
+          <Text fw={500} size="sm" c="black">
+            {truncateText(product.product_name || "Unnamed Product")}
+          </Text>
+          <Text fw={500} size="sm" c="gray">
+            {/* @ts-ignore */}
+            {product.sku || "Unnamed Product"}
+          </Text>
         </div>
+      </div>
+
+      {/* Right: Price and Sold Count */}
+      <div className="flex gap-8 items-center justify-end text-right min-w-[200px]">
+        <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+          ₦{Number(product.price || 0).toLocaleString()}
+        </Text>
+        <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+          {Number(product.total_sold).toLocaleString()} sold
+        </Text>
+      </div>
+    </div>
+  ))}
+
+  {otherSummary.quantity_sold > 0 && (
+    <div className="flex justify-between items-center px-2 py-2 bg-gray-50 rounded">
+      <div className="flex gap-2 items-center flex-1 min-w-0">
+        <img
+          src={others}
+          alt="Other Products"
+          className="w-10 h-10 rounded object-cover"
+        />
+        <div className="flex flex-col truncate">
+          <Text fw={500} size="sm" c="black">
+            Other Products
+          </Text>
+        </div>
+      </div>
+
+      <div className="flex gap-8 items-center justify-end text-right min-w-[200px]">
+        <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+          ₦{otherSummary.total_price.toLocaleString()}
+        </Text>
+        <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+          {otherSummary.quantity_sold.toLocaleString()} sold
+        </Text>
+      </div>
+    </div>
+  )}
+</div>
+
       </section>
     </main>
   );

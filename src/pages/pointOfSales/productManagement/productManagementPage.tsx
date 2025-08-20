@@ -12,10 +12,7 @@ import { useNavigate } from "react-router";
 const ProductManagementPage = () => {
   const navigate = useNavigate();
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-
-  // const handleAddProduct = () => {
-  //   navigate("/dashboard/product-management/add-new-product");
-  // };
+;
 
   const handleAddBulkProducts = () => {
     navigate("/dashboard/product-management/add-bulk-product");
@@ -31,6 +28,8 @@ const ProductManagementPage = () => {
     startDate: "",
     endDate: "",
   });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10); 
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -44,7 +43,7 @@ const ProductManagementPage = () => {
     search: filters.search ?? "",
     // @ts-ignore
     sort_by: filters.sortBy ?? "",
-    per_page: "500",
+    per_page: "",
     paginate: true,
     location_name: filters.location,
     category_name: filters.category,
@@ -53,6 +52,8 @@ const ProductManagementPage = () => {
     status: mapOrderStatus(filters.productStatus),
     price_from: filters.priceFrom ?? 100,
     price_to: filters.priceTo ?? "",
+    page: currentPage.toString(),
+
   });
 
 
@@ -63,6 +64,8 @@ const ProductManagementPage = () => {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     ...(startDate ? { start_date: startDate } : {}),
     ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
   };
   
   // @ts-ignore
@@ -75,7 +78,23 @@ const ProductManagementPage = () => {
   const handleFilterChange = (filters: FilterValues) => {
     setAppliedFilters(filters);
   };
+  const paginationData = data?.data?.products
+  ? {
+      current_page: data.data.products.current_page,
+      last_page: data.data.products.last_page,
+      per_page: data.data.products.per_page,
+      total: data.data.products.total,
+      from: data.data.products.from,
+      to: data.data.products.to,
+      next_page_url: data.data.products.next_page_url,
+      prev_page_url: data.data.products.prev_page_url,
+    }
+  : undefined;
 
+  const handlePageChange = (page: number) => {
+    setCurrentPage(page);
+  };
+  
   const subHeaders = [
     <div className="justify-between flex items-center">
       <Text fw={500} size="xl" c="black">
@@ -211,6 +230,9 @@ const ProductManagementPage = () => {
         products={products}
         onFilterChange={handleFilterChange}
         isLoading={isLoading}
+        // @ts-ignore
+        paginationData={paginationData}
+        onPageChange={handlePageChange}
       />
       <AddProduct
         opened={isLogComplaintsOpen}

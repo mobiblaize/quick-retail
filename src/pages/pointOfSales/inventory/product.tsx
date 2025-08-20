@@ -53,12 +53,18 @@ const Product = ({ product }: { product: any }) => {
                           {item.name}
                         </span>
                         {/* @ts-ignore */}
-                        {item.ean && (
-                          <span className="text-sm text-gray-600">
-                            {/* @ts-ignore */}
-                            EAN: {item.ean}
-                          </span>
-                        )}
+                       {/* Display size and colour if available */}
+{item.variation_attributes?.length > 0 && (
+  <div className="text-sm text-gray-600">
+    {item.variation_attributes.map((attr: any) => (
+      <div key={attr.option_type}>
+        {attr.option_type.charAt(0).toUpperCase() + attr.option_type.slice(1)}:{" "}
+        {attr.option_value}
+      </div>
+    ))}
+  </div>
+)}
+
                         {/* @ts-ignore */}
                         {item.sku && (
                           <span className="text-sm text-gray-600">

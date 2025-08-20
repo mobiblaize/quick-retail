@@ -1,7 +1,7 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import { notifications } from '@mantine/notifications';
-import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
+import { useUpdateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import FormInput from "../../../General/formInput";
 
 interface ResolveProps {
@@ -18,9 +18,12 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
   const [phoneNumber, setPhoneNumber] = useState("");
   const [address, setAddress] = useState("");
 
-  const { mutate, isPending } = useCreateCustomer();
+
+
+  const { mutate: updateCustomer, isPending } = useUpdateCustomer(customer?.id);;
 
   const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
+  
   useEffect(() => {
     if (customer) {
       // Split name if needed
@@ -32,7 +35,7 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
       setAddress(customer.address || '');
     }
   }, [customer]);
-  
+
   const handleSave = () => {
     if (!isFormValid) {
       notifications.show({
@@ -43,45 +46,56 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
       return;
     }
 
-    mutate(
-        {
-          customer_name: `${firstName.trim()} ${lastName.trim()}`,
-          customer_email: email,
-          customer_phone: phoneNumber,
-          customer_address: address,
-        },
-        {
-          onSuccess: () => {
-            notifications.show({
-              title: 'New Customer Saved!',
-              message: 'New Customer succesfully added.',
-              color: 'green',
-            });
-      
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setPhoneNumber('');
-            setAddress('');
-      
-            if (onCreated) {
-              onCreated();
-            } else {
-              onClose();
-            }
-          },
-          onError: (error: any) => {
-            notifications.show({
-              title: 'Error',
-              message: error?.response?.data?.message || 'Failed to create customer',
-              color: 'red',
-            });
-          },
-        }
-      );
-      
-  };
+    updateCustomer(
+      {
+        customer_name: `${firstName.trim()} ${lastName.trim()}`,
+        customer_email: email,
+        customer_phone: phoneNumber,
+        customer_address: address,
+      },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: 'Customer Updated!',
+            message: 'Customer details successfully updated.',
+            color: 'green',
+          });
 
+          // Reset form fields after save
+          setFirstName('');
+          setLastName('');
+          setEmail('');
+          setPhoneNumber('');
+          setAddress('');
+
+          if (onCreated) {
+            onCreated();
+          } else {
+            onClose();
+          }
+        },
+        onError: (error: any) => {
+          notifications.show({
+            title: 'Error',
+            message: error?.response?.data?.message || 'Failed to update customer',
+            color: 'red',
+          });
+        },
+      }
+    );
+  };
+  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    // Remove any non-numeric characters
+    let value = e.target.value.replace(/[^0-9]/g, "");
+
+    // Restrict the length to 11 digits
+    if (value.length > 11) {
+      value = value.slice(0, 11); // Truncate to 11 digits
+    }
+
+    setPhoneNumber(value);
+  };
+  
   return (
     <Modal
       opened={opened}
@@ -91,7 +105,7 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           <Text size="1.8rem" c="black" fw={800}>
             Edit Customer
           </Text>
-          <Text mt="5">Enter the details below to add a new customer</Text>
+          <Text mt="5">Edit customer details here</Text>
         </div>
       }
       centered
@@ -129,7 +143,8 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           placeholder="Enter phone number"
           paddingY={6}
           value={phoneNumber}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setPhoneNumber(e.target.value)}
+          onChange={handlePhoneNumberChange} 
         />
         <FormInput
           label="Address (Optional)"

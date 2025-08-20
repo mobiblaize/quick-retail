@@ -1,7 +1,7 @@
 // components/SalesOverview.tsx
 import { Group, Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
-import dollar from "../../../../assets/images/dollarSign.png";
+import dollar from "../../../../assets/images/orangeNaira.png";
 import greenOrders from "../../../../assets/images/greenOrders.png";
 import orangePeople from "../../../../assets/images/orangePeople.png";
 import DateFilterMenu from "../../../General/filterMenu";
@@ -30,7 +30,7 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 
   const cards = [
     {
-      title: "TOTAL PODUCT VALUE ",
+      title: "TOTAL PRODUCT VALUE ",
       value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",

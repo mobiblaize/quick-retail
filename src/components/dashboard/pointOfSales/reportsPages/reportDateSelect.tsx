@@ -5,6 +5,7 @@ import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
 import Dropdown2 from "../../../General/dropdown2";
 import { useFetchStore } from "../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
+import { ChevronLeft } from "lucide-react";
 
 const ReportDateSelect = () => {
   const location = useLocation();
@@ -114,18 +115,42 @@ const ReportDateSelect = () => {
     );
   }
 
+  const handleBack = () => {
+    navigate(-1);
+  };
+
+  const backButton = (
+    <button
+      onClick={handleBack}
+      className="flex cursor-pointer gap-2 items-center"
+    >
+      <ChevronLeft />
+      <Text fw={500} c="black">
+        Back
+      </Text>
+    </button>
+  );
+
+  
+
   return (
     <>
+
+<div className="flex gap-8 items-center py-[1.5em] ml-3">
+          {backButton}
+         
+        </div>
       <div className="flex items-center justify-between bg-white p-4 sm:p-6 shadow-md">
         <Text fw={500} size="lg" c="black">
-          Enter the details below to create your report
+          {/*  */}
+          {reportLabel || "Enter the details below to create your report"}
         </Text>
       </div>
 
       <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-[#F2F4F7] px-4 py-6">
         <div className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-md">
-          <h2 className="text-base sm:text-lg font-semibold text-gray-700 mb-4 text-center">
-            {reportLabel || "Enter the details below to create your report"}
+          <h2 className="text-base sm:text-md font-medium text-gray-700 mb-4 text-left">
+          Enter the details below to create your report
           </h2>
 
           <div className="mb-4">

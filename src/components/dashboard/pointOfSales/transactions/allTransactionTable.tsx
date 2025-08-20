@@ -2,7 +2,7 @@ import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import TanTable from "../../../General/table";
+import TanTable, { PaginationData } from "../../../General/table";
 import {
   formatDate,
   shortenTransactionId,
@@ -15,19 +15,26 @@ interface AllTransactionTableProps {
   data?: TableRowData[];
   isLoading?: boolean;
   onSortChange: (sortKey: string) => void;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  activeSort?: string;
+
 }
 
 const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
   data = [],
   isLoading = false,
   onSortChange,
+  paginationData ,   
+  onPageChange,
+  activeSort
 }) => {
   const navigate = useNavigate();
 
   const handleViewClick = (orderID: string, payment_status: string) => {
     // console.log("Navigating with orderID:", orderID);
     if (payment_status === "paid") {
-      navigate(ROUTES. viewTransaction, { state: { orderID } });
+      navigate(ROUTES. previewTransaction, { state: { orderID } });
     } else if (payment_status === "pending") {
       navigate(ROUTES.viewOrderdraft, { state: { orderID } });
     } else {
@@ -40,6 +47,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Transaction ID",
       accessorKey: "transactionID",
+      enableSorting: false, 
       cell: ({ row }) => (
         <div className="flex flex-col">
           <Text fw={500} c="black">
@@ -52,6 +60,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Transaction Date",
       accessorFn: (row) => row.created_at,
+      enableSorting: false, 
       cell: ({ row }) => (
         <Text fw={400} className="text-sm">
           {/* @ts-ignore */}
@@ -61,18 +70,20 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     },
     {
       header: "Order ID",
+      enableSorting: false, 
       // @ts-ignore
       accessorFn: (row) => row.sales_order?.orderID ?? "",
       cell: ({ row }) => (
         <Text fw={500} c="black">
           {/* @ts-ignore */}
-          {shortenTransactionId(row.original.sales_order?.orderID)}
+          {row.original.sales_order?.orderID}
         </Text>
       ),
     },
     {
       header: "Customer Name",
       accessorKey: "name",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className="text-gray-900 text-sm font-medium">
           {/* @ts-ignore */}
@@ -83,15 +94,17 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "Amount",
       accessorKey: "amount",
+      enableSorting: false, 
       cell: ({ row }) => (
         <span className=" text-gray-900 text-sm font-medium">
-          {row.original.amount}
+               ₦ {row.original.amount}
         </span>
       ),
     },
     {
       header: "Payment Status",
       accessorKey: "paymentStatus",
+      enableSorting: false, 
       cell: ({ row }) => {
         const status =
           // @ts-ignore
@@ -121,6 +134,7 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
     {
       header: "",
       accessorKey: "action",
+      enableSorting: false, 
       cell: ({ row }) => {
         //@ts-ignore
         const orderID = row.original.sales_order?.orderID;
@@ -151,11 +165,16 @@ const AllTransactionTable: React.FC<AllTransactionTableProps> = ({
         showSortFilter
         searchPlaceholder="Search orders"
         length={8}
+        tableType="transaction"
         onSortChange={onSortChange}
+        activeSort={activeSort} 
+        serverSidePagination={true}
+        paginationData={paginationData}
+        onPageChange={onPageChange}
         tableTitle={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
-              Transaction
+             All Transactions
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">{data.length}</Text>

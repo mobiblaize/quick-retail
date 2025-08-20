@@ -24,7 +24,7 @@ const OrderSummary = ({ orderId, onSendMail }: OrderDetailsProps) => {
         <div className="grid grid-cols-1 md:grid-cols-4 md:gap-x-8 w-full gap-3 md:max-w-6xl">
           {/* Customer */}
           <div className="flex flex-col">
-          <Text fw={"500"}>Customer Name</Text>
+          <Text fw={"500"}> Name</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {order.customer?.customer_name || order.customer_name || "N/A"}
             </Text>
@@ -32,7 +32,7 @@ const OrderSummary = ({ orderId, onSendMail }: OrderDetailsProps) => {
 
           {/* Discount */}
           <div className="flex flex-col">
-          <Text fw={"500"}>Customer Email</Text>
+          <Text fw={"500"}> Email</Text>
             <Text size="lg" c={"black"} fw={"400"}>
               {/* {parsedFees.discount ? `₦${parsedFees.discount}` : "None"} */}
               {order.customer?.customer_email || "N/A"}
@@ -41,7 +41,7 @@ const OrderSummary = ({ orderId, onSendMail }: OrderDetailsProps) => {
 
           {/* Reason for Return (hardcoded or dynamic) */}
           <div className="flex flex-col">
-          <Text fw={"500"}>Customer Phone</Text>
+          <Text fw={"500"}>Phone</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {order.customer?.customer_phone || "N/A"}
             </Text>
@@ -49,7 +49,7 @@ const OrderSummary = ({ orderId, onSendMail }: OrderDetailsProps) => {
 
           {/* Refund Status */}
           <div className="flex flex-col">
-          <Text fw={"500"}>Customer Address</Text>
+          <Text fw={"500"}>Address</Text>
             <Text size="lg" c={"black"} fw={"400"}>
             {order.customer?.customer_address || "N/A"}
             </Text>
