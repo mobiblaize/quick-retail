@@ -27,7 +27,7 @@ const SalesProcessingPage = () => {
       // Reload logic here
       setCurrentPage(1);
       setAppliedFilters(null);
-      window.history.replaceState({}, document.title); // clear state
+      window.history.replaceState({}, document.title); 
     }
   }, [location.state?.reload]);
   

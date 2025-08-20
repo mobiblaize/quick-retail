@@ -34,7 +34,6 @@
 //   const [sortBy, setSortBy] = useState<string>("");
 //   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
-
 //   const handleSortChange = (sortKey: string) => {
 //     setSortBy(sortKey);
 
@@ -60,7 +59,6 @@
 //     )
 //   );
 
-
 //   const categories = Array.from(
 //     new Set(
 //       products
@@ -68,7 +66,6 @@
 //         ?.filter((name: any) => typeof name === "string")
 //     )
 //   );
-
 
 //   const handleDelete = async () => {
 //     if (!selectedId) return;
@@ -99,13 +96,11 @@
 //   //   ? data.data.products.data
 //   //   : [];
 
-
 //   const mappedProducts: TableRowData[] = products.map((product: any) => {
 //     const stockStatus = product?.stock_status?.toLowerCase() ?? "";
 
 //     const isOutOfStock = ["sold out", "sold_out", "out_of_stock", "unavailable"].includes(stockStatus);
 //     const frontendStatus = isOutOfStock ? "Inactive" : "Active";
-
 
 //     return {
 //       name: product.name,
@@ -124,10 +119,6 @@
 //       originalStatus: stockStatus, // for debugging
 //     };
 //   });
-
-
-
-
 
 //   const { updateForm } = useStore();
 
@@ -228,9 +219,6 @@
 //       },
 //     },
 
-
-
-
 //     {
 //       header: "",
 //       accessorKey: "action",
@@ -326,8 +314,6 @@
 //               }
 //             />
 
-
-
 //       <DeleteProduct
 //         opened={isDeleteOpen}
 //         onClose={() => setIsDeleteOpen(false)}
@@ -340,52 +326,54 @@
 
 // export default ProductTable;
 
-
-
-
-import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core"
-import { MoreVertical } from "lucide-react"
-import { Link } from "react-router"
-import { ROUTES } from "../../../../constants/routes"
-import DeleteProduct from "../categories/modals/deleteProduct"
-import { useState } from "react"
-import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products"
-import GenericTable, { PaginationData } from "../../../General/genericTable"
-import ProductFilters from "./productFilters"
-import useStore from "./addProductStore"
+import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core";
+import { MoreVertical } from "lucide-react";
+import { Link } from "react-router";
+import { ROUTES } from "../../../../constants/routes";
+import DeleteProduct from "../categories/modals/deleteProduct";
+import { useState } from "react";
+import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
+import GenericTable, { PaginationData } from "../../../General/genericTable";
+import useStore from "./addProductStore";
+import { FilterValues } from "../../../General/table/reuseableFilter";
 
 interface ApiProduct {
-  id: string
-  variationID: string
-  name: string
-  sku: string
-  ean: string
-  code: string
-  cost_price: string
-  selling_price: string
-  quantity: number
-  reorder_level: string
-  image_path: string[]
-  status: string
-  stock_status: string
+  id: string;
+  variationID: string;
+  name: string;
+  sku: string;
+  ean: string;
+  code: string;
+  cost_price: string;
+  selling_price: string;
+  quantity: number;
+  reorder_level: string;
+  image_path: string[];
+  status: string;
+  stock_status: string;
   product: {
-    productID: string
-    product_name: string
-    category: { id: string; name: string }
-    location: { id: string; name: string; locationID: string }
-  }
+    productID: string;
+    product_name: string;
+    category: { id: string; name: string };
+    location: { id: string; name: string; locationID: string };
+  };
   variation_attributes: Array<{
-    product_variation_id: number
-    option_type: string
-    option_value: string
-  }>
+    product_variation_id: number;
+    option_type: string;
+    option_value: string;
+  }>;
 }
 
 interface ProductTableProps {
-  products: ApiProduct[]
-  isLoading: boolean
-  paginationData?: PaginationData
-  onPageChange: (page: number) => void
+  products: ApiProduct[];
+  isLoading: boolean;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  activeSort?: string;
+  setSort?: (sortBy: string) => void;
+  onFilterChange: (filters: FilterValues) => void;
 }
 
 export default function ProductTable({
@@ -393,25 +381,53 @@ export default function ProductTable({
   isLoading,
   paginationData,
   onPageChange,
+  searchTerm,
+  setSearchTerm,
+  activeSort,
+  onFilterChange,
+  setSort,
 }: ProductTableProps) {
-  const [selectedId, setSelectedId] = useState<string | number | null>(null)
-  const [isDeleteOpen, setIsDeleteOpen] = useState(false)
-  const deleteMutation = useDeleteProuct(selectedId ?? "")
+  const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [isDeleteOpen, setIsDeleteOpen] = useState(false);
+  const deleteMutation = useDeleteProuct(selectedId ?? "");
 
   const handleDelete = async () => {
-    if (!selectedId) return
-    await deleteMutation.mutateAsync()
-    setIsDeleteOpen(false)
-  }
+    if (!selectedId) return;
+    await deleteMutation.mutateAsync();
+    setIsDeleteOpen(false);
+  };
 
   const formatPrice = (price: string) =>
-    `₦ ${Number.parseFloat(price).toLocaleString()}`
+    `₦ ${Number.parseFloat(price).toLocaleString()}`;
 
-    const { updateForm } = useStore();
+  const { updateForm } = useStore();
 
   const handleProductEdit = (product: any) => {
     updateForm(product);
   };
+
+ 
+
+  const locations = Array.from(
+    new Set(
+      products
+        ?.map((p: any) => p.product?.location?.name)
+        .filter(
+          (name: string | undefined): name is string => typeof name === "string"
+        )
+    )
+  );
+
+  const categories = Array.from(
+    new Set(
+      products
+        ?.map((p: any) => p.product?.category?.name)
+        .filter(
+          (name: string | undefined): name is string => typeof name === "string"
+        )
+    )
+  );
+  
 
   const columns = [
     {
@@ -420,7 +436,9 @@ export default function ProductTable({
       render: (p: ApiProduct) => (
         <Group gap="sm">
           <Avatar
-            src={Array.isArray(p.image_path) ? p.image_path[0] ?? "" : p.image_path}
+            src={
+              Array.isArray(p.image_path) ? p.image_path[0] ?? "" : p.image_path
+            }
             size={32}
             radius="sm"
             styles={{
@@ -493,8 +511,8 @@ export default function ProductTable({
       key: "status",
       header: "Status",
       render: (p: ApiProduct) => {
-        const isActive = (p.quantity ?? 0) > 0
-        const formattedStatus = isActive ? "Active" : "Inactive"
+        const isActive = (p.quantity ?? 0) > 0;
+        const formattedStatus = isActive ? "Active" : "Inactive";
 
         return (
           <Badge
@@ -517,10 +535,10 @@ export default function ProductTable({
           >
             {formattedStatus}
           </Badge>
-        )
+        );
       },
     },
-  ]
+  ];
 
   const actions = (p: ApiProduct) => (
     <Menu shadow="md" width={160}>
@@ -548,19 +566,21 @@ export default function ProductTable({
         <Menu.Item
           color="red"
           onClick={() => {
-            setSelectedId(p.variationID)
-            setIsDeleteOpen(true)
+            setSelectedId(p.variationID);
+            setIsDeleteOpen(true);
           }}
         >
           Delete
         </Menu.Item>
       </Menu.Dropdown>
     </Menu>
-  )
+  );
 
   return (
     <>
       <GenericTable
+        enableSearch ={true}
+       enableSort={true}
         data={products}
         isLoading={isLoading}
         paginationData={paginationData}
@@ -568,6 +588,17 @@ export default function ProductTable({
         columns={columns}
         actions={actions}
         emptyMessage="No products found"
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        activeSort={activeSort}
+        onSortChange={setSort}
+        onFilterChange={onFilterChange}
+        showFilter={true}
+        tableType="product"
+        searchPlaceholder="search Product"
+        //@ts-ignore
+        locations={locations}
+        categories={categories}
         titleSection={
           <div
             style={{
@@ -604,11 +635,6 @@ export default function ProductTable({
                 {paginationData?.total ?? 0}
               </Badge>
             </div>
-
-
-            <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-              <ProductFilters onFilterChange={() => { }} />
-            </div>
           </div>
         }
       />
@@ -620,8 +646,5 @@ export default function ProductTable({
         id={selectedId}
       />
     </>
-  )
+  );
 }
-
-
-
