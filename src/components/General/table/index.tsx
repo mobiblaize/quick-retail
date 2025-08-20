@@ -59,20 +59,20 @@ export interface TanTableProps<T extends Record<string, any>> {
   modules?: string[];
   reasons?: [];
   tableType?:
-    | "inventory"
-    | "sales"
-    | "product"
-    | "returns"
-    | "discount"
-    | "audit"
-    | "transaction";
+  | "inventory"
+  | "sales"
+  | "product"
+  | "returns"
+  | "discount"
+  | "audit"
+  | "transaction";
   onSortChange?: (sortKey: string) => void;
   activeSort?: string;
   // Add server-side pagination props
   paginationData?: PaginationData;
   onPageChange?: (page: number) => void;
   serverSidePagination?: boolean;
-  isFilterActive?:  boolean;
+  isFilterActive?: boolean;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -235,7 +235,7 @@ const TanTable = <T extends Record<string, any>>({
   }, [searchTerm]);
 
 
-  
+
 
   useEffect(() => {
     setPageIndex(0);
@@ -294,14 +294,13 @@ const TanTable = <T extends Record<string, any>>({
 
   const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
     ? baseSortOptions.filter((opt) => opt.key !== "a-z" && opt.key !== "z-a")
-    : tablesWithPriceSort.includes(tableType ?? "")
-    ? baseSortOptions
-    : baseSortOptions.filter((opt) => opt.key !== "highest" && opt.key !== "lowest");    
+    : baseSortOptions;
 
 
-    useEffect(() => {
-      setFiltersApplied(isFilterActive);
-    }, [isFilterActive]);
+
+  useEffect(() => {
+    setFiltersApplied(isFilterActive);
+  }, [isFilterActive]);
 
   const resetFilter = () => {
     onFilterChange?.({
@@ -327,7 +326,7 @@ const TanTable = <T extends Record<string, any>>({
     setShowFilterDropdown(false);
   };
   console.log("filtersApplied:", filtersApplied);
-  
+
   const handleSearchChange = (term: string) => {
     setSearchTerm(term);
     setPageIndex(0); // reset pagination
@@ -336,8 +335,8 @@ const TanTable = <T extends Record<string, any>>({
     }
     if (onSearchChange) onSearchChange(term);
   };
-  
-  
+
+
   return (
     <Box className="font-sans">
       <Box
@@ -359,16 +358,16 @@ const TanTable = <T extends Record<string, any>>({
 
           <div className="lg:hidden flex md:flex-row  md:gap-[2rem] md:w-[600px] w-[300px] md:items-center gap-4 justify-between whitespace-nowrap">
             {showSearch && (
-            
+
               <SearchComp
-  setSearchTerm={handleSearchChange}
-  setPageIndex={setPageIndex}
-  searchTerm={searchTerm}
-  handleFilterChange={handleFilterChange}
-  filterList={filterList}
-  placeholder={searchPlaceholder}
-  maxWidth={searchMaxWidth}
-/>
+                setSearchTerm={handleSearchChange}
+                setPageIndex={setPageIndex}
+                searchTerm={searchTerm}
+                handleFilterChange={handleFilterChange}
+                filterList={filterList}
+                placeholder={searchPlaceholder}
+                maxWidth={searchMaxWidth}
+              />
 
             )}
 
@@ -384,16 +383,16 @@ const TanTable = <T extends Record<string, any>>({
             <div className="flex flex-row items-center gap-4 flex-wrap">
               {showSearch && (
                 <div className="min-w-[250px]">
-                 
+
                   <SearchComp
-  setSearchTerm={handleSearchChange}
-  setPageIndex={setPageIndex}
-  searchTerm={searchTerm}
-  handleFilterChange={handleFilterChange}
-  filterList={filterList}
-  placeholder={searchPlaceholder}
-  maxWidth={searchMaxWidth}
-/>
+                    setSearchTerm={handleSearchChange}
+                    setPageIndex={setPageIndex}
+                    searchTerm={searchTerm}
+                    handleFilterChange={handleFilterChange}
+                    filterList={filterList}
+                    placeholder={searchPlaceholder}
+                    maxWidth={searchMaxWidth}
+                  />
 
                 </div>
               )}
@@ -414,7 +413,7 @@ const TanTable = <T extends Record<string, any>>({
                     onClick={() => {
                       if (filtersApplied) {
                         resetFilter();
-                     
+
                       } else {
                         setShowFilterDropdown((prev) => !prev);
                         setFiltersApplied(false);
@@ -493,7 +492,7 @@ const TanTable = <T extends Record<string, any>>({
                           showPrice={true}
                           showPaymentStatus={true}
                           filterType={"sales"}
-                       
+
                         />
                       )}
 
