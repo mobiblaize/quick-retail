@@ -60,13 +60,14 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
 
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center">
-        <div className="flex flex-col">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+        <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
-         Sales overview
+            Sales overview
           </Text>
           <Text size="sm">This is an overview summarizing sales</Text>
         </div>
+
         <Group>
           <DateFilterMenu
             onDateFilterChange={({ startDate, endDate }) =>
@@ -79,7 +80,8 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
         </Group>
       </header>
 
-      <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
+
+      <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
         {cards.map((card, index) => (
           <AnalyticsCard
             key={index}
@@ -89,7 +91,7 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-            // borderColor={card.borderColor}
+          // borderColor={card.borderColor}
           />
         ))}
       </section>

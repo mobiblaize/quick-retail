@@ -19,8 +19,10 @@ const TransactionPage = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
-  const [sortBy, setSortBy] = useState<string>(""); 
+  // const [sortBy, setSortBy] = useState<string>(""); 
   const [currentPage, setCurrentPage] = useState(1);
+  const [searchTerm] = useState("");
+
   const [perPage] = useState(10);
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
@@ -28,11 +30,19 @@ const TransactionPage = () => {
     end_date: filters.endDate ?? "",
     page: currentPage.toString(),
     per_page: perPage.toString(),
+    search: filters.search ?? "",
   });
+
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    // ...(startDate ? { start_date: startDate } : {}),
+    // ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
+    search: searchTerm,
+  };
   // @ts-ignore
-  const { data, isLoading } = useFetchAllTransactions(
-    mapFiltersToPayload(appliedFilters)
-  );
+  const { data, isLoading } = useFetchAllTransactions(payload) || {};
   const transactionsArray = data?.data?.transactions?.data ?? [];
 
   const paginationData = data?.data?.transactions
@@ -96,15 +106,16 @@ const TransactionPage = () => {
         //   setAppliedFilters(newFilters);
         //   setCurrentPage(1);
         // }}
-        onSortChange={(sortKey) => {
-          const newFilters = { ...appliedFilters, sortBy: sortKey };
-          setAppliedFilters(newFilters);
-          setSortBy(sortKey); 
-          setCurrentPage(1);
-        }}
+        // onSortChange={(sortKey) => {
+        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
+        //   setAppliedFilters(newFilters);
+        //   setSortBy(sortKey); 
+        //   setCurrentPage(1);
+        // }}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        activeSort={sortBy} 
+        // activeSort={sortBy} 
+        // onSearchChange={setSearchTerm}
       />
       {!isLoading && (!data?.data || data.data.length === 0) && (
         <div>No transactions to display</div>

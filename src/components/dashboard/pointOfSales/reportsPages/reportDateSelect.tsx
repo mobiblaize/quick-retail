@@ -1,11 +1,12 @@
 import { useLocation, useNavigate } from "react-router-dom";
 import { SetStateAction, useState } from "react";
-import { Text } from "@mantine/core";
+import { MantineTheme, Stack, Text } from "@mantine/core";
 import { useGenerateReport } from "../../../../hooks/backendApis/pos/reports";
 import Dropdown2 from "../../../General/dropdown2";
 import { useFetchStore } from "../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 import { ChevronLeft } from "lucide-react";
+import { DateInput } from "@mantine/dates";
 
 const ReportDateSelect = () => {
   const location = useLocation();
@@ -31,12 +32,20 @@ const ReportDateSelect = () => {
         return "products";
       case "returns-refunds":
         return "returns";
-        case "discounts":
-          return "discounts";
+      case "discounts":
+        return "discounts";
       default:
         return path;
     }
   };
+
+  // const [pagination, setPagination] = useState({
+  //   current_page: 1,
+  //   last_page: 1,
+  //   next_page_url: null,
+  //   prev_page_url: null,
+  // });
+  
 
   const handleGenerate = async () => {
     if (!reportType) {
@@ -66,6 +75,8 @@ const ReportDateSelect = () => {
         end_date: endDate,
         report_type: mapReportType(reportType),
         locationId,
+        paginate:true,
+        per_page:10
       };
 
       const response = await generateReport.mutateAsync(payload);
@@ -100,12 +111,12 @@ const ReportDateSelect = () => {
     { label: "All Stores", value: null },
     ...(Array.isArray(storeData?.data?.stores?.data)
       ? storeData.data.stores.data.map((store: any) => ({
-          label: store.name,
-          value: store.locationID,
-        }))
+        label: store.name,
+        value: store.locationID,
+      }))
       : [])
   ];
-  
+
 
   if (!reportType) {
     return (
@@ -131,15 +142,15 @@ const ReportDateSelect = () => {
     </button>
   );
 
-  
+
 
   return (
     <>
 
-<div className="flex gap-8 items-center py-[1.5em] ml-3">
-          {backButton}
-         
-        </div>
+      <div className="flex gap-8 items-center py-[1.5em] ml-3">
+        {backButton}
+
+      </div>
       <div className="flex items-center justify-between bg-white p-4 sm:p-6 shadow-md">
         <Text fw={500} size="lg" c="black">
           {/*  */}
@@ -147,60 +158,111 @@ const ReportDateSelect = () => {
         </Text>
       </div>
 
-      <div className="min-h-[calc(100vh-80px)] flex items-center justify-center bg-[#F2F4F7] px-4 py-6">
+      <div className=" flex items-center justify-center bg-[#F2F4F7] px-4 py-6">
         <div className="w-full max-w-md bg-white p-4 sm:p-8 rounded-xl shadow-md">
-          <h2 className="text-base sm:text-md font-medium text-gray-700 mb-4 text-left">
-          Enter the details below to create your report
-          </h2>
+
+          <Text
+            fw={500}
+            c="gray.7"
+            mb="md"
+            ta="left"
+            style={(theme: MantineTheme) => ({
+              fontSize: theme.fontSizes.sm,
+              [`@media (min-width: ${theme.breakpoints.sm})`]: {
+                fontSize: theme.fontSizes.md,
+              },
+            })}
+          >
+            Enter the details below to create your report
+          </Text>
 
           <div className="mb-4">
-            <Dropdown2
-              options={storeOptions}
-              label="Stores Filter"
-              placeholder={
-                isLoadingStores ? "Loading stores..." : "Select a store"
-              }
-              value={locationId}
-              onChange={(val: SetStateAction<string | null>) =>
-                setLocationId(val)
-              }
-              required={false}
-            />
+            <Stack gap="sm" w="100%">
+              {/* Styled Label */}
+              <Text fw={500} size="sm" c="gray.7">
+                Stores Filter
+              </Text>
+
+              {/* Your Dropdown2 component with placeholder styling */}
+              <Dropdown2
+                options={storeOptions}
+                placeholder={
+                  isLoadingStores ? "Loading stores..." : "Select a store"
+                }
+                value={locationId}
+                onChange={(val: SetStateAction<string | null>) => setLocationId(val)}
+                required={false}
+                // className="w-full"
+                // styles={{
+                //   placeholder: { color: "#6B7280", fontStyle: "italic" }, // Tailwind gray-500
+                //   input: { borderRadius: "0.375rem" }, // Mantine radius-md equivalent
+                // }}
+              />
+            </Stack>
             {storeError && (
-              <p className="text-sm text-red-600 mt-1">Failed to load stores</p>
+              <Text size="sm" c="red" mt={4}>
+                Failed to load stores
+              </Text>
             )}
           </div>
 
           <div className="mb-4">
-            <label className="block text-sm text-gray-600 mb-1">
+            <Text size="sm" c="gray.6" mb={4}>
               Start Date
-            </label>
-            <input
-              type="date"
-              value={startDate}
-              onChange={(e) => setStartDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            </Text>
+            <DateInput
+              value={startDate ? new Date(startDate) : null}
+              onChange={(date) => setStartDate(date ? date.toISOString().split("T")[0] : "")}
+              placeholder="Select date"
+              w="100%"
+              radius="md"
+              withAsterisk={false}
+              styles={{
+                input: {
+                  border: "1px solid #D1D5DB", // Tailwind's border-gray-300
+                  padding: "8px",
+                  fontSize: "14px",
+                  ":focus": {
+                    borderColor: "#3B82F6", // Tailwind's blue-500
+                    boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.5)",
+                  },
+                },
+              }}
             />
+
           </div>
 
           <div className="mb-6">
-            <label className="block text-sm text-gray-600 mb-1">End Date</label>
-            <input
-              type="date"
-              value={endDate}
-              onChange={(e) => setEndDate(e.target.value)}
-              className="w-full border border-gray-300 rounded-md p-2 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            <Text size="sm" c="gray.6" mb={4}>
+              End Date
+            </Text>
+            <DateInput
+              value={endDate ? new Date(endDate) : null}
+              onChange={(date) => setEndDate(date ? date.toISOString().split("T")[0] : "")}
+              placeholder="Select date"
+              w="100%"
+              radius="md"
+              styles={{
+                input: {
+                  borderColor: "#D1D5DB", // Tailwind gray-300
+                  padding: "0.5rem",
+                  "&:focus": {
+                    borderColor: "#3B82F6", // Tailwind blue-500
+                    boxShadow: "0 0 0 2px rgba(59, 130, 246, 0.3)",
+                  },
+                },
+              }}
             />
+
           </div>
 
           <button
             disabled={loading || !startDate || !endDate}
             onClick={handleGenerate}
-            className={`w-full py-2 sm:py-3 rounded-md font-semibold text-white transition-all cursor-pointer ${
-              startDate && endDate && !loading
-                ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
-                : "bg-orange-200 cursor-not-allowed"
-            }`}
+            className={`w-full py-2 sm:py-3 rounded-md font-semibold text-white transition-all cursor-pointer ${startDate && endDate && !loading
+              ? "bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-600 hover:to-orange-700"
+              : "bg-orange-200 cursor-not-allowed"
+              }`}
           >
             {loading ? "Generating..." : "Generate Report"}
           </button>

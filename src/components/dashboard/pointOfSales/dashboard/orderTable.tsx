@@ -1,264 +1,424 @@
-import TanTable, { PaginationData } from "../../../General/table";
-import { ColumnDef } from "@tanstack/react-table";
+// import TanTable, { PaginationData } from "../../../General/table";
+// import { ColumnDef } from "@tanstack/react-table";
+// import { Text } from "@mantine/core";
+// import { PaidDot, UnpaidDot } from "../../../../assets/svg";
+// import {  useNavigate } from "react-router";
+// import { ROUTES } from "../../../../constants/routes";
+// import { formatDate,formatMoney  } from "../../../../utils/helpers";
+// import { FilterValues } from "../../../General/table/reuseableFilter";
+// import { useState } from "react";
+// import { TableRowData } from "../../../../types";
+
+// interface CustomerOrdersTableProps {
+//   salesData: any[]; 
+//   onFilterChange: (filters: FilterValues) => void;
+//   isLoading: boolean;
+//   paginationData?: PaginationData;
+//   onPageChange: (page: number) => void;
+//   onSearchChange?: (search: string) => void; 
+// }
+
+// const CustomerOrdersTable = ({
+//   salesData,
+//   onFilterChange,
+//   isLoading,
+//   paginationData,
+//   onPageChange,
+//   onSearchChange,
+// }: CustomerOrdersTableProps) => {
+//   const [sortBy, setSortBy] = useState<string>("");
+//   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+
+
+//   const handleSortChange = (sortKey: string) => {
+//     setSortBy(sortKey);
+
+//     const updatedFilters = {
+//       ...appliedFilters,
+//       sortBy: sortKey,
+//     };
+
+//     setAppliedFilters(updatedFilters);
+//     onFilterChange(updatedFilters);
+//   };
+
+
+
+//   const tableData: TableRowData[] = Array.isArray(salesData)
+//   ? salesData.map((sale) => {
+//       const totalItems = sale.sale_order_details?.reduce(
+//         //@ts-ignore
+//         (sum, item) => sum + (item.quantity_ordered || 0),
+//         0
+//       );
+
+//       const cashierFullName = sale.cashier
+//         ? `${sale.cashier.firstname || ''} ${sale.cashier.lastname || ''}`.trim()
+//         : 'Unknown';
+
+//       return {
+//         orderID: sale.orderID,
+//         date: sale.updated_at,
+//         customer: sale.customer_name,
+//         amount: sale.order_total,
+//         status: sale.payment_status,
+//         items: totalItems,
+//         cashier: cashierFullName
+//       };
+//     })
+//   : [];
+
+
+
+//   const navigate = useNavigate();
+
+//   const handleViewClick = (orderID: string, status: string) => {
+//     if (status === "paid") {
+//       navigate(ROUTES.viewOrder, { state: { orderID } });
+//     } else if (status === "pending") {
+//       navigate(ROUTES.viewOrderdraft, { state: { orderID } });
+//     } else {
+//       console.warn("Unhandled order status:", status);
+//     }
+//   };
+
+//   const defaultFilterValues: FilterValues = {
+//     startDate: "",
+//     endDate: "",
+//     location: "",
+//     category: "",
+//     stockFrom: "",
+//     stockTo: "",
+//     orderStatus: "All",
+//     priceFrom: "",
+//     priceTo: "",
+//     paymentStatus: "All",
+//     productStatus: "All",
+//     reason: "all",
+//     type: "all",
+//     discountStatus: "All",
+//     returnStatus: "All",
+//     role: "",
+//     module: "",
+//   };
+
+//   // const [appliedFilters, setAppliedFilters] = useState<FilterValues>(defaultFilterValues);
+
+//   const isFilterActive = JSON.stringify(appliedFilters) !== JSON.stringify(defaultFilterValues);
+
+
+//   const columns: ColumnDef<any>[] = [
+
+//     {
+//       header: "Order ID",
+//       accessorKey: "orderID",
+//       enableSorting: false, 
+//       cell: (props) => (
+//         <div className="flex flex-col">
+//           <Text fw={500} c="black">
+//             {/* {shortenTransactionId(props.row.original.orderID)} */}
+//             {props.row.original.orderID}
+//           </Text>
+//           <Text fw={500}>
+//             Total Items:{" "}
+//             <span className="ml-1 text-black">{props.row.original.items}</span>
+//           </Text>
+//         </div>
+//       ),
+//     },
+//     {
+//       header: "Time stamp",
+//       accessorKey: "date",
+//       enableSorting: false, 
+//       cell: (props) => (
+//         <div className="text-gray-600 whitespace-nowrap break-words ">
+//           {formatDate(props.row.original.date)}
+//         </div>
+//       ),
+//     },
+
+//     {
+//       header: "Cashier Details",
+//       accessorKey: "cashier",
+//       enableSorting: false, 
+//       cell: (props) => (
+//         <Text c="#1D2739">{props.row.original.cashier}</Text>
+//       ),
+//     },
+//     {
+//       header: "Customer",
+//       accessorKey: "customer",
+//       enableSorting: false, 
+//       cell: (props) => (
+//         <Text c="#1D2739">{props.row.original.customer}</Text>
+//       ),
+//     },
+//     {
+//       header: "Amount",
+//       accessorKey: "amount",
+//       enableSorting: false, 
+//       cell: (props) => (
+//         <Text c="#1D2739">₦ {formatMoney(props.row.original.amount)}</Text>
+//       ),
+//     },
+//     {
+//       header: "Status",
+//       accessorKey: "status",
+//       enableSorting: false, 
+//       cell: (props) => {
+//         const status = props.row.original.status;
+//         return (
+//           <div
+//             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+//               status === "paid"
+//                 ? "bg-[#ECFDF3] text-[#027A48]"
+//                 : "bg-[#FFFAEB] text-[#B54708]"
+//             }`}
+//           >
+//             {status === "paid" ? <PaidDot /> : <UnpaidDot />}
+//             <span className="ml-2 capitalize">{status}</span>
+//           </div>
+//         );
+//       },
+//     },
+
+//     {
+//       header: "",
+//       accessorKey: "action",
+//       enableSorting: false, 
+//       cell: (props) => {
+//         const { orderID, status } = props.row.original;
+
+//         return (
+//           <Text
+//             fw={700}
+//             c="customPrimary.10"
+//             className="cursor-pointer"
+//             onClick={() => handleViewClick(orderID, status)}
+//           >
+//             View Order
+//           </Text>
+//         );
+//       },
+//     },
+
+//   ];
+//   if (isLoading) {
+//     return (
+//       <div className="flex justify-center items-center py-10">
+//         <Text fw={500} size="md" c="dimmed">
+//           Loading orders...
+//         </Text>
+//       </div>
+//     );
+//   }
+
+
+//   return (
+//     <main className="w-full h-auto py-8 rounded-lg bg-white">
+//         <div className="overflow-auto max-w-full">
+//       <TanTable
+//         columnData={columns}
+//         data={tableData} 
+//         showSearch
+//         showSortFilter
+//         showFilter= {true}
+//         searchPlaceholder="Search orders"
+//         onSortChange={handleSortChange}
+//         activeSort={sortBy} 
+//         length={8}    
+//         onSearchChange={onSearchChange}
+//         tableType="sales"
+//         onFilterChange={onFilterChange}
+//         serverSidePagination={true}
+//         paginationData={paginationData}
+//         onPageChange={onPageChange}
+//         isFilterActive={isFilterActive}           
+//         // sortOptions={[
+//         //   {
+//         //     key: "products",
+//         //     label: "Sort By Recently Uploaded",
+//         //   },
+//         //   {
+//         //     key: "added_on",
+//         //     label: "Sort by Date Added",
+//         //   },
+//         // ]}
+//         tableTitle={
+//           <div className="flex gap-2.5">
+//             <Text fw={500} size="xl" c="textSecondary.9">
+//               Orders
+//             </Text>
+//             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+//             <Text c="customPrimary.10">{paginationData?.total}</Text>
+//             </div>
+//           </div>
+//         }
+
+//       />
+//       </div>
+//     </main>
+//   );
+// };
+
+// export default CustomerOrdersTable;
+
+
+import { useNavigate } from "react-router";
 import { Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import {  useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
-import { formatDate,formatMoney  } from "../../../../utils/helpers";
-import { FilterValues } from "../../../General/table/reuseableFilter";
-import { useState } from "react";
-import { TableRowData } from "../../../../types";
+import { formatDate, formatMoney } from "../../../../utils/helpers";
+import GenericTable, { PaginationData } from "../../../General/genericTable";
+
+export interface SaleRow {
+  orderID: string;
+  date: string;
+  cashier: string;
+  customer: string;
+  amount: number;
+  status: "paid" | "pending" | string;
+  items: number;
+}
 
 interface CustomerOrdersTableProps {
-  salesData: any[]; 
-  onFilterChange: (filters: FilterValues) => void;
+  salesData: any[];
+  // onFilterChange: (filters: Record<string, any>) => void;
   isLoading: boolean;
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
-  
+  onSearchChange?: (search: string) => void;
 }
 
 const CustomerOrdersTable = ({
   salesData,
-  onFilterChange,
+  // onFilterChange,
   isLoading,
   paginationData,
   onPageChange,
+  // onSearchChange,
 }: CustomerOrdersTableProps) => {
-  const [sortBy, setSortBy] = useState<string>("");
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
-
-
-  const handleSortChange = (sortKey: string) => {
-    setSortBy(sortKey);
-
-    const updatedFilters = {
-      ...appliedFilters,
-      sortBy: sortKey,
-    };
-
-    setAppliedFilters(updatedFilters);
-    onFilterChange(updatedFilters);
-  };
-
-  
-
-  const tableData: TableRowData[] = Array.isArray(salesData)
-  ? salesData.map((sale) => {
-      const totalItems = sale.sale_order_details?.reduce(
-        //@ts-ignore
-        (sum, item) => sum + (item.quantity_ordered || 0),
-        0
-      );
-
-      const cashierFullName = sale.cashier
-        ? `${sale.cashier.firstname || ''} ${sale.cashier.lastname || ''}`.trim()
-        : 'Unknown';
-
-      return {
-        orderID: sale.orderID,
-        date: sale.updated_at,
-        customer: sale.customer_name,
-        amount: sale.order_total,
-        status: sale.payment_status,
-        items: totalItems,
-        cashier: cashierFullName
-      };
-    })
-  : [];
-
-
-
+  // const [sortBy, setSortBy] = useState<string>("");
   const navigate = useNavigate();
 
-  const handleViewClick = (orderID: string, status: string) => {
-    if (status === "paid") {
-      navigate(ROUTES.viewOrder, { state: { orderID } });
-    } else if (status === "pending") {
-      navigate(ROUTES.viewOrderdraft, { state: { orderID } });
-    } else {
-      console.warn("Unhandled order status:", status);
-    }
-  };
-  
-  const defaultFilterValues: FilterValues = {
-    startDate: "",
-    endDate: "",
-    location: "",
-    category: "",
-    stockFrom: "",
-    stockTo: "",
-    orderStatus: "All",
-    priceFrom: "",
-    priceTo: "",
-    paymentStatus: "All",
-    productStatus: "All",
-    reason: "all",
-    type: "all",
-    discountStatus: "All",
-    returnStatus: "All",
-    role: "",
-    module: "",
-  };
-  
-  // const [appliedFilters, setAppliedFilters] = useState<FilterValues>(defaultFilterValues);
-  
-  const isFilterActive = JSON.stringify(appliedFilters) !== JSON.stringify(defaultFilterValues);
-  
-   
-  const columns: ColumnDef<any>[] = [
-   
-    {
-      header: "Order ID",
-      accessorKey: "orderID",
-      enableSorting: false, 
-      cell: (props) => (
-        <div className="flex flex-col">
-          <Text fw={500} c="black">
-            {/* {shortenTransactionId(props.row.original.orderID)} */}
-            {props.row.original.orderID}
-          </Text>
-          <Text fw={500}>
-            Total Items:{" "}
-            <span className="ml-1 text-black">{props.row.original.items}</span>
-          </Text>
-        </div>
-      ),
-    },
-    {
-      header: "Time stamp",
-      accessorKey: "date",
-      enableSorting: false, 
-      cell: (props) => (
-        <div className="text-gray-600 whitespace-nowrap break-words ">
-          {formatDate(props.row.original.date)}
-        </div>
-      ),
-    },
-    
-    {
-      header: "Cashier Details",
-      accessorKey: "cashier",
-      enableSorting: false, 
-      cell: (props) => (
-        <Text c="#1D2739">{props.row.original.cashier}</Text>
-      ),
-    },
-    {
-      header: "Customer",
-      accessorKey: "customer",
-      enableSorting: false, 
-      cell: (props) => (
-        <Text c="#1D2739">{props.row.original.customer}</Text>
-      ),
-    },
-    {
-      header: "Amount",
-      accessorKey: "amount",
-      enableSorting: false, 
-      cell: (props) => (
-        <Text c="#1D2739">₦ {formatMoney(props.row.original.amount)}</Text>
-      ),
-    },
-    {
-      header: "Status",
-      accessorKey: "status",
-      enableSorting: false, 
-      cell: (props) => {
-        const status = props.row.original.status;
-        return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-              status === "paid"
-                ? "bg-[#ECFDF3] text-[#027A48]"
-                : "bg-[#FFFAEB] text-[#B54708]"
-            }`}
-          >
-            {status === "paid" ? <PaidDot /> : <UnpaidDot />}
-            <span className="ml-2 capitalize">{status}</span>
-          </div>
-        );
-      },
-    },
-   
-    {
-      header: "",
-      accessorKey: "action",
-      enableSorting: false, 
-      cell: (props) => {
-        const { orderID, status } = props.row.original;
-    
-        return (
-          <Text
-            fw={700}
-            c="customPrimary.10"
-            className="cursor-pointer"
-            onClick={() => handleViewClick(orderID, status)}
-          >
-            View Order
-          </Text>
-        );
-      },
-    },
-    
-  ];
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Text fw={500} size="md" c="dimmed">
-          Loading orders...
-        </Text>
-      </div>
+  // Map API data to table rows
+  const tableData: SaleRow[] = salesData?.map((sale) => {
+    const totalItems = sale.sale_order_details?.reduce(
+      (sum: number, item: any) => sum + (item.quantity_ordered || 0),
+      0
     );
-  }
-  
+
+    const cashierFullName = sale.cashier
+      ? `${sale.cashier.firstname || ""} ${sale.cashier.lastname || ""}`.trim()
+      : "Unknown";
+
+    return {
+      orderID: sale.orderID,
+      date: sale.updated_at,
+      customer: sale.customer_name,
+      amount: Number(sale.order_total) || 0,
+      status: sale.payment_status,
+      items: totalItems || 0,
+      cashier: cashierFullName,
+    };
+  }) || [];
+
+  const handleViewClick = (orderID: string, status: string) => {
+    if (status === "paid") navigate(ROUTES.viewOrder, { state: { orderID } });
+    else if (status === "pending") navigate(ROUTES.viewOrderdraft, { state: { orderID } });
+    else console.warn("Unhandled order status:", status);
+  };
+
+  const columns = [
+    {
+      key: "orderID",
+      header: "Order ID",
+      render: (row: SaleRow) => (
+        <div>
+          <Text fw={500} color="black">{row.orderID}</Text>
+          <Text size="sm" color="dimmed">
+            Total Items: {row.items}
+          </Text>
+        </div>
+      ),
+    },
+    {
+      key: "date",
+      header: "Time stamp",
+      render: (row: SaleRow) => <Text color="dimmed">{formatDate(row.date)}</Text>,
+    },
+    {
+      key: "cashier",
+      header: "Cashier Details",
+      render: (row: SaleRow) => <Text color="#1D2739">{row.cashier}</Text>,
+    },
+    {
+      key: "customer",
+      header: "Customer",
+      render: (row: SaleRow) => <Text color="#1D2739">{row.customer}</Text>,
+    },
+    {
+      key: "amount",
+      header: "Amount",
+      render: (row: SaleRow) => <Text color="#1D2739">₦ {formatMoney(row.amount)}</Text>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (row: SaleRow) => (
+        <div
+          style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: 4,
+            padding: "2px 8px",
+            borderRadius: 999,
+            fontSize: 12,
+            fontWeight: 500,
+            backgroundColor: row.status === "paid" ? "#ECFDF3" : "#FFFAEB",
+            color: row.status === "paid" ? "#027A48" : "#B54708",
+          }}
+        >
+          {row.status === "paid" ? <PaidDot /> : <UnpaidDot />}
+          <span>{row.status}</span>
+        </div>
+      ),
+    },
+    {
+      key: "action",
+      header: "",
+      render: (row: SaleRow) => (
+        <Text
+          fw={700}
+          color="customPrimary.10"
+          style={{ cursor: "pointer" }}
+          onClick={() => handleViewClick(row.orderID, row.status)}
+        >
+          View Order
+        </Text>
+      ),
+    },
+  ];
 
   return (
-    <main className="w-full h-auto py-8 rounded-lg bg-white">
-        <div className="overflow-auto max-w-full">
-      <TanTable
-        columnData={columns}
-        data={tableData} 
-        showSearch
-        showSortFilter
-        showFilter= {true}
-        searchPlaceholder="Search orders"
-        onSortChange={handleSortChange}
-        activeSort={sortBy} 
-        length={8}   
-        
-        tableType="sales"
-        onFilterChange={onFilterChange}
-        serverSidePagination={true}
+     <main className="w-full h-auto">
+      <GenericTable
+        data={tableData}
+        isLoading={isLoading}
+        columns={columns}
         paginationData={paginationData}
         onPageChange={onPageChange}
-        isFilterActive={isFilterActive}           
-        // sortOptions={[
-        //   {
-        //     key: "products",
-        //     label: "Sort By Recently Uploaded",
-        //   },
-        //   {
-        //     key: "added_on",
-        //     label: "Sort by Date Added",
-        //   },
-        // ]}
-        tableTitle={
+         titleSection={
           <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">
-              Orders
-            </Text>
+            <Text fw={500} size="xl" c="textSecondary.9">Orders</Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-            <Text c="customPrimary.10">{paginationData?.total}</Text>
+              <Text c="customPrimary.10"> {paginationData?.total || tableData.length}</Text>
             </div>
           </div>
         }
-        
       />
-      </div>
     </main>
   );
 };
 
 export default CustomerOrdersTable;
-

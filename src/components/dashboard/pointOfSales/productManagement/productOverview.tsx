@@ -7,7 +7,7 @@ import orangePeople from "../../../../assets/images/orangePeople.png";
 import DateFilterMenu from "../../../General/filterMenu";
 
 interface TransactionData {
-    total_revenue: string;
+  total_revenue: string;
   active: number;
   inactive?: number;
 }
@@ -30,7 +30,7 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 
   const cards = [
     {
-      title: "TOTAL PRODUCT VALUE ",
+      title: "TOTAL PODUCT VALUE ",
       value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",
@@ -49,7 +49,7 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
     },
     {
       title: "INACTIVE PRODUCTS",
-      value: data?. inactive ?? "0",
+      value: data?.inactive ?? "0",
       icon: orangePeople,
       iconColor: "#E17036",
       cardBgColor: "#FEF6E7",
@@ -60,13 +60,14 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center">
-        <div className="flex flex-col">
+      <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-[2em]">
+        <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
-         Product overview
+            Product overview
           </Text>
-          <Text size="sm">This is an overview your products</Text>
+          <Text size="sm">This is an overview of your products</Text>
         </div>
+
         <Group>
           <DateFilterMenu
             onDateFilterChange={({ startDate, endDate }) =>
@@ -79,7 +80,8 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
         </Group>
       </header>
 
-      <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
+
+      <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
         {cards.map((card, index) => (
           <AnalyticsCard
             key={index}

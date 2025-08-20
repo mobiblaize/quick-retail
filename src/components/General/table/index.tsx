@@ -54,24 +54,25 @@ export interface TanTableProps<T extends Record<string, any>> {
   onFilterChange?: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
+  onSearchChange?: (search: string) => void;
   roles?: string[];
   modules?: string[];
   reasons?: [];
   tableType?:
-    | "inventory"
-    | "sales"
-    | "product"
-    | "returns"
-    | "discount"
-    | "audit"
-    | "transaction";
+  | "inventory"
+  | "sales"
+  | "product"
+  | "returns"
+  | "discount"
+  | "audit"
+  | "transaction";
   onSortChange?: (sortKey: string) => void;
   activeSort?: string;
   // Add server-side pagination props
   paginationData?: PaginationData;
   onPageChange?: (page: number) => void;
   serverSidePagination?: boolean;
-  isFilterActive?:  boolean;
+  isFilterActive?: boolean;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -102,6 +103,7 @@ const TanTable = <T extends Record<string, any>>({
   onPageChange,
   serverSidePagination = false,
   isFilterActive = true,
+  onSearchChange,
 
 }: TanTableProps<T>) => {
   const [searchTerm, setSearchTerm] = useState<string>("");
@@ -232,6 +234,9 @@ const TanTable = <T extends Record<string, any>>({
     setPageIndex(0);
   }, [searchTerm]);
 
+
+
+
   useEffect(() => {
     setPageIndex(0);
   }, [data]);
@@ -279,12 +284,12 @@ const TanTable = <T extends Record<string, any>>({
   const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
     ? baseSortOptions.filter((opt) => opt.key !== "a-z" && opt.key !== "z-a")
     : baseSortOptions;
-    
 
 
-    useEffect(() => {
-      setFiltersApplied(isFilterActive);
-    }, [isFilterActive]);
+
+  useEffect(() => {
+    setFiltersApplied(isFilterActive);
+  }, [isFilterActive]);
 
   const resetFilter = () => {
     onFilterChange?.({
@@ -311,6 +316,16 @@ const TanTable = <T extends Record<string, any>>({
   };
   console.log("filtersApplied:", filtersApplied);
 
+  const handleSearchChange = (term: string) => {
+    setSearchTerm(term);
+    setPageIndex(0); // reset pagination
+    if (serverSidePagination) {
+      onPageChange?.(1); // go back to first page
+    }
+    if (onSearchChange) onSearchChange(term);
+  };
+
+
   return (
     <Box className="font-sans">
       <Box
@@ -332,8 +347,9 @@ const TanTable = <T extends Record<string, any>>({
 
           <div className="lg:hidden flex md:flex-row  md:gap-[2rem] md:w-[600px] w-[300px] md:items-center gap-4 justify-between whitespace-nowrap">
             {showSearch && (
+
               <SearchComp
-                setSearchTerm={setSearchTerm}
+                setSearchTerm={handleSearchChange}
                 setPageIndex={setPageIndex}
                 searchTerm={searchTerm}
                 handleFilterChange={handleFilterChange}
@@ -341,6 +357,7 @@ const TanTable = <T extends Record<string, any>>({
                 placeholder={searchPlaceholder}
                 maxWidth={searchMaxWidth}
               />
+
             )}
 
             {showSortFilter && (
@@ -355,8 +372,9 @@ const TanTable = <T extends Record<string, any>>({
             <div className="flex flex-row items-center gap-4 flex-wrap">
               {showSearch && (
                 <div className="min-w-[250px]">
+
                   <SearchComp
-                    setSearchTerm={setSearchTerm}
+                    setSearchTerm={handleSearchChange}
                     setPageIndex={setPageIndex}
                     searchTerm={searchTerm}
                     handleFilterChange={handleFilterChange}
@@ -364,6 +382,7 @@ const TanTable = <T extends Record<string, any>>({
                     placeholder={searchPlaceholder}
                     maxWidth={searchMaxWidth}
                   />
+
                 </div>
               )}
 
@@ -383,7 +402,7 @@ const TanTable = <T extends Record<string, any>>({
                     onClick={() => {
                       if (filtersApplied) {
                         resetFilter();
-                     
+
                       } else {
                         setShowFilterDropdown((prev) => !prev);
                         setFiltersApplied(false);
@@ -462,7 +481,7 @@ const TanTable = <T extends Record<string, any>>({
                           showPrice={true}
                           showPaymentStatus={true}
                           filterType={"sales"}
-                       
+
                         />
                       )}
 
@@ -504,7 +523,7 @@ const TanTable = <T extends Record<string, any>>({
                             onFilterChange?.(filters);
                             setShowFilterDropdown(false);
                             setFiltersApplied(true);
-                            console.log("FILTERS SELECTED:", filters);
+                            // console.log("FILTERS SELECTED:", filters);
                           }}
                           showDiscountType={true}
                           showDiscountStatus={true}

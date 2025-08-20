@@ -33,6 +33,8 @@ const SalesProcessingPage = () => {
   
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -45,6 +47,7 @@ const SalesProcessingPage = () => {
 const mapFiltersToPayload = (filters: FilterValues) => ({
   // @ts-ignore
   search: filters.search ?? "",
+  // search: searchTerm, 
   // @ts-ignore
   sort_by: filters.sortBy ?? "",
   per_page: perPage.toString(),
@@ -55,6 +58,7 @@ const mapFiltersToPayload = (filters: FilterValues) => ({
   price_from: filters.priceFrom ?? 100,
   price_to: filters.priceTo ?? "",
   page: currentPage.toString(),
+ 
 });
 
 
@@ -68,6 +72,7 @@ const payload = {
   ...(endDate ? { end_date: endDate } : {}),
   page: currentPage,
   per_page: perPage, 
+  search: searchTerm,
 };
 // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllSales(payload) || {};
@@ -75,9 +80,9 @@ const payload = {
 
   const salesData = data?.data?.sales?.data ?? [];
 
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);  
-  };
+  // const handleFilterChange = (filters: FilterValues) => {
+  //   setAppliedFilters(filters);  
+  // };
 
 
   
@@ -122,10 +127,11 @@ const payload = {
       />
         <CustomerOrdersTable
         salesData={salesData}
-        onFilterChange={handleFilterChange}
+        // onFilterChange={handleFilterChange}
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={handlePageChange}
+        onSearchChange={setSearchTerm}
       />
     </PageContainer>
   );

@@ -18,7 +18,7 @@ interface ReturnsAnalyticsProps {
   setDateRange: (range: { startDate: string; endDate: string }) => void;
 }
 
-const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data ,   setDateRange,}) => {
+const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, setDateRange, }) => {
   const cards = [
     {
       title: "Total Returned Product",
@@ -64,15 +64,16 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data ,   setDateRan
 
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center">
+      <header className="flex flex-col gap-4 sm:flex-row sm:justify-between sm:items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
             Returns and refund overview
           </Text>
           <Text size="sm">An overview of returns and refunds</Text>
         </div>
+
         <Group>
-        <DateFilterMenu
+          <DateFilterMenu
             onDateFilterChange={({ startDate, endDate }) =>
               setDateRange({
                 startDate: startDate?.toISOString().split("T")[0] || "",
@@ -82,6 +83,7 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data ,   setDateRan
           />
         </Group>
       </header>
+
       <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5">
         {cards.map((card, index) => (
           <AnalyticsCard

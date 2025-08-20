@@ -12,6 +12,8 @@ import { notifications } from "@mantine/notifications";
 import { formatDate } from "../../../utils/helpers";
 import Dropdown from "../../../components/General/dropdown";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
+import { useGenerateReport } from "../../../hooks/backendApis/pos/reports";
+
 
 const SalesProcessingReportPage = () => {
   const navigate = useNavigate();
@@ -31,7 +33,7 @@ const SalesProcessingReportPage = () => {
   ];
 
   const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
-
+  const generateReport = useGenerateReport();
   const selectedStore = storeData?.data?.stores?.data?.find(
     (store: any) => store.locationID === locationId
   );
@@ -40,16 +42,48 @@ const SalesProcessingReportPage = () => {
     navigate(-1);
   };
 
-  const exportFullPDF = () => {
+
+  const fetchAllSalesPages = async () => {
+    let allSales: any[] = [];
+    let page = 1;
+    let lastPage = 1;
+
+    do {
+      const payload = {
+        start_date: startDate,
+        end_date: endDate,
+        locationId,
+        report_type: "sales",
+        paginate: true,
+        per_page: 50, 
+        page,
+      };
+
+      const res: any = await generateReport.mutateAsync(payload);
+      const salesData = res?.data?.data?.sales;
+      if (!salesData?.data) break;
+
+      allSales = [...allSales, ...salesData.data];
+      lastPage = salesData.last_page || 1;
+      page++;
+    } while (page <= lastPage);
+
+    return allSales;
+  };
+
+  const exportFullPDF = async () => {
+    const allSales = await fetchAllSalesPages();
     const doc = new jsPDF();
     const orangeHeaderStyle = {
       fillColor: [241, 103, 34] as [number, number, number],
       textColor: [255, 255, 255] as [number, number, number],
     };
 
+    // Title
     doc.text("Sales Report", 14, 10);
     doc.text(`Date: ${formatDate(startDate)} - ${formatDate(endDate)}`, 14, 18);
 
+    // Summary stats
     autoTable(doc, {
       startY: 25,
       head: [["Metric", "Value"]],
@@ -62,6 +96,7 @@ const SalesProcessingReportPage = () => {
       headStyles: orangeHeaderStyle,
     });
 
+    // Customer sales
     autoTable(doc, {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
@@ -75,6 +110,7 @@ const SalesProcessingReportPage = () => {
       headStyles: orangeHeaderStyle,
     });
 
+    // Product sales
     autoTable(doc, {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
@@ -88,11 +124,12 @@ const SalesProcessingReportPage = () => {
       headStyles: orangeHeaderStyle,
     });
 
+    // Full sales table (all pages)
     autoTable(doc, {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [["Order ID", "Date", "Customer", "Amount", "Status"]],
-      body: (reportData?.data?.sales?.data || []).map((s: any) => [
+      body: allSales.map((s: any) => [
         s["Order ID"],
         s["Date"],
         s["Customer Name"],
@@ -112,8 +149,9 @@ const SalesProcessingReportPage = () => {
     });
   };
 
-  const exportFullCSV = () => {
-    const escapeValue = (val: any) => `"${String(val).replace(/"/g, '""')}"`; // handles quotes inside values too
+  const exportFullCSV = async () => {
+    const allSales = await fetchAllSalesPages();
+    const escapeValue = (val: any) => `"${String(val).replace(/"/g, '""')}"`;
 
     const rows = [
       ["Metric", "Value"],
@@ -136,7 +174,7 @@ const SalesProcessingReportPage = () => {
       ]),
       [],
       ["Order ID", "Date", "Customer", "Amount", "Status"],
-      ...(reportData?.data?.sales?.data || []).map((s: any) => [
+      ...allSales.map((s: any) => [
         s["Order ID"],
         s["Date"],
         s["Customer Name"],
@@ -154,9 +192,8 @@ const SalesProcessingReportPage = () => {
     const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
     const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
     const fileName = `full-sales-report_${formattedStart}_to_${formattedEnd}.csv`;
-    
+
     link.setAttribute("download", fileName);
-    
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
@@ -197,13 +234,6 @@ const SalesProcessingReportPage = () => {
       >
         <div className="flex gap-8 items-center">
           {backButton}
-          {/* <div className="flex items-center">
-            <Text>Reports</Text>
-            <span className="mx-2">/</span>
-            <Text c="black" fw={500}>
-              Sales Report
-            </Text>
-          </div> */}
         </div>
         <div className="flex items-center gap-3">
           <Dropdown

@@ -1,3 +1,4 @@
+import { useEffect } from "react";
 import { Link } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import { useDashboard } from "../../../layout/dashboardContext";
@@ -17,7 +18,7 @@ export const DashboardHeader = ({
     // | "Procurement"
     // | "Asset Management"
     // | "Reports"
-    // | "Admin";
+    | "Admin";
 
   const navLinks = [
     // {
@@ -53,10 +54,18 @@ export const DashboardHeader = ({
     // },
     {
       label: "Admin" as DashboardSection,
-      to: ROUTES.adminDashboard,
+      to: ROUTES.vendorpage,
       active: activeSection === "Admin",
     },
   ];
+
+  useEffect(() => {
+    if (location.pathname.startsWith("/dashboard/admin")) {
+      setActiveSection("Admin");
+    } else if (location.pathname.startsWith("/dashboard")) {
+      setActiveSection("Point of Sales");
+    }
+  }, [location.pathname, setActiveSection]);
 
   const handleNavClick = (section: DashboardSection) => {
     setActiveSection(section);

@@ -9,20 +9,28 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 
 const CustomerPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+  const [appliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
-  const [sortBy, setSortBy] = useState<string>(""); 
+  // const [sortBy, setSortBy] = useState<string>(""); 
+  const [searchTerm] = useState("");
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     page: currentPage.toString(),
     per_page: perPage.toString(),
   });
-  const { data, isLoading, refetch } = useFetchAllCustomers(
-    mapFiltersToPayload(appliedFilters)
-  );
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    // ...(startDate ? { start_date: startDate } : {}),
+    // ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage, 
+    search: searchTerm,
+  };
+// @ts-ignore
+  const { data, isLoading, refetch } = useFetchAllCustomers(payload) || {};
   const customers = Array.isArray(data?.data?.customers?.data)
     ? data.data.customers.data
     : [];
@@ -66,12 +74,14 @@ const CustomerPage = () => {
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        onSortChange={(sortKey) => {
-          const newFilters = { ...appliedFilters, sortBy: sortKey };
-          setAppliedFilters(newFilters);
-          setSortBy(sortKey); 
-        }}
-        activeSort={sortBy}
+        // onSortChange={(sortKey) => {
+        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
+        //   setAppliedFilters(newFilters);
+        //   setSortBy(sortKey); 
+        // }}
+        // activeSort={sortBy}
+        onRefetch={refetch}
+        // onSearchChange={setSearchTerm}
       />
       <CreateNewCustomer
         opened={isCreateCategoryOpen}

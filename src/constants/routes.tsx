@@ -81,7 +81,6 @@ export const ROUTES = {
   pendingNoteDetails: "/dashboard/goods-received/pending-note-details",
   rejectedNoteDetails: "/dashboard/goods-received/rejected-note-details",
   approvedNoteDetails: "/dashboard/goods-received/approved-note-details",
- 
 
   // ASSET MANAGEMENT SECTION
 
@@ -236,19 +235,20 @@ export const ROUTES = {
   addBank: "/dashboard/banking/add-bank",
 
   // ADMIN SECTION
-  adminDashboard: "/dashboard/adminPage",
-  userManagement: "/dashboard/user-management",
-  viewUser: (userId: string) => `/dashboard/user-management/view-user/${userId}`,
-  addNewRole: "/dashboard/user-management/add-new-role",
-  helpPage: "/dashboard/help-page",
-  learnMore: "/dashboard/help-page/learn-more",
-  vendorpage: "/dashboard/vendor-page",
-  history: "/dashboard/subscription-history",
-  subplan: "/dashboard/subscription-plan",
-  changeplan: "/dashboard/change-plan",
-auditTrail: "/dashboard/audit-trail",
-viewTrail: "/dashboard/view-trail",
-adminSettings: "/dashboard/settings-page",
-notificationPage: '/dashboard/notification-page',
-adminSecurity: "/dashboard/security-page",
+  adminDashboard: "/dashboard/admin/adminPage",
+  userManagement: "/dashboard/admin/user-management",
+  viewUser: (userId: string) =>
+    `/dashboard/admin/user-management/view-user/${userId}`,
+  addNewRole: "/dashboard/admin/user-management/add-new-role",
+  helpPage: "/dashboard/admin/help-page",
+  learnMore: "/dashboard/admin/help-page/learn-more",
+  vendorpage: "/dashboard/admin/vendor-page",
+  history: "/dashboard/admin/subscription-history",
+  subplan: "/dashboard/admin/subscription-plan",
+  changeplan: "/dashboard/admin/change-plan",
+  auditTrail: "/dashboard/admin/audit-trail",
+  viewTrail: "/dashboard/admin/view-trail",
+  adminSettings: "/dashboard/admin/settings-page",
+  notificationPage: "/dashboard/admin/notification-page",
+  adminSecurity: "/dashboard/admin/security-page",
 };

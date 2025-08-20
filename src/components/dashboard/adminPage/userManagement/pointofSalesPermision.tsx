@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Stack, Text } from "@mantine/core";
 import PermissionGroup from "./permissionGroup";
 import { useFetchAllPermissions } from "../../../../hooks/backendApis/admin/userManagement";
 
@@ -39,10 +39,14 @@ export default function PointOfSalesPermissions({
                 key={perm.id}
                 className="flex justify-between items-center py-2 border-b border-gray-200"
               >
-                <div>
-                  <p className="font-medium text-sm">{perm.display_name}</p>
-                  <p className="text-xs text-gray-500">{perm.description}</p>
-                </div>
+               <Stack gap={2}>
+                  <Text fw={500} size="sm">
+                    {perm.display_name}
+                  </Text>
+                  <Text size="xs" c="dimmed">
+                    {perm.description}
+                  </Text>
+                </Stack>
                 <input
                   type="checkbox"
                    className="accent-orange-500 h-4 w-4"

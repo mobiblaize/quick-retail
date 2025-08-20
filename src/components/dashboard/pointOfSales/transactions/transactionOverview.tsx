@@ -55,25 +55,27 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
   ];
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center">
-        <div className="flex flex-col">
-          <Text size="xl" fw={500} c="textSecondary.9">
-            Transaction Overview
-          </Text>
-          <Text size="sm">An overview of sales transaction </Text>
-        </div>
-        <Group>
-          <DateFilterMenu
-             onDateFilterChange={({ startDate, endDate }) =>
-             onDateRangeChange({
-              startDate: startDate?.toISOString().split("T")[0] || "",
-              endDate: endDate?.toISOString().split("T")[0] || "",
-            })
-           }
-          />
-        </Group>
-      </header>
-      <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
+     <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
+  <div className="flex flex-col mb-3 sm:mb-0">
+    <Text size="xl" fw={500} c="textSecondary.9">
+      Transaction Overview
+    </Text>
+    <Text size="sm">An overview of sales transaction</Text>
+  </div>
+
+  <Group>
+    <DateFilterMenu
+      onDateFilterChange={({ startDate, endDate }) =>
+        onDateRangeChange({
+          startDate: startDate?.toISOString().split("T")[0] || "",
+          endDate: endDate?.toISOString().split("T")[0] || "",
+        })
+      }
+    />
+  </Group>
+</header>
+
+      <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
         {cards.map((card, index) => (
           <AnalyticsCard
             key={index}

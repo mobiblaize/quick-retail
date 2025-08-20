@@ -18,7 +18,7 @@ const ProductManagementPage = () => {
     navigate("/dashboard/product-management/add-bulk-product");
   };
 
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
+  const [appliedFilters] = useState<FilterValues | null>(
     null
   );
   const [dateRange, setDateRange] = useState<{
@@ -30,7 +30,7 @@ const ProductManagementPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
-
+  // const [searchTerm, setSearchTerm] = useState("");
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     if (status.toLowerCase() === "active") return "active";
@@ -41,6 +41,7 @@ const ProductManagementPage = () => {
   const mapFiltersToPayload = (filters: FilterValues) => ({
     // @ts-ignore
     search: filters.search ?? "",
+      // search: searchTerm, 
     // @ts-ignore
     sort_by: filters.sortBy ?? "",
     per_page: "",
@@ -66,6 +67,7 @@ const ProductManagementPage = () => {
     ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage, 
+    // search: searchTerm,
   };
   
   // @ts-ignore
@@ -75,9 +77,7 @@ const ProductManagementPage = () => {
     ? data.data.products.data
     : [];
 
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);
-  };
+  
   const paginationData = data?.data?.products
   ? {
       current_page: data.data.products.current_page,
@@ -228,7 +228,6 @@ const ProductManagementPage = () => {
       />
       <ProductTable
         products={products}
-        onFilterChange={handleFilterChange}
         isLoading={isLoading}
         // @ts-ignore
         paginationData={paginationData}
@@ -243,4 +242,3 @@ const ProductManagementPage = () => {
 };
 
 export default ProductManagementPage;
-

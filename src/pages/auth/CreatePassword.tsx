@@ -18,6 +18,7 @@ const CreatePassword = () => {
   // get token and email from url
   const token = new URLSearchParams(window.location.search).get("token");
   const email = new URLSearchParams(window.location.search).get("email");
+  const company = new URLSearchParams(window.location.search).get("company");
 
   const { mutateAsync: createPassword, isPending } = usePostData(
     "auth/signup/add-password"
@@ -32,18 +33,21 @@ const CreatePassword = () => {
       security_answer: "",
     },
     validate: {
+      // @ts-ignore
       password: (value) =>
         value.length < 8 ? "Password must have at least 8 letters" : null,
+      // @ts-ignore
       confirmPassword: (value, values) =>
         value !== values.password ? "Passwords do not match" : null,
-      security_question: (value) =>
-        value.length < 3
-          ? "Security question must be at least 3 characters"
-          : null,
-      security_answer: (value) =>
-        value.length < 3
-          ? "Security answer must be at least 3 characters"
-          : null,
+      // security_question: (value) =>
+      //   value.length < 3
+      //     ? "Security question must be at least 3 characters"
+      //     : null,
+      //     security_question: (value) =>
+      //     value && value.length < 3
+      //       ? "Security question must be at least 3 characters"
+      //       : null,
+        
     },
   });
 
@@ -53,6 +57,7 @@ const CreatePassword = () => {
       password: values.password,
       password_confirmation: values.confirmPassword,
       token: token,
+      company: company,
       security_question: values.security_question,
       security_answer: values.security_answer,
     };
@@ -98,7 +103,7 @@ const CreatePassword = () => {
             Let's get Started
           </div>
           <div className="flex items-center font-bold text-2xl tracking-tight">
-            {email ? email : ""}
+            {company ? company : ""}
           </div>
         </div>
         {/* Form */}
