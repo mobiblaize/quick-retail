@@ -343,7 +343,7 @@ getUniqueCategories: () => {
     new Set(
       state.apiProducts
         .map((p: ApiProduct) => p.category?.name)
-        .filter((name): name is string => Boolean(name)) // filter undefined
+        .filter((name): name is string => Boolean(name)) 
     )
   );
 },

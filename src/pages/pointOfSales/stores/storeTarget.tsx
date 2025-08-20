@@ -13,14 +13,14 @@ const StoreTarget = () => {
     startDate: "",
     endDate: "",
   });
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+  const [appliedFilters, ] = useState<FilterValues>(
     {} as FilterValues
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
-  const [sortBy, setSortBy] = useState<string>("");
+  // const [sortBy, setSortBy] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
-  
+  const [activeSort, setActiveSort] = useState("");
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
@@ -39,6 +39,7 @@ const StoreTarget = () => {
     page: currentPage,
     per_page: perPage, 
     search: searchTerm,
+    sort_by: activeSort,
   };
   // @ts-ignore
   
@@ -135,16 +136,22 @@ const StoreTarget = () => {
         stores={stores}
         loading={isLoading}
         refetchStores={handleRefetchAll}
-        onSortChange={(sortKey) => {
-          const newFilters = { ...appliedFilters, sortBy: sortKey };
-          setAppliedFilters(newFilters);
-          setSortBy(sortKey);
-          setCurrentPage(1);
-        }}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        activeSort={sortBy}
-        onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
       />
       <AddNewStore
         opened={isAddNewStoreOpen}

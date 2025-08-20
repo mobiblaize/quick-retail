@@ -240,11 +240,51 @@ export default function GenericTable<T>({
                     {tableType === "inventory" && (
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                        locations={locations}
-                        showStockLevel={true}
+                        showLocation={true}
+                          showStockLevel={true}
+                          showOrderStatus={true}
+                          locations={locations}
                         filterType="inventory"
                       />
                     )}
+                      {tableType === "sales" && (
+                        <ReusableFilterComponent
+                        onFilterChange={handleFilterChange}
+                          showPrice={true}
+                          showPaymentStatus={true}
+                          filterType={"sales"}
+
+                        />
+                      )}
+                        {tableType === "discount" && (
+                        <ReusableFilterComponent
+                        onFilterChange={handleFilterChange}
+                          showDiscountType={true}
+                          showDiscountStatus={true}
+                          filterType={"discount"}
+                        />
+                      )}
+                      {tableType === "returns" && (
+                        <ReusableFilterComponent
+                        onFilterChange={handleFilterChange}
+                          locations={locations}
+                          showReason={true}
+                          showReturnStatus={true}
+                          filterType={"returns"}
+                          // showLocation={true}
+                        />
+                      )}
+{/* 
+                      {tableType === "audit" && (
+                        <ReusableFilterComponent
+                        onFilterChange={handleFilterChange}
+                          roles={roles}
+                          modules={modules}
+                          showRole={true}
+                          showModule={true}
+                          filterType="audit"
+                        />
+                      )} */}
                   </div>
                 )}
               </div>

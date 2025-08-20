@@ -23,6 +23,7 @@ const ReturnsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -69,6 +70,7 @@ const ReturnsPage = () => {
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
+     sort_by: activeSort,
   };
 
   const { data = {}, isLoading = false } = useFetchAllreturns(payload) || {};
@@ -88,6 +90,9 @@ const ReturnsPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+ 
+
 
   const paginationData = data?.data?.returns
   ? {
@@ -140,6 +145,20 @@ const ReturnsPage = () => {
         paginationData={paginationData}
         onPageChange={handlePageChange}
         onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
       />
     </PageContainer>
   );

@@ -50,26 +50,26 @@ const ProductOrderedTable = ({ orderId }: ProductOrderedTableProps) => {
   );
 
   const columns: ColumnDef<TableRowData>[] = [
-    {
-      id: "select",
-      header: ({ table }) => (
-        <input
-          type="checkbox"
-          checked={table.getIsAllRowsSelected()}
-          onChange={table.getToggleAllRowsSelectedHandler()}
-        />
-      ),
-      cell: ({ row }) => (
-        <input
-          type="checkbox"
-          checked={row.getIsSelected()}
-          onChange={row.getToggleSelectedHandler()}
-        />
-      ),
-      enableSorting: false,
-      enableColumnFilter: false,
-      size: 10,
-    },
+    // {
+    //   id: "select",
+    //   header: ({ table }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={table.getIsAllRowsSelected()}
+    //       onChange={table.getToggleAllRowsSelectedHandler()}
+    //     />
+    //   ),
+    //   cell: ({ row }) => (
+    //     <input
+    //       type="checkbox"
+    //       checked={row.getIsSelected()}
+    //       onChange={row.getToggleSelectedHandler()}
+    //     />
+    //   ),
+    //   enableSorting: false,
+    //   enableColumnFilter: false,
+    //   size: 10,
+    // },
     {
       header: "Name",
       accessorKey: "productName",

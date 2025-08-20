@@ -30,7 +30,7 @@ const ProductManagementPage = () => {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
-  // const [searchTerm, setSearchTerm] = useState("");
+
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     if (status.toLowerCase() === "active") return "active";
@@ -219,8 +219,12 @@ const ProductManagementPage = () => {
         onPageChange={handlePageChange}
         searchTerm={searchTerm} 
         setSearchTerm={(val: string) => {
-          setSearchTerm(val);
-          setCurrentPage(1); 
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
         }}
         activeSort={activeSort}      
         setSort={(sortBy) => {
