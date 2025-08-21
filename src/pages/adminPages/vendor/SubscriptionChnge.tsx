@@ -25,7 +25,7 @@ const SubscriptionChangePage = () => {
     storedData = {};
   }
 
-  const { items, billingType, totalPrice, billingStart, billingEnd } =
+  const { items, billingType, totalPrice, billingStart, billingEnd, amount } =
     location.state || storedData;
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -38,6 +38,7 @@ const SubscriptionChangePage = () => {
   const [hasVerified, setHasVerified] = useState(false);
 
   const handleBack = () => navigate(-1);
+  console.log(location.state || storedData, "location state or stored data");
 
   const handleContinue = () => {
     const payload = {
@@ -59,6 +60,7 @@ const SubscriptionChangePage = () => {
         totalPrice,
         billingStart,
         billingEnd,
+        amount,
       })
     );
 

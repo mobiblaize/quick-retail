@@ -276,10 +276,21 @@ const TanTable = <T extends Record<string, any>>({
     { label: "Oldest", key: "oldest" },
     { label: "A-Z", key: "a-z" },
     { label: "Z-A", key: "z-a" },
+    { label: "Highest", key: "highest" },
+    { label: "Lowest", key: "lowest" },
+    { label: "Yearly", key: "yearly" },
+    { label: "Monthly", key: "monthly" },
+    { label: "Active", key: "active" },
+    { label: "Cancelled", key: "cancelled" },
+    { label: "Expired", key: "expired" }, 
+
   ];
 
   // Define table types that should exclude A-Z and Z-A
   const tablesWithoutAZSort = ["transaction", "returns"];
+
+  // Define table types that should include price sorting
+  const tablesWithPriceSort = ["sales", "product"];
 
   const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
     ? baseSortOptions.filter((opt) => opt.key !== "a-z" && opt.key !== "z-a")
@@ -360,7 +371,7 @@ const TanTable = <T extends Record<string, any>>({
 
             )}
 
-            {showSortFilter && (
+            {(showSortFilter && onSortChange) && (
               <SortFilter
                 onSortChange={onSortChange!}
                 activeSort={activeSort || ""}
