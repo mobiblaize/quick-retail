@@ -10,9 +10,7 @@ const InventoryManagementPage = () => {
         <Text fw={500} size="xl" c="black">
           Inventory Management
         </Text>
-        {/* <Link to={ROUTES.updateInventory}>
-          <Button variant="filled-primary">Update Inventory</Button>
-        </Link> */}
+       
       </div>
     </div>,
   ];

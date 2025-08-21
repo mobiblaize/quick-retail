@@ -272,40 +272,10 @@ export default function ProductTable({
         locations={locations}
         categories={categories}
         titleSection={
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-              padding: "16px 24px",
-              borderBottom: "1px solid #f1f5f9",
-              backgroundColor: "white",
-            }}
-          >
-            {/* Left: Title + Total */}
-            <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-              <Text size="xl" fw={600} style={{ color: "#1e293b" }}>
-                Products
-              </Text>
-              <Badge
-                variant="filled"
-                styles={{
-                  root: {
-                    backgroundColor: "#fed7aa",
-                    color: "#ea580c",
-                    fontWeight: 600,
-                    fontSize: "12px",
-                    height: "20px",
-                    minHeight: "20px",
-                    paddingLeft: "8px",
-                    paddingRight: "8px",
-                    textTransform: "none",
-                  },
-                }}
-              >
-                {paginationData?.total ?? 0}
-              </Badge>
+          <div className="flex gap-2.5">
+            <Text fw={500} size="xl" c="textSecondary.9">Products</Text>
+            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+              <Text c="customPrimary.10"> {paginationData?.total}</Text>
             </div>
           </div>
         }
