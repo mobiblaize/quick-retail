@@ -18,13 +18,26 @@ const InventoryTable = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
+  const normalizeFilters = (filters: FilterValues) => {
+    return {
+      ...(filters.startDate ? { start_date: filters.startDate } : {}),
+      ...(filters.endDate ? { end_date: filters.endDate } : {}),
+      ...(filters.priceFrom ? { price_from: filters.priceFrom } : {}),
+      ...(filters.priceTo ? { price_to: filters.priceTo } : {}),
+      ...(filters.orderStatus ? { order_status: filters.orderStatus } : {}),
+      ...(filters.location ? { location_name: filters.location } : {}),
+      // keep only the required keys, ignore duplicates
+    };
+  };
+  
   const payload = {
     page: currentPage.toString(),
     per_page: perPage.toString(),
     search: searchTerm,
-    ...(appliedFilters || {}),
+    ...normalizeFilters(appliedFilters),
     sort_by: activeSort,
   };
+  
 
   const { data, isLoading } = useFetchAllProducts(payload);
 
@@ -219,33 +232,18 @@ const InventoryTable = () => {
         enableSort={true}
         showFilter={true}
         tableType="inventory"
-        searchPlaceholder="search Product"
+        searchPlaceholder="search Inventory"
                //@ts-ignore
         locations={locations}
         titleSection={
-          <div
-            style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "space-between",
-              width: "100%",
-              padding: "16px 24px",
-              borderBottom: "1px solid #f1f5f9",
-              backgroundColor: "white",
-            }}
-          >
-            <div className="flex gap-2.5">
-              <Text fw={500} size="xl" c="textSecondary.9">
-                Inventory
-              </Text>
-              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10">
-                  {paginationData?.total || mappedProducts.length}
-                </Text>
-              </div>
+          <div className="flex gap-2.5">
+            <Text fw={500} size="xl" c="textSecondary.9">Inventory</Text>
+            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+              <Text c="customPrimary.10"> {paginationData?.total}</Text>
             </div>
           </div>
         }
+       
       />
     </main>
   );
