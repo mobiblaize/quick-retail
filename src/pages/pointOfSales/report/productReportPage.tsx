@@ -1,5 +1,5 @@
-import { Text } from "@mantine/core";
-import { ChevronLeft } from "lucide-react";
+import { Box, Button, Menu, Text } from "@mantine/core";
+import { ChevronDown, ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import ProductManagementReport from "../../../components/dashboard/pointOfSales/reportsPages/productManagementReport";
@@ -10,7 +10,7 @@ import { notifications } from "@mantine/notifications";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatDate } from "../../../utils/helpers";
-import Dropdown from "../../../components/General/dropdown";
+// import Dropdown from "../../../components/General/dropdown";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 import { useGenerateReport } from "../../../hooks/backendApis/pos/reports";
 
@@ -26,10 +26,10 @@ const ProductReportPage = () => {
     reportData,
   });
 
-  const exportOptions = [
-    { label: "CSV", value: "csv" },
-    { label: "PDF", value: "pdf" },
-  ];
+  // const exportOptions = [
+  //   { label: "CSV", value: "csv" },
+  //   { label: "PDF", value: "pdf" },
+  // ];
 
   const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
   const generateReport = useGenerateReport();
@@ -46,7 +46,7 @@ const ProductReportPage = () => {
     let allProducts: any[] = [];
     let page = 1;
     let lastPage = 1;
-  
+
     do {
       const payload = {
         start_date: startDate,
@@ -57,19 +57,19 @@ const ProductReportPage = () => {
         per_page: 50,
         page,
       };
-  
+
       const res: any = await generateReport.mutateAsync(payload);
       const productData = res?.data?.data?.products;
       if (!productData?.data) break;
-  
+
       allProducts = [...allProducts, ...productData.data];
       lastPage = productData.last_page || 1;
       page++;
     } while (page <= lastPage);
-  
+
     return allProducts;
   };
-  
+
 
   const exportFullPDF = async () => {
     const allProducts = await fetchAllProductPages();
@@ -108,7 +108,7 @@ const ProductReportPage = () => {
     });
 
     autoTable(doc, {
-            //@ts-ignore
+      //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [["Product Name", "Total Sold", "Price"]],
       body: (reportData?.data?.product_sales || []).map((p: any) => [
@@ -121,7 +121,7 @@ const ProductReportPage = () => {
     });
 
     autoTable(doc, {
-            //@ts-ignore
+      //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [
         [
@@ -245,25 +245,60 @@ const ProductReportPage = () => {
       <div key="1" className="py-2.5 flex flex-wrap justify-between items-center gap-3">
         <div className="flex gap-[3em] items-center">{backButton}</div>
         <div className="flex items-center gap-3 pr-[3em]">
-          <Dropdown
-            //@ts-ignore
-            options={exportOptions}
-            //@ts-ignore
-            onChange={(val) => handleExport(val)}
-            placeholder="Export"
-            inputSizeClass="py-1"
-            bgColorClass="bg-[#F16722]"
-            textColorClass="text-white"
-          />
+          <div className="flex items-center gap-3">
+          <Menu>
+            <Menu.Target>
+              <Button variant="filled-primary">
+                Export
+                <ChevronDown className="ml-2" />
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "6px 0",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("csv")}
+              >
+                Export CSV
+              </Menu.Item>
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("pdf")}
+              >
+                Export PDF
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
         </div>
       </div>,
       <div key="2" className="flex justify-between">
         <Text fw={500} size="xl" c="black">
           Product Report
         </Text>
-        <div className="border border-[#E0E0E0] rounded-lg px-[3em] py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
-          {formatDate(startDate)} – {formatDate(endDate)}
-        </div>
+        <Box
+          style={{
+            border: "1px solid #E0E0E0",
+            borderRadius: "8px",
+            padding: "8px 16px",
+            display: "flex",
+            alignItems: "center",
+            fontSize: "0.875rem",
+            color: "#344054",
+            minWidth: 230,
+          }}
+        >
+          <Text fw={500} size="sm" c="black">
+            {formatDate(startDate)} – {formatDate(endDate)}
+          </Text>
+        </Box>
       </div>,
     ];
   };

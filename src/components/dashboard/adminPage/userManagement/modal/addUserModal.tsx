@@ -1,5 +1,12 @@
-import { Button, Text } from "@mantine/core";
-import { X } from "lucide-react";
+import {
+    Button,
+    Grid,
+    Modal,
+    Select,
+    Stack,
+    Text,
+    TextInput,
+} from "@mantine/core";
 import { useState } from "react";
 import {
     useCreateUser,
@@ -14,6 +21,8 @@ type Props = {
     onClose: () => void;
 };
 
+type Option = { label: string; value: string };
+
 export default function AddUserModal({ opened, onClose }: Props) {
     const windowUrl = window.location.origin;
 
@@ -22,55 +31,56 @@ export default function AddUserModal({ opened, onClose }: Props) {
         lastname: "",
         email: "",
         phone_number: "",
-        role_id: "",
-        locationID: "",
+        role_id: "" as string | null,
+        locationID: "" as string | null,
         password_url: "",
-        applicationId: "",
+        applicationId: "" as string | null,
     });
 
-    const [phoneError, setPhoneError] = useState("");
+    const [phoneError, setPhoneError] = useState<string | null>(null);
 
     const { mutate: createUser, isPending } = useCreateUser();
     const { data: locationData } = useFetchAllLocations();
     const { data: roleData } = useFetchAllRoles();
     const { data: applicationData } = useFetchAllApplicationRoles();
 
-    const roleOptions = Array.isArray(roleData?.data)
-        ? roleData.data.map((role: { display_name: string; id: string }) => ({
+    const roleOptions: Option[] = Array.isArray(roleData?.data)
+        ? roleData.data.map((role: { display_name: string; id: string | number }) => ({
             label: role.display_name,
-            value: role.id,
+            value: String(role.id),   // force string
         }))
         : [];
 
-    const locationOptions = Array.isArray(locationData?.data?.stores)
-        ? locationData.data.stores.map((store: { locationID: string; name: string }) => ({
-            label: store.name,
-            value: store.locationID,
-        }))
+    const locationOptions: Option[] = Array.isArray(locationData?.data?.stores)
+        ? locationData.data.stores.map(
+            (store: { locationID: string | number; name: string }) => ({
+                label: store.name,
+                value: String(store.locationID),   // force string
+            })
+        )
         : [];
 
-    const applicationOptions = Array.isArray(applicationData?.data)
-        ? applicationData.data.map((app: { id: number; name: string }) => ({
+    const applicationOptions: Option[] = Array.isArray(applicationData?.data)
+        ? applicationData.data.map((app: { id: string | number; name: string }) => ({
             label: app.name,
-            value: String(app.id),
+            value: String(app.id),   // force string
         }))
         : [];
+
 
     const validatePhoneNumber = (phone: string) => {
-        const cleaned = phone.replace(/\D/g, ""); // remove non-digit characters
-        if (cleaned.length !== 11) {
-            return "Phone number must be exactly 10 digits";
-        }
-        return "";
+        const cleaned = phone.replace(/\D/g, "");
+        if (cleaned.length !== 11) return "Phone number must be exactly 11 digits";
+        return null;
     };
 
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const handleTextChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ): void => {
         const { name, value } = e.target;
 
-        // Phone validation
         if (name === "phone_number") {
-            const errorMsg = validatePhoneNumber(value);
-            setPhoneError(errorMsg);
+            setPhoneError(validatePhoneNumber(value));
         }
 
         setFormValues((prev) => ({ ...prev, [name]: value }));
@@ -82,10 +92,10 @@ export default function AddUserModal({ opened, onClose }: Props) {
             lastname: formValues.lastname,
             email: formValues.email,
             phone_number: formValues.phone_number,
-            role_id: formValues.role_id,
-            locationId: formValues.locationID,
+            role_id: formValues.role_id ?? "",
+            locationId: formValues.locationID ?? "",
             password_url: windowUrl + "/create-password",
-            applicationId: formValues.applicationId,
+            applicationId: formValues.applicationId ?? "",
         };
 
         createUser(payload, {
@@ -101,178 +111,151 @@ export default function AddUserModal({ opened, onClose }: Props) {
                 showNotification({
                     title: "Error",
                     message:
-                        err?.response?.data?.message || "Failed to create user. Please try again.",
+                        err?.response?.data?.message ||
+                        "Failed to create user. Please try again.",
                     color: "red",
                 });
             },
         });
     };
 
-    if (!opened) return null;
+    const saveDisabled =
+        !formValues.firstname ||
+        !formValues.lastname ||
+        !formValues.email ||
+        !formValues.role_id ||
+        !formValues.locationID ||
+        !!phoneError;
 
     return (
-        <div className="fixed inset-0 z-50 bg-black/50 flex items-center justify-center">
-            <div className="bg-white rounded-xl w-[380px] p-6 relative shadow-md">
-                <button className="absolute top-4 right-4 text-gray-500" onClick={onClose}>
-                    <X size={18} />
-                </button>
+        <Modal
+            opened={opened}
+            onClose={onClose}
+            title={<Text fw={600}>Add New User</Text>}
+            centered
+            size={480}
+            overlayProps={{ opacity: 0.35, blur: 2 }}
+            radius="lg"
+            padding={"md"}
+            withCloseButton
+        >
+            <Text size="sm" c="dimmed" mb="md">
+                Enter the details below to add a new user
+            </Text>
 
-                <div className="space-y-4">
-                    <Text size="lg" fw={600} c="textSecondary.9">Add New User</Text>
-                    <Text size="sm" c="dimmed" mb="xl">
-                        Enter the details below to add a new user
-                    </Text>
+            <Stack gap="md">
+                {/* Name */}
+                <Grid>
+                    <Grid.Col span={6}>
+                        <TextInput
+                            label="First Name"
+                            name="firstname"
+                            value={formValues.firstname}
+                            onChange={handleTextChange}
+                            placeholder="Enter first name"
+                            size="sm"
+                            withAsterisk
+                        />
+                    </Grid.Col>
+                    <Grid.Col span={6}>
+                        <TextInput
+                            label="Last Name"
+                            name="lastname"
+                            value={formValues.lastname}
+                            onChange={handleTextChange}
+                            placeholder="Enter last name"
+                            size="sm"
+                            withAsterisk
+                        />
+                    </Grid.Col>
+                </Grid>
 
-                    <div className="space-y-4">
-                        {/* Name */}
-                        <div className="flex gap-3">
-                            <div className="w-1/2">
-                                <label className="text-sm text-gray-700 block mb-1">First Name</label>
-                                <input
-                                    type="text"
-                                    name="firstname"
-                                    value={formValues.firstname}
-                                    onChange={handleChange}
-                                    placeholder="Enter first name"
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                                />
-                            </div>
-                            <div className="w-1/2">
-                                <label className="text-sm text-gray-700 block mb-1">Last Name</label>
-                                <input
-                                    type="text"
-                                    name="lastname"
-                                    value={formValues.lastname}
-                                    onChange={handleChange}
-                                    placeholder="Enter last name"
-                                    className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                                />
-                            </div>
-                        </div>
+                {/* Email */}
+                <TextInput
+                    label="Email"
+                    type="email"
+                    name="email"
+                    value={formValues.email}
+                    onChange={handleTextChange}
+                    placeholder="Enter email"
+                    size="sm"
+                    withAsterisk
+                />
 
-                        {/* Email */}
-                        <div>
-                            <label className="text-sm text-gray-700 block mb-1">Email</label>
-                            <input
-                                type="email"
-                                name="email"
-                                value={formValues.email}
-                                onChange={handleChange}
-                                placeholder="Enter email"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            />
-                        </div>
+                {/* Phone */}
+                <TextInput
+                    label="Phone Number"
+                    name="phone_number"
+                    value={formValues.phone_number}
+                    onChange={handleTextChange}
+                    placeholder="Enter phone number"
+                    size="sm"
+                    error={phoneError || undefined}
+                />
 
-                        {/* Phone */}
-                        <div>
-                            <label className="text-sm text-gray-700 block mb-1">Phone Number</label>
-                            <input
-                                type="text"
-                                name="phone_number"
-                                value={formValues.phone_number}
-                                onChange={handleChange}
-                                placeholder="Enter phone number"
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            />
-                            {phoneError && (
-                                <p className="text-red-500 text-xs mt-1">{phoneError}</p>
-                            )}
-                        </div>
+                {/* Role */}
+                <Select
+                    label="Role"
+                    name="role_id"
+                    value={formValues.role_id}
+                    onChange={(val) =>
+                        setFormValues((prev) => ({
+                            ...prev,
+                            role_id: val,
+                        }))
+                    }
+                    data={roleOptions}
+                    placeholder="Select role"
+                    size="sm"
+                    withAsterisk
+                    clearable
+                />
 
-                        {/* Role */}
-                        <div>
-                            <label className="text-sm text-gray-700 block mb-1">Role</label>
-                            <select
-                                name="role_id"
-                                value={formValues.role_id}
-                                onChange={handleChange}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            >
-                                <option value="" disabled>
-                                    Select role
-                                </option>
-                                {roleOptions.map((role: any) => (
-                                    <option key={role.value} value={role.value}>
-                                        {role.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                {/* Store */}
+                <Select
+                    label="Assign Store"
+                    name="locationID"
+                    value={formValues.locationID}
+                    onChange={(val) =>
+                        setFormValues((prev) => ({
+                            ...prev,
+                            locationID: val,
+                        }))
+                    }
+                    data={locationOptions}
+                    placeholder="Select store"
+                    size="sm"
+                    withAsterisk
+                    clearable
+                />
 
-                        {/* Store */}
-                        <div>
-                            <label className="text-sm text-gray-700 block mb-1">Assign Store</label>
-                            <select
-                                name="locationID"
-                                value={formValues.locationID}
-                                onChange={(e) => {
-                                    setFormValues({
-                                        ...formValues,
-                                        locationID: e.target.value,
-                                    });
-                                }}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            >
-                                <option value="" disabled>
-                                    Select store
-                                </option>
-                                {locationOptions.map((loc: any) => (
-                                    <option key={loc.value} value={loc.value}>
-                                        {loc.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
+                {/* Application */}
+                <Select
+                    label="Select Application"
+                    name="applicationId"
+                    value={formValues.applicationId}
+                    onChange={(val) =>
+                        setFormValues((prev) => ({
+                            ...prev,
+                            applicationId: val,
+                        }))
+                    }
+                    data={applicationOptions}
+                    placeholder="Select application"
+                    size="sm"
+                    withAsterisk
+                    clearable
+                />
+            </Stack>
 
-                        {/* Application */}
-                        <div>
-                            <label className="text-sm text-gray-700 block mb-1">Select Application</label>
-                            <select
-                                name="applicationId"
-                                value={formValues.applicationId}
-                                onChange={(e) => {
-                                    setFormValues({
-                                        ...formValues,
-                                        applicationId: e.target.value,
-                                    });
-                                }}
-                                className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm"
-                            >
-                                <option value="" disabled>
-                                    Select application
-                                </option>
-                                {applicationOptions.map((app: any) => (
-                                    <option key={app.value} value={app.value}>
-                                        {app.label}
-                                    </option>
-                                ))}
-                            </select>
-                        </div>
-                    </div>
-
-                    {/* Buttons */}
-                    <div className="flex gap-4 mt-6 justify-center">
-                        <Button variant="outline-primary" onClick={onClose}>
-                            No
-                        </Button>
-                        <Button
-                            variant="filled-primary"
-                            loading={isPending}
-                            onClick={handleSubmit}
-                            disabled={
-                                !formValues.firstname ||
-                                !formValues.lastname ||
-                                !formValues.email ||
-                                !formValues.role_id ||
-                                !formValues.locationID ||
-                                !!phoneError
-                            }
-                        >
-                            Save
-                        </Button>
-                    </div>
-                </div>
+            <div className="flex gap-4 mt-[2em] justify-center w-[100%]">
+                <Button variant="outline-primary" onClick={onClose} disabled={isPending}>
+                    No
+                </Button>
+                <Button variant="filled-primary" onClick={handleSubmit} loading={isPending}  disabled={saveDisabled}>
+                    Save
+                </Button>
             </div>
-        </div>
+        </Modal>
     );
 }

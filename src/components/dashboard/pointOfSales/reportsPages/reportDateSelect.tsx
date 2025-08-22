@@ -264,7 +264,7 @@ const ReportDateSelect = () => {
               : "bg-orange-200 cursor-not-allowed"
               }`}
           >
-            {loading ? "Generating..." : "Generate Report"}
+            <Text fw={500} size="sm" className="text-sm" c="#fff">{loading ? "Generating..." : "Generate Report"}</Text>
           </button>
         </div>
       </div>

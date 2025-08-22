@@ -39,7 +39,7 @@ const Pagination = ({
       table.nextPage();
     }
   };
-  console.log(nextDisabled)
+  // console.log(nextDisabled)
 
   const prevDisabled = serverSidePagination
     ? !canPreviousPage

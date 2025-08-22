@@ -47,17 +47,16 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
   );
 
   return (
-    <main className="flex flex-col lg:flex-row gap-6">
-      <div className="w-full lg:w-[50%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
-        <div className="flex justify-between items-center">
-          <div className="flex-col">
-            <Text size="xl" fw={600} c="textSecondary.9">
-              Sales by Customers
-            </Text>
-            <Text size="sm" className="text-gray-600 font-normal mb-4">
-              See how your customers are buying
-            </Text>
-          </div>
+    <main className="flex flex-col lg:flex-row gap-6 w-full">
+      {/* Sales by Customers */}
+      <div className="flex-1 min-w-0 h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
+        <div className="flex flex-col mb-4">
+          <Text size="xl" fw={600} c="textSecondary.9">
+            Sales by Customers
+          </Text>
+          <Text size="sm" c="dimmed">
+            See how your customers are buying
+          </Text>
         </div>
 
         <DivisionSaleChartReport
@@ -65,12 +64,13 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
         />
       </div>
 
-      <section className="w-full lg:w-[50%] h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
-        <div className="flex flex-col">
+      {/* Sales by Products */}
+      <section className="flex-1 min-w-0 h-auto px-4 sm:px-6 py-6 sm:py-8 rounded-lg bg-white">
+        <div className="flex flex-col mb-4">
           <Text size="xl" fw={600} c="textSecondary.9">
             Sales by Product
           </Text>
-          <Text size="sm" className="text-gray-600 font-normal mb-4">
+          <Text size="sm" c="dimmed">
             See how your products are selling.
           </Text>
         </div>
@@ -81,29 +81,28 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
               key={index}
               className="flex justify-between items-center px-2 py-2 hover:bg-gray-100 rounded"
             >
-              {/* Left: Image and Text */}
+              {/* Left: Image + Product Info */}
               <div className="flex gap-2 items-center flex-1 min-w-0">
                 <img
                   src={product.image_path || "/placeholder.png"}
                   className="w-10 h-10 rounded object-cover"
                 />
-                <div className="flex flex-col truncate">
-                  <Text fw={500} size="sm" c="black">
+                <div className="flex flex-col min-w-0 truncate">
+                  <Text fw={500} size="sm" c="black" lineClamp={1}>
                     {truncateText(product.product_name || "Unnamed Product")}
                   </Text>
-                  <Text fw={500} size="sm" c="gray">
-                    {/* @ts-ignore */}
-                    {product.sku || "Unnamed Product"}
+                  <Text fw={500} size="sm" c="gray" lineClamp={1}>
+                    {product.sku || "Unnamed SKU"}
                   </Text>
                 </div>
               </div>
 
-              {/* Right: Price and Sold Count */}
-              <div className="flex gap-8 items-center justify-end text-right min-w-[200px]">
-                <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+              {/* Right: Price & Sold */}
+              <div className="flex gap-4 items-center justify-end text-right flex-shrink-0">
+                <Text fw={400} size="sm" c="black" className="w-[80px] text-right">
                   ₦{Number(product.price || 0).toLocaleString()}
                 </Text>
-                <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+                <Text fw={400} size="sm" c="black" className="w-[80px] text-right">
                   {Number(product.total_sold).toLocaleString()} sold
                 </Text>
               </div>
@@ -118,18 +117,18 @@ const SalesCustomerAnalysis = ({ reportInfo }: SalesCustomerAnalysisProps) => {
                   alt="Other Products"
                   className="w-10 h-10 rounded object-cover"
                 />
-                <div className="flex flex-col truncate">
-                  <Text fw={500} size="sm" c="black">
+                <div className="flex flex-col min-w-0 truncate">
+                  <Text fw={500} size="sm" c="black" lineClamp={1}>
                     Other Products
                   </Text>
                 </div>
               </div>
 
-              <div className="flex gap-8 items-center justify-end text-right min-w-[200px]">
-                <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+              <div className="flex gap-4 items-center justify-end text-right flex-shrink-0">
+                <Text fw={400} size="sm" c="black" className="w-[80px] text-right">
                   ₦{otherSummary.total_price.toLocaleString()}
                 </Text>
-                <Text fw={400} size="sm" c="black" className="min-w-[80px]">
+                <Text fw={400} size="sm" c="black" className="w-[80px] text-right">
                   {otherSummary.quantity_sold.toLocaleString()} sold
                 </Text>
               </div>

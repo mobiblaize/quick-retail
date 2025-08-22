@@ -297,7 +297,13 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
       key: "paymentStatus",
       header: "Status",
       render: (row: any) => {
-        const isCompleted = row.paymentStatus?.toLowerCase() === "completed";
+        const statusRaw = row.paymentStatus || ""; 
+        const isCompleted = statusRaw.toLowerCase() === "completed";
+
+        // Capitalize first letter only
+        const capitalizedStatus =
+          statusRaw.charAt(0).toUpperCase() + statusRaw.slice(1).toLowerCase();
+
         return (
           <Badge
             leftSection={isCompleted ? <PaidDot /> : <UnpaidDot />}
@@ -305,17 +311,18 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
             variant="light"
             radius="lg"
             size="md"
+            style={{ textTransform: "none", fontWeight: 500 }} 
           >
-            {row.paymentStatus?.charAt(0).toUpperCase() +
-              row.paymentStatus?.slice(1).toLowerCase()}
+            {capitalizedStatus}
           </Badge>
         );
       },
-    },
+    }
+    ,
   ];
 
   return (
-    <main className="w-full h-auto py-6 rounded-lg bg-white">
+    <main className="w-full h-auto">
       <GenericTable
         columns={columns}
         data={rows}
@@ -332,7 +339,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
           // prev_page_url: paginationData?.prev_page_url,
         }}
         onPageChange={fetchPage}
-         titleSection={
+        titleSection={
           <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
             <div className="flex gap-2.5 items-center">
               <Text fw={500} size="xl" c="textSecondary.9">
@@ -346,17 +353,6 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
             </div>
           </div>
         }
-
-        // ={
-        //             <div className="flex gap-2.5">
-        //               <Text fw={500} size="xl" c="textSecondary.9">
-        //                 Stores Overview
-        //               </Text>
-        //               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-        //                 <Text c="customPrimary.10">{paginationData?.total ?? stores.length}</Text>
-        //               </div>
-        //             </div>
-        //           }
       />
     </main>
   );
