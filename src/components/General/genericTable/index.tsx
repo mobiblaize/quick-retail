@@ -1,7 +1,7 @@
 import { Table, Box, Loader, Pagination } from "@mantine/core";
 import type { ReactNode } from "react";
 import * as React from "react";
-import EmptyState from "../EmptyState";
+import EmptyState2 from "../table/EmptyStte2";
 import ReusableFilterComponent, {
   FilterValues,
 } from "../table/reuseableFilter";
@@ -92,7 +92,7 @@ export default function GenericTable<T>({
   }
 
   if (!data || data.length === 0) {
-    return <EmptyState />;
+    return <EmptyState2 />;
   }
 
   const initialFilters: FilterValues = {
