@@ -32,7 +32,7 @@ interface CustomerOrdersTableProps {
 const CustomerOrdersTable = ({
   salesData,
   isLoading,
-  paginationData,
+paginationData,
   onPageChange,
   searchTerm,
   setSearchTerm,

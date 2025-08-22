@@ -23,6 +23,7 @@ const HappyTimePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -56,6 +57,7 @@ const HappyTimePage = () => {
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
+    sort_by: activeSort,
   };
   // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllDiscount(payload) || {};
@@ -136,7 +138,22 @@ const HappyTimePage = () => {
         onFilterChange={handleFilterChange}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        onSearchChange={setSearchTerm}
+        // onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
+      
       />
       <CreateDiscountModal
         opened={isLogComplaintsOpen}

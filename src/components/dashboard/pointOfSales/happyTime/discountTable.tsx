@@ -7,14 +7,12 @@
 // import { FilterValues } from "../../../General/table/reuseableFilter";
 // import { useState } from "react";
 
-
 // // type DiscountTableProps = {
 // //   data: any;
 // //   isLoading: boolean;
 // //   refresh: () => void;
 // //   onFilterChange: (filters: FilterValues) => void;
 // // };
-
 
 // type DiscountTableProps = {
 //   rawDiscounts: any[];
@@ -37,35 +35,34 @@
 //   const [sortBy, setSortBy] = useState<string>("");
 //   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
 
-
 //   const handleSortChange = (sortKey: string) => {
 //     setSortBy(sortKey);
 
 //     const updatedFilters = {
 //       ...appliedFilters,
 //       sortBy: sortKey,
-//     }; 
+//     };
 
 //     setAppliedFilters(updatedFilters);
 //     onFilterChange(updatedFilters);
 //   };
 
 //   const discounts = rawDiscounts.map((item: any) => {
-//     const apiStatus = typeof item?.status === "string" 
-//       ? item.status.toLowerCase() 
+//     const apiStatus = typeof item?.status === "string"
+//       ? item.status.toLowerCase()
 //       : "";
-    
+
 //     // Prefer `to`, fallback to `initial_end_date`
 //     const dateToString =
 //       item?.to?.split("T")[0] ||
 //       (item?.initial_end_date ? item.initial_end_date.split(" ")[0] : null);
-    
+
 //     const dateTo = dateToString ? new Date(dateToString) : null;
 //     const today = new Date();
 //     const isActiveFlag = item.is_active === 1 || item.is_active === true;
-  
+
 //     let status = "Inactive";
-  
+
 //     // 1. API says expired
 //     if (apiStatus === "expired") {
 //       status = "Expired";
@@ -90,7 +87,7 @@
 //         status = "Inactive";
 //       }
 //     }
-  
+
 //     return {
 //       name: item.name || "Unnamed",
 //       discountCode: item.code || "-",
@@ -103,13 +100,13 @@
 //       image: imageSrc,
 //     };
 //   });
-  
+
 //   const columns: ColumnDef<TableRowData>[] = [
-   
+
 //     {
 //       header: "Discount Name",
 //       accessorKey: "name",
-//       enableSorting: false, 
+//       enableSorting: false,
 //       cell: ({ row }) => (
 //         <div className="flex items-center gap-3">
 //           {/* <Avatar
@@ -125,12 +122,12 @@
 //         </div>
 //       ),
 //     },
-   
+
 //     {
 //       header: "Percent Off",
 //       accessorKey: "percent",
-//       enableSorting: false, 
-//       cell: ({ row }) => 
+//       enableSorting: false,
+//       cell: ({ row }) =>
 //         row.original.discountType === "percentage"
 //           ? `${row.original.value}%`
 //           : "-"
@@ -138,31 +135,31 @@
 //     {
 //       header: "Price Off",
 //       accessorKey: "price",
-//       enableSorting: false, 
-//       cell: ({ row }) => 
+//       enableSorting: false,
+//       cell: ({ row }) =>
 //         row.original.discountType === "amount"
 //           ? `₦${row.original.value}`
 //           : "-"
-//     },    
+//     },
 //     {
 //       header: "Date From",
 //       accessorKey: "dateFrom",
-//       enableSorting: false, 
+//       enableSorting: false,
 //     },
 //     {
 //       header: "Date To",
 //       accessorKey: "dateTo",
-//       enableSorting: false, 
+//       enableSorting: false,
 //     },
 //     {
 //       header: "Redemption",
 //       accessorKey: "redemption",
-//       enableSorting: false, 
+//       enableSorting: false,
 //     },
 //     // {
 //     //   header: "Status",
 //     //   accessorKey: "status",
-//     //   enableSorting: false, 
+//     //   enableSorting: false,
 //     //   cell: ({ row }) => {
 //     //     const status = row.original.status;
 //     //     return (
@@ -185,11 +182,11 @@
 //       enableSorting: false,
 //       cell: ({ row }) => {
 //         const status = row.original.status;
-    
+
 //         let bgColor = "";
 //         let textColor = "";
 //         let Icon = UnpaidDot;
-    
+
 //         if (status === "Active") {
 //           bgColor = "bg-[#ECFDF3]";
 //           textColor = "text-[#027A48]";
@@ -203,7 +200,7 @@
 //           textColor = "text-[#B54708]";
 //           Icon = UnpaidDot;
 //         }
-    
+
 //         return (
 //           <div
 //             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
@@ -214,7 +211,7 @@
 //         );
 //       },
 //     }
-// ,    
+// ,
 //   ];
 
 //   if (isLoading) {
@@ -237,7 +234,7 @@
 //         showFilter
 //         showSortFilter
 //         onSortChange={handleSortChange}
-//         activeSort={sortBy} 
+//         activeSort={sortBy}
 //         searchPlaceholder="Search orders"
 //         length={8}
 //            //@ts-ignore
@@ -255,7 +252,6 @@
 //             </Text>
 //             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
 
-
 //               <Text c="customPrimary.10">{paginationData?.total}</Text>
 //             </div>
 //           </div>
@@ -266,8 +262,6 @@
 // };
 
 // export default DiscountTable;
-
-
 
 import { useState } from "react";
 import { Badge, Group, Loader, Text } from "@mantine/core";
@@ -282,7 +276,11 @@ type DiscountTableProps = {
   onFilterChange: (filters: FilterValues) => void;
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
-  onSearchChange?: (search: string) => void;
+  // onSearchChange?: (search: string) => void;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  activeSort?: string;
+  setSort?: (sortBy: string) => void;
 };
 
 const DiscountTable = ({
@@ -291,22 +289,26 @@ const DiscountTable = ({
   onFilterChange,
   paginationData,
   onPageChange,
-  // onSearchChange,
-}: DiscountTableProps) => {
-  const [sortBy, setSortBy] = useState<string>("");
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
-    {} as FilterValues
-  );
+  searchTerm,
+  setSearchTerm,
+  activeSort,
+  setSort,
+}: // onSearchChange,
+DiscountTableProps) => {
+  // const [sortBy, setSortBy] = useState<string>("");
+  // const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+  //   {} as FilterValues
+  // );
 
-  const handleSortChange = (sortKey: string) => {
-    setSortBy(sortKey);
-    const updatedFilters = {
-      ...appliedFilters,
-      sortBy: sortKey,
-    };
-    setAppliedFilters(updatedFilters);
-    onFilterChange(updatedFilters);
-  };
+  // const handleSortChange = (sortKey: string) => {
+  //   setSortBy(sortKey);
+  //   const updatedFilters = {
+  //     ...appliedFilters,
+  //     sortBy: sortKey,
+  //   };
+  //   setAppliedFilters(updatedFilters);
+  //   onFilterChange(updatedFilters);
+  // };
 
   const discounts = rawDiscounts.map((item: any) => {
     const apiStatus =
@@ -345,89 +347,88 @@ const DiscountTable = ({
     };
   });
 
-const columns = [
-  {
-    key: "name",
-    header: "Discount Name",
-    render: (row: any) => (
-      <Group gap="sm" align="center">
-        <Text fw={500} c="black">
-          {row.name}
-        </Text>
-      </Group>
-    ),
-  },
-  {
-    key: "percent",
-    header: "Percent Off",
-    render: (row: any) =>
-      row.discountType === "percentage" ? (
-        <Text fw={500}>{row.value}%</Text>
-      ) : (
-        <Text c="dimmed">-</Text>
+  const columns = [
+    {
+      key: "name",
+      header: "Discount Name",
+      render: (row: any) => (
+        <Group gap="sm" align="center">
+          <Text fw={500} c="black">
+            {row.name}
+          </Text>
+        </Group>
       ),
-  },
-  {
-    key: "price",
-    header: "Price Off",
-    render: (row: any) =>
-      row.discountType === "amount" ? (
-        <Text fw={500}>₦{row.value}</Text>
-      ) : (
-        <Text c="dimmed">-</Text>
-      ),
-  },
-  {
-    key: "dateFrom",
-    header: "Date From",
-    render: (row: any) => <Text c="gray.7">{row.dateFrom}</Text>,
-  },
-  {
-    key: "dateTo",
-    header: "Date To",
-    render: (row: any) => <Text c="gray.7">{row.dateTo}</Text>,
-  },
-  {
-    key: "redemption",
-    header: "Redemption",
-    render: (row: any) => <Text fw={500}>{row.redemption}</Text>,
-  },
-  {
-    key: "status",
-    header: "Status",
-    render: (row: any) => {
-      const raw = String(row.status || "");
-      const neat =
-        raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase(); // First letter only
-
-      let color: "green" | "red" | "yellow" | "gray" = "gray";
-      let icon = <UnpaidDot />;
-      if (neat === "Active") {
-        color = "green";
-        icon = <PaidDot />;
-      } else if (neat === "Expired") {
-        color = "red";
-        icon = <UnpaidDot />;
-      } else {
-        color = "yellow";
-      }
-
-      return (
-        <Badge
-          leftSection={icon}
-          color={color}
-          variant="light"
-          radius="lg"
-          size="md"
-          // hard override in case any global css uppercases text
-          style={{ textTransform: "none", letterSpacing: 0, fontWeight: 500 }}
-        >
-          {neat}
-        </Badge>
-      );
     },
-  },
-];
+    {
+      key: "percent",
+      header: "Percent Off",
+      render: (row: any) =>
+        row.discountType === "percentage" ? (
+          <Text fw={500}>{row.value}%</Text>
+        ) : (
+          <Text c="dimmed">-</Text>
+        ),
+    },
+    {
+      key: "price",
+      header: "Price Off",
+      render: (row: any) =>
+        row.discountType === "amount" ? (
+          <Text fw={500}>₦{row.value}</Text>
+        ) : (
+          <Text c="dimmed">-</Text>
+        ),
+    },
+    {
+      key: "dateFrom",
+      header: "Date From",
+      render: (row: any) => <Text c="gray.7">{row.dateFrom}</Text>,
+    },
+    {
+      key: "dateTo",
+      header: "Date To",
+      render: (row: any) => <Text c="gray.7">{row.dateTo}</Text>,
+    },
+    {
+      key: "redemption",
+      header: "Redemption",
+      render: (row: any) => <Text fw={500}>{row.redemption}</Text>,
+    },
+    {
+      key: "status",
+      header: "Status",
+      render: (row: any) => {
+        const raw = String(row.status || "");
+        const neat = raw.charAt(0).toUpperCase() + raw.slice(1).toLowerCase(); // First letter only
+
+        let color: "green" | "red" | "yellow" | "gray" = "gray";
+        let icon = <UnpaidDot />;
+        if (neat === "Active") {
+          color = "green";
+          icon = <PaidDot />;
+        } else if (neat === "Expired") {
+          color = "red";
+          icon = <UnpaidDot />;
+        } else {
+          color = "yellow";
+        }
+
+        return (
+          <Badge
+            leftSection={icon}
+            color={color}
+            variant="light"
+            radius="lg"
+            size="md"
+            // hard override in case any global css uppercases text
+            style={{ textTransform: "none", letterSpacing: 0, fontWeight: 500 }}
+          >
+            {neat}
+          </Badge>
+        );
+      },
+    },
+  ];
 
   if (isLoading) {
     return (
@@ -446,19 +447,19 @@ const columns = [
         data={discounts}
         columns={columns}
         isLoading={isLoading}
-        // showSearch
-        showFilter
-        // showSortFilter
-        onSortChange={handleSortChange}
-        activeSort={sortBy}
+        enableSearch={true}
+        enableSort={true}
         searchPlaceholder="Search discounts"
-        // length={8}
         tableType="discount"
         onFilterChange={onFilterChange}
-        // onSearchChange={onSearchChange}
-        // serverSidePagination
         paginationData={paginationData}
         onPageChange={onPageChange}
+        searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        activeSort={activeSort}
+        onSortChange={setSort}
+        showFilter={true}
+        emptyMessage="No products found"
         titleSection={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">
