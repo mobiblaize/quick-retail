@@ -173,7 +173,7 @@ interface Subscription {
 }
 
 export default function HistoryTable() {
-  const { data, isLoading, error } = useFetchAllSub();
+  const { data, isLoading } = useFetchAllSub();
   const subscriptions: Subscription[] = data?.data?.data || [];
 
   const formatPrice = (amount: number) =>

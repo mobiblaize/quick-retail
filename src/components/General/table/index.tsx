@@ -290,7 +290,7 @@ const TanTable = <T extends Record<string, any>>({
   const tablesWithoutAZSort = ["transaction", "returns"];
 
   // Define table types that should include price sorting
-  const tablesWithPriceSort = ["sales", "product"];
+  // const tablesWithPriceSort = ["sales", "product"];
 
   const customSortOptions = tablesWithoutAZSort.includes(tableType ?? "")
     ? baseSortOptions.filter((opt) => opt.key !== "a-z" && opt.key !== "z-a")
