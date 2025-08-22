@@ -1,4 +1,5 @@
-import { useNavigate } from "react-router-dom"; 
+import { useNavigate } from "react-router-dom";
+import { Card, SimpleGrid, Text, Button, Group } from "@mantine/core";
 
 const reports = [
   { label: "Sales Report", path: "sales-processing" },
@@ -11,27 +12,39 @@ const ReportSelection = () => {
   const navigate = useNavigate();
 
   return (
-    <div className="flex items-center justify-center bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full">
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 w-full">
+    <Card shadow="sm" padding="lg" radius="md" withBorder>
+      <SimpleGrid cols={{ base: 1, sm: 2 }} spacing="md">
         {reports.map((report) => (
-          <button
+          <Card
             key={report.path}
-            onClick={() =>
-                navigate("/dashboard/reports/report-date-input", {
-                  state: {
-                    reportType: report.path,
-                    reportLabel: report.label,
-                  },
-                })
-              }
-            className="flex justify-between items-center bg-gray-100 hover:bg-gray-200 transition px-6 py-4 rounded-lg shadow-sm text-gray-700 text-sm font-medium cursor-pointer"
+            shadow="xs"
+            padding="md"
+            radius="md"
+            withBorder
           >
-            {report.label}
-            <span className="text-lg">➔</span>
-          </button>
+            <Group justify="space-between" align="center">
+              <Text size="sm" fw={500}>
+                {report.label}
+              </Text>
+              <Button
+                size="xs"
+                variant="light"
+                onClick={() =>
+                  navigate("/dashboard/reports/report-date-input", {
+                    state: {
+                      reportType: report.path,
+                      reportLabel: report.label,
+                    },
+                  })
+                }
+              >
+                ➔
+              </Button>
+            </Group>
+          </Card>
         ))}
-      </div>
-    </div>
+      </SimpleGrid>
+    </Card>
   );
 };
 

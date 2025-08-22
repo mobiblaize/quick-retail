@@ -1,5 +1,5 @@
 import { useState, useMemo } from "react";
-import { Text, Select } from "@mantine/core";
+import { Text, Select, Box, Group, Badge, Loader, Stack } from "@mantine/core";
 import LineChart from "../../../General/lineChart";
 import { ChartDataPoint } from "../../../../types";
 import { useFetchSalesAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
@@ -22,11 +22,11 @@ const SalesAnalytics = () => {
 
   const chartData = useMemo(() => {
     if (!data?.data?.data || !Array.isArray(data.data.data)) return [];
-  
+
     const sorted = [...data.data.data].sort(
       (a, b) => monthOrder.indexOf(a.month) - monthOrder.indexOf(b.month)
     );
-  
+
     return sorted.map((item) => ({
       month: item.month,
       revenue: item.revenue,
@@ -47,43 +47,50 @@ const SalesAnalytics = () => {
   }, [chartData]);
 
   return (
-    <main className="w-full h-auto px-6 py-8 rounded-lg bg-white">
-      <header className="flex justify-between items-center mb-6">
-        <div className="flex flex-col">
+    <Box
+      p="md"
+      style={{
+        backgroundColor: "#fff",
+        borderRadius: 8,
+        width: "100%",
+      }}
+    >
+      <Group justify="space-between" mb="md" align="center">
+        <Stack gap={2}>
           <Text size="xl" fw={600} c="textSecondary.9">
             Sales Analytics
           </Text>
-          <Text size="sm" c="secondary">
+          <Text size="sm">
             An overview of sales over time
           </Text>
-        </div>
+        </Stack>
 
-        <div className="flex gap-4 items-center">
-          <Select
-            data={years}
-            value={selectedYear}
-            onChange={(value) => value && setSelectedYear(value)}
-            placeholder="Select year"
-            size="xs"
-            className="w-24"
-          />
-        </div>
-      </header>
+        <Select
+          data={years}
+          value={selectedYear}
+          onChange={(value) => value && setSelectedYear(value)}
+          placeholder="Select year"
+          size="xs"
+          w={100}
+        />
+      </Group>
 
       {isLoading ? (
-        <Text>Loading chart...</Text>
+        <Group justify="center" py="xl">
+          <Loader size="sm" />
+          <Text>Loading chart...</Text>
+        </Group>
       ) : (
-        <div className="mt-4">
-          <div className="flex items-center mb-2">
-            <div className="w-3 h-3 rounded-full bg-orange-500 mr-2"></div>
+        <Box mt="md">
+          <Group gap="xs" mb="sm" align="center">
+            <Badge color="orange" variant="filled" size="sm" />
             <Text size="sm">Revenue</Text>
-          </div>
+          </Group>
 
-          <div className="mt-4">
-            {!chartData.length ? (
-              <Text>No sales data available for this year.</Text>
-            ) : (
-              <LineChart
+          {!chartData.length ? (
+            <Text>No sales data available for this year.</Text>
+          ) : (
+            <LineChart
               data={chartData}
               lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
               height={280}
@@ -96,21 +103,10 @@ const SalesAnalytics = () => {
               highlightedPoint={highlightedPoint}
               yAxisLabel="Amount (NGN)"
             />
-             
-              // <LineChart
-              //   data={chartData}
-              //   lines={[{ dataKey: "revenue", color: "#F16722", name: "Revenue" }]}
-              //   height={280}
-              //   yAxisFormatter={(value) => `${value}M`}
-              //   showLegend={false}
-              //   highlightedPoint={highlightedPoint}
-            
-              // />
-            )}
-          </div>
-        </div>
+          )}
+        </Box>
       )}
-    </main>
+    </Box>
   );
 };
 
