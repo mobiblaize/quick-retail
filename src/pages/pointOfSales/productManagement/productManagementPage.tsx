@@ -8,6 +8,7 @@ import { useFetchAllProducts } from "../../../hooks/backendApis/pos/inventory";
 import { Menu, Button, Text } from "@mantine/core";
 import { ChevronDown, Plus } from "lucide-react";
 import { useNavigate } from "react-router";
+import { Loader } from "@mantine/core";
 
 const ProductManagementPage = () => {
   const navigate = useNavigate();
@@ -206,6 +207,14 @@ const ProductManagementPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+        {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
+          {!isLoading && data ? (
+        <main className="">
+       
       <ProductOverview
         data={data?.data}
         isLoading={isLoading}
@@ -232,11 +241,14 @@ const ProductManagementPage = () => {
           setCurrentPage(1);          
         }}
         onFilterChange={handleFilterChange}
+        filters={appliedFilters}  
       />
       <AddProduct
         opened={isLogComplaintsOpen}
         onClose={() => setIsLogComplaintsOpen(false)}
       />
+        </main>
+      ) : null}
     </PageContainer>
   );
 };

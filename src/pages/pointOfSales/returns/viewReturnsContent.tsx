@@ -16,6 +16,7 @@ import SendMail, {
   SendMailRef,
 } from "../../../components/dashboard/pointOfSales/returnsRefunds/sendMail";
 import { useFetchRetrun } from "../../../hooks/backendApis/pos/returns";
+import { Loader } from "@mantine/core";
 
 const slideVariants = {
   initial: (direction: number) => ({
@@ -45,8 +46,11 @@ const ViewReturnsContent: React.FC = () => {
   const data = location.state || {};
   const returnId = data.returnId;
 
+
+
   const { data: returnedData } = useFetchRetrun(returnId || "");
   const [salesOrderData, setSalesOrderData] = useState(null);
+  const [isDeclineOpen, setIsDeclineOpen] = useState(false);
 
 
   const statusColors = {
@@ -58,7 +62,7 @@ const ViewReturnsContent: React.FC = () => {
   const navigate = useNavigate();
   const { currentStep, prevStep } = useReturns();
   const [isResolveOpen, setIsResolveOpen] = useState(false);
-  const [isDeclineOpen, setIsDeclineOpen] = useState(false);
+  const [isLoading,] = useState(false);
 
   const sendMailRef = useRef<SendMailRef>(null);
 
@@ -259,6 +263,11 @@ const ViewReturnsContent: React.FC = () => {
       subHeaders={getSubHeaders()}
       subHeaderButtom={getSubHeaderBottom()}
     >
+        {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <AnimatePresence mode="wait">{renderStepContent()}</AnimatePresence>
 
       <Resolve

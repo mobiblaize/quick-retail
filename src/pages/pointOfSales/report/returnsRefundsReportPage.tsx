@@ -299,7 +299,7 @@ import { notifications } from "@mantine/notifications";
 // import Dropdown from "../../../components/General/dropdown";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { formatDate, truncateText } from "../../../utils/helpers";
+import { formatDate, truncateText2 } from "../../../utils/helpers";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 import { useGenerateReport } from "../../../hooks/backendApis/pos/reports";
 
@@ -346,9 +346,9 @@ const RetunsRefundsReportPage = () => {
         start_date: startDate,
         end_date: endDate,
         locationId,
-        report_type: "returns_refunds", // match your backend param
+        report_type: "returns",
         paginate: true,
-        per_page: 50,
+        per_page: 10,
         page,
       };
 
@@ -430,7 +430,7 @@ const RetunsRefundsReportPage = () => {
       startY: doc.lastAutoTable.finalY + 10,
       head: [["Order ID", "Product ID", "Date Returned", "Customer Name", "Product Name", "Reason", "Status"]],
       body: allReturns.map((s: any) => [
-        truncateText(s["Order ID"], 6),
+        truncateText2(s["Order ID"], 6),
         s["Product ID"],
         s["Date Returned"],
         s["Customer Name"],
@@ -454,23 +454,27 @@ const RetunsRefundsReportPage = () => {
   // ✅ make async
   const exportFullCSV = async () => {
     const allReturns = await fetchAllReturnsPages();
-    const escapeValue = (val: any) => `"${String(val).replace(/"/g, '""')}"`;
-
+  
+    const safe = (val: any) =>
+      val !== null && val !== undefined
+        ? `"${String(val).replace(/"/g, '""')}"`
+        : '""';
+  
     const refundVal = Number(reportData?.data?.stats?.total_refund_value || 0);
     const pendingVal = Number(reportData?.data?.stats?.total_pending_complaints || 0);
     const resolvedVal = Number(reportData?.data?.stats?.total_resolved_complaints || 0);
     const declinedVal = Number(reportData?.data?.stats?.total_declined_complaints || 0);
     const totalComplaints = pendingVal + resolvedVal + declinedVal;
-
+  
     const getPercent = (val: number) =>
       totalComplaints > 0 ? `${((val / totalComplaints) * 100).toFixed(1)}%` : "0%";
-
-    const rows = [
+  
+    const rows: any[] = [
       ["Metric", "Value (Count)", "Percentage"],
       ["Total Returned Value", refundVal.toLocaleString(), "-"],
-      ["Pending Complaints", pendingVal.toString(), getPercent(pendingVal)],
-      ["Resolved Complaints", resolvedVal.toString(), getPercent(resolvedVal)],
-      ["Complaints Declined", declinedVal.toString(), getPercent(declinedVal)],
+      ["Pending Complaints", pendingVal, getPercent(pendingVal)],
+      ["Resolved Complaints", resolvedVal, getPercent(resolvedVal)],
+      ["Complaints Declined", declinedVal, getPercent(declinedVal)],
       [],
       ["Product Name", "Product Price", "Return Count"],
       ...(reportData?.data?.product_returns || []).map((c: any) => [
@@ -488,38 +492,42 @@ const RetunsRefundsReportPage = () => {
       [],
       ["Order ID", "Product ID", "Date Returned", "Customer Name", "Product Name", "Reason", "Status"],
       ...allReturns.map((s: any) => [
-        s["Order ID"],
-        s["Product ID"],
-        s["Date Returned"],
-        s["Customer Name"],
-        s["Product name"],
-        s["Reason"],
-        s["Status"],
+        s.order_id,
+        s.product_id,
+        s.date_returned,
+        s.customer_name,
+        s.product_name,
+        s.reason,
+        s.status,
       ]),
     ];
-
-    const csvContent = rows.map((r) => r.map(escapeValue).join(",")).join("\n");
-
+  
+    const csvContent = rows.map((r) => r.map(safe).join(",")).join("\n");
+  
     const blob = new Blob([csvContent], { type: "text/csv;charset=utf-8;" });
-    const url = window.URL.createObjectURL(blob);
+    const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
     link.href = url;
-    const formattedStart = formatDate(startDate).replace(/\s+/g, "_");
-    const formattedEnd = formatDate(endDate).replace(/\s+/g, "_");
-    const fileName = `full-returns-report_${formattedStart}_to_${formattedEnd}.csv`;
-
-    link.setAttribute("download", fileName);
+  
+    const formattedStart = formatDate(startDate).replace(/[^a-zA-Z0-9]/g, "_");
+    const formattedEnd = formatDate(endDate).replace(/[^a-zA-Z0-9]/g, "_");
+    link.setAttribute(
+      "download",
+      `full-returns-report_${formattedStart}_to_${formattedEnd}.csv`
+    );
+  
     document.body.appendChild(link);
     link.click();
     document.body.removeChild(link);
-    window.URL.revokeObjectURL(url);
-
+    URL.revokeObjectURL(url);
+  
     notifications.show({
       title: "Download Successful",
       message: "Full Returns report CSV exported successfully!",
       color: "green",
     });
   };
+  
 
 
   const handleExport = (val: "csv" | "pdf") => {

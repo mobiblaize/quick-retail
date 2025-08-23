@@ -23,6 +23,7 @@ interface ApiProduct {
   image_path: string[];
   status: string;
   stock_status: string;
+
   product: {
     productID: string;
     product_name: string;
@@ -46,6 +47,7 @@ interface ProductTableProps {
   activeSort?: string;
   setSort?: (sortBy: string) => void;
   onFilterChange: (filters: FilterValues) => void;
+  filters: FilterValues; 
 }
 
 export default function ProductTable({
@@ -58,6 +60,7 @@ export default function ProductTable({
   activeSort,
   onFilterChange,
   setSort,
+  filters,
 }: ProductTableProps) {
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
@@ -268,6 +271,7 @@ export default function ProductTable({
         showFilter={true}
         tableType="product"
         searchPlaceholder="search products"
+        filters={filters}    
         //@ts-ignore
         locations={locations}
         categories={categories}

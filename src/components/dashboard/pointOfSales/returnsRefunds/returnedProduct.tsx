@@ -12,9 +12,10 @@ const ReturnedProduct: React.FC<ReturnedProductProps> = ({ onSendMail }) => {
   const location = useLocation();
   const returnData = location.state || {};
 
-  if (!returnData.orderId) {
+  if (!returnData.returnId) {
     return <div>No order selected</div>;
   }
+  
 
   return (
     <>

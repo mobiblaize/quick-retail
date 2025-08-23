@@ -142,7 +142,7 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
   ];
 
   return (
-    <main className="w-full h-auto">
+    <>
       <GenericTable
         columns={columns}
         data={rows}
@@ -153,28 +153,20 @@ const SalesProcessingReport = ({ reportInfo }: { reportInfo: any }) => {
           last_page: paginationData?.last_page,
           per_page: paginationData?.per_page,
           total: paginationData?.total,
-          // from: paginationData?.from,
-          // to: paginationData?.to,
-          // next_page_url: paginationData?.next_page_url,
-          // prev_page_url: paginationData?.prev_page_url,
+      
         }}
         onPageChange={fetchPage}
+       
         titleSection={
-          <div className="w-full flex flex-col lg:flex-row items-start lg:items-center justify-between gap-4">
-            <div className="flex gap-2.5 items-center">
-              <Text fw={500} size="xl" c="textSecondary.9">
-                Sales Processing
-              </Text>
-              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-                <Text c="customPrimary.10" size="sm">
-                  {paginationData?.total}
-                </Text>
-              </div>
+          <div className="flex gap-2.5">
+            <Text fw={500} size="xl" c="textSecondary.9">   Sales Processing</Text>
+            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+              <Text c="customPrimary.10"> {paginationData?.total}</Text>
             </div>
           </div>
         }
       />
-    </main>
+    </>
   );
 };
 

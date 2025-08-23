@@ -45,6 +45,7 @@ interface GenericTableProps<T> {
 
   // Filter props
   onFilterChange?: (filters: FilterValues) => void;
+  filters?: FilterValues; 
   showFilter?: boolean;
   tableType?:
     | "inventory"
@@ -80,6 +81,16 @@ export default function GenericTable<T>({
   locations,
   categories,
   onFilterChange,
+  filters = {
+    startDate: "",
+    endDate: "",
+    location: "",
+    stockFrom: "",
+    stockTo: "",
+    orderStatus: "",
+    role: "",
+    module: ""
+  }, 
 }: GenericTableProps<T>) {
   if (isLoading) {
     return (
@@ -106,24 +117,76 @@ export default function GenericTable<T>({
     module: "",
   };
 
-  const [appliedFilters, setAppliedFilters] =
-    React.useState<FilterValues>(initialFilters);
+
   const [showFilterPanel, setShowFilterPanel] = React.useState(false);
 
-  const filtersApplied = React.useMemo(() => {
-    return Object.values(appliedFilters).some((val) =>
-      Array.isArray(val) ? val.length > 0 : !!val
-    );
-  }, [appliedFilters]);
+  // const filtersApplied = React.useMemo(() => {
+  //   return Object.values(appliedFilters).some((val) =>
+  //     Array.isArray(val) ? val.length > 0 : !!val
+  //   );
+  // }, [appliedFilters]);
+  // const isValueSet = (v: any) =>
+  // Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null && v !== "";
 
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);
-    onFilterChange?.(filters);
+//   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
+
+//   const isValueSet = (v: any) => {
+//     if (Array.isArray(v)) return v.length > 0;
+//     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
+//     return (
+//       v !== undefined &&
+//       v !== null &&
+//       v !== "" &&
+//       !DEFAULT_FILTER_VALUES.includes(v)
+//     );
+//   };
+  
+
+// const filtersApplied = React.useMemo(
+//   () => Object.values(appliedFilters).some(isValueSet),
+//   [appliedFilters]
+// );
+
+  
+
+// const handleFilterChange = (filters: FilterValues) => {
+//   console.log("Filters applied:", filters);
+//   setAppliedFilters(filters);
+//   onFilterChange?.(filters);
+//   setShowFilterPanel(false);
+// };
+
+
+//   const handleResetFilters = () => {
+//     setAppliedFilters(initialFilters);
+//     onFilterChange?.(initialFilters);
+//     setShowFilterPanel(false);
+//   };
+
+const DEFAULT_FILTER_VALUES = ["All", "", "all"];
+
+  const isValueSet = (v: any) => {
+    if (Array.isArray(v)) return v.length > 0;
+    if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
+    return (
+      v !== undefined &&
+      v !== null &&
+      v !== "" &&
+      !DEFAULT_FILTER_VALUES.includes(v)
+    );
+  };
+
+  const filtersApplied = React.useMemo(
+    () => Object.values(filters).some(isValueSet),
+    [filters]
+  );
+
+  const handleFilterChange = (newFilters: FilterValues) => {
+    onFilterChange?.(newFilters);
     setShowFilterPanel(false);
   };
 
   const handleResetFilters = () => {
-    setAppliedFilters(initialFilters);
     onFilterChange?.(initialFilters);
     setShowFilterPanel(false);
   };

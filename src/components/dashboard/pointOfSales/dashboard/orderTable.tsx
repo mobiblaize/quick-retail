@@ -27,6 +27,7 @@ interface CustomerOrdersTableProps {
   setSearchTerm?: (value: string) => void;
   activeSort?: string;
   setSort?: (sortBy: string) => void;
+  filters: FilterValues; 
 }
 
 const CustomerOrdersTable = ({
@@ -39,6 +40,7 @@ paginationData,
   activeSort,
   onFilterChange,
   setSort,
+  filters
 }: CustomerOrdersTableProps) => {
   // const [sortBy, setSortBy] = useState<string>("");
   const navigate = useNavigate();
@@ -160,6 +162,7 @@ paginationData,
         searchPlaceholder="search Orders"
         enableSearch ={true}
         enableSort={true}
+        filters={filters}   
          titleSection={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">Orders</Text>

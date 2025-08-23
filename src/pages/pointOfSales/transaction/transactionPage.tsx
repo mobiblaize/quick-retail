@@ -5,6 +5,7 @@ import AllTransactionTable from "../../../components/dashboard/pointOfSales/tran
 import { useFetchAllTransactions } from "../../../hooks/backendApis/pos/transactions";
 import { useState } from "react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const TransactionPage = () => {
   const [tempDateRange, setTempDateRange] = useState<{
@@ -78,7 +79,12 @@ const TransactionPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-     
+      {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
+        
       <TransactionOverview
   data={data?.data}
   isLoading={isLoading}

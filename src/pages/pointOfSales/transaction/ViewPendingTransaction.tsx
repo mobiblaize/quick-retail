@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import { ROUTES } from "../../../constants/routes";
 import { useFetchSingleSale } from "../../../hooks/backendApis/pos/salesProcessing";
 import ViewPending from "../../../components/dashboard/pointOfSales/transactions/viewPending";
+import { Loader } from "@mantine/core";
 
 const ViewPendingTransactionPage = () => {
   const navigate = useNavigate();
@@ -57,6 +58,12 @@ const ViewPendingTransactionPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+      {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
+        
       <ViewPending saleData={saleData} isLoading={isLoading} isError={isError} />
     </PageContainer>
   );
