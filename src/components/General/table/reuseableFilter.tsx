@@ -1,8 +1,466 @@
-import { useEffect, useState } from 'react';
+// import { useEffect, useState } from 'react';
 
 
-export type DiscountType = 'all' | 'amount' | 'percentage';
-export type Reason = 'all' | 'damaged' | 'mistaken' | 'size issue' | 'others';
+// export type DiscountType = 'all' | 'amount' | 'percentage';
+// export type Reason = 'all' | 'damaged' | 'mistaken' | 'size issue' | 'others';
+
+// export interface FilterValues {
+//   startDate: string;
+//   endDate: string;
+//   location: string;
+//   category?: string;
+//   stockFrom: string;
+//   stockTo: string;
+//   orderStatus: string;
+//   priceFrom?: string;
+//   priceTo?: string;
+//   paymentStatus?: string;
+//   productStatus?:string;
+//   reason?: Reason ;
+//   type?: DiscountType;
+//    discountStatus?: string
+//    returnStatus?: string;
+//    role: string;
+//    module: string;
+//    [key: string]: string | undefined; 
+// }
+
+// export interface ReusableFilterComponentProps {
+//   onFilterChange: (filters: FilterValues) => void;
+//   locations?: string[];
+//   categories?: string[];
+//   reasons?:string[];
+//   roles?: string[];
+//   modules?: string[];
+//   types?: string[];
+//   filterType: 'inventory' | 'product' | 'sales' | 'returns' | 'discount' | 'audit' ;
+//   showLocation?: boolean;
+//   showCategory?:boolean;
+//   showStockLevel?: boolean;
+//   showOrderStatus?: boolean;
+//   showPrice?: boolean;         
+//   showPaymentStatus?: boolean;
+//   showProductStatus?: boolean;
+//   showReason?:boolean;
+//   showDiscountType?:boolean;
+//   showDiscountStatus ?:boolean;
+//   showReturnStatus?: boolean;
+//   showRole?: boolean;
+//   showModule?: boolean;
+//   setFiltersApplied?: (value: boolean) => void;
+//   setAppliedFilters?: (filters: FilterValues) => void;
+//   onResetFilter?: () => void;
+// }
+
+// const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
+//   onFilterChange,
+//   locations = [],
+//   categories =[],
+//   roles = [],
+//   modules = [],
+//   showLocation,
+//   showCategory,
+//   showStockLevel,
+//   showOrderStatus,
+//   showPrice = false,
+//   showPaymentStatus = false,
+//   showProductStatus = false,
+//   showReason = false,
+//   showDiscountType  = false,
+//   showDiscountStatus  = false,
+//   showReturnStatus = false,
+//   showRole = false,
+//   showModule = false,
+//   setFiltersApplied,
+// }) => {
+//   const [filters, setFilters] = useState<FilterValues>({
+//     startDate: '',
+//     endDate: '',
+//     location: '',
+//     category: '',
+//     reason:'all',
+//     stockFrom: '',
+//     stockTo: '',
+//     orderStatus: 'All',
+//     priceFrom: '',
+//     priceTo: '',
+//     paymentStatus: 'All',
+//     productStatus: 'All',
+//     type: 'all',
+//     discountStatus: 'All',
+//      returnStatus: 'All',
+//     role: '',
+//     module: '',
+//   });
+
+//   const handleClear = () => {
+//     const cleared: FilterValues = {
+//       startDate: '',
+//       endDate: '',
+//       location: '',
+//       category: '',
+//       reason: 'all',
+//       stockFrom: '',
+//       stockTo: '',
+//       orderStatus: 'All',
+//       paymentStatus: 'All',
+//       priceFrom: '',
+//       priceTo: '',
+//       productStatus: '',
+//       type: 'all',
+//       discountStatus: 'All',
+//       returnStatus: 'All',
+//       role: '',
+//       module: '',
+//     };
+
+//     setFilters(cleared);
+
+//     // onFilterChange(cleared); 
+//   };
+
+//   useEffect(() => {
+//     const hasFilters = Object.entries(filters).some(
+//       ([ val]) => val && val !== '' && val !== 'All' && val !== 'all'
+//     );
+
+//     setFiltersApplied?.(hasFilters);
+//   }, [filters]);
+
+
+
+//   return (
+//     <div className="w-80 bg-white rounded-lg">
+//       <h2 className="text-lg font-semibold mb-4">FILTER</h2>
+
+//       {/* Date */}
+//       <div className="mb-4">
+//         <label className="block text-sm font-medium mb-1">Date</label>
+//         <div className="flex gap-2">
+//           <input
+//             type="date"
+//             value={filters.startDate}
+//             onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
+//             className="flex-1 border rounded p-2 text-sm border-gray-200"
+//           />
+//           <input
+//             type="date"
+//             value={filters.endDate}
+//             onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
+//             className="flex-1 border rounded p-2 text-sm border-gray-200 "
+//           />
+//         </div>
+//       </div>
+
+//       {/* Location */}
+//       {showLocation && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Store</label>
+//           <select
+//             value={filters.location}
+//             onChange={(e) => setFilters({ ...filters, location: e.target.value })}
+//             className="w-full border rounded p-2 text-sm border-gray-200"
+//           >
+//             <option value="">Choose location</option>
+//             {locations.map((loc) => (
+//               <option key={loc} value={loc}>
+//                 {loc}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       )}
+
+//        {/* Category */}
+//        {showCategory && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Category</label>
+//           <select
+//             value={filters.category}
+//             onChange={(e) => setFilters({ ...filters, category: e.target.value })}
+//             className="w-full border rounded p-2 text-sm border-gray-200"
+//           >
+//             <option value="">Choose category</option>
+//             {categories.map((cat) => (
+//               <option key={cat} value={cat}>
+//                 {cat}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       )}
+
+//            {/* Reason */}
+//           {/* Reason */}
+// {showReason && (
+//   <div className="mb-4">
+//     <label className="block text-sm font-medium mb-1">Reason</label>
+//     <select
+//       value={filters.reason}
+//       onChange={(e) => setFilters({ ...filters, reason: e.target.value as Reason })}
+//       className="w-full border rounded p-2 text-sm border-gray-200"
+//     >
+//       <option value="all">All</option>
+//       <option value="damaged">Damaged</option>
+//       <option value="mistaken">Mistaken</option>
+//       <option value="size issue">Size Issue</option>
+//       <option value="others">Others</option>
+//     </select>
+//   </div>
+// )}
+
+//        {/* Discount Type */}
+//        {showDiscountType && (
+//   <div className="mb-4">
+//     <label className="block text-sm font-medium mb-1">Discount Type</label>
+//     <select
+//       value={filters.type}
+//       onChange={(e) => setFilters({ ...filters, type: e.target.value as DiscountType })}
+//       className="w-full border rounded p-2 text-sm border-gray-200"
+//     >
+//       <option value="all">All</option>
+//       <option value="amount">Amount Off</option>
+//       <option value="percentage">Percentage Off</option>
+//     </select>
+//   </div>
+// )}
+
+//       {/* Stock level */}
+//       {showStockLevel && (
+//   <div className="mb-4">
+//     <label className="block text-sm font-medium mb-1">Stock level</label>
+//     <div className="flex gap-2">
+//       <input
+//         type="number"
+//         placeholder="From"
+//         value={filters.stockFrom}
+//         onChange={(e) => setFilters({ ...filters, stockFrom: e.target.value })}
+//         className="w-39 border rounded p-2 text-sm border-gray-200" 
+//       />
+//       <input
+//         type="number"
+//         placeholder="To"
+//         value={filters.stockTo}
+//         onChange={(e) => setFilters({ ...filters, stockTo: e.target.value })}
+//         className="w-39 border rounded p-2 text-sm"
+//       />
+//     </div>
+//   </div>
+// )}
+
+
+//       {/* Price level */}
+//       {showPrice && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Price (₦)</label>
+//           <div className="flex gap-2">
+//             <div className="relative ">
+//               <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
+//               <input
+//                 type="number"
+//                 placeholder="From"
+//                 value={filters.priceFrom}
+//                 onChange={(e) => setFilters({ ...filters, priceFrom: e.target.value })}
+//                 className="w-39 border rounded p-2 text-sm pl border-gray-200"
+//               />
+//             </div>
+//             <div className="relative w-24">
+//               <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
+//               <input
+//                 type="number"
+//                 placeholder="To"
+//                 value={filters.priceTo}
+//                 onChange={(e) => setFilters({ ...filters, priceTo: e.target.value })}
+//                 className="w-39 border rounded p-2 text-sm pl-4 border-gray-200"
+//               />
+//             </div>
+//           </div>
+//         </div>
+//       )}
+
+//        {/* Role */}
+//        {showRole && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Role</label>
+//           <select
+//             value={filters.role}
+//             onChange={(e) => setFilters({ ...filters, role: e.target.value })}
+//             className="w-full border rounded p-2 text-sm border-gray-200"
+//           >
+//             <option value="">Select Role</option>
+//             {roles.map((rol) => (
+//               <option key={rol} value={rol}>
+//                 {rol}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       )}
+
+
+//        {/* Module*/}
+//        {showModule && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Module</label>
+//           <select
+//             value={filters.module}
+//             onChange={(e) => setFilters({ ...filters, module: e.target.value })}
+//             className="w-full border rounded p-2 text-sm border-gray-200"
+//           >
+//             <option value="">Select Module</option>
+//             {modules.map((mod) => (
+//               <option key={mod} value={mod}>
+//                 {mod}
+//               </option>
+//             ))}
+//           </select>
+//         </div>
+//       )}
+
+
+//       {/* Order Status */}
+//       {showOrderStatus && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Order Status</label>
+//           <div className="flex justify-around  gap-x-2 gap-y-2">
+//             {['All', 'Available', 'Low stock', 'Sold out'].map((status) => (
+//               <label key={status} className="flex items-center gap-1 text-sm">
+//                 <input
+//                   type="radio"
+//                   name="orderStatus"
+//                   value={status}
+//                   checked={filters.orderStatus === status}
+//                   onChange={() => setFilters({ ...filters, orderStatus: status })}
+//                 />
+//                 {status}
+//               </label>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+//       {showProductStatus && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1"> Status</label>
+//           <div className="flex justify-around gap-x-2 gap-y-2">
+//             {['All', 'Active', 'Inactive', ].map((status) => (
+//               <label key={status} className="flex items-center gap-1 text-sm">
+//                 <input
+//                   type="radio"
+//                   name="productStatus"
+//                   value={status}
+//                   checked={filters.productStatus === status}
+//                   onChange={() => setFilters({ ...filters, productStatus: status })}
+//                 />
+//                 {status}
+//               </label>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+// {showDiscountStatus && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Order Status</label>
+//           <div className="flex justify-around gap-x-2 gap-y-2">
+//             {['All', 'Active', 'Inactive', 'Expired', ].map((status) => (
+//               <label key={status} className="flex items-center gap-1 text-sm">
+//                 <input
+//                   type="radio"
+//                   name="discountStatus"
+//                   value={status}
+//                   checked={filters.discountStatus === status}
+//                   onChange={() => setFilters({ ...filters, discountStatus: status })}
+//                 />
+//                 {status}
+//               </label>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+
+// {showReturnStatus && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Return Status</label>
+//           <div className="flex justify-around gap-x-2 gap-y-2">
+//             {['All', 'Resolved', 'Pending', 'Declined', ].map((status) => (
+//               <label key={status} className="flex items-center gap-1 text-sm">
+//                 <input
+//                   type="radio"
+//                   name="returnStatus"
+//                   value={status}
+//                   checked={filters.returnStatus === status}
+//                   onChange={() => setFilters({ ...filters, returnStatus: status })}
+//                 />
+//                 {status}
+//               </label>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Payment Status */}
+//       {showPaymentStatus && (
+//         <div className="mb-4">
+//           <label className="block text-sm font-medium mb-1">Order Status</label>
+//           <div className="flex justify-around  gap-x-2 gap-y-2">
+//             {['All', 'Pending', 'Paid'].map((status) => (
+//               <label key={status} className="flex items-center gap-1 text-sm">
+//                 <input
+//                   type="radio"
+//                   name="paymentStatus"
+//                   value={status}
+//                   checked={filters.paymentStatus === status}
+//                   onChange={() => setFilters({ ...filters, paymentStatus: status })}
+//                 />
+//                 {status}
+//               </label>
+//             ))}
+//           </div>
+//         </div>
+//       )}
+
+//       {/* Buttons */}
+//       <div className="flex justify-between gap-3 mt-4">
+//         <button
+//           onClick={handleClear}
+//           className="border border-orange-500 text-orange-500 py-1 px-4 text-sm hover:bg-orange-50 rounded-lg  w-full"
+//         >
+//           Clear All
+//         </button>
+//         <button
+//           onClick={() => onFilterChange(filters)}
+
+//           className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
+//         >
+//           Filter
+//         </button>
+//       </div>
+//     </div>
+//   );
+// };
+
+// export default ReusableFilterComponent;
+
+
+
+import { useEffect, useState } from "react";
+import {
+  Paper,
+  Title,
+  Text,
+  Stack,
+  Group,
+  TextInput,
+  Select,
+  Radio,
+  Button,
+  Divider,
+} from "@mantine/core";
+
+export type DiscountType = "all" | "amount" | "percentage";
+export type Reason = "all" | "damaged" | "mistaken" | "size issue" | "others";
 
 export interface FilterValues {
   startDate: string;
@@ -15,35 +473,35 @@ export interface FilterValues {
   priceFrom?: string;
   priceTo?: string;
   paymentStatus?: string;
-  productStatus?:string;
-  reason?: Reason ;
+  productStatus?: string;
+  reason?: Reason;
   type?: DiscountType;
-   discountStatus?: string
-   returnStatus?: string;
-   role: string;
-   module: string;
-   [key: string]: string | undefined; 
+  discountStatus?: string;
+  returnStatus?: string;
+  role: string;
+  module: string;
+  [key: string]: string | undefined;
 }
 
 export interface ReusableFilterComponentProps {
   onFilterChange: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
-  reasons?:string[];
+  reasons?: string[];
   roles?: string[];
   modules?: string[];
   types?: string[];
-  filterType: 'inventory' | 'product' | 'sales' | 'returns' | 'discount' | 'audit' ;
+  filterType: "inventory" | "product" | "sales" | "returns" | "discount" | "audit";
   showLocation?: boolean;
-  showCategory?:boolean;
+  showCategory?: boolean;
   showStockLevel?: boolean;
   showOrderStatus?: boolean;
-  showPrice?: boolean;         
+  showPrice?: boolean;
   showPaymentStatus?: boolean;
   showProductStatus?: boolean;
-  showReason?:boolean;
-  showDiscountType?:boolean;
-  showDiscountStatus ?:boolean;
+  showReason?: boolean;
+  showDiscountType?: boolean;
+  showDiscountStatus?: boolean;
   showReturnStatus?: boolean;
   showRole?: boolean;
   showModule?: boolean;
@@ -52,10 +510,24 @@ export interface ReusableFilterComponentProps {
   onResetFilter?: () => void;
 }
 
+const inputStyles = {
+  input: {
+    borderColor: "#E5E7EB",
+    padding: "8px 12px",
+    fontSize: 14,
+    borderRadius: 6,
+  },
+  label: {
+    fontSize: 14,
+    fontWeight: 500,
+    marginBottom: 4,
+  },
+} as const;
+
 const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   onFilterChange,
   locations = [],
-  categories =[],
+  categories = [],
   roles = [],
   modules = [],
   showLocation,
@@ -63,381 +535,394 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showStockLevel,
   showOrderStatus,
   showPrice = false,
-  showPaymentStatus = false,
+  showPaymentStatus = false, // ✅ used here
   showProductStatus = false,
   showReason = false,
-  showDiscountType  = false,
-  showDiscountStatus  = false,
+  showDiscountType = false,
+  showDiscountStatus = false,
   showReturnStatus = false,
   showRole = false,
   showModule = false,
   setFiltersApplied,
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
-    startDate: '',
-    endDate: '',
-    location: '',
-    category: '',
-    reason:'all',
-    stockFrom: '',
-    stockTo: '',
-    orderStatus: 'All',
-    priceFrom: '',
-    priceTo: '',
-    paymentStatus: 'All',
-    productStatus: 'All',
-    type: 'all',
-    discountStatus: 'All',
-     returnStatus: 'All',
-    role: '',
-    module: '',
+    startDate: "",
+    endDate: "",
+    location: "",
+    category: "",
+    reason: "all",
+    stockFrom: "",
+    stockTo: "",
+    orderStatus: "All",
+    priceFrom: "",
+    priceTo: "",
+    paymentStatus: "All",
+    productStatus: "All",
+    type: "all",
+    discountStatus: "All",
+    returnStatus: "All",
+    role: "",
+    module: "",
   });
 
   const handleClear = () => {
     const cleared: FilterValues = {
-      startDate: '',
-      endDate: '',
-      location: '',
-      category: '',
-      reason: 'all',
-      stockFrom: '',
-      stockTo: '',
-      orderStatus: 'All',
-      paymentStatus: 'All',
-      priceFrom: '',
-      priceTo: '',
-      productStatus: '',
-      type: 'all',
-      discountStatus: 'All',
-      returnStatus: 'All',
-      role: '',
-      module: '',
+      startDate: "",
+      endDate: "",
+      location: "",
+      category: "",
+      reason: "all",
+      stockFrom: "",
+      stockTo: "",
+      orderStatus: "All",
+      paymentStatus: "All",
+      priceFrom: "",
+      priceTo: "",
+      productStatus: "",
+      type: "all",
+      discountStatus: "All",
+      returnStatus: "All",
+      role: "",
+      module: "",
     };
-  
-    setFilters(cleared);
 
-    // onFilterChange(cleared); 
+    setFilters(cleared);
   };
-  
+
   useEffect(() => {
     const hasFilters = Object.entries(filters).some(
-      ([ val]) => val && val !== '' && val !== 'All' && val !== 'all'
+      ([, val]) => val && val !== "" && val !== "All" && val !== "all"
     );
-  
     setFiltersApplied?.(hasFilters);
-  }, [filters]);
-  
+  }, [filters, setFiltersApplied]);
 
-  
   return (
-    <div className="w-80 bg-white rounded-lg">
-      <h2 className="text-lg font-semibold mb-4">FILTER</h2>
+    <Paper
+      w={320}
+      bg="white"
+      radius="lg"
+      p="md"
+      withBorder={false}
+    >
+      <Title
+        order={4}
+        style={{ fontSize: "1.125rem", fontWeight: 600, marginBottom: 16 }}
+      >
+        FILTER
+      </Title>
 
       {/* Date */}
-      <div className="mb-4">
-        <label className="block text-sm font-medium mb-1">Date</label>
-        <div className="flex gap-2">
-          <input
+      <Stack gap={8} mb={16}>
+        <Text fz="sm" fw={500}>
+          Date
+        </Text>
+        <Group gap="sm" grow>
+          <TextInput
             type="date"
             value={filters.startDate}
-            onChange={(e) => setFilters({ ...filters, startDate: e.target.value })}
-            className="flex-1 border rounded p-2 text-sm border-gray-200"
+            onChange={(e) => setFilters({ ...filters, startDate: e.currentTarget.value })}
+            styles={inputStyles}
           />
-          <input
+          <TextInput
             type="date"
             value={filters.endDate}
-            onChange={(e) => setFilters({ ...filters, endDate: e.target.value })}
-            className="flex-1 border rounded p-2 text-sm border-gray-200 "
+            onChange={(e) => setFilters({ ...filters, endDate: e.currentTarget.value })}
+            styles={inputStyles}
           />
-        </div>
-      </div>
+        </Group>
+      </Stack>
 
       {/* Location */}
       {showLocation && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Store</label>
-          <select
-            value={filters.location}
-            onChange={(e) => setFilters({ ...filters, location: e.target.value })}
-            className="w-full border rounded p-2 text-sm border-gray-200"
-          >
-            <option value="">Choose location</option>
-            {locations.map((loc) => (
-              <option key={loc} value={loc}>
-                {loc}
-              </option>
-            ))}
-          </select>
-        </div>
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Store
+          </Text>
+          <Select
+            placeholder="Choose location"
+            value={filters.location || null}
+            onChange={(val) => setFilters({ ...filters, location: val ?? "" })}
+            data={locations}
+            styles={inputStyles}
+            allowDeselect
+            clearable
+          />
+        </Stack>
       )}
 
-       {/* Category */}
-       {showCategory && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Category</label>
-          <select
-            value={filters.category}
-            onChange={(e) => setFilters({ ...filters, category: e.target.value })}
-            className="w-full border rounded p-2 text-sm border-gray-200"
-          >
-            <option value="">Choose category</option>
-            {categories.map((cat) => (
-              <option key={cat} value={cat}>
-                {cat}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Category */}
+      {showCategory && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Category
+          </Text>
+          <Select
+            placeholder="Choose category"
+            value={filters.category || null}
+            onChange={(val) => setFilters({ ...filters, category: val ?? "" })}
+            data={categories}
+            styles={inputStyles}
+            allowDeselect
+            clearable
+          />
+        </Stack>
       )}
 
-           {/* Reason */}
-          {/* Reason */}
-{showReason && (
-  <div className="mb-4">
-    <label className="block text-sm font-medium mb-1">Reason</label>
-    <select
-      value={filters.reason}
-      onChange={(e) => setFilters({ ...filters, reason: e.target.value as Reason })}
-      className="w-full border rounded p-2 text-sm border-gray-200"
-    >
-      <option value="all">All</option>
-      <option value="damaged">Damaged</option>
-      <option value="mistaken">Mistaken</option>
-      <option value="size issue">Size Issue</option>
-      <option value="others">Others</option>
-    </select>
-  </div>
-)}
- 
-       {/* Discount Type */}
-       {showDiscountType && (
-  <div className="mb-4">
-    <label className="block text-sm font-medium mb-1">Discount Type</label>
-    <select
-      value={filters.type}
-      onChange={(e) => setFilters({ ...filters, type: e.target.value as DiscountType })}
-      className="w-full border rounded p-2 text-sm border-gray-200"
-    >
-      <option value="all">All</option>
-      <option value="amount">Amount Off</option>
-      <option value="percentage">Percentage Off</option>
-    </select>
-  </div>
-)}
+      {/* Reason */}
+      {showReason && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Reason
+          </Text>
+          <Select
+            value={filters.reason || "all"}
+            onChange={(val) =>
+              setFilters({ ...filters, reason: (val as Reason) ?? "all" })
+            }
+            data={["all", "damaged", "mistaken", "size issue", "others"]}
+            styles={inputStyles}
+          />
+        </Stack>
+      )}
+
+      {/* Discount Type */}
+      {showDiscountType && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Discount Type
+          </Text>
+          <Select
+            value={filters.type || "all"}
+            onChange={(val) =>
+              setFilters({ ...filters, type: (val as DiscountType) ?? "all" })
+            }
+            data={[
+              { value: "all", label: "All" },
+              { value: "amount", label: "Amount Off" },
+              { value: "percentage", label: "Percentage Off" },
+            ]}
+            styles={inputStyles}
+          />
+        </Stack>
+      )}
 
       {/* Stock level */}
       {showStockLevel && (
-  <div className="mb-4">
-    <label className="block text-sm font-medium mb-1">Stock level</label>
-    <div className="flex gap-2">
-      <input
-        type="number"
-        placeholder="From"
-        value={filters.stockFrom}
-        onChange={(e) => setFilters({ ...filters, stockFrom: e.target.value })}
-        className="w-39 border rounded p-2 text-sm border-gray-200" 
-      />
-      <input
-        type="number"
-        placeholder="To"
-        value={filters.stockTo}
-        onChange={(e) => setFilters({ ...filters, stockTo: e.target.value })}
-        className="w-39 border rounded p-2 text-sm"
-      />
-    </div>
-  </div>
-)}
-
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Stock level
+          </Text>
+          <Group gap="sm">
+            <TextInput
+              type="number"
+              placeholder="From"
+              value={filters.stockFrom}
+              onChange={(e) =>
+                setFilters({ ...filters, stockFrom: e.currentTarget.value })
+              }
+              styles={inputStyles}
+              style={{ width: 156 }}
+            />
+            <TextInput
+              type="number"
+              placeholder="To"
+              value={filters.stockTo}
+              onChange={(e) =>
+                setFilters({ ...filters, stockTo: e.currentTarget.value })
+              }
+              styles={inputStyles}
+              style={{ width: 156 }}
+            />
+          </Group>
+        </Stack>
+      )}
 
       {/* Price level */}
       {showPrice && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Price (₦)</label>
-          <div className="flex gap-2">
-            <div className="relative ">
-              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
-              <input
-                type="number"
-                placeholder="From"
-                value={filters.priceFrom}
-                onChange={(e) => setFilters({ ...filters, priceFrom: e.target.value })}
-                className="w-39 border rounded p-2 text-sm pl border-gray-200"
-              />
-            </div>
-            <div className="relative w-24">
-              <span className="absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500"></span>
-              <input
-                type="number"
-                placeholder="To"
-                value={filters.priceTo}
-                onChange={(e) => setFilters({ ...filters, priceTo: e.target.value })}
-                className="w-39 border rounded p-2 text-sm pl-4 border-gray-200"
-              />
-            </div>
-          </div>
-        </div>
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Price (₦)
+          </Text>
+          <Group gap="sm" grow>
+            <TextInput
+              type="number"
+              placeholder="From"
+              value={filters.priceFrom}
+              onChange={(e) =>
+                setFilters({ ...filters, priceFrom: e.currentTarget.value })
+              }
+              styles={inputStyles}
+            />
+            <TextInput
+              type="number"
+              placeholder="To"
+              value={filters.priceTo}
+              onChange={(e) =>
+                setFilters({ ...filters, priceTo: e.currentTarget.value })
+              }
+              styles={inputStyles}
+            />
+          </Group>
+        </Stack>
       )}
 
-       {/* Role */}
-       {showRole && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Role</label>
-          <select
-            value={filters.role}
-            onChange={(e) => setFilters({ ...filters, role: e.target.value })}
-            className="w-full border rounded p-2 text-sm border-gray-200"
-          >
-            <option value="">Select Role</option>
-            {roles.map((rol) => (
-              <option key={rol} value={rol}>
-                {rol}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Role */}
+      {showRole && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Role
+          </Text>
+          <Select
+            placeholder="Select Role"
+            value={filters.role || null}
+            onChange={(val) => setFilters({ ...filters, role: val ?? "" })}
+            data={roles}
+            styles={inputStyles}
+            allowDeselect
+            clearable
+          />
+        </Stack>
       )}
 
-
-       {/* Module*/}
-       {showModule && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Module</label>
-          <select
-            value={filters.module}
-            onChange={(e) => setFilters({ ...filters, module: e.target.value })}
-            className="w-full border rounded p-2 text-sm border-gray-200"
-          >
-            <option value="">Select Module</option>
-            {modules.map((mod) => (
-              <option key={mod} value={mod}>
-                {mod}
-              </option>
-            ))}
-          </select>
-        </div>
+      {/* Module */}
+      {showModule && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Module
+          </Text>
+          <Select
+            placeholder="Select Module"
+            value={filters.module || null}
+            onChange={(val) => setFilters({ ...filters, module: val ?? "" })}
+            data={modules}
+            styles={inputStyles}
+            allowDeselect
+            clearable
+          />
+        </Stack>
       )}
-
 
       {/* Order Status */}
       {showOrderStatus && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Order Status</label>
-          <div className="flex justify-around  gap-x-2 gap-y-2">
-            {['All', 'Available', 'Low stock', 'Sold out'].map((status) => (
-              <label key={status} className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name="orderStatus"
-                  value={status}
-                  checked={filters.orderStatus === status}
-                  onChange={() => setFilters({ ...filters, orderStatus: status })}
-                />
-                {status}
-              </label>
-            ))}
-          </div>
-        </div>
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Order Status
+          </Text>
+          <Radio.Group
+            name="orderStatus"
+            value={filters.orderStatus}
+            onChange={(val) => setFilters({ ...filters, orderStatus: val })}
+          >
+            <Group justify="space-around" gap="xs" wrap="wrap">
+              {["All", "Available", "Low stock", "Sold out"].map((status) => (
+                <Radio key={status} value={status} label={status} size="sm" />
+              ))}
+            </Group>
+          </Radio.Group>
+        </Stack>
       )}
 
-      {showProductStatus && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1"> Status</label>
-          <div className="flex justify-around gap-x-2 gap-y-2">
-            {['All', 'Active', 'Inactive', ].map((status) => (
-              <label key={status} className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name="productStatus"
-                  value={status}
-                  checked={filters.productStatus === status}
-                  onChange={() => setFilters({ ...filters, productStatus: status })}
-                />
-                {status}
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-
-{showDiscountStatus && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Order Status</label>
-          <div className="flex justify-around gap-x-2 gap-y-2">
-            {['All', 'Active', 'Inactive', 'Expired', ].map((status) => (
-              <label key={status} className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name="discountStatus"
-                  value={status}
-                  checked={filters.discountStatus === status}
-                  onChange={() => setFilters({ ...filters, discountStatus: status })}
-                />
-                {status}
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-
-
-{showReturnStatus && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Return Status</label>
-          <div className="flex justify-around gap-x-2 gap-y-2">
-            {['All', 'Resolved', 'Pending', 'Declined', ].map((status) => (
-              <label key={status} className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name="returnStatus"
-                  value={status}
-                  checked={filters.returnStatus === status}
-                  onChange={() => setFilters({ ...filters, returnStatus: status })}
-                />
-                {status}
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
-
-      {/* Payment Status */}
+      {/* ✅ Payment Status */}
       {showPaymentStatus && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Order Status</label>
-          <div className="flex justify-around  gap-x-2 gap-y-2">
-            {['All', 'Pending', 'Paid'].map((status) => (
-              <label key={status} className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name="paymentStatus"
-                  value={status}
-                  checked={filters.paymentStatus === status}
-                  onChange={() => setFilters({ ...filters, paymentStatus: status })}
-                />
-                {status}
-              </label>
-            ))}
-          </div>
-        </div>
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Payment Status
+          </Text>
+          <Radio.Group
+            name="paymentStatus"
+            value={filters.paymentStatus}
+            onChange={(val) => setFilters({ ...filters, paymentStatus: val })}
+          >
+            <Group justify="space-around" gap="xs" wrap="wrap">
+              {["All", "Paid", "Unpaid"].map((status) => (
+                <Radio key={status} value={status} label={status} size="sm" />
+              ))}
+            </Group>
+          </Radio.Group>
+        </Stack>
       )}
+
+      {/* Product Status */}
+      {showProductStatus && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Status
+          </Text>
+          <Radio.Group
+            name="productStatus"
+            value={filters.productStatus}
+            onChange={(val) => setFilters({ ...filters, productStatus: val })}
+          >
+            <Group justify="space-around" gap="xs" wrap="wrap">
+              {["All", "Active", "Inactive"].map((status) => (
+                <Radio key={status} value={status} label={status} size="sm" />
+              ))}
+            </Group>
+          </Radio.Group>
+        </Stack>
+      )}
+
+      {/* Discount Status */}
+      {showDiscountStatus && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Order Status
+          </Text>
+          <Radio.Group
+            name="discountStatus"
+            value={filters.discountStatus}
+            onChange={(val) => setFilters({ ...filters, discountStatus: val })}
+          >
+            <Group justify="space-around" gap="xs" wrap="wrap">
+              {["All", "Active", "Inactive", "Expired"].map((status) => (
+                <Radio key={status} value={status} label={status} size="sm" />
+              ))}
+            </Group>
+          </Radio.Group>
+        </Stack>
+      )}
+
+      {/* Return Status */}
+      {showReturnStatus && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            Return Status
+          </Text>
+          <Radio.Group
+            name="returnStatus"
+            value={filters.returnStatus}
+            onChange={(val) => setFilters({ ...filters, returnStatus: val })}
+          >
+            <Group justify="space-around" gap="xs" wrap="wrap">
+              {["All", "Resolved", "Pending", "Declined"].map((status) => (
+                <Radio key={status} value={status} label={status} size="sm" />
+              ))}
+            </Group>
+          </Radio.Group>
+        </Stack>
+      )}
+
+      <Divider my="sm" />
 
       {/* Buttons */}
-      <div className="flex justify-between gap-3 mt-4">
-        <button
+      <Group gap="sm" grow mt="sm">
+        <Button
+          variant="outline"
+          color="orange"
+          radius="lg"
           onClick={handleClear}
-          className="border border-orange-500 text-orange-500 py-1 px-4 text-sm hover:bg-orange-50 rounded-lg  w-full"
         >
-          Clear All
-        </button>
-        <button
+          <Text fz="sm" fw={500} c="textSecondary.9">Clear All</Text>
+        </Button>
+        <Button
+          color="orange"
+          radius="lg"
           onClick={() => onFilterChange(filters)}
-       
-          className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
         >
-          Filter
-        </button>
-      </div>
-    </div>
+          <Text fz="sm" fw={500} c="#fff">Filter</Text>
+        </Button>
+      </Group>
+    </Paper>
   );
 };
 
