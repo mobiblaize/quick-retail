@@ -1,4 +1,4 @@
-name: Deploy Frontend to Production
+name: Deploy Frontend to Production (Plesk via SFTP)
 
 on:
   push:
@@ -21,17 +21,87 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
-      - name: Install dependencies
-        run: npm install
+      - name: Install and build
+        run: |
+          npm ci --no-audit --no-fund
+          NODE_ENV=production npm run build
+          ls -la dist/
 
-      - name: Build project
-        run: npm run build
+      - name: Create deployment success file
+        run: |
+          echo '{"status":"deployed","timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","environment":"production","method":"sftp","commit":"'$GITHUB_SHA'"}' > deploy-success.json
 
-      - name: Install Vercel CLI
-        run: npm install --global vercel@latest
+      - name: Create deployment package
+        run: |
+          # Create .htaccess for SPA routing
+          echo "RewriteEngine On
+          RewriteCond %{REQUEST_FILENAME} !-f
+          RewriteCond %{REQUEST_FILENAME} !-d
+          RewriteRule ^(.*)$ /index.html [QSA,L]
+          
+          # Security headers
+          Header always set X-Frame-Options DENY
+          Header always set X-Content-Type-Options nosniff
+          Header always set Referrer-Policy strict-origin-when-cross-origin
+          
+          # Cache static assets
+          <filesMatch \".(css|jpg|jpeg|png|gif|js|ico|svg|woff|woff2|ttf|eot)$\">
+            ExpiresActive On
+            ExpiresDefault \"access plus 1 month\"
+            Header append Cache-Control \"public\"
+          </filesMatch>" > ./dist/.htaccess
 
-      - name: Deploy to Vercel Production
-        run: vercel --prod --token=${{ secrets.VERCEL_TOKEN }} --yes
-        env:
-          VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
-          VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+      - name: Clean frontend files only (preserve API)
+        uses: appleboy/ssh-action@v1.0.3
+        with:
+          host: ${{ secrets.PLESK_SFTP_HOST }}
+          username: ${{ secrets.PLESK_SFTP_USER }}
+          password: ${{ secrets.PLESK_SFTP_PASSWORD }}
+          port: 22
+          script: |
+            cd httpdocs
+            
+            # Remove only frontend files, preserve api folder
+            find . -maxdepth 1 -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.ico" -o -name "*.png" -o -name "*.jpg" -o -name "*.svg" \) -delete 2>/dev/null || true
+            find . -maxdepth 1 -type d -name "assets" -exec rm -rf {} + 2>/dev/null || true
+            find . -maxdepth 1 -type d -name "static" -exec rm -rf {} + 2>/dev/null || true
+            
+            echo "Frontend cleanup completed, API folder preserved"
+
+      - name: Deploy to production
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.PLESK_SFTP_USER }}
+          server: ${{ secrets.PLESK_SFTP_HOST }}
+          password: ${{ secrets.PLESK_SFTP_PASSWORD }}
+          port: 22
+          local_path: './dist/*'
+          remote_path: '/httpdocs'
+          sftpArgs: '-o ConnectTimeout=5'
+          sftp_only: true
+
+      - name: Upload deployment success file
+        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
+        with:
+          username: ${{ secrets.PLESK_SFTP_USER }}
+          server: ${{ secrets.PLESK_SFTP_HOST }}
+          password: ${{ secrets.PLESK_SFTP_PASSWORD }}
+          local_path: './deploy-success.json'
+          remote_path: '/httpdocs/deploy-success.json'
+          sftp_only: true
+
+      - name: Health Check
+        run: |
+          echo "Waiting for deployment to be ready..."
+          sleep 30
+          
+          # Check if site is responding
+          HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quick-retail.com)
+          
+          if [ $HTTP_STATUS -eq 200 ]; then
+            echo "Deployment successful - Site is responding with HTTP $HTTP_STATUS"
+            echo "React app is now live alongside the API at https://quick-retail.com"
+          else
+            echo "Deployment may have issues - Site responding with HTTP $HTTP_STATUS"
+            exit 1
+          fi
