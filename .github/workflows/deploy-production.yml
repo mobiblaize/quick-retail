@@ -76,7 +76,7 @@ jobs:
           password: ${{ secrets.PLESK_SFTP_PASSWORD }}
           port: 22
           local_path: './dist/'
-          remote_path: '/httpdocs/'
+          remote_path: './httpdocs/'
           sftpArgs: '-o ConnectTimeout=5'
           sftp_only: true
 
