@@ -9,12 +9,11 @@ import CreateDiscountModal from "../../../components/dashboard/pointOfSales/happ
 import { useFetchAllDiscount } from "../../../hooks/backendApis/pos/discount";
 import AnalysisOverview1 from "../../../components/dashboard/pointOfSales/happyTime/overView2";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
-    null
-  );
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);;
   const [dateRange] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
@@ -23,6 +22,7 @@ const HappyTimePage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -56,6 +56,7 @@ const HappyTimePage = () => {
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
+    sort_by: activeSort,
   };
   // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllDiscount(payload) || {};
@@ -129,6 +130,11 @@ const HappyTimePage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
    <AnalysisOverview1  stats={stats} />
       <DiscountTable
         rawDiscounts={rawDiscounts}
@@ -136,7 +142,22 @@ const HappyTimePage = () => {
         onFilterChange={handleFilterChange}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        onSearchChange={setSearchTerm}
+        filters={appliedFilters} 
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
+      
       />
       <CreateDiscountModal
         opened={isLogComplaintsOpen}

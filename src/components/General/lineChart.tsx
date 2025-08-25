@@ -6,67 +6,71 @@ import {
   CartesianGrid,
   Tooltip,
   Legend,
-  TooltipProps,
   Area,
   ComposedChart,
+  TooltipProps,
 } from "recharts";
-import { Text } from "@mantine/core";
+import { Text, Box, Stack, useMantineTheme } from "@mantine/core";
 
 const CustomTooltip = ({
   active,
   payload,
   label,
 }: TooltipProps<number, string>) => {
-  if (active && payload && payload.length) {
-    return (
-      <div className="bg-white p-2 shadow-md rounded-md border border-gray-200">
-        <Text size="sm" fw={600}>
-          {label}
-        </Text>
+  const theme = useMantineTheme();
+
+  if (!active || !payload || !payload.length) return null;
+
+  return (
+    <Box
+      p="sm"
+      style={{
+        backgroundColor: theme.white,
+        borderRadius: theme.radius.sm,
+        boxShadow: theme.shadows.sm,
+        border: `1px solid ${theme.colors.gray[3]}`,
+      }}
+    >
+      <Text size="sm" fw={600}>
+        {label} {/* Month */}
+      </Text>
+      <Stack gap="xs" mt="xs">
         {payload.map((entry, index) => (
-          <div
+          <Box
             key={`tooltip-item-${index}`}
-            className="flex items-center gap-2"
+            style={{ display: "flex", alignItems: "center", gap: theme.spacing.sm }}
           >
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: entry.color }}
+            <Box
+              style={{
+                width: 12,
+                height: 12,
+                borderRadius: "50%",
+                backgroundColor: entry.color,
+              }}
             />
-            <Text size="sm" c="dimmed">
-              {entry.name}:{" "}
-              <Text component="span" fw={600}>
-                {entry.value}
-              </Text>
+            <Text size="sm" color="dimmed">
+              {entry.name}: <Text component="span" fw={600}>{entry.value}</Text>
             </Text>
-          </div>
+          </Box>
         ))}
-      </div>
-    );
-  }
-  return null;
+      </Stack>
+    </Box>
+  );
 };
 
-interface LegendPayload {
-  value: string;
-  color: string;
-  type?: string;
-  id?: string;
-}
+const CustomLegend = ({ payload }: { payload?: { value: string; color: string }[] }) => {
+  const theme = useMantineTheme();
+  if (!payload) return null;
 
-const CustomLegend = ({ payload }: { payload?: LegendPayload[] }) => {
   return (
-    <div className="flex gap-4 justify-center mt-2">
-      {payload &&
-        payload.map((entry, index) => (
-          <div key={`legend-item-${index}`} className="flex items-center gap-2">
-            <div
-              className="w-3 h-3 rounded-full"
-              style={{ backgroundColor: entry.color }}
-            />
-            <Text size="sm">{entry.value}</Text>
-          </div>
-        ))}
-    </div>
+    <Box style={{ display: "flex", gap: theme.spacing.md, justifyContent: "center", mt: theme.spacing.sm }}>
+      {payload.map((entry, index) => (
+        <Box key={index} style={{ display: "flex", alignItems: "center", gap: theme.spacing.sm }}>
+          <Box style={{ width: 12, height: 12, borderRadius: "50%", backgroundColor: entry.color }} />
+          <Text size="sm">{entry.value}</Text>
+        </Box>
+      ))}
+    </Box>
   );
 };
 
@@ -84,11 +88,7 @@ interface HighlightedPoint {
 
 interface LineChartProps {
   data: DataPoint[];
-  lines: {
-    dataKey: string;
-    color: string;
-    name?: string;
-  }[];
+  lines: { dataKey: string; color: string; name?: string }[];
   height?: number;
   showGrid?: boolean;
   showTooltip?: boolean;
@@ -108,89 +108,71 @@ const LineChart: React.FC<LineChartProps> = ({
   showTooltip = true,
   showLegend = true,
   xAxisDataKey = "month",
-  yAxisFormatter = (value) => `${value}M`,
+  yAxisFormatter = (value) => `₦${value.toLocaleString()}`,
   tooltipFormatter,
   highlightedPoint,
   yAxisLabel,
 }) => {
+  const theme = useMantineTheme();
+
   return (
-    <div className="w-full" style={{ height: `${height}px` }}>
+    <Box style={{ width: "100%", height }}>
       <ResponsiveContainer width="100%" height="100%">
-        
-        <ComposedChart
-          data={data}
-          // margin={{ top: 10, right: 30, left: 10, bottom: 10 }}
-          margin={{ top: 10, right: 30, left: 60, bottom: 10 }} 
-        >
-          {showGrid && (
-            <CartesianGrid
-              strokeDasharray="3 3"
-              vertical={false}
-              stroke="#eee"
-            />
-          )}
-{/* @ts-ignore */}
+        <ComposedChart data={data} margin={{ top: 10, right: 30, left: 60, bottom: 10 }}>
+          {showGrid && <CartesianGrid strokeDasharray="3 3" vertical={false} stroke={theme.colors.gray[3]} />}
+
+          {/* X Axis - Months */}
           <XAxis
             dataKey={xAxisDataKey}
             axisLine={false}
             tickLine={false}
             tickMargin={10}
-            tick={{ fontSize: 12, fill: "#666" }}
+            tick={{
+              fontFamily: theme.fontFamily,
+              fontWeight: 500,
+              fontSize: 14,
+              fill: theme.colors.gray[7],
+            }}
           />
-{/* @ts-ignore */}
+
+          {/* Y Axis - Amounts */}
           <YAxis
             axisLine={false}
             tickLine={false}
             tickMargin={10}
-            tick={{ fontSize: 12, fill: "#666" }}
+            tick={{
+              fontFamily: theme.fontFamily,
+              fontWeight: 500,
+              fontSize: 14,
+              fill: theme.colors.gray[7],
+            }}
             tickFormatter={yAxisFormatter}
             label={{
-              value: yAxisLabel || '',
+              value: yAxisLabel || "",
               angle: -90,
-              position: 'insideLeft',
-              offset: -20, // Increase this value to add padding
-              style: { textAnchor: 'middle', fill: '#667085' },
+              position: "insideLeft",
+              offset: -20,
+              style: { textAnchor: "middle", fill: theme.colors.gray[6], fontFamily: theme.fontFamily, fontWeight: 600 },
             }}
-          /> 
+          />
 
-         
-
-          {showTooltip && (
-            <Tooltip content={<CustomTooltip />} formatter={tooltipFormatter} />
-          )}
-
+          {showTooltip && <Tooltip content={<CustomTooltip />} formatter={tooltipFormatter} />}
           {showLegend && <Legend content={<CustomLegend />} />}
 
-          {/* Define gradients for each line */}
+          {/* Gradients for areas */}
           <defs>
             {lines.map((line, index) => (
-              <linearGradient
-                key={`gradient-${index}`}
-                id={`color-${line.dataKey}`}
-                x1="0"
-                y1="0"
-                x2="0"
-                y2="1"
-              >
+              <linearGradient key={index} id={`color-${line.dataKey}`} x1="0" y1="0" x2="0" y2="1">
                 <stop offset="5%" stopColor={line.color} stopOpacity={0.5} />
                 <stop offset="95%" stopColor={line.color} stopOpacity={0.1} />
               </linearGradient>
             ))}
           </defs>
 
-          {/* Improved Area beneath lines with gradient */}
           {lines.map((line, index) => (
-            <Area
-              key={`area-${index}`}
-              type="monotone"
-              dataKey={line.dataKey}
-              fill={`url(#color-${line.dataKey})`}
-              stroke="none"
-              fillOpacity={1}
-            />
+            <Area key={`area-${index}`} type="monotone" dataKey={line.dataKey} fill={`url(#color-${line.dataKey})`} stroke="none" fillOpacity={1} />
           ))}
 
-          {/* Lines on top */}
           {lines.map((line, index) => (
             <Line
               key={`line-${index}`}
@@ -200,12 +182,7 @@ const LineChart: React.FC<LineChartProps> = ({
               strokeWidth={2}
               name={line.name || line.dataKey}
               dot={false}
-              activeDot={{
-                r: 6,
-                fill: line.color,
-                stroke: "#fff",
-                strokeWidth: 2,
-              }}
+              activeDot={{ r: 6, fill: line.color, stroke: theme.white, strokeWidth: 2 }}
             />
           ))}
 
@@ -213,11 +190,18 @@ const LineChart: React.FC<LineChartProps> = ({
             <Tooltip
               position={{ x: 0, y: 0 }}
               content={
-                <div className="bg-orange-500 text-white px-3 py-1 rounded-md shadow-md">
+                <Box
+                  style={{
+                    backgroundColor: theme.colors.orange[6],
+                    color: theme.white,
+                    padding: theme.spacing.xs,
+                    borderRadius: theme.radius.sm,
+                  }}
+                >
                   <Text fw={600} size="sm">
                     {highlightedPoint.label}
                   </Text>
-                </div>
+                </Box>
               }
               wrapperStyle={{
                 visibility: "visible",
@@ -226,19 +210,16 @@ const LineChart: React.FC<LineChartProps> = ({
                 transform: "translate(-50%, -100%)",
               }}
               coordinate={{
-                x:
-                  data.findIndex(
-                    (item) => item.month === highlightedPoint.month
-                  ) *
-                  (100 / data.length),
+                x: data.findIndex((item) => item.month === highlightedPoint.month) * (100 / data.length),
                 y: highlightedPoint.value,
               }}
             />
           )}
         </ComposedChart>
       </ResponsiveContainer>
-    </div>
+    </Box>
   );
 };
 
 export default LineChart;
+

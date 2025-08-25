@@ -1,21 +1,22 @@
-import { Button, Text } from "@mantine/core";
+import {  Loader , Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import CustomerTable from "../../../components/dashboard/pointOfSales/customer/customerTable";
 import CreateNewCustomer from "../../../components/dashboard/pointOfSales/customer/createNewCustomer";
 import { useState } from "react";
 import { useFetchAllCustomers } from "../../../hooks/backendApis/pos/customersManagement";
-import { Plus } from "lucide-react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 const CustomerPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
-  const [appliedFilters] = useState<FilterValues>(
-    {} as FilterValues
-  );
+ //@ts-ignore
+ const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   // const [sortBy, setSortBy] = useState<string>(""); 
-  const [searchTerm] = useState("");
+  ;const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
+
+
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     page: currentPage.toString(),
@@ -28,6 +29,7 @@ const CustomerPage = () => {
     page: currentPage,
     per_page: perPage, 
     search: searchTerm,
+    sort_by: activeSort,
   };
 // @ts-ignore
   const { data, isLoading, refetch } = useFetchAllCustomers(payload) || {};
@@ -51,35 +53,52 @@ const CustomerPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+
+
+
   const subHeaders = [
     <div key="1">
       <div className="flex items-center justify-between">
         <Text fw={500} size="xl" c="black">
           Customers
         </Text>
-        <Button
+        {/* <Button
           variant="filled-primary"
           onClick={() => setIsCreateCategoryOpen(true)}
         >
           New Customer
           <Plus size={24} />
-        </Button>
+        </Button> */}
       </div>
     </div>,
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <CustomerTable
         customers={customers}
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        // onSortChange={(sortKey) => {
-        //   const newFilters = { ...appliedFilters, sortBy: sortKey };
-        //   setAppliedFilters(newFilters);
-        //   setSortBy(sortKey); 
-        // }}
-        // activeSort={sortBy}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
         onRefetch={refetch}
         // onSearchChange={setSearchTerm}
       />

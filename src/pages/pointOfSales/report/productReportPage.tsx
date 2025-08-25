@@ -1,5 +1,5 @@
-import { Text } from "@mantine/core";
-import { ChevronLeft } from "lucide-react";
+import { Box, Button, Menu, Text } from "@mantine/core";
+import { ChevronDown, ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import ProductManagementReport from "../../../components/dashboard/pointOfSales/reportsPages/productManagementReport";
@@ -10,7 +10,7 @@ import { notifications } from "@mantine/notifications";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { formatDate } from "../../../utils/helpers";
-import Dropdown from "../../../components/General/dropdown";
+// import Dropdown from "../../../components/General/dropdown";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 import { useGenerateReport } from "../../../hooks/backendApis/pos/reports";
 
@@ -26,10 +26,10 @@ const ProductReportPage = () => {
     reportData,
   });
 
-  const exportOptions = [
-    { label: "CSV", value: "csv" },
-    { label: "PDF", value: "pdf" },
-  ];
+  // const exportOptions = [
+  //   { label: "CSV", value: "csv" },
+  //   { label: "PDF", value: "pdf" },
+  // ];
 
   const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
   const generateReport = useGenerateReport();
@@ -46,7 +46,7 @@ const ProductReportPage = () => {
     let allProducts: any[] = [];
     let page = 1;
     let lastPage = 1;
-  
+
     do {
       const payload = {
         start_date: startDate,
@@ -54,35 +54,36 @@ const ProductReportPage = () => {
         locationId,
         report_type: "products",
         paginate: true,
-        per_page: 50,
+        per_page: 10,
         page,
       };
-  
+
       const res: any = await generateReport.mutateAsync(payload);
       const productData = res?.data?.data?.products;
       if (!productData?.data) break;
-  
+
       allProducts = [...allProducts, ...productData.data];
       lastPage = productData.last_page || 1;
       page++;
     } while (page <= lastPage);
-  
+
     return allProducts;
   };
-  
+
 
   const exportFullPDF = async () => {
     const allProducts = await fetchAllProductPages();
-
+  
     const doc = new jsPDF();
     const orangeHeaderStyle = {
       fillColor: [241, 103, 34] as [number, number, number],
       textColor: [255, 255, 255] as [number, number, number],
     };
-
+  
     doc.text("Product Report", 14, 10);
     doc.text(`Date: ${formatDate(startDate)} - ${formatDate(endDate)}`, 14, 18);
-
+  
+    // --- Stats Table ---
     autoTable(doc, {
       startY: 25,
       head: [["Metric", "Value"]],
@@ -94,9 +95,10 @@ const ProductReportPage = () => {
       theme: "grid",
       headStyles: orangeHeaderStyle,
     });
-
+  
+    // --- Category Sales ---
     autoTable(doc, {
-      startY: 25,
+      startY: (doc as any).lastAutoTable.finalY + 10,
       head: [["Category Name", "Total Quantity Sold", "Total Revenue"]],
       body: (reportData?.data?.customer_sales || []).map((c: any) => [
         c.category_name,
@@ -106,10 +108,10 @@ const ProductReportPage = () => {
       theme: "grid",
       headStyles: orangeHeaderStyle,
     });
-
+  
+    // --- Product Sales ---
     autoTable(doc, {
-            //@ts-ignore
-      startY: doc.lastAutoTable.finalY + 10,
+      startY: (doc as any).lastAutoTable.finalY + 10,
       head: [["Product Name", "Total Sold", "Price"]],
       body: (reportData?.data?.product_sales || []).map((p: any) => [
         p.product_name,
@@ -119,10 +121,10 @@ const ProductReportPage = () => {
       theme: "grid",
       headStyles: orangeHeaderStyle,
     });
-
+  
+    // --- All Products ---
     autoTable(doc, {
-            //@ts-ignore
-      startY: doc.lastAutoTable.finalY + 10,
+      startY: (doc as any).lastAutoTable.finalY + 10,
       head: [
         [
           "Product Name",
@@ -146,15 +148,17 @@ const ProductReportPage = () => {
       theme: "grid",
       headStyles: orangeHeaderStyle,
     });
-
+  
+    // ✅ This will now download correctly
     doc.save("full-product-report.pdf");
-
+  
     notifications.show({
       title: "Download Successful",
       message: "Full product report PDF exported successfully!",
       color: "green",
     });
   };
+  
 
   const exportFullCSV = async () => {
     const allProducts = await fetchAllProductPages();
@@ -245,25 +249,60 @@ const ProductReportPage = () => {
       <div key="1" className="py-2.5 flex flex-wrap justify-between items-center gap-3">
         <div className="flex gap-[3em] items-center">{backButton}</div>
         <div className="flex items-center gap-3 pr-[3em]">
-          <Dropdown
-            //@ts-ignore
-            options={exportOptions}
-            //@ts-ignore
-            onChange={(val) => handleExport(val)}
-            placeholder="Export"
-            inputSizeClass="py-1"
-            bgColorClass="bg-[#F16722]"
-            textColorClass="text-white"
-          />
+          <div className="flex items-center gap-3">
+          <Menu>
+            <Menu.Target>
+              <Button variant="filled-primary">
+                Export
+                <ChevronDown className="ml-2" />
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "6px 0",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("csv")}
+              >
+                Export CSV
+              </Menu.Item>
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("pdf")}
+              >
+                Export PDF
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
+        </div>
         </div>
       </div>,
       <div key="2" className="flex justify-between">
         <Text fw={500} size="xl" c="black">
           Product Report
         </Text>
-        <div className="border border-[#E0E0E0] rounded-lg px-[3em] py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
-          {formatDate(startDate)} – {formatDate(endDate)}
-        </div>
+        <Box
+          style={{
+            border: "1px solid #E0E0E0",
+            borderRadius: "8px",
+            padding: "8px 16px",
+            display: "flex",
+            alignItems: "center",
+            fontSize: "0.875rem",
+            color: "#344054",
+            minWidth: 230,
+          }}
+        >
+          <Text fw={500} size="sm" c="black">
+            {formatDate(startDate)} – {formatDate(endDate)}
+          </Text>
+        </Box>
       </div>,
     ];
   };

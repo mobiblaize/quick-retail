@@ -25,7 +25,7 @@ export interface FilterValues {
    [key: string]: string | undefined; 
 }
 
-interface ReusableFilterComponentProps {
+export interface ReusableFilterComponentProps {
   onFilterChange: (filters: FilterValues) => void;
   locations?: string[];
   categories?: string[];
@@ -320,24 +320,32 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
 
       {/* Order Status */}
       {showOrderStatus && (
-        <div className="mb-4">
-          <label className="block text-sm font-medium mb-1">Order Status</label>
-          <div className="flex justify-around  gap-x-2 gap-y-2">
-            {['All', 'Available', 'Low stock', 'Sold out'].map((status) => (
-              <label key={status} className="flex items-center gap-1 text-sm">
-                <input
-                  type="radio"
-                  name="orderStatus"
-                  value={status}
-                  checked={filters.orderStatus === status}
-                  onChange={() => setFilters({ ...filters, orderStatus: status })}
-                />
-                {status}
-              </label>
-            ))}
-          </div>
-        </div>
-      )}
+  <div className="mb-4">
+    <label className="block text-sm font-medium mb-1">Order Status</label>
+    <div className="flex justify-around gap-x-2 gap-y-2">
+      {[
+        { value: "All", label: "All" },
+        { value: "available", label: "Available" },
+        { value: "low_stock", label: "Low Stock" },
+        { value: "sold_out", label: "Sold Out" },
+      ].map((status) => (
+        <label key={status.value} className="flex items-center gap-1 text-sm">
+          <input
+            type="radio"
+            name="orderStatus"
+            value={status.value}
+            checked={filters.orderStatus === status.value}
+            onChange={() =>
+              setFilters({ ...filters, orderStatus: status.value })
+            }
+          />
+          {status.label}
+        </label>
+      ))}
+    </div>
+  </div>
+)}
+
 
       {showProductStatus && (
         <div className="mb-4">
@@ -431,24 +439,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
         </button>
         <button
           onClick={() => onFilterChange(filters)}
-          // // onClick={() => {
-          // //   console.log("Submitting filters:", filters);
-          // //   onFilterChange(filters);
-          // // }}
-          // // onClick={() => {
-          // //   const hasFilters = Object.entries(filters).some(
-          // //     ([key, val]) =>
-          // //       val && val !== '' && val !== 'All' && val !== 'all'
-          // //   );
-          
-          // //   if (hasFilters) {
-          // //     setFiltersApplied?.(true); // ✅ Notifies parent to show "Reset Filter"
-          // //   }
-          
-          // //   setAppliedFilters?.(filters); // Optional if you're tracking filters
-          // //   onFilterChange(filters);      // Pass current filters to parent
-          // // }}
-          // onClick={handleApplyFilters}
+       
           className="bg-orange-500 text-white py-1 px-4 text-sm hover:bg-orange-600 rounded-lg  w-full"
         >
           Filter

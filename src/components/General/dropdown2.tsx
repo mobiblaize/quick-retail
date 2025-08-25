@@ -60,9 +60,15 @@ const Dropdown2 = ({
       <button
         type="button"
         onClick={() => setOpen(!open)}
-        className={`w-full text-left px-4 py-2 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 font-sans text-sm ${textColorClass || "text-black"}`}
+        className={`items-center flex justify-between w-full text-left px-4 py-2 bg-white border border-gray-300 rounded-md text-sm ${textColorClass || "text-black"}`}
       >
-        {selectedOption ? selectedOption.label : <span className="text-gray-400">{placeholder}</span>}
+        {selectedOption ? (
+          <Text>{selectedOption.label}</Text>
+        ) : (
+          <Text size="sm">
+            {placeholder}
+          </Text>
+        )}
         <span className="float-right">▾</span>
       </button>
 

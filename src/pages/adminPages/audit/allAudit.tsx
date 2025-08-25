@@ -19,6 +19,14 @@ const AuditTrailPage = () => {
 const [, setFilters] = useState<FilterValues | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
+  const handlePageChange = (newPage: number) => {
+    console.log("Page changed to:", newPage);
+    // setPage(newPage);
+
+    // 👇 trigger your API fetch here with newPage
+    // fetchData({ page: newPage });
+  };
+
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
 
@@ -152,7 +160,7 @@ const exportOptions = [
         error={error}
         logs={data?.data?.data || []} 
         onFilterChange={handleFilterChange}
-   
+         onPageChange={handlePageChange} 
       />
     </PageContainer>
   );

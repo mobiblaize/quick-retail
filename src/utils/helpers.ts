@@ -36,6 +36,13 @@ export const formatDate = (dateString: string) => {
   export function truncateText(text: string, length = 10) {
     return text.length > length ? text.slice(0, length) + "..." : text;
   }
+
+  export function truncateText2(text: any, length: number) {
+    if (!text) return ""; // handle null/undefined safely
+    const str = String(text);
+    return str.length > length ? str.slice(0, length) + "..." : str;
+  }
+  
   
   export const fileToBase64 = (file: File): Promise<string> => {
     return new Promise((resolve, reject) => {

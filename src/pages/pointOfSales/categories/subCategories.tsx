@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Text, Loader  } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import SubCategoryTable from "../../../components/dashboard/pointOfSales/categories/subCategoryTable";
 import { useLocation, useNavigate } from "react-router";
@@ -34,6 +34,11 @@ const SubCategories = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <SubCategoryTable subCategories={subCategories} category={category} isLoading={isLoading}  onDeleteSuccess={handleDeleteSuccess}  />
     </PageContainer>
   );

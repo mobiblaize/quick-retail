@@ -222,14 +222,12 @@
 
 
 
-
-// UserManagementTable.tsx
 import { useEffect, useState } from "react"
 import { Text, Badge } from "@mantine/core"
 import { Link } from "react-router"
 import { ROUTES } from "../../../../constants/routes"
 import GenericTable, { PaginationData } from "../../../General/genericTable"
-import UserFilters, { UserFilterValues } from "./UserFilters"
+import UserFilters  from "./UserFilters"
 import { useFetchUsers } from "../../../../hooks/backendApis/admin/userManagement"
 import * as dayjs from "dayjs"
 
@@ -257,7 +255,8 @@ export default function UserManagementTable() {
   const [currentPage, setCurrentPage] = useState(1)
   const [queryParams, setQueryParams] = useState({ page: currentPage })
   const { data, isLoading, isError } = useFetchUsers(queryParams)
-  const [appliedFilters, setAppliedFilters] = useState<UserFilterValues>({
+  // const [appliedFilters, setAppliedFilters] = useState<UserFilterValues>({
+  const [appliedFilters, setAppliedFilters] = useState<any>({
     searchTerm: "",
     sortBy: "All",
     status: "All",
@@ -270,21 +269,21 @@ export default function UserManagementTable() {
         last_page: data.data.users.last_page,
         per_page: data.data.users.per_page,
         total: data.data.users.total,
-        from: data.data.users.from,
-        to: data.data.users.to,
-        next_page_url: data.data.users.next_page_url,
-        prev_page_url: data.data.users.prev_page_url,
+        // from: data.data.users.from,
+        // to: data.data.users.to,
+        // next_page_url: data.data.users.next_page_url,
+        // prev_page_url: data.data.users.prev_page_url,
       }
     : undefined
 
   // filters
-  const handleFilterChange = (filters: UserFilterValues) => {
+  const handleFilterChange = (filters: any) => {
     setAppliedFilters(filters)
     setQueryParams({
       page: 1,
-      search: filters.searchTerm,
-      sort: filters.sortBy !== "All" ? filters.sortBy : undefined,
-      status: filters.status !== "All" ? filters.status : undefined,
+      // search: filters.searchTerm,
+      // sort: filters.sortBy !== "All" ? filters.sortBy : undefined,
+      // status: filters.status !== "All" ? filters.status : undefined,
     })
   }
 
