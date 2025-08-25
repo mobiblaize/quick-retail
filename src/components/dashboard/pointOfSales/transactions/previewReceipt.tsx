@@ -9,7 +9,7 @@ const PreviewTransaction = () => {
   const { data: orderData, isLoading, isError } = useFetchSingleSale(initialOrderId);
 
   if (isLoading) return <p className="text-center py-8">Loading order details...</p>;
-  if (isError || !orderData?.data) return <p className="text-center py-8">No order data available</p>;
+  if (isError || !orderData?.data) return <p className="text-center py-8"></p>;
 
   const actualOrder = orderData.data;
 

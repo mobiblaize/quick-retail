@@ -1,5 +1,5 @@
-import { Text } from "@mantine/core";
-import { ChevronLeft } from "lucide-react";
+import { Box, Text, Menu, Button } from "@mantine/core";
+import { ChevronLeft, ChevronDown } from "lucide-react";
 import { useNavigate, useLocation } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import SalesProcessingReport from "../../../components/dashboard/pointOfSales/reportsPages/salesProcessingReport";
@@ -10,10 +10,8 @@ import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { notifications } from "@mantine/notifications";
 import { formatDate } from "../../../utils/helpers";
-import Dropdown from "../../../components/General/dropdown";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 import { useGenerateReport } from "../../../hooks/backendApis/pos/reports";
-
 
 const SalesProcessingReportPage = () => {
   const navigate = useNavigate();
@@ -27,10 +25,7 @@ const SalesProcessingReportPage = () => {
     reportData,
   });
 
-  const exportOptions = [
-    { label: "CSV", value: "csv" },
-    { label: "PDF", value: "pdf" },
-  ];
+  // const exportOptions = ["csv", "pdf"] as const;
 
   const { data: storeData, isLoading: isLoadingStores } = useFetchStore();
   const generateReport = useGenerateReport();
@@ -41,7 +36,6 @@ const SalesProcessingReportPage = () => {
   const handleBack = () => {
     navigate(-1);
   };
-
 
   const fetchAllSalesPages = async () => {
     let allSales: any[] = [];
@@ -55,7 +49,7 @@ const SalesProcessingReportPage = () => {
         locationId,
         report_type: "sales",
         paginate: true,
-        per_page: 50, 
+        per_page: 10,
         page,
       };
 
@@ -79,11 +73,9 @@ const SalesProcessingReportPage = () => {
       textColor: [255, 255, 255] as [number, number, number],
     };
 
-    // Title
     doc.text("Sales Report", 14, 10);
     doc.text(`Date: ${formatDate(startDate)} - ${formatDate(endDate)}`, 14, 18);
 
-    // Summary stats
     autoTable(doc, {
       startY: 25,
       head: [["Metric", "Value"]],
@@ -96,7 +88,6 @@ const SalesProcessingReportPage = () => {
       headStyles: orangeHeaderStyle,
     });
 
-    // Customer sales
     autoTable(doc, {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
@@ -110,7 +101,6 @@ const SalesProcessingReportPage = () => {
       headStyles: orangeHeaderStyle,
     });
 
-    // Product sales
     autoTable(doc, {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
@@ -124,17 +114,23 @@ const SalesProcessingReportPage = () => {
       headStyles: orangeHeaderStyle,
     });
 
-    // Full sales table (all pages)
     autoTable(doc, {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [["Order ID", "Date", "Customer", "Amount", "Status"]],
+      // body: allSales.map((s: any) => [
+      //   s["Order ID"],
+      //   s["Date"],
+      //   s["Customer Name"],
+      //   s["Total Amount"],
+      //   s["Status"],
+      // ]),
       body: allSales.map((s: any) => [
-        s["Order ID"],
-        s["Date"],
-        s["Customer Name"],
-        s["Total Amount"],
-        s["Status"],
+        s.order_id,   // instead of s["Order ID"]
+        s.date,
+        s.customer_name,
+        s.total_amount,
+        s.status,
       ]),
       theme: "grid",
       headStyles: orangeHeaderStyle,
@@ -232,36 +228,70 @@ const SalesProcessingReportPage = () => {
         key="1"
         className="py-2.5 flex justify-between items-center flex-wrap gap-3"
       >
-        <div className="flex gap-8 items-center">
-          {backButton}
-        </div>
+        <div className="flex gap-8 items-center">{backButton}</div>
+
+        {/* Updated Export Button as Mantine Menu */}
         <div className="flex items-center gap-3">
-          <Dropdown
-            //@ts-ignore
-            options={exportOptions}
-            //@ts-ignore
-            onChange={(val) => handleExport(val)}
-            placeholder="Export"
-            inputSizeClass="py-1"
-            bgColorClass="bg-[#F16722]"
-            textColorClass="text-white"
-          />
+          <Menu>
+            <Menu.Target>
+              <Button variant="filled-primary">
+                Export
+                <ChevronDown className="ml-2" />
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "6px 0",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("csv")}
+              >
+                Export CSV
+              </Menu.Item>
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("pdf")}
+              >
+                Export PDF
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </div>
       </div>,
+
       <div key="2" className="flex justify-between">
         <Text fw={500} size="xl" c="black">
           Sales Report
         </Text>
-        <div className="border border-[#E0E0E0] rounded-lg px-4 py-2 flex items-center text-sm text-[#344054] min-w-[230px]">
-          {formatDate(startDate)} – {formatDate(endDate)}
-        </div>
+        <Box
+          style={{
+            border: "1px solid #E0E0E0",
+            borderRadius: "8px",
+            padding: "8px 16px",
+            display: "flex",
+            alignItems: "center",
+            fontSize: "0.875rem",
+            color: "#344054",
+            minWidth: 230,
+          }}
+        >
+          <Text fw={500} size="sm" c="black">
+            {formatDate(startDate)} – {formatDate(endDate)}
+          </Text>
+        </Box>
       </div>,
     ];
   };
 
   return (
     <PageContainer subHeaders={getSubHeaders()}>
-      <div className=" rounded-lg px-4 py-2 mb-2">
+      <div className="rounded-lg px-4 py-2 mb-2">
         {isLoadingStores ? (
           <Text>Loading store info...</Text>
         ) : (

@@ -7,17 +7,19 @@ import CreateNewCategory from "../../../components/dashboard/pointOfSales/catego
 import CreateSubCategory from "../../../components/dashboard/pointOfSales/categories/modals/createSubCategory";
 import { useFetchAllCategories } from "../../../hooks/backendApis/pos/categories";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const CategoriesPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
   const [isCreateSubCategoryOpen, setIsSubCreateCategoryOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10); 
-  const [sortBy, setSortBy] = useState<string>(""); 
+  const [, setSortBy] = useState<string>(""); 
   const [searchTerm, setSearchTerm] = useState("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
   );
+  const [activeSort, setActiveSort] = useState("");
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
     page: currentPage.toString(),
@@ -30,6 +32,7 @@ const CategoriesPage = () => {
     page: currentPage,
     per_page: perPage, 
     search: searchTerm,
+    sort_by: activeSort,
   };
   // @ts-ignore
   const { data, isLoading, refetch } = useFetchAllCategories(payload) || {};
@@ -110,6 +113,11 @@ const handlePageChange = (page: number) => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+      {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <CategoriesTable
         categories={categories}
         isLoading={isLoading}
@@ -121,8 +129,20 @@ const handlePageChange = (page: number) => {
         }}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        activeSort={sortBy} 
-        onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
       />
       <CreateNewCategory
         opened={isCreateCategoryOpen}

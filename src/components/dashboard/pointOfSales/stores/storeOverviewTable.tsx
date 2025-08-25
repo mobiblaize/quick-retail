@@ -288,7 +288,7 @@ type StoreOverviewTableProps = {
   stores?: StoreData[];
   loading?: boolean;
   refetchStores?: () => void;
-  onSortChange: (sortKey: string) => void;
+  // onSortChange: (sortKey: string) => void;
   paginationData?: {
     current_page: number;
     last_page: number;
@@ -297,6 +297,9 @@ type StoreOverviewTableProps = {
   onPageChange: (page: number) => void;
   activeSort?: string;
   onSearchChange?: (search: string) => void;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  setSort?: (sortBy: string) => void;
 };
 
 const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
@@ -305,6 +308,10 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
   refetchStores,
   paginationData,
   onPageChange,
+  searchTerm,
+  setSearchTerm,
+  activeSort,
+  setSort,
 }) => {
   const [modalOpen, setModalOpen] = useState(false);
   const [selectedStore, setSelectedStore] = useState<StoreData | null>(null);
@@ -469,11 +476,20 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
     <div>
       <main className="w-full h-auto py-6">
         <GenericTable
+             enableSearch ={true}
+             enableSort={true}
           columns={columns}
           data={tableData}
           isLoading={loading}
           paginationData={paginationData}
           onPageChange={onPageChange}
+          searchTerm={searchTerm}
+        setSearchTerm={setSearchTerm}
+        activeSort={activeSort}
+        onSortChange={setSort}
+        showFilter={true}
+        tableType="product"
+        searchPlaceholder="search stores"
           titleSection={
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">

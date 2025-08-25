@@ -30,7 +30,7 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 
   const cards = [
     {
-      title: "TOTAL PODUCT VALUE ",
+      title: "TOTAL PRODUCT VALUE ",
       value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",

@@ -8,11 +8,10 @@ import { useFetchAllreturns } from "../../../hooks/backendApis/pos/returns";
 import { ROUTES } from "../../../constants/routes";
 import { useNavigate } from "react-router";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const ReturnsPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
-    null
-  );
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [dateRange, setDateRange] = useState<{
     startDate: string;
     endDate: string;
@@ -23,6 +22,7 @@ const ReturnsPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -69,6 +69,7 @@ const ReturnsPage = () => {
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
+     sort_by: activeSort,
   };
 
   const { data = {}, isLoading = false } = useFetchAllreturns(payload) || {};
@@ -88,6 +89,9 @@ const ReturnsPage = () => {
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
+ 
+
 
   const paginationData = data?.data?.returns
   ? {
@@ -123,6 +127,11 @@ const ReturnsPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <ReturnsAnalytics
         data={{
           totalReturns: data?.data?.totalReturns ?? 0,
@@ -140,6 +149,21 @@ const ReturnsPage = () => {
         paginationData={paginationData}
         onPageChange={handlePageChange}
         onSearchChange={setSearchTerm}
+        searchTerm={searchTerm} 
+        filters={appliedFilters}  
+        setSearchTerm={(val: string) => {
+          setSearchTerm(prev => {
+            if (prev !== val) {
+              setCurrentPage(1); 
+            }
+            return val;
+          });
+        }}
+        activeSort={activeSort}      
+        setSort={(sortBy) => {
+          setActiveSort(sortBy);
+          setCurrentPage(1);          
+        }}
       />
     </PageContainer>
   );

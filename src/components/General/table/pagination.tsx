@@ -32,12 +32,14 @@ const Pagination = ({
   };
 
   const handleNextPage = () => {
+    console.log(serverSidePagination);
     if (serverSidePagination && onNextPage) {
       onNextPage();
     } else {
       table.nextPage();
     }
   };
+  // console.log(nextDisabled)
 
   const prevDisabled = serverSidePagination
     ? !canPreviousPage
@@ -82,10 +84,12 @@ const Pagination = ({
       </button>
 
       {/* Page Numbers Container */}
-      <div style={{
-        display: "flex",
-        gap: "0px", // No gap between page buttons
-      }}>
+      <div
+        style={{
+          display: "flex",
+          gap: "0px", // No gap between page buttons
+        }}
+      >
         {buttons.map((button, index) => {
           // Clone the button element and apply consistent styling
           return (
@@ -113,6 +117,7 @@ const Pagination = ({
       <button
         onClick={handleNextPage}
         disabled={nextDisabled}
+
         style={{
           backgroundColor: "#ffffff",
           // border: "1px solid #D1D5DB",

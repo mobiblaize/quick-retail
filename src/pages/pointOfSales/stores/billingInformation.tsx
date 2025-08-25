@@ -1,4 +1,4 @@
-import {  Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useLocation, useNavigate } from "react-router";
 import OrderInformation from "../../../components/dashboard/pointOfSales/stores/orderInformation";
@@ -14,9 +14,12 @@ const BillingInformation = () => {
   const subHeaders = [
     <div key="1" className="py-2.5">
       <div className="flex gap-8 items-center">
-        <button onClick={() => navigate(-1)} className="cursor-pointer">
+        <Button
+          variant="subtle"
+          onClick={() => navigate(-1)}
+        >
           Back
-        </button>
+        </Button>
         {/* <div className="md:flex hidden items-center">
           <Text>Categories</Text>
           <span className="mx-2">/</span>
