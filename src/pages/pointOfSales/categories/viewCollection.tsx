@@ -1,4 +1,4 @@
-import { Button, Text } from "@mantine/core";
+import { Button, Text,  Loader  } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useState } from "react";
 import { useLocation, useNavigate } from "react-router";
@@ -14,7 +14,7 @@ const ViewCollection = () => {
 
   const initialSubCategory = state?.subCategory;
   const [subCategory, setSubCategory] = useState(initialSubCategory); 
-
+  const [isLoading,] = useState(); 
   const subHeaders = [
     <div key="1" className="py-2.5">
       <div className="flex gap-8 items-center">
@@ -43,6 +43,11 @@ const ViewCollection = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+      {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <CategoryProductDetails category={category} subCategory={subCategory} />
 
       <CategoriesProductTable subCategoryId={subCategory?.id} />

@@ -5,6 +5,7 @@ import { ChevronLeft } from "lucide-react";
 import ViewOrderReceipt from "../../../components/dashboard/pointOfSales/salesProcessing/viewOrderReceipt";
 import { ROUTES } from "../../../constants/routes";
 import { useFetchSingleSale } from "../../../hooks/backendApis/pos/salesProcessing";
+import { Loader } from "@mantine/core";
 
 const ViewOrderPage = () => {
   const navigate = useNavigate();
@@ -68,6 +69,11 @@ const ViewOrderPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <ViewOrderReceipt />
     </PageContainer>
   );

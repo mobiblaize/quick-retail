@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text, Loader, Avatar, Group } from "@mantine/core";
+import { Text, Avatar, Group } from "@mantine/core";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
@@ -15,15 +15,19 @@ const InventoryTable = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   //@ts-ignore
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
   const normalizeFilters = (filters: FilterValues) => {
     return {
       ...(filters.startDate ? { start_date: filters.startDate } : {}),
       ...(filters.endDate ? { end_date: filters.endDate } : {}),
-      ...(filters.priceFrom ? { price_from: filters.priceFrom } : {}),
-      ...(filters.priceTo ? { price_to: filters.priceTo } : {}),
+      ...(filters.stockFrom !== undefined && filters.stockFrom !== ""
+      ? { stock_from: String(filters.stockFrom) }
+      : {}),
+    ...(filters.stockTo !== undefined && filters.stockTo !== ""
+      ? { stock_to: String(filters.stockTo) }
+      : {}),
       ...(filters.orderStatus ? { order_status: filters.orderStatus } : {}),
       ...(filters.location ? { location_name: filters.location } : {}),
       // keep only the required keys, ignore duplicates
@@ -200,11 +204,7 @@ const InventoryTable = () => {
 
   return (
     <main className="relative w-full h-auto">
-      {isLoading && (
-        <div className="absolute inset-0 bg-white bg-opacity-60 flex items-center justify-center z-50">
-          <Loader color="orange" size="lg" />
-        </div>
-      )}
+     
 
       {/* Add a search input to use setSearchTerm */}
       {/* <div className="mb-4">
@@ -228,6 +228,7 @@ const InventoryTable = () => {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         onSortChange={setActiveSort}
+        filters={appliedFilters}  
         enableSearch={true}
         enableSort={true}
         showFilter={true}

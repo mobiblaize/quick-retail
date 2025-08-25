@@ -12,8 +12,7 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 
 
 const AdminDashboardPage = () => {
-
-  const [appliedFilters] = useState<FilterValues | null>(null);
+  const [appliedFilters,] = useState<FilterValues>({} as FilterValues);
   const [dateRange, ] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
@@ -87,8 +86,8 @@ const payload = shouldFetch
       <SalesOverview />
       <CustomerAnalysis />
       <DivisionSalesOverview />
-      <CustomerOrdersTable salesData={salesData} isLoading={false}  paginationData={data?.data?.sales}
-        onPageChange={handlePageChange}/>
+      <CustomerOrdersTable salesData={salesData} isLoading={false} paginationData={data?.data?.sales}
+      onPageChange={handlePageChange}         filters={appliedFilters}  />
     </PageContainer>
   );
 };

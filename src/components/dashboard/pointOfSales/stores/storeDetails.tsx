@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import { useToggleStore } from "../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
+import ConfirmStoreModal from "./modals/activateStore";
 
 interface StoreDetailsProps {
   store: {
@@ -17,17 +18,47 @@ interface StoreDetailsProps {
     address: string;
     is_active: number;
     staff_no: number;
-    registered_customers:number;
+    registered_customers: number;
   };
 }
 
 const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
   const [isEnabled, setIsEnabled] = useState(false);
+  const [modalOpen, setModalOpen] = useState(false);
+  const [actionType, setActionType] = useState<"activate" | "deactivate">(
+    "activate"
+  );
+
   useEffect(() => {
     if (store && typeof store.is_active !== "undefined") {
       setIsEnabled(store.is_active === 1);
     }
   }, [store?.is_active]);
+
+  const handleConfirm = () => {
+    toggleMutation.mutate(undefined, {
+      onSuccess: () => {
+        const newStatus = actionType === "activate" ? 1 : 0;
+        setIsEnabled(newStatus === 1);
+
+        notifications.show({
+          title: "Store status updated",
+          message: `Store ${newStatus === 1 ? "Activated" : "Deactivated"}.`,
+          color: newStatus === 1 ? "green" : "red",
+        });
+
+        setModalOpen(false);
+      },
+      onError: () => {
+        notifications.show({
+          title: "Error",
+          message: "Failed to update store status.",
+          color: "red",
+        });
+        setModalOpen(false);
+      },
+    });
+  };
 
   if (!store) {
     return <div>Loading store data...</div>;
@@ -52,7 +83,7 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
           <div className="flex flex-col">
             <Text fw={"500"}>Registered Customers</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-            {store.registered_customers}
+              {store.registered_customers}
             </Text>
           </div>
           {/* <div className="flex flex-col">
@@ -103,27 +134,8 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
               <Switch
                 checked={isEnabled}
                 onChange={() => {
-                  toggleMutation.mutate(undefined, {
-                    onSuccess: () => {
-                      const newStatus = isEnabled ? 0 : 1;
-                      setIsEnabled(!isEnabled);
-
-                      notifications.show({
-                        title: "Store status updated",
-                        message: `Store ${
-                          newStatus === 1 ? "Activated" : "Deactivated"
-                        }.`,
-                        color: newStatus === 1 ? "green" : "red",
-                      });
-                    },
-                    onError: () => {
-                      notifications.show({
-                        title: "Error",
-                        message: "Failed to update store status.",
-                        color: "red",
-                      });
-                    },
-                  });
+                  setActionType(isEnabled ? "deactivate" : "activate");
+                  setModalOpen(true); // open confirmation modal
                 }}
                 className={`${
                   isEnabled ? "text-orange-600" : "text-gray-300"
@@ -136,6 +148,12 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
 
         <div className="grid grid-cols-1 md:grid-cols-4 gap-x-8 mt-6 max-w-6xl"></div>
       </section>
+      <ConfirmStoreModal
+        opened={modalOpen}
+        onClose={() => setModalOpen(false)}
+        action={actionType}
+        onConfirm={handleConfirm}
+      />
     </main>
   );
 };
