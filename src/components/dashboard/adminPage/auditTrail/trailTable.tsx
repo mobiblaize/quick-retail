@@ -219,7 +219,7 @@ import { Text, Badge } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
-import UserFilters, { UserFilterValues } from "../userManagement/UserFilters";
+import UserFilters from "../userManagement/UserFilters";
 
 interface TrailTableProps {
   logs: any[];
@@ -227,13 +227,12 @@ interface TrailTableProps {
   error: any;
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
-  onFilterChange?: (filters: UserFilterValues) => void;
+  onFilterChange?: (filters: UserFilters) => void;
 }
 
 export default function TrailTable({
   logs,
   isLoading,
-  error,
   paginationData,
   onPageChange,
   onFilterChange,
@@ -273,7 +272,7 @@ export default function TrailTable({
           ? `${causer.firstname} ${causer.lastname}`
           : "N/A";
         const email = causer?.email || "N/A";
-
+zz
         return (
           <div>
             <Text size="sm" fw={500}>
