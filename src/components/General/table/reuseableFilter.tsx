@@ -808,19 +808,31 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           <Text fz="sm" fw={500}>
             Order Status
           </Text>
+
           <Radio.Group
             name="orderStatus"
             value={filters.orderStatus}
             onChange={(val) => setFilters({ ...filters, orderStatus: val })}
           >
             <Group justify="space-around" gap="xs" wrap="wrap">
-              {["All", "Available", "Low stock", "Sold out"].map((status) => (
-                <Radio key={status} value={status} label={status} size="sm" />
+              {[
+                { value: "All", label: "All" },
+                { value: "available", label: "Available" },
+                { value: "low_stock", label: "Low Stock" },
+                { value: "sold_out", label: "Sold Out" },
+              ].map((status) => (
+                <Radio
+                  key={status.value}
+                  value={status.value}
+                  label={status.label}
+                  size="sm"
+                />
               ))}
             </Group>
           </Radio.Group>
         </Stack>
       )}
+
 
       {/* ✅ Payment Status */}
       {showPaymentStatus && (

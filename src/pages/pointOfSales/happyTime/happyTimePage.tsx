@@ -9,12 +9,11 @@ import CreateDiscountModal from "../../../components/dashboard/pointOfSales/happ
 import { useFetchAllDiscount } from "../../../hooks/backendApis/pos/discount";
 import AnalysisOverview1 from "../../../components/dashboard/pointOfSales/happyTime/overView2";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
-    null
-  );
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);;
   const [dateRange] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
@@ -131,6 +130,11 @@ const HappyTimePage = () => {
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
    <AnalysisOverview1  stats={stats} />
       <DiscountTable
         rawDiscounts={rawDiscounts}
@@ -138,7 +142,7 @@ const HappyTimePage = () => {
         onFilterChange={handleFilterChange}
         paginationData={paginationData}
         onPageChange={handlePageChange}
-        // onSearchChange={setSearchTerm}
+        filters={appliedFilters} 
         searchTerm={searchTerm} 
         setSearchTerm={(val: string) => {
           setSearchTerm(prev => {

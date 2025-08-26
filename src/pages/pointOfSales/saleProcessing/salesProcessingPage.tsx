@@ -8,12 +8,14 @@ import { ROUTES } from "../../../constants/routes";
 import SalesOverview from "../../../components/dashboard/pointOfSales/salesProcessing/salesOverview";
 import { useFetchAllSales } from "../../../hooks/backendApis/pos/salesProcessing";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
-
+import { Loader } from "@mantine/core";
 
 
 
 const SalesProcessingPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+  // const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+
   const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
     startDate: "",
     endDate: "",
@@ -124,6 +126,11 @@ const payload = {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <SalesOverview
         data={data?.data}
         isLoading={isLoading}
@@ -137,6 +144,7 @@ const payload = {
         onPageChange={handlePageChange}
         onSearchChange={setSearchTerm}
         searchTerm={searchTerm} 
+        filters={appliedFilters}  
         setSearchTerm={(val: string) => {
           setSearchTerm(prev => {
             if (prev !== val) {

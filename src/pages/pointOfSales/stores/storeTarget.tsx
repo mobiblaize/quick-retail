@@ -7,6 +7,7 @@ import AddNewStore from "../../../components/dashboard/pointOfSales/stores/modal
 import { useState } from "react";
 import { useFetchStore } from "../../../hooks/backendApis/pos/storeManagement";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const StoreTarget = () => {
   const [, setDateRange] = useState<{ startDate: string; endDate: string }>({
@@ -127,6 +128,11 @@ const StoreTarget = () => {
   
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <AnalysisOverview
         data={data?.data?.stats}
         isLoading={isLoading}

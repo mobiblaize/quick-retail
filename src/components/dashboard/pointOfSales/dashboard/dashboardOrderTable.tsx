@@ -14,7 +14,7 @@ const DashboardOrdersTable = () => {
     const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
   const [dateRange] = useState({ startDate: "", endDate: "" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10);
+  const [perPage] = useState(5);
     const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
 
@@ -161,13 +161,7 @@ const DashboardOrdersTable = () => {
 
   return (
     <main className="w-full h-auto">
-      {/* Header */}
-      {/* <Group justify="space-between" align="center" style={{ padding: "0 0 16px 0" }}>
-        <Group gap={8} align="center">
-          <Text fw={500} size="xl" color="dark">Orders</Text>
-          <Badge color="yellow" variant="filled">{data?.data?.sales?.total || tableData.length}</Badge>
-        </Group>
-      </Group> */}
+    
 
       <GenericTable
         columns={columns}
@@ -183,11 +177,7 @@ const DashboardOrdersTable = () => {
         tableType="sales"
         searchPlaceholder="search orders"
         onFilterChange={handleFilterChange}
-        paginationData={{
-          current_page: currentPage,
-          last_page: data?.data?.sales?.last_page || 1,
-          total: data?.data?.sales?.total || tableData.length,
-        }}
+       
         onPageChange={handlePageChange}
         titleSection={
           <div className="flex gap-2.5">

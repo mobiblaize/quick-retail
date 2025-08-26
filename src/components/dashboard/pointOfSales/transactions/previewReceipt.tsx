@@ -155,6 +155,8 @@ const PreviewTransaction = () => {
 
   const { data: orderData, isLoading, isError } = useFetchSingleSale(initialOrderId);
 
+  if (isLoading) return <p className="text-center py-8">Loading order details...</p>;
+  
   if (isLoading) {
     return <Text ta="center" style={{ padding: "2rem" }}>Loading order details...</Text>;
   }

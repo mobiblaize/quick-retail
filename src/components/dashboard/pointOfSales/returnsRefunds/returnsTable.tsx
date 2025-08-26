@@ -27,6 +27,7 @@ interface ReturnsTableProps {
   activeSort?: string;
   setSort?: (sortBy: string) => void;
   searchTerm?: string;
+  filters: FilterValues; 
 }
 
 const ReturnsTable = ({
@@ -40,6 +41,7 @@ const ReturnsTable = ({
   activeSort,
   onFilterChange,
   setSort,
+  filters,
 }: ReturnsTableProps) => {
   // const [sortBy, setSortBy] = useState<string>("");
 
@@ -52,6 +54,7 @@ const ReturnsTable = ({
   const mappedReturns = Array.isArray(returns)
     ? returns.map((item: any) => ({
         returnId: item.returnID || "N/A",
+        orderId: item.sales_order?.orderID || "N/A", 
         name: item.product_variation?.name || "N/A",
         productCode: item.product_variation?.sku || "N/A",
         dateReturned: item.created_at || "N/A",
@@ -157,10 +160,8 @@ const ReturnsTable = ({
       header: "",
       render: (row: any) => (
         <Link
-          to={ROUTES.viewReturns}
-          state={{
-            ...row,
-          }}
+          to={ROUTES.viewReturns} // don’t need `:id` if you’re using only state
+          state={{ ...row }}      // pass the whole row (or just returnId)
         >
           <Text fw={700} c="customPrimary.10" className="cursor-pointer">
             View
@@ -168,6 +169,8 @@ const ReturnsTable = ({
         </Link>
       ),
     },
+    
+    
   ];
 
   return (
@@ -188,6 +191,7 @@ const ReturnsTable = ({
         onFilterChange={onFilterChange}
         showFilter={true}
         tableType="returns"
+        filters={filters}    
         searchPlaceholder="search returns"
         titleSection={
           <div className="flex gap-2.5">

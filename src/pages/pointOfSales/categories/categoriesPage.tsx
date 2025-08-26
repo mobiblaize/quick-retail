@@ -7,6 +7,7 @@ import CreateNewCategory from "../../../components/dashboard/pointOfSales/catego
 import CreateSubCategory from "../../../components/dashboard/pointOfSales/categories/modals/createSubCategory";
 import { useFetchAllCategories } from "../../../hooks/backendApis/pos/categories";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const CategoriesPage = () => {
   const [isCreateCategoryOpen, setIsCreateCategoryOpen] = useState(false);
@@ -112,6 +113,11 @@ const handlePageChange = (page: number) => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+      {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <CategoriesTable
         categories={categories}
         isLoading={isLoading}

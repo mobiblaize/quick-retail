@@ -49,7 +49,7 @@ const SalesProcessingReportPage = () => {
         locationId,
         report_type: "sales",
         paginate: true,
-        per_page: 50,
+        per_page: 10,
         page,
       };
 
@@ -118,12 +118,19 @@ const SalesProcessingReportPage = () => {
       //@ts-ignore
       startY: doc.lastAutoTable.finalY + 10,
       head: [["Order ID", "Date", "Customer", "Amount", "Status"]],
+      // body: allSales.map((s: any) => [
+      //   s["Order ID"],
+      //   s["Date"],
+      //   s["Customer Name"],
+      //   s["Total Amount"],
+      //   s["Status"],
+      // ]),
       body: allSales.map((s: any) => [
-        s["Order ID"],
-        s["Date"],
-        s["Customer Name"],
-        s["Total Amount"],
-        s["Status"],
+        s.order_id,   // instead of s["Order ID"]
+        s.date,
+        s.customer_name,
+        s.total_amount,
+        s.status,
       ]),
       theme: "grid",
       headStyles: orangeHeaderStyle,

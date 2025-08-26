@@ -1,10 +1,9 @@
-import { Button, Text } from "@mantine/core";
+import {  Loader , Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import CustomerTable from "../../../components/dashboard/pointOfSales/customer/customerTable";
 import CreateNewCustomer from "../../../components/dashboard/pointOfSales/customer/createNewCustomer";
 import { useState } from "react";
 import { useFetchAllCustomers } from "../../../hooks/backendApis/pos/customersManagement";
-import { Plus } from "lucide-react";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
 const CustomerPage = () => {
@@ -64,18 +63,23 @@ const CustomerPage = () => {
         <Text fw={500} size="xl" c="black">
           Customers
         </Text>
-        <Button
+        {/* <Button
           variant="filled-primary"
           onClick={() => setIsCreateCategoryOpen(true)}
         >
           New Customer
           <Plus size={24} />
-        </Button>
+        </Button> */}
       </div>
     </div>,
   ];
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <CustomerTable
         customers={customers}
         isLoading={isLoading}

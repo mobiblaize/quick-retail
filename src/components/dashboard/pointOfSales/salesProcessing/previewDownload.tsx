@@ -156,17 +156,27 @@
 // export default ReceiptPreview;
 
 
-import { Paper, Box, Flex, Text, Table, Group, Image } from "@mantine/core";
+import {
+  Paper,
+  Box,
+  Flex,
+  Text,
+  Table,
+  Group,
+  Image,
+  // Divider,
+  Stack,
+} from "@mantine/core";
 import logo from "../../../../assets/images/logo.png";
 
 type ReceiptPreviewProps = {
-  order: any; // consider adding a proper type later
+  order: any; // TODO: replace with proper type
 };
 
 const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
   if (!order || Object.keys(order).length === 0 || !order.data) {
     console.log("No order or empty order object");
-    return <Text>No order data available</Text>;
+    return <Text ta="center">No order data available</Text>;
   }
 
   const actualOrder = order.data;
@@ -181,219 +191,138 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
   return (
     <Paper
       shadow="sm"
-      radius="sm"
-      withBorder={false}
-      p={32} // Tailwind p-8 (32px)
-      style={{
-        width: "100%",
-        margin: "0 auto",
-        backgroundColor: "#FFFFFF",          // bg-white
-        borderRadius: 4,                     // rounded
-        color: "#1F2937",                    // text-gray-800
-        fontSize: 14,                        // text-sm
-      }}
+      radius="md"
+      p="xl"
+      maw="80rem"
+      mx="auto"
+      withBorder
+      bg="white"
     >
       {/* Header */}
-      <Flex
-        justify="space-between"
-        align="flex-start"
-        pb={16}   // pb-4
-        mb={24}   // mb-6
-        style={{ borderBottom: "1px solid #E5E7EB" }} // border-b gray-200
-      >
-        <Box>
-          <Image
-            src={logo}
-            alt="logo"
-            height={32}
-            fit="contain"
-            mb={8}
-            classNames={{
-              root: "w-full h-[50px] rounded-lg overflow-hidden object-cover" 
-            }}
-          />
-          <Text fw={600} c="#EA580C">  
+      <Flex justify="space-between" align="flex-start" pb="md" mb="lg" style={{ borderBottom: "1px solid #E5E7EB" }}>
+        <Stack gap={4}>
+          <Image src={logo} alt="logo" h={32} fit="contain" />
+          <Text c="orange" fw={600}>
             {actualOrder.receipt_no}
           </Text>
-        </Box>
-
-        <Box ta="right" style={{ fontSize: 16 /* text-md */ }}>
-          <Text size="xl" fw={500} ta="left">
-            {/* text-xl font-medium text-left */}
-            {actualOrder.cashier ? `${actualOrder.cashier.firstname} ${actualOrder.cashier.lastname}` : ""}
-          </Text>
+        </Stack>
+        <Stack gap={2} align="flex-end" fz="xs" lh={1.4}>
           <Text>{actualOrder.location?.address}</Text>
           <Text>{actualOrder.location?.email}</Text>
           <Text>{actualOrder.location?.phone}</Text>
-        </Box>
+        </Stack>
       </Flex>
 
       {/* Customer & Receipt Details */}
-      <Flex justify="space-between" mb={32 /* mb-8 */}>
-        <Box>
-          <Text fw={400 /* font-normal */}>Customer Details</Text>
-          <Text fw={500 /* font-medium */}>
+      <Flex direction={{ base: "column", md: "row" }} gap="xl" mb="xl">
+        <Stack gap={4}>
+          <Text fw={600}>Customer Details</Text>
+          <Text fw={600}>
             {actualOrder.customer?.customer_name || actualOrder.customer_name}
           </Text>
-          <Text
-            style={{
-              whiteSpace: "normal", // whitespace-normal
-              "@media (min-width: 1024px)": { width: 150 }, // lg:w-[150px]
-            }}
-          >
-            {actualOrder.customer?.customer_address}
-          </Text>
-        </Box>
-
-        <Box ta="right">
-          <Text fw={500}>Receipt Details</Text>
-          <Text style={{ color: "gray", fontWeight: 400  }}>
+          <Text>{actualOrder.customer?.customer_address}</Text>
+        </Stack>
+        <Stack gap={4} ml="auto" ta={{ base: "left", md: "right" }}>
+          <Text fw={600}>Receipt Details</Text>
+          <Text c="dimmed">
             Date Issued:{" "}
-            <Text span style={{ color: "black", fontWeight: 400 }}>
+            <Text span c="black">
               {new Date(actualOrder.date_completed).toLocaleDateString()}
             </Text>
           </Text>
-        </Box>
+        </Stack>
       </Flex>
 
-      {/* Table of Sale Order Details */}
-      <Box style={{ overflowX: "auto", marginTop: 16 /* mt-4 */ }}>
-
-        <Table
-          style={{
-            minWidth: "100%",
-            textAlign: "left",
-            fontSize: 16,
-            borderCollapse: "collapse",
-          }}
-        >
-          <thead
-            style={{
-              background: "#F3F4F6",       
-              fontWeight: 500,
-              borderBottom: "1px solid #E5E7EB",
-            }}
-          >
-            <tr>
-              <th style={{ padding: 8 }}>Item</th>
-              <th style={{ padding: 8 }}>Qty</th>
-              <th style={{ padding: 8 }}>Unit Price</th>
-              <th style={{ padding: 8 }}>Amount</th>
-            </tr>
-          </thead>
-
-          <tbody>
+      {/* Items Table */}
+      <Box style={{ overflowX: "auto" }}>
+        <Table striped highlightOnHover withColumnBorders>
+          <Table.Thead>
+            <Table.Tr>
+              <Table.Th>Item</Table.Th>
+              <Table.Th ta="center">Qty</Table.Th>
+              <Table.Th ta="center">Unit Price</Table.Th>
+              <Table.Th ta="right" style={{ width: "1%" }}>
+                Amount
+              </Table.Th>
+            </Table.Tr>
+          </Table.Thead>
+          <Table.Tbody>
             {actualOrder.sale_order_details?.map((detail: any) => {
               const variationName = detail.product_variation?.name || "N/A";
-
               let size = "N/A";
               let color = "N/A";
-
               if (variationName !== "N/A") {
                 const parts = variationName.split("-");
                 size = parts[parts.length - 2] || "N/A";
                 color = parts[parts.length - 1] || "N/A";
               }
-
               return (
-                <tr
-                  key={detail.order_detail_id}
-                  style={{ borderBottom: "1px solid #E5E7EB" }} // divide-y
-                >
-                  <td style={{ padding: 8 }}>
-                    <Text fw={500}>{variationName}</Text>
-                    <Text size="sm">
-                      Size: <Text span fw={500}>{size}</Text>
-                    </Text>
-                    <Text size="sm">
-                      Color: <Text span fw={500}>{color}</Text>
-                    </Text>
-                  </td>
-                  <td style={{ padding: 8 }}>{detail.quantity_ordered}</td>
-                  <td style={{ padding: 8 }}>
+                <Table.Tr key={detail.order_detail_id}>
+                  <Table.Td>
+                    <Text fw={600}>{variationName}</Text>
+                    <div>
+                      Size: <Text span fw={600}>{size}</Text>
+                    </div>
+                    <div>
+                      Color: <Text span fw={600}>{color}</Text>
+                    </div>
+                  </Table.Td>
+                  <Table.Td ta="center">{detail.quantity_ordered}</Table.Td>
+                  <Table.Td ta="center">
                     ₦{Number(detail.unit_price).toLocaleString()}
-                  </td>
-                  <td style={{ padding: 8 }}>
+                  </Table.Td>
+                  <Table.Td ta="right">
                     ₦{Number(detail.total_price).toLocaleString()}
-                  </td>
-                </tr>
+                  </Table.Td>
+                </Table.Tr>
               );
             })}
-          </tbody>
+          </Table.Tbody>
         </Table>
       </Box>
 
       {/* Fees Breakdown */}
-      <Box
-        mt={24}
-        w="100%"
-        mx="auto"
-        ta="right"
-        style={{
-          color: "#374151",
-          paddingRight: "7em", 
-          paddingLeft: "1em",  
-        }}
-      >
-        <Group justify="space-between" mb={4}>
+      <Stack gap={8} mt="lg" maw={300} ml="auto">
+        <Group justify="space-between">
           <Text>Subtotal:</Text>
-          <Text>₦{fees?.sub_total?.toLocaleString?.() || "0"}</Text>
+          <Text>₦{fees.sub_total?.toLocaleString() || "0"}</Text>
         </Group>
-        <Group justify="space-between" mb={4}>
+        <Group justify="space-between">
           <Text>Discount:</Text>
-          <Text>₦{fees?.discount?.toLocaleString?.() || "0"}</Text>
+          <Text>₦{fees.discount?.toLocaleString() || "0"}</Text>
         </Group>
-        <Group justify="space-between" mb={4}>
-          <Text style={{ whiteSpace: "nowrap" }}>
-            Tax ({fees?.tax_rate ? `${fees.tax_rate}%` : ""}):
+        <Group justify="space-between">
+          <Text>
+            Tax {fees.tax_rate ? `(${fees.tax_rate}%)` : ""}
           </Text>
-          <Text>₦{fees?.tax?.toLocaleString?.() || "0"}</Text>
+          <Text>₦{fees.tax?.toLocaleString() || "0"}</Text>
         </Group>
-
-        {fees?.service_fee ? (
-          <Group justify="space-between" mb={4}>
-            <Text style={{ whiteSpace: "nowrap" }}>Service Fee:</Text>
+        {fees.service_fee && (
+          <Group justify="space-between">
+            <Text>Service Fee:</Text>
             <Text>₦{fees.service_fee.toLocaleString()}</Text>
           </Group>
-        ) : null}
-      </Box>
+        )}
+      </Stack>
 
-      {/* Receipt Amount */}
-      <Paper
-        mt={32}
-        p={24}
-        radius={4}
-        withBorder
-        style={{
-          textAlign: "center",         
-          background: "#FDE1D0",       
-          borderWidth: 2,              
-          borderStyle: "dashed",       
-          borderColor: "#FED7AA",     
-        }}
+      {/* Total Amount */}
+      <Box
+        mt="xl"
+        p="lg"
+        ta="center"
+        bg="orange.0"
+        style={{ border: "2px dashed #FCD9BD", borderRadius: "8px" }}
       >
-        <Text
-          fw={700}
-          style={{
-            fontSize: 18,         
-            color: "#F9A578",      
-          }}
-        >
+        <Text fz="lg" fw={700}>
           Total
         </Text>
-        <Text
-          fw={700}
-          style={{
-            fontSize: 36,         
-            color: "#EA580C",     
-            lineHeight: 1.2,
-          }}
-        >
+        <Text fz="xl" fw={700} c="orange">
           ₦{Number(actualOrder.amount_paid).toLocaleString()}
         </Text>
-      </Paper>
+      </Box>
     </Paper>
   );
 };
 
 export default ReceiptPreview;
+

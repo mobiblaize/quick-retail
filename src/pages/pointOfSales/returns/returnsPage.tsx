@@ -8,11 +8,10 @@ import { useFetchAllreturns } from "../../../hooks/backendApis/pos/returns";
 import { ROUTES } from "../../../constants/routes";
 import { useNavigate } from "react-router";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
+import { Loader } from "@mantine/core";
 
 const ReturnsPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
-    null
-  );
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [dateRange, setDateRange] = useState<{
     startDate: string;
     endDate: string;
@@ -128,6 +127,11 @@ const ReturnsPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+       {isLoading && (
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
+        <Loader size="xl" color="orange" />
+      </div>
+    )}
       <ReturnsAnalytics
         data={{
           totalReturns: data?.data?.totalReturns ?? 0,
@@ -146,6 +150,7 @@ const ReturnsPage = () => {
         onPageChange={handlePageChange}
         onSearchChange={setSearchTerm}
         searchTerm={searchTerm} 
+        filters={appliedFilters}  
         setSearchTerm={(val: string) => {
           setSearchTerm(prev => {
             if (prev !== val) {
