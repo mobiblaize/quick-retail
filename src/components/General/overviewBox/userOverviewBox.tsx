@@ -33,7 +33,7 @@ const  UserOverviewBox = () => {
     activeUsers: 0,
     inactiveUsers: 0,
   };
-  const innerColor ="text-[#099137]"
+  // const innerColor ="text-[#099137]"
 
   const cards = [
     {
