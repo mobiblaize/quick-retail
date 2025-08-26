@@ -46,7 +46,7 @@ export const DashboardHeader = ({
     //   to: ROUTES.assetDashboard,
     //   active: activeSection === "Asset Management",
     // },
-    
+
     // {
     //   label: "Reports" as DashboardSection,
     //   to: ROUTES.dashboard,
@@ -80,14 +80,17 @@ export const DashboardHeader = ({
             <Link
               key={index}
               to={route.to}
-              className={`relative group pb-2 ${
-                route.active
+              className={`relative group pb-2 ${route.active
                   ? "text-orange-500 font-medium"
                   : "text-[#667185] font-normal"
-              }`}
+                }`}
               onClick={() => handleNavClick(route.label)}
             >
-              <p className="cursor-pointer">{route.label}</p>
+              <p
+                style={{ cursor: "pointer", fontFamily: "Inter, sans-serif" }}
+              >
+                {route.label}
+              </p>
               {route.active ? (
                 <div className="absolute bottom-0 left-0 w-full h-0.5 bg-orange-500"></div>
               ) : (

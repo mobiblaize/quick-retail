@@ -273,7 +273,6 @@ export default function TrailTable({
           ? `${causer.firstname} ${causer.lastname}`
           : "N/A";
         const email = causer?.email || "N/A";
-zz
         return (
           <div>
             <Text size="sm" fw={500}>

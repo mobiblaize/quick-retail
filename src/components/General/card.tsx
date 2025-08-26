@@ -23,7 +23,6 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   value,
   icon,
   cardBgColor,
-  iconColor,
   textColor = "#667185",
   percentageValue,
   width = "100%",

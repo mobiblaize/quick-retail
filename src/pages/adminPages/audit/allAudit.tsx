@@ -1,22 +1,23 @@
 
-import { Text } from "@mantine/core";
+import { Button, Menu, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import TrailTable from "../../../components/dashboard/adminPage/auditTrail/trailTable";
 import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 import { useState } from "react";
-import Dropdown from "../../../components/General/dropdown";
+// import Dropdown from "../../../components/General/dropdown";
 // @ts-ignore
 import Papa from "papaparse";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 import { useMemo } from "react";
 import { useSearchParams } from "react-router";
+import { ChevronDown } from "lucide-react";
 
 
 
 const AuditTrailPage = () => {
-const [, setFilters] = useState<FilterValues | null>(null);
+  const [, setFilters] = useState<FilterValues | null>(null);
   const [searchParams, setSearchParams] = useSearchParams();
 
   const handlePageChange = (newPage: number) => {
@@ -52,18 +53,18 @@ const [, setFilters] = useState<FilterValues | null>(null);
   const { data, isLoading, error } = useFetchAuditTrails(queryParams);
 
 
-const exportOptions = [
-    { label: "CSV", value: "csv" },
-    { label: "PDF", value: "pdf" },
-  ];
+  // const exportOptions = [
+  //   { label: "CSV", value: "csv" },
+  //   { label: "PDF", value: "pdf" },
+  // ];
 
 
-//   const { data, isLoading, error } = useFetchAuditTrails();
+  //   const { data, isLoading, error } = useFetchAuditTrails();
   const handleExport = (format: string) => {
     const logs = data?.data?.data || [];
-  
+
     if (!logs || logs.length === 0) return;
-  
+
     const tableData = logs.map((log: any) => ({
       timestamp: new Date(log.created_at).toLocaleString(),
       name: `${log.causer?.firstname || ''} ${log.causer?.lastname || ''}`,
@@ -73,7 +74,7 @@ const exportOptions = [
       module: log.action_module || '',
       ipAddress: log.ip_address || '',
     }));
-  
+
     if (format === "csv") {
       const csv = Papa.unparse(tableData);
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
@@ -85,10 +86,10 @@ const exportOptions = [
       link.click();
       document.body.removeChild(link);
     }
-  
+
     if (format === "pdf") {
       const doc = new jsPDF();
-  
+
       autoTable(doc, {
         head: [[
           "Timestamp",
@@ -119,38 +120,58 @@ const exportOptions = [
         },
         margin: { top: 20 },
       });
-  
+
       doc.save("audit_trail.pdf");
     }
   };
-  
-  
+
+
   const subHeaders = [
     <div
-    key="1"
-    className="py-2.5 flex justify-between items-center flex-wrap gap-3"
-  >
-    <div className="flex gap-8 items-center">
-  
-      <div className="flex items-center mt-2">
-        <Text c="black" fw={500}>
-        Audit Trail
-        </Text>
+      key="1"
+      className="py-2.5 flex justify-between items-center flex-wrap gap-3"
+    >
+      <div className="flex gap-8 items-center">
+
+        <div className="flex items-center mt-2">
+          <Text c="black" fw={500}>
+            Audit Trail
+          </Text>
+        </div>
       </div>
-    </div>
-    <div className="flex items-center gap-3">
-      <Dropdown
-        //@ts-ignore
-        options={exportOptions}
-        //@ts-ignore
-        onChange={(val) => handleExport(val)}
-        placeholder="Export"
-        inputSizeClass="py-1"
-        bgColorClass="bg-[#F16722]"
-        textColorClass="text-white"
-      />
-    </div>
-  </div>,
+      <div className="flex items-center gap-3">
+        <Menu>
+          <Menu.Target>
+            <Button variant="filled-primary">
+              Export
+              <ChevronDown className="ml-2" />
+            </Button>
+          </Menu.Target>
+
+          <Menu.Dropdown
+            style={{
+              backgroundColor: "white",
+              borderRadius: "8px",
+              padding: "6px 0",
+              boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+            }}
+          >
+            <Menu.Item
+              style={{ fontSize: 14, color: "#333" }}
+              onClick={() => handleExport("csv")}
+            >
+              Export CSV
+            </Menu.Item>
+            <Menu.Item
+              style={{ fontSize: 14, color: "#333" }}
+              onClick={() => handleExport("pdf")}
+            >
+              Export PDF
+            </Menu.Item>
+          </Menu.Dropdown>
+        </Menu>
+      </div>
+    </div>,
   ];
 
   return (
@@ -158,9 +179,9 @@ const exportOptions = [
       <TrailTable
         isLoading={isLoading}
         error={error}
-        logs={data?.data?.data || []} 
+        logs={data?.data?.data || []}
         onFilterChange={handleFilterChange}
-         onPageChange={handlePageChange} 
+        onPageChange={handlePageChange}
       />
     </PageContainer>
   );
