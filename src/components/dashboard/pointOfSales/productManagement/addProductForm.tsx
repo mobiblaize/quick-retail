@@ -79,21 +79,11 @@ const AddProductForm = () => {
 
     Promise.all(files.map(fileToBase64))
       .then((base64Images) => {
-        const updatedImage = formData.image || base64Images[0];
-        const remainingImages =
-          formData.image || base64Images.length > 1
-            ? base64Images.slice(formData.image ? 0 : 1)
-            : [];
-
-        setFormData({
-          ...formData,
-          image: updatedImage,
-          image_path: [...formData.image_path, ...remainingImages],
-        });
+        setFormData((prev) => ({
+          ...prev,
+          image_path: [...prev.image_path, ...base64Images],
+        }));
       })
-      .catch((err) => {
-        console.error("Failed to read files:", err);
-      });
   };
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -138,6 +128,21 @@ const AddProductForm = () => {
       return;
     }
 
+    // ✅ New image check
+    if (
+      !formData.has_variations &&
+      (!formData.image_path || formData.image_path.length === 0)
+    ) {
+      notifications.show({
+        title: "Validation Error",
+        message: "At least one product image is required",
+        color: "red",
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+
     const payload = {
       product_name: formData.product_name,
       sku: formData.sku,
@@ -146,7 +151,8 @@ const AddProductForm = () => {
       short_description: formData.short_description,
       long_description: formData.long_description,
       location_id: Number(formData.location_id),
-      has_variations: formData.has_variations,
+      has_variations: formData.has_variations ? 1 : 0,
+      image_path: formData.image_path || [],
       cost_price: costPrice,
       selling_price: sellingPrice,
       total_quantity: Number(formData.quantity),
@@ -157,7 +163,7 @@ const AddProductForm = () => {
       promotional_end_date: formData.promotional_end_date || null,
       safety_instructions: formData.safety_instructions || "",
       certificates: formData.certificates || [],
-      image_path: formData.image_path || [],
+      // image_path: formData.image_path || [],
       variations: [],
       notes: formData.notes || "",
     };

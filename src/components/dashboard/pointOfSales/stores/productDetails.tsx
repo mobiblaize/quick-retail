@@ -26,9 +26,7 @@ const ProductDetails = ({ productData }: ProductDetailsProps) => {
         </div>
 
         <Text size="1.8rem" c="black" fw={600}>
-          {productData?.name ||
-            productData?.product?.product_name ||
-            "Unnamed Product"}
+          {productData?.product?.product_name || "N/A"}
         </Text>
       </section>
 
@@ -63,31 +61,28 @@ const ProductDetails = ({ productData }: ProductDetailsProps) => {
 
       <div className="flex border-b border-gray-200 mt-8">
         <button
-          className={`py-2 px-4 cursor-pointer font-medium ${
-            activeTab === "Description"
+          className={`py-2 px-4 cursor-pointer font-medium ${activeTab === "Description"
               ? "text-[#1D2939] border-b-2 border-[#1D2939]"
               : "text-gray-500"
-          }`}
+            }`}
           onClick={() => handleTabChange("Description")}
         >
           Description
         </button>
         <button
-          className={`py-2 px-4 cursor-pointer font-medium ${
-            activeTab === "Delivery"
+          className={`py-2 px-4 cursor-pointer font-medium ${activeTab === "Delivery"
               ? "text-[#1D2939] border-b-2 border-[#1D2939]"
               : "text-gray-500"
-          }`}
+            }`}
           onClick={() => handleTabChange("Delivery")}
         >
           Delivery
         </button>
         <button
-          className={`py-2 px-4 cursor-pointer font-medium ${
-            activeTab === "Review"
+          className={`py-2 px-4 cursor-pointer font-medium ${activeTab === "Review"
               ? "text-[#1D2939] border-b-2 border-[#1D2939]"
               : "text-gray-500"
-          }`}
+            }`}
           onClick={() => handleTabChange("Review")}
         >
           Review

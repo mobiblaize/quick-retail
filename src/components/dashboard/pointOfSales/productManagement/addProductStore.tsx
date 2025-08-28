@@ -161,11 +161,12 @@ type FormData = {
   code: string;
   status: string;
   stock_status: string;
-  category: string;
+  category: string | { id: number; name: string };
   category_id: string;
   sub_category_id: string;
   short_description: string;
   long_description: string;
+  location: string | { id: number; name: string };
   location_id: string;
   product?: any;
   has_variations: number;
@@ -182,7 +183,6 @@ type FormData = {
   selling_price: string;
   updated_at: string;
   quantity: string;
-  location: string;
   cost_price: string;
   reorder_level?: string;
   size?: string;
@@ -190,7 +190,6 @@ type FormData = {
   variation_attributes?: VariationAttribute[];
   notes?: string;
   productID?: string;
-  cost_Price?: string;
 };
 
 // ✅ Initial form state
@@ -231,7 +230,6 @@ export const initialFormState: FormData = {
   variation_attributes: [],
   notes: "",
   productID: "",
-  cost_Price: "",
 };
 
 // ✅ Extended state interface — using imported types
