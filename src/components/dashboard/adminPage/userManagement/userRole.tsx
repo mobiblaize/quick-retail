@@ -82,8 +82,8 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
 
             <Text
                 component="h3"
-                size="sm"
-                fw={600}
+                size="lg"
+                fw={700}
                 c="#48464E"
                 mb="xs"
             >
@@ -93,11 +93,11 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
             {/* <p className="text-[16px] text-[#908C9C] mb-2">
                 User Count: <span className="font-semibold text-[#48464E]">{userCount} People</span>
             </p> */}
-            <Text fz="16px" c="#666" size="md" fw={400}>
+            <Text className="!inline" fz="16px" c="#908C9C" size="md" fw={400}>
                 User Count:{" "}
-                {/* <Text size="md" c="#48464E"> */}
+                <span className="text-[#48464E]">
                 {loadingCount ? "..." : `${userCount} People`}
-                {/* </Text> */}
+                </span>
             </Text>
 
             <div className="mt-2">
@@ -110,7 +110,7 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
             {/* Status + Date */}
             <div className="flex justify-between items-center text-[16px] text-[#908C9C] mb-4">
                 <div>
-                    <Text fw={600} size="md" c="#48464E" mb={2}>Status:</Text>
+                    <Text size="md" c="#B4AFC3" mb={2}>Status:</Text>
                 </div>
                 <div className="flex items-center gap-2">
                     <label className="relative inline-flex items-center cursor-pointer">
@@ -128,7 +128,7 @@ const RoleCard: React.FC<RoleCardProps & { id: string }> = ({
             </div>
 
             <div className="flex items-center justify-between">
-                <Text fz="16px" c="#908C9C">
+                <Text fz="16px" c="#B4AFC3">
                     Date Added:
                 </Text>
                 <Text c="#48464E">

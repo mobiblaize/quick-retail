@@ -405,12 +405,12 @@ export default function UserManagementTable() {
               variant="filled"
               styles={{
                 root: {
-                  backgroundColor: "#fed7aa",
-                  color: "#ea580c",
-                  fontWeight: 600,
+                  backgroundColor: "#FFEADF",
+                  color: "#F16722",
+                  fontWeight: 500,
                   fontSize: "12px",
-                  height: "20px",
-                  minHeight: "20px",
+                  height: "22px",
+                  minHeight: "22px",
                   paddingLeft: "8px",
                   paddingRight: "8px",
                   textTransform: "none",
