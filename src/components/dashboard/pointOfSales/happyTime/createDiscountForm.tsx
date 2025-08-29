@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Button } from "@mantine/core";
+import { Button, Divider, Title } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
 import FormInput from "../../../General/formInput";
@@ -81,9 +81,10 @@ const CreateDiscountForm = () => {
   return (
     <div>
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
+        <Title order={3} fw={600} size="lg" c="dark" mb="sm">
           BASIC INFORMATION
-        </h2>
+        </Title>
+        <Divider mb="md" />
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <FormInput
             type="text"
@@ -155,11 +156,12 @@ const CreateDiscountForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        <h2 className="text-lg font-semibold text-gray-800 mb-4 border-b border-gray-200">
+        <Title order={3} fw={600} size="lg" c="dark" mb="sm">
           DISCOUNT APPLICABILITY
-        </h2>
+        </Title>
+        <Divider mb="md" />
         <DiscountSearchProduct
-          onSelect={() => {}}
+          onSelect={() => { }}
           onItemsChange={(items) => {
             setSelectedProducts(items);
           }}

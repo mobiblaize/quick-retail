@@ -1,11 +1,11 @@
-import { Text, Loader } from "@mantine/core";
+import { Text, Loader, Menu, Button } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
-import { ChevronLeft } from "lucide-react";
+import { ChevronDown, ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
 import ViewHeader from "../../../components/dashboard/adminPage/auditTrail/viewHeader";
 import ViewDetails from "../../../components/dashboard/adminPage/auditTrail/viewDetails";
 import { useFetchSingleAudit } from "../../../hooks/backendApis/admin/auditTrail";
-import Dropdown from "../../../components/General/dropdown";
+// import Dropdown from "../../../components/General/dropdown";
 // @ts-ignore
 import Papa from "papaparse";
 import jsPDF from "jspdf";
@@ -19,10 +19,10 @@ const ViewAuditPage = () => {
   const { data, isLoading, error } = useFetchSingleAudit(uuid);
   console.log(data);
 
-  const exportOptions = [
-    { label: "CSV", value: "csv" },
-    { label: "PDF", value: "pdf" },
-  ];
+  // const exportOptions = [
+  //   { label: "CSV", value: "csv" },
+  //   { label: "PDF", value: "pdf" },
+  // ];
   const handleBack = () => {
     navigate(-1);
   };
@@ -101,16 +101,36 @@ const ViewAuditPage = () => {
           View Audit Trail
         </Text>
         <div className="flex items-center gap-3">
-          <Dropdown
-            //@ts-ignore
-            options={exportOptions}
-            //@ts-ignore
-            onChange={(val) => handleExport(val)}
-            placeholder="Export"
-            inputSizeClass="py-1"
-            bgColorClass="bg-[#F16722]"
-            textColorClass="text-white"
-          />
+          <Menu>
+            <Menu.Target>
+              <Button variant="filled-primary">
+                Export
+                <ChevronDown className="ml-2" />
+              </Button>
+            </Menu.Target>
+
+            <Menu.Dropdown
+              style={{
+                backgroundColor: "white",
+                borderRadius: "8px",
+                padding: "6px 0",
+                boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
+              }}
+            >
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("csv")}
+              >
+                Export CSV
+              </Menu.Item>
+              <Menu.Item
+                style={{ fontSize: 14, color: "#333" }}
+                onClick={() => handleExport("pdf")}
+              >
+                Export PDF
+              </Menu.Item>
+            </Menu.Dropdown>
+          </Menu>
         </div>
       </div>
     </div>,

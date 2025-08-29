@@ -1,4 +1,4 @@
-import  { ReactNode } from "react";
+import { ReactNode } from "react";
 import { Text, Group, Card, useMantineTheme } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
 
@@ -50,33 +50,36 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   }
 
   return (
-    <Card p="lg" radius="md" style={cardStyle}>
-      {icon && <div>{icon}</div>}
-
+    <Card p="lg" radius="md" style={cardStyle} >
+  {icon && <div>{icon}</div>}
       <Text c={textColor} size="xs" fw={700} mt="xs" tt={"uppercase"}>
         {title}
       </Text>
 
-      <Text c={textColor} fz="24px" fw="600" style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
-  {value}
-  {percentageValue !== undefined && (
-    <Group
-      gap="xs"
-      style={{
-        borderRadius: "0.8rem",
-        padding: "4px 8px",
-        display: "inline-flex",
-        backgroundColor: "#E7F6EC",
-      }}
-    >
-      <Text c="#036B26" size="sm" fw={500}>
-        {percentageValue}
+      <Text
+        c={textColor}
+        fz="24px"
+        fw="600"
+        style={{ display: "flex", alignItems: "center", gap: "8px" }}
+      >
+        {value}
+        {percentageValue !== undefined && (
+          <Group
+            gap="xs"
+            style={{
+              borderRadius: "0.8rem",
+              padding: "4px 8px",
+              display: "inline-flex",
+              backgroundColor: "#E7F6EC",
+            }}
+          >
+            <Text c="#036B26" size="sm" fw={500}>
+              {percentageValue}
+            </Text>
+            <ArrowIcon />
+          </Group>
+        )}
       </Text>
-      <ArrowIcon />
-    </Group>
-  )}
-</Text>
-
     </Card>
   );
 };

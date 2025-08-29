@@ -3,7 +3,6 @@ import { Text, Avatar, Group } from "@mantine/core";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import imageSrc from "../../../../assets/images/productIMG.png";
 import { formatDate } from "../../../../utils/helpers";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import { useFetchAllProducts } from "../../../../hooks/backendApis/pos/inventory";
@@ -96,7 +95,7 @@ const InventoryTable = () => {
       render: (row: any) => (
         <Group gap="sm" align="center">
           <Avatar
-            src={row.image || imageSrc}
+            src={row.image || ""}
             alt={row.name}
             radius="md"
             size={40}

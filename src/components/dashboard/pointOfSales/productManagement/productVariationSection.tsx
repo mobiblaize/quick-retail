@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, Plus } from "lucide-react";
 import { useFetchProductVariations } from "../../../../hooks/backendApis/pos/products";
-import { Input } from "@mantine/core";
+import { Input, Text } from "@mantine/core";
 
 const ProductVariationSection = ({ form_data }: any) => {
   const productId = form_data?.product?.productID;
@@ -25,6 +25,7 @@ const ProductVariationSection = ({ form_data }: any) => {
 
         return {
           id: variant.id,
+          variationID: variant.variationID, 
           cost_price: variant.cost_price || "",
           selling_price: variant.selling_price || "",
           reorder_level: variant.reorder_level || "",
@@ -45,17 +46,30 @@ const ProductVariationSection = ({ form_data }: any) => {
     setVariants((prev) => [
       ...prev,
       {
-        id: Date.now(), // temporary unique ID
+        id: Date.now(), 
+        variationID: "",        
+        product_id: productId,
         cost_price: "",
         selling_price: "",
         reorder_level: "",
         size: "",
         color: "",
+
       },
     ]);
   };
 
-  if (!hasVariations || !productId) return null;
+  if (!form_data?.product) {
+    return <p className="text-sm p-4">Loading product...</p>;
+  }
+
+  if (!productId) {
+    return <p className="text-sm text-red-500 p-4">Invalid product data</p>;
+  }
+
+  if (!hasVariations) {
+    return <p className="text-sm p-4">This product has no variations</p>;
+  }
 
   if (isLoading) return <p className="text-sm p-4">Loading variations...</p>;
   if (isError) return <p className="text-sm text-red-500 p-4">Error loading variations</p>;
@@ -64,12 +78,12 @@ const ProductVariationSection = ({ form_data }: any) => {
     <div className="overflow-auto">
       <div className="min-w-[1000px]">
         <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
-          <div>Cost Price</div>
-          <div>Selling Price</div>
-          <div>Reorder Level</div>
-          <div>Size</div>
-          <div>Color</div>
-          <div className="col-span-3 text-right pr-2">Actions</div>
+          <Text fw={500}>Cost Price</Text>
+          <Text fw={500}>Selling Price</Text>
+          <Text fw={500}>Reorder Level</Text>
+          <Text fw={500}>Size</Text>
+          <Text fw={500}>Color</Text>
+          <Text fw={500} ta="right" pr="sm" className="col-span-3">Actions</Text>
         </div>
 
         {variants.map((variant) => (

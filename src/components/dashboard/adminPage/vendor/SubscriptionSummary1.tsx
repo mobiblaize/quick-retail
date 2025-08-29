@@ -50,10 +50,10 @@ interface SubscriptionSummaryProps {
           </div>
   
           {/* Other Details */}
-          <div className="border-l border-gray-300 pl-[3em]">
+          <div className="border-l lg:col-span-2 border-gray-300 pl-[3em]  ">
             <h4 className="font-medium text-gray-800 mb-4">Other Details</h4>
-            <div className="space-y-4 text-sm">
-              <div className="flex justify-between ">
+            <div className="space-y-4 max-w-full text-sm">
+              <div className="flex justify-between  ">
                 <p className="text-gray-500">Billing Type</p>
                 <p className="text-gray-800 font-normal">{billingType}</p>
               </div>

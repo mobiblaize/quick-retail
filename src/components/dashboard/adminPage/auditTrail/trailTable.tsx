@@ -273,7 +273,6 @@ export default function TrailTable({
           ? `${causer.firstname} ${causer.lastname}`
           : "N/A";
         const email = causer?.email || "N/A";
-
         return (
           <div>
             <Text size="sm" fw={500}>
@@ -346,7 +345,7 @@ export default function TrailTable({
       onClick={() => handleViewClick(row.uuid)}
       className="text-[#F16722] hover:underline cursor-pointer text-sm"
     >
-      View
+      <Text size="sm" fw={500} c="#F16722">View</Text>
     </button>
   );
 

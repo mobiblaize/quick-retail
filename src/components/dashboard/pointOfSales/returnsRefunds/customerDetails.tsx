@@ -1,4 +1,4 @@
-import { Text } from "@mantine/core";
+import { Box, Flex, Image, NumberInput, Paper, Stack, Text } from "@mantine/core";
 import { useFetchRetrun, } from "../../../../hooks/backendApis/pos/returns";
 
 interface CustomerDetailsProps {
@@ -19,61 +19,108 @@ const CustomerDetails = ({ returnId }: CustomerDetailsProps) => {
         </Text>
       </div>
 
-      <section className="mt-6 w-full">
-        <div className="grid grid-cols-1 gap-4 w-full max-w-6xl mx-auto">
-          <ul className="space-y-3">
-            <li className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-lg bg-gray-50 shadow-sm">
-              {/* Product image */}
-              <img
-                src={product?.image_path || "/placeholder.png"}
-                alt={product?.name || "Product Image"}
-                className="w-20 h-20 object-cover rounded border"
-              />
-
-              <div className="flex flex-1 flex-col md:flex-row justify-between w-full gap-4">
-                {/* Product info */}
-                <div>
-                  <span className="font-semibold text-gray-900">
-                    {product?.name || "Product Name"}
-                  </span>
-                  <div className="text-sm text-black-600">
-                    <div>EAN: {product?.ean || "N/A"}</div>
-                    <div>SKU: {product?.sku || "N/A"}</div>
-                  </div>
-                </div>
-
-                {/* Unit price */}
-                <div className="flex flex-col items-center min-w-[90px]">
-                  <span className="text-xs text-black-500">Unit Price</span>
-                  <span className="font-medium text-black-500">
-                    ₦ {Number(product?.selling_price || 0).toLocaleString()}
-                  </span>
-                </div>
-
-                {/* Quantity */}
-                <div className="flex flex-col items-center min-w-[90px]">
-                  <span className="text-xs text-black-500"> Return  Quantity</span>
-                  <input
-                    type="number"
-                    min={1}
-                    value={salesOrder?.quantity_returned }
-                    className="w-16 border rounded px-1 text-center text-black-500"
-                    disabled
+      <Box component="section" mt="md" w="100%">
+        <Box w="100%" maw="72rem" mx="auto">
+          {/* <ul className="space-y-3"> */}
+          <Stack
+            component="ul"
+            gap="sm"
+            m={0}
+            p={0}
+            style={{ listStyle: "none" }}
+          >
+            <Paper
+              component="li"
+              p="md"
+              radius="lg"
+              shadow="xs"
+              bg="#F9FAFB" // gray-50
+              withBorder={false}
+            >
+              <Flex
+                direction={{ base: "column", md: "row" }}
+                align={{ base: "flex-start", md: "center" }}
+                gap="md"
+              >
+                {/* Product image */}
+                <Box
+                  style={{
+                    width: 80,
+                    height: 80,
+                    border: "1px solid #E5E7EB", // gray-200
+                    borderRadius: 8,
+                    overflow: "hidden",
+                    flex: "0 0 auto",
+                  }}
+                >
+                  <Image
+                    src={product?.image_path || "/placeholder.png"}
+                    alt={product?.name || "Product Image"}
+                    fit="cover"
+                    w="100%"
+                    h="100%"
                   />
-                </div>
+                </Box>
 
-                {/* Total price */}
-                <div className="flex flex-col items-center min-w-[90px]">
-                  <span className="text-xs text-black-500">Total Price</span>
-                  <span className="font-semibold text-[#2E90FA]">
-                    ₦ {Number(salesOrder?.total_price || 0).toLocaleString()}
-                  </span>
-                </div>
-              </div>
-            </li>
-          </ul>
-        </div>
-      </section>
+                <Flex
+                  direction={{ base: "column", md: "row" }}
+                  justify="space-between"
+                  gap="md"
+                  style={{ width: "100%" }}
+                >
+                  {/* Product info */}
+                  <Box>
+                    <Text fw={600} c="#111827">
+                      {product?.name || "Product Name"}
+                    </Text>
+                    <Text fz="sm" c="#4B5563">
+                      EAN: {product?.ean || "N/A"}
+                    </Text>
+                    <Text fz="sm" c="#4B5563">
+                      SKU: {product?.sku || "N/A"}
+                    </Text>
+                  </Box>
+
+                  {/* Unit price */}
+                  <Box ta="center" style={{ minWidth: 90 }}>
+                    <Text fz="xs" c="#6B7280">
+                      Unit Price
+                    </Text>
+                    <Text fw={500} c="#6B7280">
+                      ₦ {Number(product?.selling_price || 0).toLocaleString()}
+                    </Text>
+                  </Box>
+
+                  {/* Quantity */}
+                  <Box ta="center" style={{ minWidth: 90 }}>
+                    <Text fz="xs" c="#6B7280">
+                      Return Quantity
+                    </Text>
+                    <NumberInput
+                      min={1}
+                      disabled
+                      value={salesOrder?.quantity_returned}
+                      size="xs"
+                      styles={{ input: { textAlign: "center" } }}
+                      style={{ width: 64 }}
+                    />
+                  </Box>
+
+                  {/* Total price */}
+                  <Box ta="center" style={{ minWidth: 90 }}>
+                    <Text fz="xs" c="#6B7280">
+                      Total Price
+                    </Text>
+                    <Text fw={600} c="#2E90FA">
+                      ₦ {Number(salesOrder?.total_price || 0).toLocaleString()}
+                    </Text>
+                  </Box>
+                </Flex>
+              </Flex>
+            </Paper>
+          </Stack>
+        </Box>
+      </Box>
     </main>
   );
 };
