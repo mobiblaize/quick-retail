@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { formatDate, formatMoney } from "../../../../utils/helpers";
@@ -182,9 +182,18 @@ const DashboardOrdersTable = () => {
         titleSection={
           <div className="flex gap-2.5">
             <Text fw={500} size="xl" c="textSecondary.9">Orders</Text>
-            <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10">{data?.data?.sales?.total || tableData.length}</Text>
-            </div>
+            {/* <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3"> */}
+              {/* <Text c="customPrimary.10">{data?.data?.sales?.total || tableData.length}</Text> */}
+            {/* </div> */}
+            <div className="flex justify-center mt">
+      <Button
+        variant="outline"
+        radius="xl"
+        onClick={() => navigate(ROUTES.sales)}
+      >
+        View More
+      </Button>
+    </div>
           </div>
         }
       />

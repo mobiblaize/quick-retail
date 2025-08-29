@@ -48,3 +48,7 @@ export const useFetchingleOrderProducts = (orderId: string, customPayload?: Part
 
   return useFetchPostData(`pos/sales/sales-order-products/${orderId}`, payload);
 };
+
+export const usePaymentDetails = () => {
+  return usePostData("pos/sales/payment-breakdown");
+};

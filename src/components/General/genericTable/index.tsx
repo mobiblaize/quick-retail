@@ -102,9 +102,18 @@ export default function GenericTable<T>({
     );
   }
 
+  // if (!data || data.length === 0) {
+  //   return <EmptyState2 />;
+  // }
+  const handleResetFilters = () => {
+    onFilterChange?.(initialFilters);
+    setShowFilterPanel(false);
+  };
+
   if (!data || data.length === 0) {
-    return <EmptyState2 />;
+    return <EmptyState2 onReset={handleResetFilters} />;
   }
+  
 
   const initialFilters: FilterValues = {
     startDate: "",
@@ -119,50 +128,6 @@ export default function GenericTable<T>({
 
 
   const [showFilterPanel, setShowFilterPanel] = React.useState(false);
-
-  // const filtersApplied = React.useMemo(() => {
-  //   return Object.values(appliedFilters).some((val) =>
-  //     Array.isArray(val) ? val.length > 0 : !!val
-  //   );
-  // }, [appliedFilters]);
-  // const isValueSet = (v: any) =>
-  // Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null && v !== "";
-
-//   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
-
-//   const isValueSet = (v: any) => {
-//     if (Array.isArray(v)) return v.length > 0;
-//     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
-//     return (
-//       v !== undefined &&
-//       v !== null &&
-//       v !== "" &&
-//       !DEFAULT_FILTER_VALUES.includes(v)
-//     );
-//   };
-  
-
-// const filtersApplied = React.useMemo(
-//   () => Object.values(appliedFilters).some(isValueSet),
-//   [appliedFilters]
-// );
-
-  
-
-// const handleFilterChange = (filters: FilterValues) => {
-//   console.log("Filters applied:", filters);
-//   setAppliedFilters(filters);
-//   onFilterChange?.(filters);
-//   setShowFilterPanel(false);
-// };
-
-
-//   const handleResetFilters = () => {
-//     setAppliedFilters(initialFilters);
-//     onFilterChange?.(initialFilters);
-//     setShowFilterPanel(false);
-//   };
-
 const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
   const isValueSet = (v: any) => {
@@ -186,10 +151,7 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
     setShowFilterPanel(false);
   };
 
-  const handleResetFilters = () => {
-    onFilterChange?.(initialFilters);
-    setShowFilterPanel(false);
-  };
+
 
   return (
     <div
