@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 
 
-export type DiscountType = 'all' | 'amount' | 'percentage';
+export type DiscountType = '' | 'amount' | 'percentage';
 export type Reason = 'all' | 'damaged' | 'mistaken' | 'size issue' | 'others';
 
 export interface FilterValues {
@@ -86,7 +86,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     priceTo: '',
     paymentStatus: 'All',
     productStatus: 'All',
-    type: 'all',
+    type: '',
     discountStatus: 'All',
      returnStatus: 'All',
     role: '',
@@ -107,7 +107,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       priceFrom: '',
       priceTo: '',
       productStatus: '',
-      type: 'all',
+      type: '',
       discountStatus: 'All',
       returnStatus: 'All',
       role: '',
