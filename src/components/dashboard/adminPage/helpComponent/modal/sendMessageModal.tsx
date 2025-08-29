@@ -170,18 +170,21 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
           required
         />
 
-        {/* File Upload Section */}
         <div className="border border-dashed border-gray-300 rounded-lg p-3 text-sm">
           <Text fw={500} size="sm" mb={6}>
             Supporting document if any
           </Text>
 
           {file ? (
-            <Group justify="space-between">
+            <Group
+              justify="space-between"
+              align="center"
+              className="p-2 border rounded-lg"
+            >
               <Group gap="xs">
                 <IconCheck size={16} color="green" />
                 <div>
-                  <Text size="sm" fw={500}>
+                  <Text size="sm" fw={500} c="green">
                     Upload Successful
                   </Text>
                   <Text size="xs" c="dimmed">
@@ -215,19 +218,29 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
           )}
         </div>
 
-
-
-
-        <div className="flex gap-4 mt-[2em] justify-center">
-          <Button variant="outline-primary" onClick={onClose}>
+        {/* Action Buttons */}
+        <div className="flex gap-7 mt-[2em] justify-center min-w-full">
+          <Button
+            className="!w-full"
+            variant="outline-primary"
+            onClick={onClose}
+          >
             No
           </Button>
 
-          <Button variant="filled-primary"
+          <Button
+            className={`!w-full ${
+              !isValid || !validateEmail(email)
+                ? "bg-'#F16722' text-white cursor-not-allowed"
+                : ""
+            }`}
+            variant="filled"
+            color={!isValid || !validateEmail(email) ? "white" : "orange"}
             onClick={handleSubmit}
-            disabled={!isValid || isLoading}
-            loading={isLoading}>
-            Send
+            disabled={!isValid || !validateEmail(email) || isLoading}
+            loading={isLoading}
+          >
+            Save
           </Button>
         </div>
       </Box>

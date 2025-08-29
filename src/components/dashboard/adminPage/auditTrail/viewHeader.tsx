@@ -70,8 +70,10 @@ console.log(profile)
               ) : (
                 roles.map((role, index) => (
                   <span key={index}>
-                    {typeof role === "object" && "display_name" in role
-                      ? role.display_name
+                  {/* @ts-ignore */}
+                    {typeof role === "object" && role?.name
+                      //  @ts-ignore
+                      ? role.name
                       : String(role)}
                   </span>
                 ))
