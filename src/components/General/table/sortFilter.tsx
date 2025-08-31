@@ -41,7 +41,7 @@ const SortFilter = ({ onSortChange, activeSort, sortOptions }: SortFilterProps) 
               },
             }}
           >
-            {activeSort || "All"}
+            <Text size="md" c="#000" fw={300}>{activeSort || "All"}</Text>
           </Button>
         </Menu.Target>
         <Menu.Dropdown style={{ minWidth: "120px" }}>

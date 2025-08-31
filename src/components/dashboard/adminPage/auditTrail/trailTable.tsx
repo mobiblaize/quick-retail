@@ -155,7 +155,7 @@ export default function TrailTable({
       onClick={() => handleViewClick(row.uuid)}
       className="text-[#F16722] hover:underline cursor-pointer text-sm"
     >
-      View
+      <Text size="sm" fw={500} c="#F16722">View</Text>
     </button>
   );
 

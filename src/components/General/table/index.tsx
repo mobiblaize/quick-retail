@@ -316,7 +316,7 @@ const TanTable = <T extends Record<string, any>>({
       paymentStatus: "All",
       productStatus: "All",
       reason: "all",
-      type: "all",
+      type: "",
       discountStatus: "All",
       returnStatus: "All",
       role: "",

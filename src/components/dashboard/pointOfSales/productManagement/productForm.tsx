@@ -280,6 +280,7 @@ type OverviewProps = {
   product: {
     category: string;
     has_variations: number;
+    product_name: string;
   };
   cost_price: number;
   selling_price: number;
@@ -338,7 +339,7 @@ export default function ProductForm({ overview }: { overview: OverviewProps }) {
             </Text>
           </div>
           <Text size="1.8rem" c="black" fw={600}>
-            {overview?.name || "N/A"}
+            {overview?.product?.product_name || "N/A"}
           </Text>
         </section>
         <div className="flex mt-5 gap-10">

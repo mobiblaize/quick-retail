@@ -1,4 +1,5 @@
 import { iSelect } from "./formTypes";
+import { Text } from "@mantine/core";
 
 const FormSelect = ({
   label,
@@ -35,16 +36,17 @@ const FormSelect = ({
       }`}
     >
       {label && (
-        <label
-          style={{ color: (error && "#D42620") || color }}
-          className={`${
-            labelPosition === "flex" ? "whitespace-nowrap" : "block"
-          } text-${fontSize} font-normal`}
+        <Text
+          component="label"
+          c={(error && "#D42620") || (color as string) || "#1f2937"}
+          fw={500}
+          size="sm"
+          className={`${labelPosition === "flex" ? "whitespace-nowrap" : "block"}`}
         >
           {label}{" "}
           {required && <span className={`pl-1 ${requiredColor}`}>*</span>}
           {optional && <span className="text-[#787486] pl-1">(Optional)</span>}
-        </label>
+        </Text>
       )}
       <div className="relative flex-1">
         {leftIcon && (
@@ -81,7 +83,7 @@ const FormSelect = ({
           {...rest}
         >
           {placeholder && (
-            <option value="" style={{ color: "#98A2B3" }}>
+            <option value="" style={{ color: "#000" }}>
               {placeholder}
             </option>
           )}
