@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { notifications } from "@mantine/notifications";
 import {
   Title,
-  TextInput,
-  Select,
   Textarea,
   Button,
   Paper,
@@ -13,21 +11,23 @@ import {
   Text,
   Group,
   Image,
-  NumberInput,
   Box,
   ActionIcon,
 } from "@mantine/core";
 import useStore from "./addProductStore";
 import {
   useFetchAllCategories,
-  useFetchAllSubCategories,
+  // useFetchAllSubCategories,
+  useFetchSubCatOfCat,
 } from "../../../../hooks/backendApis/pos/categories";
 import {
-  useFetchAllLocations,
+  useFetchAllLocations,              
   useUpdateProduct,
 } from "../../../../hooks/backendApis/pos/products";
 import ProductVariationSection from "./productVariationSection";
 import { useNavigate } from "react-router";
+import FormInput from "../../../General/formInput";
+import Dropdown from "../../../General/dropdown";
 
 interface VariantPayload {
   variationID: string | null;
@@ -49,6 +49,26 @@ const EditProductForm = () => {
     form_data?.product?.productID
   );
 
+  // ✅ new state for selected category
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>(
+    formData?.product?.category?.id || ""
+  );
+
+  // ✅ fetch categories & subcategories
+  const { data: subCatData } = useFetchSubCatOfCat(
+    selectedCategoryId,
+    !!selectedCategoryId
+  );
+  const subCategories = Array.isArray(subCatData?.data) ? subCatData.data : [];
+
+  const subCategoryOptions = subCategories.map(
+    (cat: { name: string; id: number }) => ({
+      label: cat.name,
+      value: cat.id,
+    })
+  );
+
+
   // Categories & Locations
   const { data: categoryData } = useFetchAllCategories();
   const categories = Array.isArray(categoryData?.data?.data)
@@ -59,14 +79,14 @@ const EditProductForm = () => {
     value: c.id.toString(),
   }));
 
-  const { data: subCategoryData } = useFetchAllSubCategories();
-  const subCategories = Array.isArray(subCategoryData?.data?.data)
-    ? subCategoryData.data.data
-    : [];
-  const subCategoryOptions = subCategories.map((c: any) => ({
-    label: c.name,
-    value: c.id.toString(),
-  }));
+  // const { data: subCategoryData } = useFetchAllSubCategories();
+  // const subCategories = Array.isArray(subCategoryData?.data?.data)
+  //   ? subCategoryData.data.data
+  //   : [];
+  // const subCategoryOptions = subCategories.map((c: any) => ({
+  //   label: c.name,
+  //   value: c.id.toString(),
+  // }));
 
   const { data: locationData } = useFetchAllLocations();
   const locations = Array.isArray(locationData?.data?.stores?.data)
@@ -101,15 +121,15 @@ const EditProductForm = () => {
   const [variants, setVariants] = useState<VariantPayload[]>(
     Array.isArray(form_data?.variations)
       ? form_data.variations.map((v: any) => ({
-          variationID: v.variationID ?? null,
-          sku: v.sku ?? null,
-          cost_price: v.cost_price ?? 0,
-          selling_price: v.selling_price ?? 0,
-          reorder_level: v.reorder_level ?? 0,
-          size: v.attributes?.size ?? null,
-          color: v.attributes?.color ?? null,
-          productID: form_data.product?.productID ?? null,
-        }))
+        variationID: v.variationID ?? null,
+        sku: v.sku ?? null,
+        cost_price: v.cost_price ?? 0,
+        selling_price: v.selling_price ?? 0,
+        reorder_level: v.reorder_level ?? 0,
+        size: v.attributes?.size ?? null,
+        color: v.attributes?.color ?? null,
+        productID: form_data.product?.productID ?? null,
+      }))
       : []
   );
 
@@ -133,23 +153,23 @@ const EditProductForm = () => {
       variants.length > 0
         ? variants
         : [
-            {
-              variationID: null,
-              productID: formData.product?.productID ?? null,
-              sku: `SKU-${Date.now()}`,
-              cost_price: parseInt(formData.cost_price?.toString() || "0", 10),
-              selling_price: parseInt(
-                formData.selling_price?.toString() || "0",
-                10
-              ),
-              reorder_level: parseInt(
-                formData.reorder_level?.toString() || "0",
-                10
-              ),
-              size: formData.size ?? null,
-              color: formData.color ?? null,
-            },
-          ];
+          {
+            variationID: null,
+            productID: formData.product?.productID ?? null,
+            sku: `SKU-${Date.now()}`,
+            cost_price: parseInt(formData.cost_price?.toString() || "0", 10),
+            selling_price: parseInt(
+              formData.selling_price?.toString() || "0",
+              10
+            ),
+            reorder_level: parseInt(
+              formData.reorder_level?.toString() || "0",
+              10
+            ),
+            size: formData.size ?? null,
+            color: formData.color ?? null,
+          },
+        ];
 
     const variationsPayload = preparedVariants.map((v) => {
       const baseSku = v.sku?.replace(/\s/g, "") || `SKU-${Date.now()}`;
@@ -182,8 +202,8 @@ const EditProductForm = () => {
       image_path: Array.isArray(formData.image_path)
         ? formData.image_path
         : formData.image_path
-        ? [formData.image_path as string]
-        : [],
+          ? [formData.image_path as string]
+          : [],
       variations: variationsPayload,
     };
 
@@ -221,48 +241,37 @@ const EditProductForm = () => {
         </Title>
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <FormInput
               label="Product Name"
               placeholder="Enter product name"
+              paddingY={"0.7rem"}
               value={formData?.product?.product_name}
-              onChange={(e) =>
+              onChange={(e: any) =>
                 setFormData({ ...formData, product_name: e.target.value })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <FormInput
               label="SKU (Store Keeping Unit)"
               placeholder="Enter SKU"
+              paddingY={"0.7rem"}
               value={formData.sku}
-              onChange={(e) =>
+              onChange={(e: any) =>
                 setFormData({ ...formData, sku: e.target.value })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
 
-          <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+          {/* <Grid.Col span={{ base: 12, md: 6 }}>
+            <Dropdown
               label="Category"
               placeholder={
                 formData.product.category?.name || "Select product category"
               }
-              data={categoryOptions}
+              options={categoryOptions}
+              paddingY={"0.7rem"}
               value={formData.product.category?.id?.toString() || ""}
               onChange={(value) =>
                 setFormData({
@@ -270,47 +279,64 @@ const EditProductForm = () => {
                   category: categoryOptions.find((c: any) => c.value === value),
                 })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-                input: {
-                  color: "#000 !important",
-                  "&[data-placeholder]": { color: "#000 !important", opacity: 1 },
-                  "::placeholder": { color: "#000 !important", opacity: 1 },
-                },
-              }}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <Dropdown
               label="Sub-category"
               placeholder={
                 formData.product.sub_category?.name ||
                 "Select product sub category"
               }
-              data={subCategoryOptions}
+              options={subCategoryOptions}
+              paddingY={"0.7rem"}
               value={formData.sub_category_id || ""}
               onChange={(value) =>
                 setFormData({ ...formData, sub_category_id: value || "" })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-                input: {
-                  color: "#000 !important",
-                  "&[data-placeholder]": { color: "#000 !important", opacity: 1 },
-                  "::placeholder": { color: "#000 !important", opacity: 1 },
-                },
+            />
+          </Grid.Col> */}
+
+
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Dropdown
+              label="Category"
+              placeholder={
+                formData.product?.category?.name || "Select product category"
+              }
+              options={categoryOptions}
+              paddingY="0.7rem"
+              value={selectedCategoryId} // ✅ keep it number or ""
+              onChange={(value) => {
+                setSelectedCategoryId(Number(value));
+                setFormData({
+                  ...formData,
+                  category_id: value?.toString() || "", // ensure string type
+                  sub_category_id: "", // reset subcategory when category changes
+                });
               }}
+              />
+          </Grid.Col>
+
+          <Grid.Col span={{ base: 12, md: 6 }}>
+            <Dropdown
+              label="Sub-category"
+              placeholder={
+                formData.product?.sub_category?.name || "Select product sub category"
+              }
+              options={subCategoryOptions} // ✅ filtered by selectedCategoryId
+              paddingY="0.7rem"
+              value={formData.sub_category_id?.toString() || ""}
+              onChange={(value) =>
+                setFormData({ 
+                  ...formData, 
+                  sub_category_id: value?.toString() || "" 
+                })
+              }
             />
           </Grid.Col>
+
         </Grid>
       </Paper>
 
@@ -328,43 +354,31 @@ const EditProductForm = () => {
           </Title>
           <Grid gutter="md">
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <NumberInput
+              <FormInput
                 label="Cost Price"
                 placeholder="₦"
                 value={formData.cost_price}
-                onChange={(value) =>
+                paddingY={"0.7rem"}
+                onChange={(value: any) =>
                   setFormData({
                     ...formData,
                     cost_price: value?.toString() || "",
                   })
                 }
-                styles={{
-                  label: {
-                    color: "#1f2937",
-                    fontFamily: "DM Sans, sans-serif",
-                    fontWeight: 500,
-                  },
-                }}
               />
             </Grid.Col>
             <Grid.Col span={{ base: 12, md: 6 }}>
-              <NumberInput
+              <FormInput
                 label="Selling Price"
                 placeholder="₦"
                 value={formData.selling_price}
-                onChange={(value) =>
+                paddingY={"0.7rem"}
+                onChange={(value: any) =>
                   setFormData({
                     ...formData,
                     selling_price: value?.toString() || "",
                   })
                 }
-                styles={{
-                  label: {
-                    color: "#1f2937",
-                    fontFamily: "DM Sans, sans-serif",
-                    fontWeight: 500,
-                  },
-                }}
               />
             </Grid.Col>
           </Grid>
@@ -385,54 +399,39 @@ const EditProductForm = () => {
 
         <Grid gutter="md">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <FormInput
               label="Short Description"
               placeholder="Enter short product description"
               value={formData.product.short_description}
-              onChange={(e) =>
+              paddingY={"0.7rem"}
+              onChange={(e: any) =>
                 setFormData({ ...formData, short_description: e.target.value })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
+            <Text size="sm" c="grey" fw={300} mb={3}>
+              Long Description
+            </Text>
             <Textarea
-              label="Long Description"
+              // label="Long Description"
               placeholder="Enter detailed product description"
               value={formData.product.long_description}
+              // paddingY={"0.7rem"}
               onChange={(e) =>
                 setFormData({ ...formData, long_description: e.target.value })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <TextInput
+            <FormInput
               label="Tags"
               placeholder="Enter tags"
+              paddingY={"0.7rem"}
               value={formData.product.tags}
-              onChange={(e) =>
+              onChange={(e: any) =>
                 setFormData({ ...formData, tags: e.target.value })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
         </Grid>
@@ -444,6 +443,83 @@ const EditProductForm = () => {
           </Text>
 
           <Group align="center" gap="md">
+            {(serverImages.length > 0 || images.length > 0) && (
+              <Group gap="md">
+                {serverImages.map((url, index) => (
+                  <Box key={`server-${index}`} pos="relative" w={200} h={200}>
+                    <Image
+                      src={url}
+                      alt={`server-preview-${index}`}
+                      w="100%"
+                      h="100%"
+                      fit="cover"
+                      radius="md"
+                    />
+                  </Box>
+                ))}
+
+                {images.map((file, index) => (
+                  <Box
+                    key={`uploaded-${index}`}
+                    pos="relative"
+                    w={200}
+                    h={200}
+                    className="group" // 👈 group to control hover
+                  >
+                    <Image
+                      src={URL.createObjectURL(file)}
+                      alt={`preview-${index}`}
+                      w="100%"
+                      h="100%"
+                      fit="cover"
+                      radius="md"
+                    />
+
+                    <ActionIcon
+                      variant="filled"
+                      color="red"
+                      size="sm"
+                      radius="xl"
+                      pos="absolute"
+                      top={6}
+                      right={6}
+                      onClick={() => handleRemoveImage(index)}
+                      className="opacity-0 group-hover:opacity-100 transition-all duration-200 border-2 border-white shadow-lg" // 👈 fade-in on hover
+                    >
+                      <X size={14} strokeWidth={3} />
+                    </ActionIcon>
+                  </Box>
+                ))}
+              </Group>
+            )}
+
+            {Array.isArray(formData?.image_path) ? (
+              formData.image_path.map((imgSrc, index) => (
+                <Image
+                  key={index}
+                  src={imgSrc}
+                  w={200}
+                  h={200}
+                  fit="cover"
+                  radius="md"
+                  mt="md"
+                  alt={`Image ${index + 1}`}
+                />
+              ))
+            ) : formData?.image_path ? (
+              <Image
+                src={formData.image_path}
+                w={200}
+                h={200}
+                fit="cover"
+                radius="md"
+                mt="md"
+                alt="Product image"
+              />
+            ) : null}
+
+
+
             <Paper
               w={200}
               h={200}
@@ -470,14 +546,18 @@ const EditProductForm = () => {
               </Text>
             </Paper>
 
-            <Button
+
+
+
+
+            {/* <Button
               variant="subtle"
               color="orange"
               leftSection={<UploadCloud size={16} />}
               onClick={handleUploadClick}
             >
               Add more photos
-            </Button>
+            </Button> */}
 
             <input
               type="file"
@@ -489,72 +569,7 @@ const EditProductForm = () => {
             />
           </Group>
 
-          {Array.isArray(formData?.image_path) ? (
-            formData.image_path.map((imgSrc, index) => (
-              <Image
-                key={index}
-                src={imgSrc}
-                w={200}
-                h={200}
-                fit="cover"
-                radius="md"
-                mt="md"
-                alt={`Image ${index + 1}`}
-              />
-            ))
-          ) : formData?.image_path ? (
-            <Image
-              src={formData.image_path}
-              w={200}
-              h={200}
-              fit="cover"
-              radius="md"
-              mt="md"
-              alt="Product image"
-            />
-          ) : null}
 
-          {(serverImages.length > 0 || images.length > 0) && (
-            <Group gap="md" mt="md">
-              {serverImages.map((url, index) => (
-                <Box key={`server-${index}`} pos="relative" w={96} h={96}>
-                  <Image
-                    src={url}
-                    alt={`server-preview-${index}`}
-                    w="100%"
-                    h="100%"
-                    fit="cover"
-                    radius="md"
-                  />
-                </Box>
-              ))}
-
-              {images.map((file, index) => (
-                <Box key={`uploaded-${index}`} pos="relative" w={96} h={96}>
-                  <Image
-                    src={URL.createObjectURL(file)}
-                    alt={`preview-${index}`}
-                    w="100%"
-                    h="100%"
-                    fit="cover"
-                    radius="md"
-                  />
-                  <ActionIcon
-                    variant="filled"
-                    color="red"
-                    size="sm"
-                    radius="xl"
-                    pos="absolute"
-                    top={4}
-                    right={4}
-                    onClick={() => handleRemoveImage(index)}
-                  >
-                    <X size={12} />
-                  </ActionIcon>
-                </Box>
-              ))}
-            </Group>
-          )}
         </Box>
       </Paper>
 
@@ -572,30 +587,25 @@ const EditProductForm = () => {
 
         <Grid gutter="md" mb="lg">
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <FormInput
               label="Total Stock Quantity"
               placeholder="Enter stock quantity"
+              paddingY={"0.7rem"}
               value={formData.quantity}
-              onChange={(value) =>
+              onChange={(value: any) =>
                 setFormData({ ...formData, quantity: value?.toString() || "" })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <Select
+            <Dropdown
               label="Location"
               placeholder={
                 formData.product.location?.name || "Select location"
               }
-              data={locationOptions}
+              options={locationOptions}
+              paddingY={"0.7rem"}
               value={formData.product.location?.id || ""}
               onChange={(value) =>
                 setFormData({
@@ -603,39 +613,21 @@ const EditProductForm = () => {
                   location: locationOptions.find((c: any) => c.value === value),
                 })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-                input: {
-                  color: "#000 !important",
-                  "&[data-placeholder]": { color: "#000 !important", opacity: 1 },
-                  "::placeholder": { color: "#000 !important", opacity: 1 },
-                },
-              }}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
-            <NumberInput
+            <FormInput
               label="Reorder Level"
               placeholder="Enter a reorder level"
+              paddingY={"0.7rem"}
               value={formData.reorder_level}
-              onChange={(value) =>
+              onChange={(value: any) =>
                 setFormData({
                   ...formData,
                   reorder_level: value?.toString() || "",
                 })
               }
-              styles={{
-                label: {
-                  color: "#1f2937",
-                  fontFamily: "DM Sans, sans-serif",
-                  fontWeight: 500,
-                },
-              }}
             />
           </Grid.Col>
         </Grid>
@@ -649,12 +641,7 @@ const EditProductForm = () => {
 
       <Paper p="xl" radius="md" withBorder>
         <Group justify="flex-end">
-          <Button
-            color="orange"
-            onClick={handleUpdateSubmit}
-            loading={isLoading}
-            size="md"
-          >
+          <Button variant="filled-primary" onClick={handleUpdateSubmit} loading={isLoading} style={{ width: 150 }}>
             {isLoading ? "Updating..." : "Update Product"}
           </Button>
         </Group>

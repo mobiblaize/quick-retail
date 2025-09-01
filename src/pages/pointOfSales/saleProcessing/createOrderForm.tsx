@@ -5,6 +5,7 @@ import SearchProduct from "../../../components/dashboard/pointOfSales/salesProce
 import {
   useFetchSingleSale,
 } from "../../../hooks/backendApis/pos/salesProcessing";
+import { notifications } from "@mantine/notifications";
 
 interface CreateOrderFormProps {
   registerSubmit: (handler: (payload: any) => void) => void;
@@ -68,18 +69,18 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
 
     // @ts-ignore
     updatePaymentDetails((prev) => ({
-  ...prev,
-  items: payloadItems,
-}));
+      ...prev,
+      items: payloadItems,
+    }));
 
   };
 
   const handleCustomerChange = (id: string | null) => {
     // console.log("Customer ID selected:", id);
-     // @ts-ignore
+    // @ts-ignore
     updatePaymentDetails((prev) => ({
       ...prev,
-      customerId: id, 
+      customerId: id,
     }));
   };
 
@@ -100,19 +101,23 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         };
 
         if (!payload.customerId) {
-          alert("Please select a customer.");
+          notifications.show({
+            title: "Missing customer",
+            message: "Please select a customer.",
+            color: "red",
+          });
           return;
         }
 
         if (!payload.items || payload.items.length === 0) {
-          alert("Please select at least one item.");
+          notifications.show({
+            title: "No items selected",
+            message: "Please select at least one item.",
+            color: "red",
+          });
           return;
         }
 
-        // console.log("Submitting payload:", payload);
-        // Now parent can handle the mutation / API call
-        // because CreateOrderForm guarantees the payload is complete
-        // The parent (CreateOrderPageContent) will pass this to the API
         return payload;
       });
     }
@@ -121,7 +126,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   return (
     <main className="flex flex-col gap-8">
       <SearchProduct
-        onSelect={() => {}}
+        onSelect={() => { }}
         onItemsChange={handleSelectedItemsChange}
         initialItems={paymentDetails.items}
       />

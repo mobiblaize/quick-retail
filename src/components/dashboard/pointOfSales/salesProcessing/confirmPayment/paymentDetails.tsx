@@ -1,4 +1,4 @@
-import { Divider, Text } from "@mantine/core";
+import { Divider, Input, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { CircleHelp } from "lucide-react";
 import Dropdown2 from "../../../../General/dropdown2";
@@ -133,58 +133,42 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
 
         {selectedMethod === "cash" && (
           <>
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Amount Collected
-              </label>
-              <NumericFormat
-                value={localAmount}
-                onValueChange={(values) => {
-                  const numericAmount = parseFloat(values.value || "0");
-                  const numericTotal = parseFloat(sanitizeAmount(total));
+           <div style={{ width: "100%" }}>
+  <Input.Wrapper
+    label={
+      <Text size="sm" fw={500} c="gray.7" mb={4}>
+        Amount Collected
+      </Text>
+    }
+    error={amountError && "Collected amount cannot be less than total"}
+  >
+    <NumericFormat
+      value={localAmount}
+      onValueChange={(values) => {
+        const numericAmount = parseFloat(values.value || "0");
+        const numericTotal = parseFloat(sanitizeAmount(total));
 
-                  if (numericAmount < numericTotal) {
-                    setAmountError(
-                      "Collected amount cannot be less than total"
-                    );
-                  } else {
-                    setAmountError("");
-                  }
+        if (numericAmount < numericTotal) {
+          setAmountError("Collected amount cannot be less than total");
+        } else {
+          setAmountError("");
+        }
 
-                  setLocalAmount(values.value);
-                  onPaymentChange(selectedMethod, values.value);
-                }}
-                thousandSeparator
-                prefix="₦"
-                allowNegative={false}
-                decimalScale={2}
-                fixedDecimalScale
-                allowLeadingZeros={false}
-                placeholder="Enter the amount customer paid in cash"
-                className={`
-      w-full
-      text-gray-900
-      border
-      ${amountError ? "border-red-500" : "border-gray-300"}
-      rounded-md
-      px-3
-      py-2
-      text-sm
-      shadow-sm
-      focus:outline-none
-      focus:ring-2
-      ${
-        amountError
-          ? "focus:ring-red-500 focus:border-red-500"
-          : "focus:ring-blue-500 focus:border-blue-500"
-      }
-      disabled:bg-gray-200
-    `}
-              />
-              {amountError && (
-                <p className="text-sm text-red-600 mt-1">{amountError}</p>
-              )}
-            </div>
+        setLocalAmount(values.value);
+        onPaymentChange(selectedMethod, values.value);
+      }}
+      thousandSeparator
+      prefix="₦"
+      allowNegative={false}
+      decimalScale={2}
+      fixedDecimalScale
+      allowLeadingZeros={false}
+      placeholder="Enter the amount customer paid in cash"
+      customInput={Input} // ✅ use Mantine Input for styling
+      error={!!amountError}
+    />
+  </Input.Wrapper>
+</div>
 
             <FormInput
               type="text"

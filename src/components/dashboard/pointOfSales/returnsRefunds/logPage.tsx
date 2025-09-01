@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { Divider, Text } from "@mantine/core";
+import { Button, Divider, FileButton, Group, NumberInput, Stack, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import Dropdown2 from "../../../General/dropdown2";
 import {
@@ -66,9 +66,9 @@ const LogOrder = () => {
     setQuantitiesReturned((prev) => ({ ...prev, [orderDetailId]: value }));
   };
 
-  const handleAddPhotos = (files: FileList | null) => {
+  const handleAddPhotos = (files: File[] | null) => {
     if (files) {
-      setDefectImages((prev) => [...prev, ...Array.from(files)]);
+      setDefectImages((prev) => [...prev, ...files]);
     }
   };
 
@@ -107,7 +107,7 @@ const LogOrder = () => {
       });
       return;
     }
-  
+
     if (!returnReason) {
       notifications.show({
         title: "Validation Error",
@@ -116,7 +116,7 @@ const LogOrder = () => {
       });
       return;
     }
-  
+
     // Gather selected order details with quantity returned > 0
     const order_detail = Object.entries(selectedItems)
       .filter(
@@ -127,7 +127,7 @@ const LogOrder = () => {
         order_detail_id: orderDetailId,
         quantity_returned: quantitiesReturned[orderDetailId] || 0,
       }));
-  
+
     if (order_detail.length === 0) {
       notifications.show({
         title: "Validation Error",
@@ -137,7 +137,7 @@ const LogOrder = () => {
       });
       return;
     }
-  
+
     let defect_image: string[] = [];
     try {
       defect_image = await Promise.all(defectImages.map(fileToBase64));
@@ -149,7 +149,7 @@ const LogOrder = () => {
       });
       return;
     }
-  
+
     // Payload ready
     const payload = {
       order_id: submittedOrderId,
@@ -158,9 +158,9 @@ const LogOrder = () => {
       notes: notes || null,
       defect_image,
     };
-  
+
     console.log("Payload to send:", payload);
-  
+
     mutate(payload, {
       onSuccess: () => {
         notifications.show({
@@ -168,7 +168,7 @@ const LogOrder = () => {
           message: "Return information successfully submitted.",
           color: "green",
         });
-  
+
         // reset form states as needed
         setOrderId("");
         setSubmittedOrderId("");
@@ -177,20 +177,20 @@ const LogOrder = () => {
         setReturnReason("");
         setNotes("");
         setDefectImages([]);
-  
-     
-        navigate(ROUTES.returns); 
+
+
+        navigate(ROUTES.returns);
       },
-      onError: (error: any) => {
-        notifications.show({
-          title: "Error",
-          message: error?.response?.data?.message || "Failed to submit return",
-          color: "red",
-        });
+      onError: () => {
+        // notifications.show({
+        //   title: "Error",
+        //   message: error?.response?.data?.message || "Failed to submit return",
+        //   color: "red",
+        // });
       },
     });
   };
-  
+
 
   return (
     <main className="w-full h-auto rounded-lg bg-white pb-[3em]">
@@ -246,7 +246,7 @@ const LogOrder = () => {
                     return (
                       <li
                         key={index}
-                        className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 "
+                        className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 bg-[#F0F2F5]"
                       >
                         <div className="flex items-center gap-2 mb-3 md:mb-0">
                           <input
@@ -263,47 +263,62 @@ const LogOrder = () => {
                           <img
                             src={product?.image_path || "/placeholder.png"}
                             alt={product?.name || "Product Image"}
-                            className="w-16 h-16 md:w-20 md:h-20 object-cover rounded border"
+                            className="w-16 h-16 md:w-15 md:h-15 object-cover"
                           />
                         </div>
 
                         <div className="flex flex-col md:flex-row flex-1 justify-between w-full gap-4">
-                          <div className="flex flex-col gap-1">
-                            <span className="font-semibold text-gray-900 text-base">
+                          <Stack gap={4} align="flex-start">
+                            <Text fw={600} c="dark" size="sm">
                               {product?.name || "Product Name"}
-                            </span>
-                            <div className="text-sm text-gray-600">
-                              <div>EAN: {product?.ean || "N/A"}</div>
-                              <div>SKU: {product?.sku || "N/A"}</div>
-                            </div>
-                          </div>
+                            </Text>
 
-                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
-                            <span className="text-xs text-gray-500">
+                            <Stack gap={2}>
+                              <Text size="xs" c="dimmed">
+                                EAN: {product?.ean || "N/A"}
+                              </Text>
+                              <Text size="xs" c="dimmed">
+                                SKU: {product?.sku || "N/A"}
+                              </Text>
+                            </Stack>
+                          </Stack>
+
+                          <Stack
+                            gap={2}
+                            align="flex-start"
+                            className="min-w-[90px] md:items-center"
+                          >
+                            <Text size="xs" c="dimmed">
                               Unit Price
-                            </span>
-                            <span className="font-medium text-gray-700">
-                              ₦{" "}
-                              {Number(
-                                product?.selling_price || 0
-                              ).toLocaleString()}
-                            </span>
-                          </div>
+                            </Text>
+                            <Text fw={500} c="dark">
+                              ₦ {Number(product?.selling_price || 0).toLocaleString()}
+                            </Text>
+                          </Stack>
 
-                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
-                            <span className="text-xs text-gray-500">
+                          <Stack
+                            gap={2}
+                            align="flex-start"
+                            className="min-w-[90px] md:items-center"
+                          >
+                            <Text size="xs" c="dimmed">
                               Quantity
-                            </span>
-                            <input
-                              type="number"
-                              min={1}
+                            </Text>
+                            <FormInput
                               value={salesOrder?.quantity_ordered || 0}
-                              className="w-full md:w-16 border rounded px-2 py-1 text-center text-gray-700"
-                              disabled
+                              min={1}
+                            // disabled
+                            // hideControls
+                            // styles={{
+                            //   input: {
+                            //     textAlign: "center",
+                            //   },
+                            // }}
+                            // w={{ base: "100%", md: 64 }} // replaces w-full and md:w-16
                             />
-                          </div>
+                          </Stack>
 
-                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
+                          {/* <div className="flex flex-col items-start md:items-center min-w-[90px]">
                             <span className="text-xs text-gray-500">
                               Return Quantity
                             </span>
@@ -312,7 +327,7 @@ const LogOrder = () => {
                               min={1}
                               value={
                                 quantitiesReturned[
-                                  salesOrder.order_detail_id
+                                salesOrder.order_detail_id
                                 ] || 0
                               }
                               // onChange={(e) =>
@@ -324,7 +339,7 @@ const LogOrder = () => {
                               onChange={(e) => {
                                 const inputQty = parseInt(e.target.value, 10);
                                 const orderedQty = salesOrder.quantity_ordered;
-                              
+
                                 if (inputQty <= orderedQty) {
                                   handleQuantityReturnedChange(salesOrder.order_detail_id, inputQty);
                                 } else {
@@ -335,9 +350,43 @@ const LogOrder = () => {
                                   });
                                 }
                               }}
-                              
+
                               className="w-full md:w-16 border rounded px-2 py-1 text-center text-gray-700"
                               disabled={!isSelected}
+                            />
+                          </div> */}
+
+
+                          <div className="flex flex-col items-start md:items-center min-w-[90px]">
+                            <Text size="xs" c="dimmed">
+                              Return Quantity
+                            </Text>
+
+                            <NumberInput
+                              min={1}
+                              value={quantitiesReturned[salesOrder.order_detail_id] || 0}
+                              onChange={(value) => {
+                                const inputQty = Number(value);
+                                const orderedQty = salesOrder.quantity_ordered;
+
+                                if (inputQty <= orderedQty) {
+                                  handleQuantityReturnedChange(salesOrder.order_detail_id, inputQty);
+                                } else {
+                                  notifications.show({
+                                    title: "Invalid Quantity",
+                                    message: `You can't return more than ${orderedQty} items.`,
+                                    color: "red",
+                                  });
+                                }
+                              }}
+                              disabled={!isSelected}
+                              className="w-full md:w-16"
+                              styles={{
+                                input: {
+                                  textAlign: "center",
+                                  color: "#374151", // Mantine gray-700
+                                },
+                              }}
                             />
                           </div>
                         </div>
@@ -361,6 +410,7 @@ const LogOrder = () => {
                 { label: "Others (enter reason in notes)", value: "Others" },
               ]}
               placeholder="Select a reason"
+              // paddingY={7}
               value={returnReason}
               onChange={setReturnReason}
               required
@@ -370,7 +420,7 @@ const LogOrder = () => {
             <FormInput
               label="Notes (optional)"
               placeholder="Enter random notes for return"
-              paddingY={6}
+              // paddingY={7}
               value={notes}
               onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
                 setNotes(e.target.value)
@@ -378,7 +428,7 @@ const LogOrder = () => {
             />
 
             <div className="md:col-span-2">
-              <label className="text-red-400 cursor-pointer inline-flex items-center gap-1">
+              {/* <label className="text-red-400 cursor-pointer inline-flex items-center gap-1">
                 <span>
                   {defectImages.length > 0 ? "Add More Photos" : "Add Photos"}
                 </span>
@@ -390,7 +440,30 @@ const LogOrder = () => {
                   multiple
                   onChange={(e) => handleAddPhotos(e.target.files)}
                 />
-              </label>
+              </label> */}
+
+              <FileButton
+                onChange={(files) => handleAddPhotos(files)}
+                accept="image/*"
+                multiple
+              >
+                {(props) => (
+                  <Button
+                    {...props}
+                    variant="light"
+                    color="orange"
+                    radius="md"
+                    leftSection={
+                      <Text size="lg" fw={500}>
+                        +
+                      </Text>
+                    }
+                  >
+                    {defectImages.length > 0 ? "Add More Photos" : "Add Photos"}
+                  </Button>
+                )}
+              </FileButton>
+
 
               <div className="mt-2 flex gap-4 flex-wrap">
                 {defectImages.map((file, index) => (
@@ -421,12 +494,12 @@ const LogOrder = () => {
       )}
 
       {data?.data?.sale_order_details && (
-        <div className="mt-6 p-4 bg-white rounded-lg bg-gray-50">
+        <div className="mt-6 p-4 rounded-lg bg-gray-50">
           <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
             REFUND DETAILS
           </Text>
           <Divider size="sm" className="my-2" color="#E4E7EC" />
-          {(() => {
+          {/* {(() => {
             const { subtotal, discount, tax, total } = calculateRefundDetails();
             return (
               <div className="space-y-2">
@@ -456,10 +529,45 @@ const LogOrder = () => {
                 </div>
               </div>
             );
-          })()}
+          })()} */}
+
+{(() => {
+  const { subtotal, discount, tax, total } = calculateRefundDetails();
+  return (
+    <Stack gap="xs">
+      <Group justify="space-between">
+        <Text size="sm" c="dimmed">Subtotal</Text>
+        <Text size="sm" fw={500}>
+          ₦ {subtotal.toLocaleString()}
+        </Text>
+      </Group>
+
+      <Group justify="space-between">
+        <Text size="sm" c="dimmed">Discount</Text>
+        <Text size="sm" fw={500}>
+          ₦ {discount.toLocaleString()}
+        </Text>
+      </Group>
+
+      <Group justify="space-between">
+        <Text size="sm" c="dimmed">Tax (VAT)</Text>
+        <Text size="sm" fw={500}>
+          ₦ {tax.toLocaleString()}
+        </Text>
+      </Group>
+
+      <Group justify="space-between">
+        <Text size="md" fw={600}>Total</Text>
+        <Text size="md" fw={600}>
+          ₦ {total.toLocaleString()}
+        </Text>
+      </Group>
+    </Stack>
+  );
+})()}
         </div>
       )}
-      <div className="fixed bottom-4 left-4 right-9 flex flex-col md:flex-row justify-end gap-3 z-50">
+      {/* <div className="fixed bottom-4 left-4 right-9 flex flex-col md:flex-row justify-end gap-3 z-50">
         <button
           type="button"
           onClick={handleBack}
@@ -475,6 +583,29 @@ const LogOrder = () => {
         >
           Log Returns
         </button>
+      </div> */}
+
+
+
+      <div
+        key="search-product-buttons"
+        className="flex gap-4 justify-end mt-[4em] bg-[#fff] p-4"
+      >
+        <Button
+          variant="outline-primary"
+          onClick={handleBack}
+          style={{ width: 150 }}
+        >
+          Cancel
+        </Button>
+
+        <Button
+          variant="filled-primary"
+          onClick={handleSave}
+          style={{ width: 150 }}
+        >
+          Log Return
+        </Button>
       </div>
     </main>
   );

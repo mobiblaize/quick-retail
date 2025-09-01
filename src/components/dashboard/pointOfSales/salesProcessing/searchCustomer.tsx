@@ -1,4 +1,4 @@
-import { Divider, Text } from "@mantine/core";
+import { Box, Divider, Text, Button, Group, Stack, ActionIcon } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { ChevronDown, ChevronUp, Search, X } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
@@ -133,88 +133,131 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     });
   };
   return (
-    <main className="w-full h-auto rounded-lg bg-white">
-      <header className="px-6 py-2 cursor-pointer" onClick={toggleExpand}>
-        <div className="flex items-center justify-between">
+    <Box
+      w="100%"
+      h="auto"
+      style={(theme) => ({
+        borderRadius: theme.radius.lg,
+        backgroundColor: "white",
+      })}
+    >
+      <Box
+        px="lg"
+        py="xs"
+        style={{ cursor: "pointer" }}
+        onClick={toggleExpand}
+      >
+        <Group justify="space-between" align="center">
           <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
             {isAddingCustomer ? "Add New Customer" : "Customer"}
           </Text>
           {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
-        </div>
-      </header>
+        </Group>
+      </Box>
 
       {isExpanded && (
         <>
-          <Divider size="sm" className="mt-3" color="#E4E7EC" />
+          <Divider size="sm" mt="xs" color="#E4E7EC" />
 
-          <div className="w-full px-6 pb-6 relative">
+          <Box px="lg" pb="lg" pos="relative" w="100%">
             {!isAddingCustomer ? (
               <>
-                <div className="relative max-w-md">
-                  <h1 className="mt-[1em]">SEARCH CUSTOMER</h1>
+                <Box pos="relative" mt="md">
+                  <Text size="lg" fw={500} c="textSecondary.9">
+                    Search Customer
+                  </Text>
 
-                  <FormInput
-                    value={searchTerm}
-                    onChange={handleSearchChange}
-                    placeholder="Enter Customer Name"
-                    leftIcon={<Search color="#667185" />}
-                    readOnly={!!selectedCustomer}
-                    rightIcon={
-                      selectedCustomer ? (
-                        <button
-                          onClick={() => {
-                            setSelectedCustomer(null);
-                            setSearchTerm("");
-                            onCustomerSelect(null);
-                          }}
-                          type="button"
-                          className="focus:outline-none"
-                        >
-                          <X
-                            size={18}
-                            className="text-gray-400 hover:text-gray-600"
-                          />
-                        </button>
-                      ) : null
-                    }
-                  />
+                  <Box maw={400}>
+                    <FormInput
+                      value={searchTerm}
+                      onChange={handleSearchChange}
+                      placeholder="Enter Customer Name"
+                      leftIcon={<Search color="#667185" />}
+                      readOnly={!!selectedCustomer}
+                      rightIcon={
+                        selectedCustomer ? (
+                          <ActionIcon
+                            onClick={() => {
+                              setSelectedCustomer(null);
+                              setSearchTerm("");
+                              onCustomerSelect(null);
+                            }}
+                            variant="subtle"
+                            size="sm"
+                            color="gray"
+                          >
+                            <X size={18} />
+                          </ActionIcon>
+                        ) : null
+                      }
+                    />
+                  </Box>
 
                   {/* Search dropdown */}
                   {!selectedCustomer &&
                     searchTerm.length > 2 &&
                     customerList.length > 0 && (
-                      <div className="absolute left-0 right-0 border border-gray-300 mt-1 rounded shadow-md max-h-48 overflow-y-auto z-10 bg-white">
+                      <Box
+                        pos="absolute"
+                        left={0}
+                        right={0}
+                        mt="xs"
+                        style={(theme) => ({
+                          border: `1px solid ${theme.colors.gray[3]}`,
+                          borderRadius: theme.radius.md,
+                          boxShadow: theme.shadows.md,
+                          maxHeight: 192,
+                          overflowY: "auto",
+                          zIndex: 10,
+                          backgroundColor: theme.white,
+                        })}
+                      >
                         {customerList.map((customer) => (
-                          <div
+                          <Box
                             key={customer.customerID}
-                            className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-b last:border-none"
+                            px="md"
+                            py="xs"
                             onClick={() => handleSelectCustomer(customer)}
+                            style={(theme) => ({
+                              cursor: "pointer",
+                              borderBottom: `1px solid ${theme.colors.gray[3]}`,
+                              "&:last-of-type": { borderBottom: "none" },
+                              "&:hover": {
+                                backgroundColor: theme.colors.gray[1],
+                              },
+                            })}
                           >
-                            <p className="font-medium text-gray-900">
+                            <Text fw={500} c="dark.9">
                               {customer.customer_name}
-                            </p>
-                            <p className="text-sm text-gray-700">
+                            </Text>
+                            <Text size="sm" c="gray.7">
                               {customer.customer_phone}
-                            </p>
-                            <p className="text-sm text-gray-700">
+                            </Text>
+                            <Text size="sm" c="gray.7">
                               {customer.customer_email}
-                            </p>
-                          </div>
+                            </Text>
+                          </Box>
                         ))}
-                      </div>
+                      </Box>
                     )}
-                </div>
+                </Box>
 
-                <div className="mt-[1em] text-[#EB5017] cursor-pointer">
-                  <span onClick={() => setIsAddingCustomer(true)}>
+                <Box mt="md">
+                  <Text
+                    c="customPrimary.6"
+                    fw={600}
+                    size="md"
+                    style={{ cursor: "pointer" }}
+                    onClick={() => setIsAddingCustomer(true)}
+                  >
                     + Add New Customer
-                  </span>
-                </div>
+                  </Text>
+                </Box>
               </>
             ) : (
               // Add Customer Form
-              <div className="flex flex-col gap-4 w-full mt-4">
-                <div className="grid grid-cols-2 gap-4 ">
+              <Stack gap="md" w="100%" mt="md">
+                <Group gap="md" grow>
                   <FormInput
                     label="Customer Name"
                     value={newCustomer.customer_name}
@@ -235,8 +278,8 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                       })
                     }
                   />
-                </div>
-                <div className="grid grid-cols-2 gap-4">
+                </Group>
+                <Group gap="md" grow>
                   <FormInput
                     label="Phone"
                     value={newCustomer.customer_phone}
@@ -257,27 +300,25 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                       })
                     }
                   />
-                </div>
-                <div className="flex gap-4 justify-start text-right items-end">
-                  <button
-                    className="mt-2  w-[150px] px-2 h-[44px]  border border-[#F16722] text-[#F16722] bg-[white]  rounded-lg"
-                    onClick={() => setIsAddingCustomer(false)}
-                  >
+                </Group>
+
+
+                <div key="search-product-buttons" className="flex gap-4 justify-start">
+                  <Button variant="outline-primary"  onClick={() => setIsAddingCustomer(false)}>
                     Cancel
-                  </button>
-                  <button
-                    className="mt-4  w-[150px] h-[44px] px-2 rounded-lg text-[white] bg-[#F16722] font-medium "
-                    onClick={handleCreateCustomer}
-                  >
-                    Create Customer
-                  </button>
+                  </Button>
+                  <Button variant="filled-primary" onClick={handleCreateCustomer}>
+                  Create Customer
+                  </Button>
                 </div>
-              </div>
+
+
+              </Stack>
             )}
-          </div>
+          </Box>
         </>
       )}
-    </main>
+    </Box>
   );
 };
 

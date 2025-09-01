@@ -1,4 +1,4 @@
-import { Table, Box, Loader, Pagination } from "@mantine/core";
+import { Table, Box, Loader, Pagination, Text } from "@mantine/core";
 import type { ReactNode } from "react";
 import * as React from "react";
 import EmptyState2 from "../table/EmptyStte2";
@@ -45,16 +45,16 @@ interface GenericTableProps<T> {
 
   // Filter props
   onFilterChange?: (filters: FilterValues) => void;
-  filters?: FilterValues; 
+  filters?: FilterValues;
   showFilter?: boolean;
   tableType?:
-    | "inventory"
-    | "sales"
-    | "product"
-    | "returns"
-    | "discount"
-    | "audit"
-    | "transaction";
+  | "inventory"
+  | "sales"
+  | "product"
+  | "returns"
+  | "discount"
+  | "audit"
+  | "transaction";
   locations?: string[];
   categories?: string[];
 }
@@ -90,7 +90,7 @@ export default function GenericTable<T>({
     orderStatus: "",
     role: "",
     module: ""
-  }, 
+  },
 }: GenericTableProps<T>) {
   if (isLoading) {
     return (
@@ -128,42 +128,42 @@ export default function GenericTable<T>({
   // const isValueSet = (v: any) =>
   // Array.isArray(v) ? v.length > 0 : v !== undefined && v !== null && v !== "";
 
-//   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
+  //   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
-//   const isValueSet = (v: any) => {
-//     if (Array.isArray(v)) return v.length > 0;
-//     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
-//     return (
-//       v !== undefined &&
-//       v !== null &&
-//       v !== "" &&
-//       !DEFAULT_FILTER_VALUES.includes(v)
-//     );
-//   };
-  
-
-// const filtersApplied = React.useMemo(
-//   () => Object.values(appliedFilters).some(isValueSet),
-//   [appliedFilters]
-// );
-
-  
-
-// const handleFilterChange = (filters: FilterValues) => {
-//   console.log("Filters applied:", filters);
-//   setAppliedFilters(filters);
-//   onFilterChange?.(filters);
-//   setShowFilterPanel(false);
-// };
+  //   const isValueSet = (v: any) => {
+  //     if (Array.isArray(v)) return v.length > 0;
+  //     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
+  //     return (
+  //       v !== undefined &&
+  //       v !== null &&
+  //       v !== "" &&
+  //       !DEFAULT_FILTER_VALUES.includes(v)
+  //     );
+  //   };
 
 
-//   const handleResetFilters = () => {
-//     setAppliedFilters(initialFilters);
-//     onFilterChange?.(initialFilters);
-//     setShowFilterPanel(false);
-//   };
+  // const filtersApplied = React.useMemo(
+  //   () => Object.values(appliedFilters).some(isValueSet),
+  //   [appliedFilters]
+  // );
 
-const DEFAULT_FILTER_VALUES = ["All", "", "all"];
+
+
+  // const handleFilterChange = (filters: FilterValues) => {
+  //   console.log("Filters applied:", filters);
+  //   setAppliedFilters(filters);
+  //   onFilterChange?.(filters);
+  //   setShowFilterPanel(false);
+  // };
+
+
+  //   const handleResetFilters = () => {
+  //     setAppliedFilters(initialFilters);
+  //     onFilterChange?.(initialFilters);
+  //     setShowFilterPanel(false);
+  //   };
+
+  const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
   const isValueSet = (v: any) => {
     if (Array.isArray(v)) return v.length > 0;
@@ -304,40 +304,40 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
                         showLocation={true}
-                          showStockLevel={true}
-                          showOrderStatus={true}
-                          locations={locations}
+                        showStockLevel={true}
+                        showOrderStatus={true}
+                        locations={locations}
                         filterType="inventory"
                       />
                     )}
-                      {tableType === "sales" && (
-                        <ReusableFilterComponent
+                    {tableType === "sales" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          showPrice={true}
-                          showPaymentStatus={true}
-                          filterType={"sales"}
+                        showPrice={true}
+                        showPaymentStatus={true}
+                        filterType={"sales"}
 
-                        />
-                      )}
-                        {tableType === "discount" && (
-                        <ReusableFilterComponent
+                      />
+                    )}
+                    {tableType === "discount" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          showDiscountType={true}
-                          showDiscountStatus={true}
-                          filterType={"discount"}
-                        />
-                      )}
-                      {tableType === "returns" && (
-                        <ReusableFilterComponent
+                        showDiscountType={true}
+                        showDiscountStatus={true}
+                        filterType={"discount"}
+                      />
+                    )}
+                    {tableType === "returns" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          locations={locations}
-                          showReason={true}
-                          showReturnStatus={true}
-                          filterType={"returns"}
-                          // showLocation={true}
-                        />
-                      )}
-{/* 
+                        locations={locations}
+                        showReason={true}
+                        showReturnStatus={true}
+                        filterType={"returns"}
+                      // showLocation={true}
+                      />
+                    )}
+                    {/* 
                       {tableType === "audit" && (
                         <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
@@ -421,7 +421,7 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
               borderTop: "1px solid #f1f5f9",
             }}
           >
-            <Pagination
+            {/* <Pagination
               total={paginationData.last_page}
               value={paginationData.current_page}
               onChange={onPageChange}
@@ -438,6 +438,33 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
                   "&:hover:not([data-active])": { backgroundColor: "#f8fafc" },
                 },
               }}
+            /> */}
+
+
+            <Pagination
+              total={paginationData.last_page}
+              value={paginationData.current_page}
+              onChange={onPageChange}
+              size="sm"
+              getControlProps={(control) => ({
+                children:
+                  typeof control === "number" ? (
+                    <Text fz="sm" fw={500} c="gray.7">
+                      {control}
+                    </Text>
+                  ) : undefined,
+              })}
+              styles={(theme) => ({
+                control: {
+                  border: "none",
+                  "&[data-active]": {
+                    backgroundColor: "transparent", // no fill
+                    border: `1px solid ${theme.colors.orange[6]}`, // orange border
+                    color: theme.colors.orange[6], // orange text
+                  },
+                  "&:hover:not([data-active])": { backgroundColor: theme.colors.gray[0] },
+                },
+              })}
             />
           </Box>
         )}

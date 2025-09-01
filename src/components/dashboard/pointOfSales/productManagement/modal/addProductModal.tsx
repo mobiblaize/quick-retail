@@ -100,7 +100,7 @@ export default function AddProduct({ opened, onClose }: Props) {
           key="search-product-buttons"
           className="flex gap-4 mt-[2em] justify-center"
         >
-          <Button variant="outline-primary" onClick={onClose}>
+          <Button variant="outline-primary" onClick={onClose}   style={{ width: 150 }}>
             Cancel
           </Button>
 
@@ -108,6 +108,7 @@ export default function AddProduct({ opened, onClose }: Props) {
             variant="filled-primary"
             disabled={!selected}
             onClick={handleContinue}
+            style={{ width: 150 }}
           >
             Continue
           </Button>
