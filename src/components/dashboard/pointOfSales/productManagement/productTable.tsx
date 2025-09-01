@@ -127,7 +127,7 @@ export default function ProductTable({
           </Avatar>
 
           <div>
-            <Text size="sm" fw={500}>
+            <Text c="black" fw={500}>
               {p.product.product_name}
             </Text>
             <Text size="xs" c="dimmed">

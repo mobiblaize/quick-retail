@@ -117,7 +117,6 @@ export default function InventoryForm() {
             (val) => setFormData({ ...formData, location_id: val }) // assuming val is number
           }
           required
-          textColorClass="text-gray-800"
           placeholder="Select location"
         />
       </div>

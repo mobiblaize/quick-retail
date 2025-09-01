@@ -60,10 +60,9 @@ const NavItem = ({
     return (
       <>
         <div onClick={toggleOpened} className="cursor-pointer">
-        <div
-            className={`${
-              isActive || isChildActive() ? "bg-[#FCE7DD] rounded-lg" : ""
-            } rounded-none px-6 p-4`}
+          <div
+            className={`${isActive || isChildActive() ? "bg-[#FCE7DD] rounded-lg" : ""
+              } rounded-none px-6 p-4`}
           >
             <div className="flex justify-between items-center w-full">
               <div className="flex gap-2 items-center">
@@ -75,13 +74,12 @@ const NavItem = ({
                   ) : null}
                 </div>
                 <p
-                  className={`${
-                    isActive || isChildActive()
-                      ? "font-semibold text-[#F16722]"
-                      : isLogOut
+                  className={`${isActive || isChildActive()
+                    ? "font-semibold text-[#F16722]"
+                    : isLogOut
                       ? "text-red-500"
                       : "text-[#787486] font-[400]"
-                  }`}
+                    }`}
                 >
                   {label}
                 </p>
@@ -90,7 +88,7 @@ const NavItem = ({
                 {opened ? <ChevronUp size={20} /> : <ChevronDown size={20} />}
               </div>
             </div>
-            </div>
+          </div>
         </div>
 
         {opened && (
@@ -106,9 +104,8 @@ const NavItem = ({
                   onClick={onNavigate}
                 >
                   <List.Item
-                    className={`py-3 px-4 text-md ${
-                      isChildItemActive ? "text-[#F16722]" : "text-[#787486]"
-                    }`}
+                    className={`py-3 px-4 text-md ${isChildItemActive ? "text-[#F16722]" : "text-[#787486]"
+                      }`}
                   >
                     {child.label}
                   </List.Item>
@@ -123,10 +120,10 @@ const NavItem = ({
 
   return (
     <Anchor component={Link} to={href} underline="never" onClick={onNavigate}>
- <div
-        className={`cursor-pointer ${
-          isActive ? "bg-[#FCE7DD] rounded-lg" : ""
-        } rounded-none px-6 p-4`}
+      <div
+        className={`cursor-pointer 
+    ${isActive ? "bg-[#FCE7DD] rounded-lg" : "hover:bg-[#F0F2F5]"} 
+    rounded-none px-6 p-4`}
       >
         <div className="flex gap-2 items-center">
           <div className="min-w-6 min-h-6 w-6 h-6 flex items-center justify-center">
@@ -137,18 +134,18 @@ const NavItem = ({
             ) : null}
           </div>
           <p
-            className={`${
-              isActive
+            className={`${isActive
                 ? "font-semibold text-[#F16722]"
                 : isLogOut
-                ? "text-red-500"
-                : "text-[#787486] font-[400] "
-            }`}
+                  ? "text-red-500"
+                  : "text-[#787486] font-[400] hover:text-black"
+              }`}
           >
             {label}
           </p>
         </div>
-        </div>
+      </div>
+
     </Anchor>
   );
 };
