@@ -15,6 +15,7 @@ export interface PaginationData {
   total?: number;
 }
 
+
 interface GenericTableProps<T> {
   enableSearch?: boolean;
   enableSort?: boolean;
