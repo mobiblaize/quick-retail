@@ -1,5 +1,5 @@
-// import { useState } from 'react';
-// import { Search } from 'lucide-react';
+import { useState } from 'react';
+import { Search } from 'lucide-react';
 import { Link } from 'react-router-dom';
 import { ROUTES } from '../../../../constants/routes';
 import { Text, Title } from '@mantine/core';
@@ -19,25 +19,26 @@ const helpArticles = [
     { id: 6, title: 'How do I set up other modules of the app?', description: 'Full access to system functionalities, including editing but needs approval from super.' },
 ];
 
+
 const HelpSection = () => {
     const filteredArticles = helpArticles;
-
+    const [search, setSearch] = useState('');
     return (
         <section className="p-6 bg-white rounded-xl">
             <div className="flex justify-between items-center mb-[3em] flex-wrap gap-4">
                 <Title order={3} size="20px" fw={500} c="#101828">
                     Need Assistance?
                 </Title>
-                {/* <div className="relative w-full max-w-xs">
+                <div className="relative w-full max-w-xs">
                     <Search className="absolute left-3 top-3 text-gray-400 w-5 h-5" />
                     <input
                         type="text"
                         placeholder="Search questions"
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
-                        className="pl-10 pr-4 py-2 w-full border-[#D0D5DD] border rounded-lg text-[#98A2B3] text-sm"
+                        className="pl-10 pr-4 py-2 w-full border-[#D0D5DD] border rounded-lg text-[#98A2B3] text-sm focus:outline-none focus:ring-2 focus:ring-[#F04D4D] focus:border-transparent"
                     />
-                </div> */}
+                </div>
             </div>
 
             <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
