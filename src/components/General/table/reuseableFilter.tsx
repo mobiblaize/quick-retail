@@ -459,7 +459,7 @@ import {
   Divider,
 } from "@mantine/core";
 
-export type DiscountType = "all" | "amount" | "percentage";
+export type DiscountType = "" | "amount" | "percentage";
 export type Reason = "all" | "damaged" | "mistaken" | "size issue" | "others";
 
 export interface FilterValues {
@@ -546,44 +546,44 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   setFiltersApplied,
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
-    startDate: "",
-    endDate: "",
-    location: "",
-    category: "",
-    reason: "all",
-    stockFrom: "",
-    stockTo: "",
-    orderStatus: "All",
-    priceFrom: "",
-    priceTo: "",
-    paymentStatus: "All",
-    productStatus: "All",
-    type: "all",
-    discountStatus: "All",
-    returnStatus: "All",
-    role: "",
-    module: "",
+    startDate: '',
+    endDate: '',
+    location: '',
+    category: '',
+    reason:'all',
+    stockFrom: '',
+    stockTo: '',
+    orderStatus: 'All',
+    priceFrom: '',
+    priceTo: '',
+    paymentStatus: 'All',
+    productStatus: 'All',
+    type: '',
+    discountStatus: 'All',
+     returnStatus: 'All',
+    role: '',
+    module: '',
   });
 
   const handleClear = () => {
     const cleared: FilterValues = {
-      startDate: "",
-      endDate: "",
-      location: "",
-      category: "",
-      reason: "all",
-      stockFrom: "",
-      stockTo: "",
-      orderStatus: "All",
-      paymentStatus: "All",
-      priceFrom: "",
-      priceTo: "",
-      productStatus: "",
-      type: "all",
-      discountStatus: "All",
-      returnStatus: "All",
-      role: "",
-      module: "",
+      startDate: '',
+      endDate: '',
+      location: '',
+      category: '',
+      reason: 'all',
+      stockFrom: '',
+      stockTo: '',
+      orderStatus: 'All',
+      paymentStatus: 'All',
+      priceFrom: '',
+      priceTo: '',
+      productStatus: '',
+      type: '',
+      discountStatus: 'All',
+      returnStatus: 'All',
+      role: '',
+      module: '',
     };
 
     setFilters(cleared);
