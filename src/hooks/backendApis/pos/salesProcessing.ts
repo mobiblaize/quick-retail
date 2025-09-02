@@ -42,7 +42,7 @@ export const useFetchingleOrderProducts = (orderId: string, customPayload?: Part
     sort_by: "",
     per_page: "500",
     paginate: true,
-  };
+  }
 
   const payload = { ...defaultPayload, ...customPayload };
 
