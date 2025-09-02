@@ -1,4 +1,4 @@
-import { Button, Text } from "@mantine/core";
+import { Button, Text, Skeleton } from "@mantine/core";
 import { Plus } from "lucide-react";
 import PageContainer from "../../../layout/pageContainer";
 import DiscountTable from "../../../components/dashboard/pointOfSales/happyTime/discountTable";
@@ -9,16 +9,61 @@ import CreateDiscountModal from "../../../components/dashboard/pointOfSales/happ
 import { useFetchAllDiscount } from "../../../hooks/backendApis/pos/discount";
 import AnalysisOverview1 from "../../../components/dashboard/pointOfSales/happyTime/overView2";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
-import { Loader } from "@mantine/core";
+
+/* ---------- Skeletons ---------- */
+const OverviewSkeleton = () => (
+  <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    {Array.from({ length: 4 }).map((_, i) => (
+      <div key={i} className="bg-white rounded-lg shadow-sm p-4">
+        <Skeleton height={16} width="40%" mb="sm" />
+        <Skeleton height={28} width="60%" />
+        <Skeleton height={10} mt="sm" width="30%" />
+      </div>
+    ))}
+  </section>
+);
+
+const DiscountTableSkeleton = () => (
+  <section className="bg-white rounded-lg shadow-sm p-4">
+    {/* top controls */}
+    <div className="flex flex-wrap gap-3 mb-4">
+      <Skeleton height={36} width={220} />
+      <Skeleton height={36} width={160} />
+      <Skeleton height={36} width={140} />
+      <Skeleton height={36} width={120} />
+      <Skeleton height={36} width={220} />
+    </div>
+    {/* table head */}
+    <div className="grid grid-cols-6 gap-4 border-b py-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Skeleton key={i} height={14} width="60%" />
+      ))}
+    </div>
+    {/* rows */}
+    {Array.from({ length: 8 }).map((_, r) => (
+      <div key={r} className="grid grid-cols-6 gap-4 py-3 border-b">
+        {Array.from({ length: 6 }).map((_, c) => (
+          <Skeleton key={c} height={16} width={c === 1 ? "80%" : "60%"} />
+        ))}
+      </div>
+    ))}
+    {/* pagination */}
+    <div className="flex items-center justify-between mt-4">
+      <Skeleton height={28} width={180} />
+      <div className="flex gap-2">
+        <Skeleton height={28} width={32} />
+        <Skeleton height={28} width={32} />
+        <Skeleton height={28} width={32} />
+      </div>
+    </div>
+  </section>
+);
+/* ---------- /Skeletons ---------- */
 
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);;
-  const [dateRange] = useState<{ startDate: string; endDate: string }>({
-    startDate: "",
-    endDate: "",
-  });
-
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [dateRange] = useState<{ startDate: string; endDate: string }>({ startDate: "", endDate: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [searchTerm, setSearchTerm] = useState("");
@@ -58,14 +103,14 @@ const HappyTimePage = () => {
     search: searchTerm,
     sort_by: activeSort,
   };
+
   // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllDiscount(payload) || {};
 
   const rawDiscounts = data?.data?.discounts?.data || [];
   const stats = data?.data?.stats || {};
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);
-  };
+
+  const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
 
   const paginationData = data?.data?.discounts
     ? {
@@ -80,40 +125,17 @@ const HappyTimePage = () => {
       }
     : undefined;
 
-  const handlePageChange = (page: number) => {
-    setCurrentPage(page);
-  };
+  const handlePageChange = (page: number) => setCurrentPage(page);
 
   const subHeaders = [
     <div key="1">
-     <div className="flex items-center justify-between">
-  {/* left: title */}
-  <div className="flex flex-col">
-    <Text fw={500} size="xl" c="black">
-      Discounts
-    </Text>
-  </div>
-
-  {/* right: buttons (keeps horizontal layout inside on mobile) */}
-  <div className="flex flex-row gap-2 md:gap-4 justify-start sm:justify-end">
-    <Link to={ROUTES.createDiscounts}>
-      <Button
-        variant="filled-primary"
-        className="flex gap-1.5 items-center justify-center"
-        style={{ padding: "0.8rem 0.5rem" }}
-      >
-        <span className="whitespace-nowrap">Create Discount</span>
-        <Plus size={24} />
-      </Button>
-    </Link>
-  </div>
-</div>
-
-      {/* <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4 sm:gap-0">
-        <Text fw={500} size="xl" c="black">
-          Discounts
-        </Text>
-        <div className="flex flex-row gap-2 md:gap-4">
+      <div className="flex items-center justify-between">
+        <div className="flex flex-col">
+          <Text fw={500} size="xl" c="black">
+            Discounts
+          </Text>
+        </div>
+        <div className="flex flex-row gap-2 md:gap-4 justify-start sm:justify-end">
           <Link to={ROUTES.createDiscounts}>
             <Button
               variant="filled-primary"
@@ -125,40 +147,41 @@ const HappyTimePage = () => {
             </Button>
           </Link>
         </div>
-      </div> */}
+      </div>
     </div>,
   ];
+
   return (
     <PageContainer subHeaders={subHeaders}>
-       {isLoading && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
-        <Loader size="xl" color="orange" />
-      </div>
-    )}
-   <AnalysisOverview1  stats={stats} />
-      <DiscountTable
-        rawDiscounts={rawDiscounts}
-        isLoading={isLoading}
-        onFilterChange={handleFilterChange}
-        paginationData={paginationData}
-        onPageChange={handlePageChange}
-        filters={appliedFilters} 
-        searchTerm={searchTerm} 
-        setSearchTerm={(val: string) => {
-          setSearchTerm(prev => {
-            if (prev !== val) {
-              setCurrentPage(1); 
-            }
-            return val;
-          });
-        }}
-        activeSort={activeSort}      
-        setSort={(sortBy) => {
-          setActiveSort(sortBy);
-          setCurrentPage(1);          
-        }}
-      
-      />
+      {/* Overview / stats */}
+      {isLoading ? <OverviewSkeleton /> : <AnalysisOverview1 stats={stats} />}
+
+      {/* Discounts table */}
+      {isLoading ? (
+        <DiscountTableSkeleton />
+      ) : (
+        <DiscountTable
+          rawDiscounts={rawDiscounts}
+          isLoading={isLoading}
+          onFilterChange={handleFilterChange}
+          paginationData={paginationData}
+          onPageChange={handlePageChange}
+          filters={appliedFilters}
+          searchTerm={searchTerm}
+          setSearchTerm={(val: string) => {
+            setSearchTerm((prev) => {
+              if (prev !== val) setCurrentPage(1);
+              return val;
+            });
+          }}
+          activeSort={activeSort}
+          setSort={(sortBy) => {
+            setActiveSort(sortBy);
+            setCurrentPage(1);
+          }}
+        />
+      )}
+
       <CreateDiscountModal
         opened={isLogComplaintsOpen}
         onClose={() => setIsLogComplaintsOpen(false)}
@@ -172,3 +195,4 @@ const HappyTimePage = () => {
 };
 
 export default HappyTimePage;
+

@@ -2,7 +2,7 @@ import { useState, useEffect, SetStateAction } from "react";
 import { Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
-import { SqrCode } from "../../../../assets/svg";
+// import { SqrCode } from "../../../../assets/svg";
 import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
 import { formatMoney } from "../../../../utils/helpers";
 import { useOrderStore } from "../../../../hooks/useOrderFormStore";
@@ -136,7 +136,8 @@ const SearchProduct = ({
   useEffect(() => {}, [initialItems]);
 
   return (
-    <main className="w-full h-auto rounded-lg bg-white">
+    <main className="w-full h-auto rounded-lg bg-white shadow-sm">
+
       <div className="px-6 py-2">
         <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
           Search Product
@@ -150,7 +151,7 @@ const SearchProduct = ({
             setSearchTerm(e.target.value)
           }
           leftIcon={<Search color="#667185" />}
-          rightIcon={<SqrCode />}
+          // rightIcon={<SqrCode />}
         />
       </div>
 

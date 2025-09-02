@@ -12,8 +12,7 @@ import autoTable from "jspdf-autotable";
 const AuditTrailPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
-  //@ts-ignore
-  const [filters, setFilters] = useState<FilterValues>({});
+  const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [searchParams, setSearchParams] = useSearchParams();
@@ -86,18 +85,8 @@ const AuditTrailPage = () => {
     if (format === "pdf") {
       const doc = new jsPDF();
       autoTable(doc, {
-        head: [
-          [
-            "Timestamp",
-            "Name",
-            "Email",
-            "Role",
-            "Activity",
-            "Module",
-            "IP Address",
-          ],
-        ],
-        body: tableData.map((row: any) => [
+        head: [["Timestamp", "Name", "Email", "Role", "Activity", "Module", "IP Address"]],
+        body: tableData.map((row: { timestamp: any; name: any; email: any; role: any; activity: any; module: any; ipAddress: any; }) => [
           row.timestamp,
           row.name,
           row.email,
@@ -166,7 +155,8 @@ const AuditTrailPage = () => {
     <PageContainer subHeaders={subHeaders}>
       <TrailTable
         isLoading={isLoading}
-        errors={error}
+    
+        error={error}
         logs={data?.data?.data || []}
         onFilterChange={handleFilterChange}
         onPageChange={setCurrentPage}
