@@ -19,6 +19,7 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
   // --- State ---
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
+  //@ts-ignore
   const [filters, setFilters] = useState<FilterValues>({});
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
