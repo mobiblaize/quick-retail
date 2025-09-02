@@ -253,10 +253,10 @@ const PreviewTransaction = () => {
         >
           <thead style={{ background: "#F3F4F6", borderBottom: "1px solid #E5E7EB" }}>
             <tr>
-              <th style={{ padding: 12, fontWeight: 600 }}>Item</th>
-              <th style={{ padding: 12, fontWeight: 600, textAlign: "center" }}>Qty</th>
-              <th style={{ padding: 12, fontWeight: 600, textAlign: "right" }}>Unit Price</th>
-              <th style={{ padding: 12, fontWeight: 600, textAlign: "right" }}>Amount</th>
+              <th style={{ padding: 12, fontWeight: 600 }}><Text c="#000" fw={500}>Item</Text></th>
+              <th style={{ padding: 12, fontWeight: 600, textAlign: "center" }}><Text c="#000" fw={500}>Qty</Text></th>
+              <th style={{ padding: 12, fontWeight: 600, textAlign: "right" }}><Text c="#000" fw={500}>Unit Price</Text></th>
+              <th style={{ padding: 12, fontWeight: 600, textAlign: "right" }}><Text c="#000" fw={500}>Amount</Text></th>
             </tr>
           </thead>
           <tbody>

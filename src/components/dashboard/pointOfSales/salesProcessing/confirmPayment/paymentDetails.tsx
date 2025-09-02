@@ -5,7 +5,6 @@ import Dropdown2 from "../../../../General/dropdown2";
 import { useEffect, useState } from "react";
 import { useFetchSingleSale } from "../../../../../hooks/backendApis/pos/salesProcessing";
 import { formatMoney } from "../../../../../utils/helpers";
-import { NumericFormat } from "react-number-format";
 
 type PaymentItem = {
   label: string;
@@ -98,7 +97,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     setSelectedMethod(method);
   }, [method]);
 
-  useEffect(() => {}, [localAmount, selectedMethod, total]);
+  useEffect(() => { }, [localAmount, selectedMethod, total]);
 
   return (
     <main className="w-full h-auto rounded-lg bg-white">
@@ -126,6 +125,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
         <FormInput
           type="text"
           label="Payment Reference Number"
+          paddingY="0.7rem"
           optional
           placeholder="Enter Payment Reference Number"
           className="w-full"
@@ -133,68 +133,42 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
 
         {selectedMethod === "cash" && (
           <>
-            <div className="w-full">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
-                Amount Collected
-              </label>
-              <NumericFormat
-                value={localAmount}
-                onValueChange={(values) => {
-                  const numericAmount = parseFloat(values.value || "0");
-                  const numericTotal = parseFloat(sanitizeAmount(total));
 
-                  if (numericAmount < numericTotal) {
-                    setAmountError(
-                      "Collected amount cannot be less than total"
-                    );
-                  } else {
-                    setAmountError("");
-                  }
+            <FormInput
+              type="text"
+              label="Amount Collected"
+              placeholder="Enter the amount customer paid in cash"
+              value={localAmount}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                // Remove non-numeric chars except decimal
+                const rawValue = e.target.value.replace(/[^\d.]/g, "");
+                const numericAmount = parseFloat(rawValue || "0");
+                const numericTotal = parseFloat(sanitizeAmount(total));
 
-                  setLocalAmount(values.value);
-                  onPaymentChange(selectedMethod, values.value);
-                }}
-                thousandSeparator
-                prefix="₦"
-                allowNegative={false}
-                decimalScale={2}
-                fixedDecimalScale
-                allowLeadingZeros={false}
-                placeholder="Enter the amount customer paid in cash"
-                className={`
-      w-full
-      text-gray-900
-      border
-      ${amountError ? "border-red-500" : "border-gray-300"}
-      rounded-md
-      px-3
-      py-2
-      text-sm
-      shadow-sm
-      focus:outline-none
-      focus:ring-2
-      ${
-        amountError
-          ? "focus:ring-red-500 focus:border-red-500"
-          : "focus:ring-blue-500 focus:border-blue-500"
-      }
-      disabled:bg-gray-200
-    `}
-              />
-              {amountError && (
-                <p className="text-sm text-red-600 mt-1">{amountError}</p>
-              )}
-            </div>
+                if (numericAmount < numericTotal) {
+                  setAmountError("Collected amount cannot be less than total");
+                } else {
+                  setAmountError("");
+                }
+
+                setLocalAmount(rawValue);
+                onPaymentChange(selectedMethod, rawValue);
+              }}
+              error={amountError || undefined}
+              leftPrefix="₦"
+              paddingY="0.7rem"
+            />
 
             <FormInput
               type="text"
               label="Customer Balance"
               className="w-full"
+              paddingY="0.7rem"
               value={
                 balance !== ""
                   ? `${parseFloat(balance) > 0 ? "+" : ""}${formatMoney(
-                      balance
-                    )}`
+                    balance
+                  )}`
                   : ""
               }
               readOnly

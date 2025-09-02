@@ -74,7 +74,7 @@ const EmptyState2 = ({ onReset }: EmptyState2Props) => (
           backgroundColor: "#f97316",
         }}
       >
-        Reset Table
+        <Text c="#fff" fw={500}>Reset Table</Text>
       </Button>
     )}
   </Box>

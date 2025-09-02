@@ -38,11 +38,11 @@ const SalesAnalytics = () => {
 
     return highlight
       ? {
-          month: highlight.month,
-          value: highlight.revenue,
-          dataKey: "revenue",
-          label: `₦${highlight.revenue.toLocaleString()}M`,
-        }
+        month: highlight.month,
+        value: highlight.revenue,
+        dataKey: "revenue",
+        label: `₦${highlight.revenue.toLocaleString()}M`,
+      }
       : undefined;
   }, [chartData]);
 
@@ -70,8 +70,17 @@ const SalesAnalytics = () => {
           value={selectedYear}
           onChange={(value) => value && setSelectedYear(value)}
           placeholder="Select year"
-          size="xs"
-          w={100}
+          size="md"          // match DatePickerInput size
+          w={110}            // adjust width to be similar to the date pickers
+          styles={{
+            input: {
+              color: '#1D2939',
+              fontWeight: 500,
+              '&::placeholder': {
+                color: '#667085',
+              },
+            },
+          }}
         />
       </Group>
 

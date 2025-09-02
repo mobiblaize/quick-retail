@@ -147,7 +147,7 @@ const CreateDiscountModal = ({
                 label="Select Product"
                 value={selectedProducts[0] || null}
                 onChange={(val) => setSelectedProducts([Number(val)])}
-                textColorClass="text-gray-800"
+                // textColorClass="text-gray-800"
                 required
               />
             </div>

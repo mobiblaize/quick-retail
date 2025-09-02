@@ -1,4 +1,4 @@
-import { Paper, Text } from "@mantine/core";
+import { Paper, rem, Text } from "@mantine/core";
 import { useState, useRef, useEffect } from "react";
 
 interface Option {
@@ -61,6 +61,12 @@ const Dropdown2 = ({
         type="button"
         onClick={() => setOpen(!open)}
         className={`items-center flex justify-between w-full text-left px-4 py-2 bg-white border border-gray-300 rounded-md text-sm ${textColorClass || "text-black"}`}
+        style={{
+          paddingTop: rem(16),   // 0.7rem ≈ 11.2px
+          paddingBottom: rem(16),
+          paddingLeft: rem(16),
+          paddingRight: rem(16),
+        }}
       >
         {selectedOption ? (
           <Text>{selectedOption.label}</Text>

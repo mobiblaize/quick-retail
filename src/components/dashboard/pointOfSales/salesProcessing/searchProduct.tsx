@@ -1,5 +1,5 @@
 import { useState, useEffect, SetStateAction } from "react";
-import { Loader, Text } from "@mantine/core";
+import { Box, Button, Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 // import { SqrCode } from "../../../../assets/svg";
@@ -39,12 +39,7 @@ const SearchProduct = ({
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>(items);
   const [hasSetInitial, setHasSetInitial] = useState(false);
 
-  // useEffect(() => {
-  //   // @ts-ignore
-  //   setItems(selectedItems);
-  //   // @ts-ignore
-  //   onItemsChange(selectedItems);
-  // }, [selectedItems]);
+
 
   useEffect(() => {
     if (!hasSetInitial && initialItems.length > 0) {
@@ -61,18 +56,15 @@ const SearchProduct = ({
     }
   }, [initialItems, hasSetInitial]);
 
-  // useEffect(() => {
-  //   //  @ts-ignore */
-  //   onItemsChange(selectedItems);
-  // }, [selectedItems, onItemsChange]);
+
 
   useEffect(() => {
     //  @ts-ignore
-    setItems(selectedItems); 
+    setItems(selectedItems);
     //  @ts-ignore
-    onItemsChange(selectedItems); 
-  }, [selectedItems]); 
-  
+    onItemsChange(selectedItems);
+  }, [selectedItems]);
+
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -89,8 +81,8 @@ const SearchProduct = ({
   const products = data?.products?.data
     ? data.products.data
     : data?.data
-    ? [data.data]
-    : [];
+      ? [data.data]
+      : [];
 
   const handleSelect = (item: {
     name: string;
@@ -128,15 +120,15 @@ const SearchProduct = ({
         /* @ts-ignore */
         (item.custom ? `custom-${item.name}` : item.variationID) === itemKey
           ? /* @ts-ignore */
-            { ...item, quantity: value }
+          { ...item, quantity: value }
           : item
       )
     );
   };
-  useEffect(() => {}, [initialItems]);
+  useEffect(() => { }, [initialItems]);
 
   return (
-    <main className="w-full h-auto rounded-lg bg-white shadow-sm">
+    <main className="w-full h-auto  bg-white p-6 rounded-lg shadow-md border border-gray-200">
 
       <div className="px-6 py-2">
         <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
@@ -147,18 +139,19 @@ const SearchProduct = ({
         <FormInput
           placeholder="Search by Name."
           value={searchTerm}
+          paddingY="0.7rem"
           onChange={(e: { target: { value: SetStateAction<string> } }) =>
             setSearchTerm(e.target.value)
           }
           leftIcon={<Search color="#667185" />}
-          // rightIcon={<SqrCode />}
+        // rightIcon={<SqrCode />}
         />
       </div>
 
       {isLoading && (
-        <div className="px-6 py-2">
-          <Loader size="sm" />
-        </div>
+        <Box px="md" py="xs">
+          <Loader size="sm" color="orange" type="oval" />
+        </Box>
       )}
 
       {!isLoading && debouncedSearch && (
@@ -202,40 +195,46 @@ const SearchProduct = ({
                       }
                     }}
                     className={`flex items-center gap-4 px-4 py-3 rounded border 
-                      ${
-                        isOutOfStock
-                          ? "bg-red-50 border-red-200 cursor-not-allowed"
-                          : "hover:bg-gray-100 border-gray-200 cursor-pointer"
+                      ${isOutOfStock
+                        ? "bg-red-50 border-red-200 cursor-not-allowed"
+                        : "hover:bg-gray-100 border-gray-200 cursor-pointer"
                       }`}
                   >
                     <img
                       src={item.image_path}
-                      alt={item.name}
+                      // alt={item.name}
+                      alt=""
                       className="w-12 h-12 object-cover rounded"
                     />
                     <div className="flex flex-col">
-                      <span className="font-medium">{item.name}</span>
+                      <Text fw={500}>{item.name}</Text>
 
                       {/* Stock warning */}
                       {isOutOfStock && (
-                        <span className="text-xs font-semibold text-red-500">
+                        <Text size="xs" fw={600} c="red">
                           No stock
-                        </span>
+                        </Text>
                       )}
 
-                      <span className="text-sm text-gray-500">{item.sku}</span>
-                      <span className="text-sm text-gray-500">
+                      <Text size="sm" c="dimmed">
+                        {item.sku}
+                      </Text>
+
+                      <Text size="sm" c="dimmed">
+                        {item.sku}
+                      </Text>
+                      <Text size="sm" c="dimmed">
                         {item.variation_attributes
                           ?.map(
                             (attr: { option_type: any; option_value: any }) =>
                               `${attr.option_type}: ${attr.option_value}`
                           )
                           .join(", ")}
-                      </span>
-                      <span className="text-xs text-gray-400">
-                        {item.product?.location?.name},{" "}
-                        {item.product?.location?.state}
-                      </span>
+                      </Text>
+
+                      <Text size="xs" c="gray.5">
+                        {item.product?.location?.name}, {item.product?.location?.state}
+                      </Text>
                     </div>
                   </li>
                 );
@@ -246,7 +245,7 @@ const SearchProduct = ({
               onClick={() =>
                 handleSelect({ name: debouncedSearch, custom: true })
               }
-              // className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
+            // className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
             >
               {/* Use custom entry: <strong>{debouncedSearch}</strong> */}
             </li>
@@ -254,22 +253,21 @@ const SearchProduct = ({
         </ul>
       )}
 
-      {/* New selected items section */}
       {selectedItems.length > 0 && (
         <section className="px-6 py-4 mt-6 border-t border-gray-300 w-full">
-          <Text size="md" fw={600} c="black" className="mb-3">
+          <Text size="md" fw={600} c="black">
             SELECTED PRODUCTS ({selectedItems.length})
           </Text>
-          <ul className="">
+          <ul className="mt-[2em]">
             {selectedItems.map((item) => {
               {
                 /* @ts-ignore */
               }
               const itemKey = item.custom
                 ? /* @ts-ignore */
-                  `custom-${item.name}`
+                `custom-${item.name}`
                 : /* @ts-ignore */
-                  item.variationId;
+                item.variationId;
               /* @ts-ignore */
               const quantity = item.quantity ?? 0;
               /* @ts-ignore */
@@ -290,7 +288,7 @@ const SearchProduct = ({
                       /* @ts-ignore */
                       src={item.image_path}
                       /* @ts-ignore */
-                      alt={item.name}
+                      // alt={item.name}
                       className="w-16 h-16 object-cover rounded"
                     />
                   )}
@@ -300,38 +298,47 @@ const SearchProduct = ({
                     {
                       /* /* @ts-ignore */
                       <div className="flex flex-col ">
-                        <span className="font-medium text-gray-900">
+                        <Text fw={500} c="dark.9">
                           {/* @ts-ignore */}
                           {item.name}
-                        </span>
+                        </Text>
+
                         {/* @ts-ignore */}
                         {item.ean && (
-                          <span className="text-sm text-gray-600">
-                            {/* @ts-ignore */}
-                            EAN: <span className="font-medium">{item.ean}</span>
-                          </span>
+                          <Text size="sm" c="gray.6">
+                            EAN:{" "}
+                            <Text span fw={500}>
+                              {item.ean}
+                            </Text>
+                          </Text>
                         )}
+
                         {/* @ts-ignore */}
                         {item.sku && (
-                          <span className="text-sm text-gray-600">
-                            {/* @ts-ignore */}
-                            SKU: <span className="font-medium">{item.sku}</span>
-                          </span>
+                          <Text size="sm" c="gray.6">
+                            SKU:{" "}
+                            <Text span fw={500}>
+                              {item.sku}
+                            </Text>
+                          </Text>
                         )}
                       </div>
-
                       /* Unit Price */
                     }
                     <div className="flex flex-col items-center min-w-[70px]">
-                      <span className="text-xs text-gray-800">Unit Price</span>
-                      <span className="font-medium">
+                      <Text size="xs" c="dark.7">
+                        Unit Price
+                      </Text>
+                      <Text fw={500}>
                         ₦ {formatMoney(unitPrice.toFixed(2))}
-                      </span>
+                      </Text>
                     </div>
 
                     {/* Quantity Input */}
                     <div className="min-w-[70px]">
-                      <span className="text-xs text-gray-800">Quantity</span>
+                      <Text size="xs" c="dark.7">
+                        Quantity
+                      </Text>
                       <FormInput
                         type="number"
                         min={1}
@@ -355,33 +362,48 @@ const SearchProduct = ({
                       />
                     </div>
 
+
                     {/* Total Price */}
                     <div className="flex flex-col items-center min-w-[70px]">
-                      <span className="text-xs text-gray-900">Total Price</span>
-                      <span className="font-semibold text-[#2E90FA]">
+                      <Text size="xs" c="dark.9">
+                        Total Price
+                      </Text>
+                      <Text fw={600} c="#2E90FA">
                         ₦ {formatMoney(totalPrice.toFixed(2))}
-                      </span>
+                      </Text>
                     </div>
 
                     {/* Remove Button */}
-                    <button
+                    <Button
+                      variant="subtle"
+                      color="dark"
+                      size="lg"
+                      aria-label="Remove selected item"
+                      styles={(theme) => ({
+                        root: {
+                          fontFamily: '"DM Sans", sans-serif',
+                          fontWeight: 400,
+                          fontSize: "16px",
+                          cursor: "pointer",
+                          color: "red",
+                          "&:hover": {
+                            color: theme.colors.orange[5],
+                            backgroundColor: "transparent",
+                          },
+                        },
+                      })}
                       onClick={() => {
                         setSelectedItems((prev) =>
                           prev.filter((i) =>
-                            // @ts-ignore
                             item.custom
-                              ? // @ts-ignore
-                                !(i.custom && i.name === item.name)
-                              : // @ts-ignore
-                                i.variationID !== item.variationID
+                              ? !(i.custom && i.name === item.name)
+                              : i.variationID !== item.variationID
                           )
                         );
                       }}
-                      className="text-red-500 hover:text-red-700 font-bold text-xxxl"
-                      aria-label="Remove selected item"
                     >
                       &times; Remove
-                    </button>
+                    </Button>
                   </div>
                 </li>
               );

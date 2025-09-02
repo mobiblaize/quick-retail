@@ -22,13 +22,13 @@ const ViewProduct = () => {
     <div key="1" className="py-2.5">
       <div className="flex gap-8 items-center">
         <button onClick={() => navigate(-1)} className="cursor-pointer">
-          Back
+          <Text c={"black"}>Back</Text>
         </button>
-        <div className="md:flex hidden items-center">
+        {/* <div className="md:flex hidden items-center">
           <Text>Product management</Text>
           <span className="mx-2">/</span>
           <Text c={"black"}>View Product</Text>
-        </div>
+        </div> */}
       </div>
     </div>,
   ];

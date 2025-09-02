@@ -137,6 +137,12 @@
 
 // export default CreateOrderForm;
 
+
+
+
+
+
+
 import { useEffect } from "react";
 import PaymentDetails1 from "../../../components/dashboard/pointOfSales/salesProcessing/paymentDetails";
 import SearchCustomer from "../../../components/dashboard/pointOfSales/salesProcessing/searchCustomer";
@@ -260,7 +266,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   return (
     <main className="flex flex-col gap-8">
       <SearchProduct
-        onSelect={() => {}}
+        onSelect={() => { }}
         onItemsChange={handleSelectedItemsChange}
         initialItems={paymentDetails.items}
       />
@@ -276,5 +282,3 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
 };
 
 export default CreateOrderForm;
-
-

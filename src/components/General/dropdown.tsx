@@ -1,8 +1,9 @@
-import { useState, useRef, useEffect } from "react";
+import { Select, Text, Group } from "@mantine/core";
+import { useMemo, useRef } from "react";
 
 interface Option {
   label: string;
-  value: number;
+  value: string | number;
 }
 
 interface CustomDropdownProps {
@@ -12,13 +13,15 @@ interface CustomDropdownProps {
   value: string | number | null;
   onChange: (val: string | number) => void;
   required?: boolean;
-  textColorClass?: string;
-  inputSizeClass?: string;
-  bgColorClass?: string;
-  hoverBgColorClass?: string;
-  selectedBgColorClass?: string;
-  selectedTextColorClass?: string;
+  optional?: boolean;
+  error?: string;
+  color?: string;
+  requiredColor?: string;
   IconComponent?: React.ReactNode;
+  paddingX?: number | string;
+  paddingY?: number | string;
+  borderWidth?: number | string;
+  leftPrefix?: string;
 }
 
 const Dropdown = ({
@@ -28,81 +31,87 @@ const Dropdown = ({
   value,
   onChange,
   required,
-  textColorClass = "text-black",
-  inputSizeClass = "py-2 px-4",
-  bgColorClass = "bg-white",
-  hoverBgColorClass = "hover:bg-gray-300",
-  selectedBgColorClass = "bg-gray-300",
-  selectedTextColorClass = "text-white",
+  optional,
+  error,
+  color,
+  requiredColor = "red.6",
+  IconComponent,
+  paddingX = 16,
+  paddingY = "5px",
+  borderWidth = "1px",
+  leftPrefix,
 }: CustomDropdownProps) => {
-  const [open, setOpen] = useState(false);
-  const dropdownRef = useRef<HTMLDivElement>(null);
+  const data = useMemo(
+    () =>
+      options.map((opt) => ({
+        value: String(opt.value),
+        label: opt.label,
+      })),
+    [options]
+  );
 
-  useEffect(() => {
-    const handleClickOutside = (event: MouseEvent) => {
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(event.target as Node)
-      ) {
-        setOpen(false);
-      }
-    };
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
+  const normalizeDimension = (dimension: number | string | undefined) => {
+    if (dimension === undefined) return "0.5rem";
+    if (typeof dimension === "number") return `${dimension}px`;
+    return dimension;
+  };
 
-  const selectedOption = options.find((opt) => opt.value === value);
+  const paddingXValue = normalizeDimension(paddingX);
+  const paddingYValue = normalizeDimension(paddingY);
+  const borderWidthValue = normalizeDimension(borderWidth);
+
+  const inputRef = useRef<HTMLInputElement>(null);
+
+  const sharedLabel =
+    label && (
+      <Group gap="xs" align="center">
+        <Text size="sm" fw={500} c="gray.7">
+          {label}
+        </Text>
+        {required && <Text size="sm" c={requiredColor}>*</Text>}
+        {optional && <Text size="sm" c="gray.5">(Optional)</Text>}
+      </Group>
+    );
 
   return (
-    <div className="relative w-full" ref={dropdownRef}>
-      {label && (
-        <label className="block mb-1 font-medium text-gray-700">
-          {label}
-          {required && <span className="text-red-600 ml-1">*</span>}
-        </label>
-      )}
-
-      <button
-        type="button"
-        onClick={() => setOpen(!open)}
-        className={`w-full p-2 text-left border border-gray-300 rounded-md shadow-sm focus:outline-none ${inputSizeClass} ${bgColorClass} ${textColorClass}`}
-      >
-        {selectedOption ? (
-          selectedOption.label
-        ) : (
-          <span className="">{placeholder}</span>
-        )}
-        {/* <span className="float-right">▾</span> */}
-      </button>
-
-      {open && (
-        <ul
-          className="absolute z-10 mt-1 w-full border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto bg-white"
-          role="listbox"
-        >
-          {options.map((opt) => {
-            const isSelected = value === opt.value;
-            return (
-              <li
-                key={opt.value}
-                className={`cursor-pointer select-none px-2 py-2 ${
-                  isSelected
-                    ? `${selectedBgColorClass} ${selectedTextColorClass}`
-                    : "text-black"
-                } ${!isSelected && hoverBgColorClass}`}
-                role="option"
-                onClick={() => {
-                  onChange(opt.value);
-                  setOpen(false);
-                }}
-              >
-                {opt.label}
-              </li>
-            );
-          })}
-        </ul>
-      )}
-    </div>
+    <Select
+      ref={inputRef}
+      label={sharedLabel}
+      placeholder={placeholder}
+      data={data}
+      value={value !== null ? String(value) : null}
+      onChange={(val) => {
+        if (val !== null) {
+          const parsed =
+            isNaN(Number(val)) || val.trim() === "" ? val : Number(val);
+          onChange(parsed);
+        }
+      }}
+      error={error}
+      rightSection={IconComponent}
+      styles={{
+        wrapper: { width: "100%" },
+        input: {
+          borderWidth: borderWidthValue,
+          borderColor: error ? "#D42620" : "#E5E7EB",
+          borderStyle: "solid",
+          borderRadius: "0.375rem",
+          backgroundColor: "#fff",
+          color: error ? "#D42620" : color ?? "#111827",
+          paddingLeft: leftPrefix ? "2.5rem" : paddingXValue,
+          paddingRight: IconComponent ? "2.5rem" : paddingXValue,
+          paddingTop: paddingYValue,
+          paddingBottom: paddingYValue,
+          height: "auto",
+          minHeight: "2.5rem",
+          fontSize: "16px",
+          boxShadow: "none",
+          outline: "none",
+          "&::placeholder": { color: "#111827" },
+        },
+      }}
+      rightSectionWidth={40}
+    />
   );
 };
 

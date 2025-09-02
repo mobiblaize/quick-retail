@@ -30,7 +30,7 @@ const EditProduct: React.FC = () => {
       <div key="1" className="py-2.5">
         <div className="hidden sm:flex gap-8 items-center">
           {backButton}
-          <div className="flex items-center">
+          {/* <div className="flex items-center">
             <Text>Product management</Text>
             <>
               <span className="mx-2">/</span>
@@ -38,7 +38,7 @@ const EditProduct: React.FC = () => {
                 Edit Product
               </Text>
             </>
-          </div>
+          </div> */}
         </div>
 
         <div className="flex sm:hidden gap-2 items-center">{backButton}</div>

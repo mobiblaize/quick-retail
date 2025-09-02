@@ -238,11 +238,11 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
         <Table striped highlightOnHover withColumnBorders>
           <Table.Thead>
             <Table.Tr>
-              <Table.Th>Item</Table.Th>
-              <Table.Th ta="center">Qty</Table.Th>
-              <Table.Th ta="center">Unit Price</Table.Th>
+              <Table.Th><Text c="#000" fw={500}>Item</Text></Table.Th>
+              <Table.Th ta="center"><Text c="#000" fw={500}>Qty</Text></Table.Th>
+              <Table.Th ta="center"><Text c="#000" fw={500}>Unit Price</Text></Table.Th>
               <Table.Th ta="right" style={{ width: "1%" }}>
-                Amount
+              <Text c="#000" fw={500}>Amount</Text>
               </Table.Th>
             </Table.Tr>
           </Table.Thead>
