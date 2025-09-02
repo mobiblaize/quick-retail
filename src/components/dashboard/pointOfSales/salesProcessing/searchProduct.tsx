@@ -128,7 +128,7 @@ const SearchProduct = ({
   useEffect(() => { }, [initialItems]);
 
   return (
-    <main className="w-full h-auto rounded-lg bg-white shadow-sm">
+    <main className="w-full h-auto  bg-white p-6 rounded-lg shadow-md border border-gray-200">
 
       <div className="px-6 py-2">
         <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
@@ -202,7 +202,8 @@ const SearchProduct = ({
                   >
                     <img
                       src={item.image_path}
-                      alt={item.name}
+                      // alt={item.name}
+                      alt=""
                       className="w-12 h-12 object-cover rounded"
                     />
                     <div className="flex flex-col">
@@ -381,10 +382,10 @@ const SearchProduct = ({
                       styles={(theme) => ({
                         root: {
                           fontFamily: '"DM Sans", sans-serif',
-                          fontWeight: 500,
+                          fontWeight: 400,
                           fontSize: "16px",
                           cursor: "pointer",
-                          color: "#000",
+                          color: "red",
                           "&:hover": {
                             color: theme.colors.orange[5],
                             backgroundColor: "transparent",

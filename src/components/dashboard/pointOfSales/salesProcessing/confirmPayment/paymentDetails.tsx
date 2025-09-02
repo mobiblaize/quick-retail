@@ -1,11 +1,10 @@
-import { Divider, Input, Text } from "@mantine/core";
+import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { CircleHelp } from "lucide-react";
 import Dropdown2 from "../../../../General/dropdown2";
 import { useEffect, useState } from "react";
 import { useFetchSingleSale } from "../../../../../hooks/backendApis/pos/salesProcessing";
 import { formatMoney } from "../../../../../utils/helpers";
-import { NumericFormat } from "react-number-format";
 
 type PaymentItem = {
   label: string;
@@ -98,7 +97,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     setSelectedMethod(method);
   }, [method]);
 
-  useEffect(() => {}, [localAmount, selectedMethod, total]);
+  useEffect(() => { }, [localAmount, selectedMethod, total]);
 
   return (
     <main className="w-full h-auto rounded-lg bg-white">
@@ -126,6 +125,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
         <FormInput
           type="text"
           label="Payment Reference Number"
+          paddingY="0.7rem"
           optional
           placeholder="Enter Payment Reference Number"
           className="w-full"
@@ -133,52 +133,42 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
 
         {selectedMethod === "cash" && (
           <>
-           <div style={{ width: "100%" }}>
-  <Input.Wrapper
-    label={
-      <Text size="sm" fw={500} c="gray.7" mb={4}>
-        Amount Collected
-      </Text>
-    }
-    error={amountError && "Collected amount cannot be less than total"}
-  >
-    <NumericFormat
-      value={localAmount}
-      onValueChange={(values) => {
-        const numericAmount = parseFloat(values.value || "0");
-        const numericTotal = parseFloat(sanitizeAmount(total));
 
-        if (numericAmount < numericTotal) {
-          setAmountError("Collected amount cannot be less than total");
-        } else {
-          setAmountError("");
-        }
+            <FormInput
+              type="text"
+              label="Amount Collected"
+              placeholder="Enter the amount customer paid in cash"
+              value={localAmount}
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                // Remove non-numeric chars except decimal
+                const rawValue = e.target.value.replace(/[^\d.]/g, "");
+                const numericAmount = parseFloat(rawValue || "0");
+                const numericTotal = parseFloat(sanitizeAmount(total));
 
-        setLocalAmount(values.value);
-        onPaymentChange(selectedMethod, values.value);
-      }}
-      thousandSeparator
-      prefix="₦"
-      allowNegative={false}
-      decimalScale={2}
-      fixedDecimalScale
-      allowLeadingZeros={false}
-      placeholder="Enter the amount customer paid in cash"
-      customInput={Input} // ✅ use Mantine Input for styling
-      error={!!amountError}
-    />
-  </Input.Wrapper>
-</div>
+                if (numericAmount < numericTotal) {
+                  setAmountError("Collected amount cannot be less than total");
+                } else {
+                  setAmountError("");
+                }
+
+                setLocalAmount(rawValue);
+                onPaymentChange(selectedMethod, rawValue);
+              }}
+              error={amountError || undefined}
+              leftPrefix="₦"
+              paddingY="0.7rem"
+            />
 
             <FormInput
               type="text"
               label="Customer Balance"
               className="w-full"
+              paddingY="0.7rem"
               value={
                 balance !== ""
                   ? `${parseFloat(balance) > 0 ? "+" : ""}${formatMoney(
-                      balance
-                    )}`
+                    balance
+                  )}`
                   : ""
               }
               readOnly

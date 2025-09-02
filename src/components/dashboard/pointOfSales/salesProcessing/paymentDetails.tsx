@@ -19,7 +19,7 @@ const PaymentDetails1: React.FC<PaymentDetailsProps> = ({ items, total }) => {
   const toggleExpand = () => setIsExpanded(!isExpanded);
 
   return (
-    <main className="w-full h-auto rounded-lg bg-white shadow-sm">
+    <main className="w-full h-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
       <header className="px-6 py-2 cursor-pointer" onClick={toggleExpand}>
         <div className="flex items-center justify-between">
           <Text size="lg" fw={500} c="textSecondary.9" tt={"uppercase"}>

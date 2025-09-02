@@ -10,6 +10,7 @@ interface TrailTableProps {
   paginationData?: PaginationData;
   onPageChange: (page: number) => void;
   searchTerm?: string;
+  error?: Error | null;
   setSearchTerm?: (value: string) => void;
   activeSort?: string;
   setSort?: (sortBy: string) => void;
@@ -28,6 +29,7 @@ export default function TrailTable({
   setSort,
   onFilterChange,
   filters,
+  // error,  
 }: TrailTableProps) {
   const navigate = useNavigate();
 
