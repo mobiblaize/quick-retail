@@ -10,7 +10,7 @@ import { ChevronDown, Plus } from "lucide-react";
 import { useNavigate } from "react-router";
 import { Loader } from "@mantine/core";
 
-const ProductManagementPage = () => {
+const ProductManagementPage = () => { 
   const navigate = useNavigate();
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
 ;const [searchTerm, setSearchTerm] = useState("");

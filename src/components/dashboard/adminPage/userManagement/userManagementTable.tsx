@@ -1,107 +1,46 @@
-import { useEffect, useState, useMemo } from "react";
 import { Text } from "@mantine/core";
-import { Link } from "react-router";
-import { ROUTES } from "../../../../constants/routes";
+import { Link } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
-import { useFetchUsers } from "../../../../hooks/backendApis/admin/userManagement";
-import * as dayjs from "dayjs";
+import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import * as dayjs from "dayjs";
 
 export interface UserRowData {
   user_uuid: string;
-  userID: string;
   firstname: string;
   lastname: string;
   email: string;
-  last_login: string | null;
-  status: string;
-  roles: {
-    id: number;
-    name: string;
-    display_name: string;
-    description: string;
-    created_at: string;
-    updated_at: string;
-  }[];
-  locationID?: string;
   updated_at?: string;
+  status: string;
+  roles: { name: string }[];
 }
 
-export default function UserManagementTable() {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
-  const [currentPage, setCurrentPage] = useState(1);
-  const [queryParams, setQueryParams] = useState({ page: currentPage });
-  const { data, isLoading, isError } = useFetchUsers(queryParams);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeSort, setActiveSort] = useState("");
+interface UserManagementTableProps {
+  users: UserRowData[];
+  isLoading: boolean;
+  paginationData?: PaginationData;
+  onPageChange: (page: number) => void;
+  searchTerm: string;
+  setSearchTerm: (value: string) => void;
+  activeSort: string;
+  setSort: (value: string) => void;
+  filters?: FilterValues;
+  onFilterChange?: (filters: FilterValues) => void;
+}
 
-  const users: UserRowData[] = data?.data?.users?.data || [];
-  const paginationData: PaginationData | undefined = data?.data?.users
-    ? {
-        current_page: data.data.users.current_page,
-        last_page: data.data.users.last_page,
-        per_page: data.data.users.per_page,
-        total: data.data.users.total,
-      }
-    : undefined;
-
-  const handleFilterChange = (filters: any) => {
-    setAppliedFilters(filters);
-    setQueryParams({ page: 1 });
-  };
-
+export default function UserManagementTable({
+  users,
+  isLoading,
+  paginationData,
+  onPageChange,
+  searchTerm,
+  setSearchTerm,
+  activeSort,
+  setSort,
+  filters,
+  onFilterChange,
+}: UserManagementTableProps) {
   const dayjsInstance = (dayjs as any).default || dayjs;
-  const handlePageChange = (page: number) => setCurrentPage(page);
-
-  useEffect(() => {
-    if (users.length > 0) {
-      const locationID = users[0]?.locationID;
-      if (locationID) {
-        localStorage.setItem("viewUserLocationID", locationID);
-      }
-    }
-  }, [users]);
-
-  /** --- Search & Sort Logic --- **/
-  const processedUsers = useMemo(() => {
-    let filtered = users;
-
-    if (searchTerm) {
-      const term = searchTerm.toLowerCase();
-      filtered = filtered.filter(
-        (u) =>
-          u.firstname?.toLowerCase().includes(term) ||
-          u.lastname?.toLowerCase().includes(term) ||
-          u.email?.toLowerCase().includes(term) ||
-          u.user_uuid?.toLowerCase().includes(term)
-      );
-    }
-
-    switch (activeSort) {
-      case "A-Z":
-        filtered = [...filtered].sort((a, b) =>
-          `${a.firstname} ${a.lastname}`.localeCompare(`${b.firstname} ${b.lastname}`)
-        );
-        break;
-      case "Z-A":
-        filtered = [...filtered].sort((a, b) =>
-          `${b.firstname} ${b.lastname}`.localeCompare(`${a.firstname} ${a.lastname}`)
-        );
-        break;
-      case "Recent":
-        filtered = [...filtered].sort(
-          (a, b) => new Date(b.updated_at || "").getTime() - new Date(a.updated_at || "").getTime()
-        );
-        break;
-      case "Oldest":
-        filtered = [...filtered].sort(
-          (a, b) => new Date(a.updated_at || "").getTime() - new Date(b.updated_at || "").getTime()
-        );
-        break;
-    }
-
-    return filtered;
-  }, [users, searchTerm, activeSort]);
 
   /** --- Table Columns --- **/
   const columns = [
@@ -118,11 +57,7 @@ export default function UserManagementTable() {
     {
       key: "user_uuid",
       header: "User ID",
-      render: (u: UserRowData) => (
-        <Text fw={500} c="black">
-          {u.user_uuid}
-        </Text>
-      ),
+      render: (u: UserRowData) => <Text fw={500}>{u.user_uuid}</Text>,
     },
     {
       key: "updated_at",
@@ -178,22 +113,23 @@ export default function UserManagementTable() {
 
   return (
     <GenericTable
-      columns={columns}
-      data={isLoading || isError ? [] : processedUsers}
+      enableSearch
+      enableSort
+      showFilter
+      data={users}
       isLoading={isLoading}
-      activeSort={activeSort}
+      paginationData={paginationData}
+      onPageChange={onPageChange}
+      columns={columns}
+      actions={actions}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
-      onSortChange={setActiveSort}
-      enableSearch={true}
-      enableSort={true}
-      showFilter={true}
-      tableType="sales"
-      actions={actions}
-      searchPlaceholder="search users"
-      onFilterChange={handleFilterChange}
+      activeSort={activeSort}
+      onSortChange={setSort}
+      onFilterChange={onFilterChange}
+      filters={filters}
+      searchPlaceholder="Search users"
       emptyMessage="No users found"
-      onPageChange={handlePageChange}
       titleSection={
         <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
           <Text fw={500} size="xl" c="textSecondary.9">
@@ -201,7 +137,7 @@ export default function UserManagementTable() {
           </Text>
           <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
             <Text c="customPrimary.10">
-              {paginationData?.total ?? processedUsers.length}
+              {paginationData?.total ?? users.length}
             </Text>
           </div>
         </div>

@@ -247,6 +247,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
                   padding: "6px 10px",
                   borderRadius: 8,
                   fontSize: 14,
+                  textTransform: "capitalize",
                 }}
               >
                 Role: {roleText}
@@ -264,7 +265,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
             </Text>
 
             {/* Roles line (if you still want them under the email; comment out if not needed) */}
-            <Text fz="sm" c="dimmed">
+            <Text fz="sm" c="dimmed" className="!capitalize">
               Roles: {renderRoles()}
             </Text>
           </Stack>

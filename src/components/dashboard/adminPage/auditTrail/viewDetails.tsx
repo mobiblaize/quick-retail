@@ -176,7 +176,7 @@ export default function ViewDetails({ profile }: ProfileHeaderProps) {
       <SimpleGrid cols={{ base: 1, md: 3 }} spacing="lg" p="md">
         {profileInfo.map(({ label, value }) => (
           <Box key={label}>
-            <Text c="dimmed" size="sm">
+            <Text c="dimmed" size="sm" className="!capitalize">
               {label}
             </Text>
 
@@ -184,7 +184,7 @@ export default function ViewDetails({ profile }: ProfileHeaderProps) {
               {React.isValidElement(value) ? (
                 value
               ) : ( */}
-            <Text fw={600} c="dark" size="sm">
+            <Text fw={600} c="dark" size="sm" className="!capitalize">
               {String(value ?? "—")}
             </Text>
             {/* )}
