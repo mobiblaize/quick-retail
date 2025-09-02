@@ -126,7 +126,7 @@ interface ProfileHeaderProps {
 }
 
 export default function ViewHeader({ profile }: ProfileHeaderProps) {
-  const { profile_picture, firstname, lastname, email, store_name, id, roles, causer_id } =
+  const { profile_picture, firstname, lastname, email, store_name, roles, causer_id } =
     profile;
   const { mutate: updatePhoto } = useFetchPhoto();
   const fileInputRef = useRef<HTMLInputElement | null>(null);

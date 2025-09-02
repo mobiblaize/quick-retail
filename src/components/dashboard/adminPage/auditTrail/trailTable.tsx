@@ -16,7 +16,6 @@ interface TrailTableProps {
   setSort?: (sortBy: string) => void;
   onFilterChange?: (filters: FilterValues) => void;
   filters?: FilterValues;
-  errors?: any;
 }
 
 export default function TrailTable({
@@ -33,7 +32,6 @@ export default function TrailTable({
   // error,  
 }: TrailTableProps) {
   const navigate = useNavigate();
-  console.log(errors);
   const formatTime = (dateStr: string) =>
     dateStr
       ? new Intl.DateTimeFormat("en-US", {
