@@ -247,12 +247,11 @@ export default function AddUserModal({ opened, onClose }: Props) {
                     clearable
                 />
             </Stack>
-
-            <div className="flex gap-4 mt-[2em] justify-center w-[100%]">
-                <Button variant="outline-primary" onClick={onClose} disabled={isPending}>
+            <div className="flex gap-7 mt-[2em] justify-center w-[100%]">
+                <Button className="!w-full" variant="outline-primary" onClick={onClose} disabled={isPending}>
                     No
                 </Button>
-                <Button variant="filled-primary" onClick={handleSubmit} loading={isPending}  disabled={saveDisabled}>
+                <Button className="!w-full" variant="filled-primary" onClick={handleSubmit} loading={isPending}  disabled={saveDisabled}>
                     Save
                 </Button>
             </div>
