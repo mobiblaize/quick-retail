@@ -15,6 +15,7 @@ interface TrailTableProps {
   setSort?: (sortBy: string) => void;
   onFilterChange?: (filters: FilterValues) => void;
   filters?: FilterValues;
+  errors?: any;
 }
 
 export default function TrailTable({
@@ -28,9 +29,10 @@ export default function TrailTable({
   setSort,
   onFilterChange,
   filters,
+  errors,
 }: TrailTableProps) {
   const navigate = useNavigate();
-
+  console.log(errors);
   const formatTime = (dateStr: string) =>
     dateStr
       ? new Intl.DateTimeFormat("en-US", {
@@ -113,6 +115,7 @@ export default function TrailTable({
       ),
     },
   ];
+  console.log(paginationData);
 
   const actions = (row: any) => (
     <button
@@ -155,6 +158,7 @@ export default function TrailTable({
           </Text>
           <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
             <Text c="customPrimary.10">{paginationData?.total || logs.length}</Text>
+
           </div>
         </div>
       }
