@@ -128,7 +128,6 @@ export default function TrailTable({
       </Text>
     </button>
   );
-  console.log();
 
   return (
     <GenericTable

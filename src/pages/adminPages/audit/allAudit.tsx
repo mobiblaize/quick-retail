@@ -6,6 +6,7 @@ import { FilterValues } from "../../../components/General/table/reuseableFilter"
 import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { ChevronDown } from "lucide-react";
+// import * as Papa from "papaparse";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
@@ -71,7 +72,9 @@ const AuditTrailPage = () => {
     }));
 
     if (format === "csv") {
-      const csv = data.unparse(tableData);
+      // const csv = Papa.unparse(tableData);
+      // const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      const csv = tableData.map((row: any) => Object.values(row).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");

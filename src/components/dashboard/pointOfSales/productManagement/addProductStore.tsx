@@ -170,7 +170,8 @@ type FormData = {
   location_id: string;
   product?: any;
   has_variations: number;
-  tags: string;
+  tags: string[];
+  // tags: [] as string[];
   promotional_price: string;
   promotional_start_date: string;
   promotional_end_date: string;
@@ -209,7 +210,7 @@ export const initialFormState: FormData = {
   long_description: "",
   location_id: "",
   has_variations: 0,
-  tags: "",
+  tags: [],
   promotional_price: "",
   promotional_start_date: "",
   promotional_end_date: "",

@@ -94,7 +94,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
             //@ts-ignore
             onChange={(val) => setSelectedCategoryId(val)}
             required
-            textColorClass="text-gray-800"
+            // textColorClass="text-gray-800"
           />
 
           <FormInput

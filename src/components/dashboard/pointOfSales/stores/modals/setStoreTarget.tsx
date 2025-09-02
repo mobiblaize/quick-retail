@@ -86,7 +86,6 @@ const SetStoreTarget = ({ opened, onClose }: AddNewStoreModalProps) => {
             options={storeOptions}
             value={locationId}
             onChange={(val) => setLocationId(val as string)}
-            textColorClass="text-gray-800"
             placeholder="Select a store"
             required
           />

@@ -353,13 +353,14 @@ const CreateOrderPageContent: React.FC = () => {
       case OrderCreationStep.SEARCH_PRODUCT:
         return [
           <div key="search-product-buttons" className="flex gap-4 justify-end">
-            <Button variant="outline-primary" onClick={handleBack2}>
+            <Button variant="outline-primary" onClick={handleBack2} w={150}>
               Cancel
             </Button>
             <Button
               variant="filled-primary"
               onClick={() => isOrderValid && nextStep()}
               disabled={!isOrderValid}
+              w={150}
               title={
                 !hasCustomer
                   ? "Select a customer"
@@ -510,4 +511,3 @@ const CreateOrderPageContent: React.FC = () => {
 };
 
 export default CreateOrderPageContent;
-

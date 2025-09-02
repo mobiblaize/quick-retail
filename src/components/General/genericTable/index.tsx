@@ -1,4 +1,4 @@
-import { Table, Box, Loader, Pagination } from "@mantine/core";
+import { Table, Box, Loader, Pagination, Text } from "@mantine/core";
 import type { ReactNode } from "react";
 import * as React from "react";
 import EmptyState2 from "../table/EmptyStte2";
@@ -46,16 +46,16 @@ interface GenericTableProps<T> {
 
   // Filter props
   onFilterChange?: (filters: FilterValues) => void;
-  filters?: FilterValues; 
+  filters?: FilterValues;
   showFilter?: boolean;
   tableType?:
-    | "inventory"
-    | "sales"
-    | "product"
-    | "returns"
-    | "discount"
-    | "audit"
-    | "transaction";
+  | "inventory"
+  | "sales"
+  | "product"
+  | "returns"
+  | "discount"
+  | "audit"
+  | "transaction";
   locations?: string[];
   categories?: string[];
 }
@@ -91,7 +91,7 @@ export default function GenericTable<T>({
     orderStatus: "",
     role: "",
     module: ""
-  }, 
+  },
 }: GenericTableProps<T>) {
   if (isLoading) {
     return (
@@ -114,7 +114,7 @@ export default function GenericTable<T>({
   if (!data || data.length === 0) {
     return <EmptyState2 onReset={handleResetFilters} />;
   }
-  
+
 
   const initialFilters: FilterValues = {
     startDate: "",
@@ -129,7 +129,7 @@ export default function GenericTable<T>({
 
 
   const [showFilterPanel, setShowFilterPanel] = React.useState(false);
-const DEFAULT_FILTER_VALUES = ["All", "", "all"];
+  const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
   const isValueSet = (v: any) => {
     if (Array.isArray(v)) return v.length > 0;
@@ -267,40 +267,40 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
                         showLocation={true}
-                          showStockLevel={true}
-                          showOrderStatus={true}
-                          locations={locations}
+                        showStockLevel={true}
+                        showOrderStatus={true}
+                        locations={locations}
                         filterType="inventory"
                       />
                     )}
-                      {tableType === "sales" && (
-                        <ReusableFilterComponent
+                    {tableType === "sales" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          showPrice={true}
-                          showPaymentStatus={true}
-                          filterType={"sales"}
+                        showPrice={true}
+                        showPaymentStatus={true}
+                        filterType={"sales"}
 
-                        />
-                      )}
-                        {tableType === "discount" && (
-                        <ReusableFilterComponent
+                      />
+                    )}
+                    {tableType === "discount" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          showDiscountType={true}
-                          showDiscountStatus={true}
-                          filterType={"discount"}
-                        />
-                      )}
-                      {tableType === "returns" && (
-                        <ReusableFilterComponent
+                        showDiscountType={true}
+                        showDiscountStatus={true}
+                        filterType={"discount"}
+                      />
+                    )}
+                    {tableType === "returns" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          locations={locations}
-                          showReason={true}
-                          showReturnStatus={true}
-                          filterType={"returns"}
-                          // showLocation={true}
-                        />
-                      )}
-{/* 
+                        locations={locations}
+                        showReason={true}
+                        showReturnStatus={true}
+                        filterType={"returns"}
+                      // showLocation={true}
+                      />
+                    )}
+                    {/* 
                       {tableType === "audit" && (
                         <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
@@ -320,7 +320,7 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
       )}
 
       <Box>
-        <Table.ScrollContainer minWidth={800}>
+        {/* <Table.ScrollContainer minWidth={800}>
           <Table striped={false} highlightOnHover withTableBorder={false}>
             <Table.Thead>
               <Table.Tr style={{ backgroundColor: "#f8fafc" }}>
@@ -373,7 +373,64 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
               ))}
             </Table.Tbody>
           </Table>
+        </Table.ScrollContainer> */}
+
+        <Table.ScrollContainer minWidth={800}>
+          <Table
+            striped={false}
+            highlightOnHover
+            withTableBorder={false}
+            withColumnBorders={false}
+            styles={(theme) => ({
+              thead: {
+                backgroundColor: theme.colors.gray[0],
+              },
+              th: {
+                fontWeight: 600,
+                fontSize: theme.fontSizes.sm,
+                color: theme.colors.gray[7],
+                padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+                textAlign: "left",
+                fontFamily: 'DM Sans, sans-serif',
+              },
+              td: {
+                padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+                fontSize: theme.fontSizes.sm,
+                borderBottom: `1px solid ${theme.colors.gray[2]}`,
+                fontFamily: 'DM Sans, sans-serif',
+              },
+              tr: {
+                "&:hover": {
+                  backgroundColor: theme.colors.gray[0],
+                  fontFamily: 'DM Sans, sans-serif',
+                },
+              },
+            })}
+          >
+            <Table.Thead>
+              <Table.Tr>
+                {columns.map((col) => (
+                  <Table.Th key={col.key} style={{ width: col.width }}>
+                    {col.header}
+                  </Table.Th>
+                ))}
+                {actions && <Table.Th>Action</Table.Th>}
+              </Table.Tr>
+            </Table.Thead>
+
+            <Table.Tbody>
+              {data.map((row, idx) => (
+                <Table.Tr key={idx}>
+                  {columns.map((col) => (
+                    <Table.Td key={col.key}>{col.render(row)}</Table.Td>
+                  ))}
+                  {actions && <Table.Td>{actions(row)}</Table.Td>}
+                </Table.Tr>
+              ))}
+            </Table.Tbody>
+          </Table>
         </Table.ScrollContainer>
+
 
         {paginationData && paginationData.last_page > 1 && onPageChange && (
           <Box
@@ -382,9 +439,10 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
               justifyContent: "flex-end",
               padding: "16px 24px",
               borderTop: "1px solid #f1f5f9",
+              fontFamily: 'DM Sans, sans-serif',
             }}
           >
-            <Pagination
+            {/* <Pagination
               total={paginationData.last_page}
               value={paginationData.current_page}
               onChange={onPageChange}
@@ -401,6 +459,34 @@ const DEFAULT_FILTER_VALUES = ["All", "", "all"];
                   "&:hover:not([data-active])": { backgroundColor: "#f8fafc" },
                 },
               }}
+            /> */}
+
+
+            <Pagination
+              total={paginationData.last_page}
+              value={paginationData.current_page}
+              onChange={onPageChange}
+              size="sm"
+              getControlProps={(control) => ({
+                children:
+                  typeof control === "number" ? (
+                    <Text fz="sm" fw={500} c="gray.7">
+                      {control}
+                    </Text>
+                  ) : undefined,
+              })}
+              styles={(theme) => ({
+                control: {
+                  border: "none",
+                  "&[data-active]": {
+                    backgroundColor: "transparent", // no fill
+                    border: `1px solid ${theme.colors.orange[6]}`, // orange border
+                    color: theme.colors.orange[6], // orange text
+                    fontFamily: 'DM Sans, sans-serif',
+                  },
+                  "&:hover:not([data-active])": { backgroundColor: theme.colors.gray[0] },
+                },
+              })}
             />
           </Box>
         )}

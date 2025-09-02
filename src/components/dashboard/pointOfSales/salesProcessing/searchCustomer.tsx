@@ -67,11 +67,11 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
     customer?.id
       ? {
-          customerID: customer.id,
-          customer_name: customer.name,
-          customer_email: "",
-          customer_phone: "",
-        }
+        customerID: customer.id,
+        customer_name: customer.name,
+        customer_email: "",
+        customer_phone: "",
+      }
       : null
   );
 
@@ -176,7 +176,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   
 
   return (
-    <main className="w-full h-auto rounded-lg bg-white">
+    <main className="w-full h-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
       <header
         className={`px-6 py-2 ${collapsible ? "cursor-pointer" : ""}`}
         onClick={collapsible ? toggleExpand : undefined}
@@ -202,14 +202,17 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
             {!isAddingCustomer ? (
               <>
                 <div className="relative max-w-md">
-                  <h1 className="mt-[1em]">SEARCH CUSTOMER</h1>
+                  <Text mt="md" mb="1em">
+                    SEARCH CUSTOMER
+                  </Text>
 
                   <div className="flex items-center gap-2">
-                    <input
+                    <FormInput
                       value={searchTerm}
                       onChange={handleSearchChange}
                       placeholder="Enter Customer Name"
-                      className="w-full border border-gray-300 rounded-md px-3 py-2 text-sm shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      paddingY={"0.7rem"}
+                      className="w-full "
                     />
                     {selectedCustomer && (
                       <button
@@ -241,26 +244,29 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                             className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-b last:border-none"
                             onClick={() => handleSelectCustomer(c)}
                           >
-                            <p className="font-medium text-gray-900">
+                            <Text fw={500} c="dark">
                               {c.customer_name}
-                            </p>
-                            <p className="text-sm text-gray-700">
+                            </Text>
+                            <Text size="sm" c="dimmed">
                               {c.customer_phone}
-                            </p>
-                            <p className="text-sm text-gray-700">
+                            </Text>
+                            <Text size="sm" c="dimmed">
                               {c.customer_email}
-                            </p>
+                            </Text>
                           </div>
                         ))}
                       </div>
                     )}
                 </div>
 
-                <div className="mt-[1em] text-[#EB5017] cursor-pointer">
-                  <span onClick={() => setIsAddingCustomer(true)}>
-                    + Add New Customer
-                  </span>
-                </div>
+                <Text
+                  mt="md"
+                  c="#EB5017"
+                  style={{ cursor: "pointer" }}
+                  onClick={() => setIsAddingCustomer(true)}
+                >
+                  + Add New Customer
+                </Text>
               </>
             ) : (
               <div className="flex flex-col gap-4 w-full mt-4">
@@ -270,6 +276,8 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                   <FormInput
                     label="Customer Name"
                     value={newCustomer.customer_name}
+                    placeholder="Enter customer name"
+                    paddingY="0.7rem"
                     onChange={(e: { target: { value: any } }) =>
                       setNewCustomer({
                         ...newCustomer,
@@ -280,6 +288,8 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                   <FormInput
                     label="Email"
                     value={newCustomer.customer_email}
+                    placeholder="Enter customer email"
+                     paddingY="0.7rem"
                     onChange={(e: { target: { value: any } }) =>
                       setNewCustomer({
                         ...newCustomer,
@@ -305,6 +315,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
               placeholder="Enter phone number"
               value={newCustomer.customer_phone}
               onChange={handlePhoneChange}
+               paddingY="0.7rem"
               // @ts-ignore
               inputMode="numeric"
               pattern="\d*"
@@ -319,6 +330,8 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                   <FormInput
                     label="Address"
                     value={newCustomer.customer_address}
+                  placeholder="Enter customer address"
+                     paddingY="0.7rem"
                     onChange={(e: { target: { value: any } }) =>
                       setNewCustomer({
                         ...newCustomer,
@@ -332,13 +345,13 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                     className="mt-2  w-[150px] px-2 h-[44px]  border border-[#F16722] text-[#F16722] bg-[white]  rounded-lg"
                     onClick={() => setIsAddingCustomer(false)}
                   >
-                    Cancel
+                    <Text c="#f16722">Cancel</Text>
                   </button>
                   <button
                     className="mt-4  w-[150px] h-[44px] px-2 rounded-lg text-[white] bg-[#F16722] font-medium "
                     onClick={handleCreateCustomer}
                   >
-                    Create Customer
+                    <Text c="#fff">Create Customer</Text>
                   </button>
                 </div>
               </div>
