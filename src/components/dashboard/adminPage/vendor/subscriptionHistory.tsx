@@ -26,7 +26,7 @@ const HistoryTable = () => {
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
-    return status.toLowerCaddase();
+    return status.toLowerCase();
   };
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
