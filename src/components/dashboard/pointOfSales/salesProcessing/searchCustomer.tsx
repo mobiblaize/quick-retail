@@ -1,10 +1,11 @@
 import { Divider, Text } from "@mantine/core";
-import { ChevronDown, ChevronUp, X } from "lucide-react";
+import { X } from "lucide-react";
 import { useState, useEffect, useRef, ReactNode } from "react";
 import { useSearchAllCustomers } from "../../../../hooks/backendApis/pos/products";
 import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import { notifications } from "@mantine/notifications";
 import { useOrderStore } from "../../../../hooks/useOrderStore";
+import FormInput from "../../../General/formInput";
 
 interface CustomerData {
   customer_phone: ReactNode;
@@ -17,8 +18,8 @@ interface SearchCustomerProps {
   onCustomerSelect: (customerID: string | null) => void;
   initialCustomerId?: string | null;
   initialCustomerName?: string;
-  collapsible?: boolean;   // optional if you added this earlier
-  showIcon?: boolean;      // optional if you added this earlier
+  collapsible?: boolean; // optional if you added this earlier
+  showIcon?: boolean; // optional if you added this earlier
 }
 
 const SearchCustomer: React.FC<SearchCustomerProps> = ({
@@ -43,7 +44,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     initialCustomerName || customer?.name || ""
   );
 
-  const [newCustomer, ] = useState({
+  const [newCustomer, setNewCustomer] = useState({
     customer_name: "",
     customer_email: "",
     customer_phone: "",
@@ -91,16 +92,53 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     }
   }, [searchTerm, refetch]);
 
+  const [phoneError, setPhoneError] = useState<string | null>(null);
+
+  // Helpers
+  const digitsOnly = (s: string) => s.replace(/\D/g, "");
+  const clamp11 = (s: string) => digitsOnly(s).slice(0, 11);
+
+  // Block typing of non-digits (but allow navigation keys)
+  const blockNonNumericKeys = (e: React.KeyboardEvent<HTMLInputElement>) => {
+    if (e.ctrlKey || e.metaKey) return; // allow copy/paste shortcuts
+    const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"];
+    if (allowed.includes(e.key)) return;
+    if (!/^\d$/.test(e.key)) e.preventDefault();
+  };
+
+  const onPhonePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
+    const text = e.clipboardData.getData("text");
+    if (!/^\d+$/.test(text)) e.preventDefault();
+  };
+
+  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const digits = clamp11(e.target.value);
+    setNewCustomer(prev => ({ ...prev, customer_phone: digits }));
+    setPhoneError(digits.length === 11 ? null : "Phone must be 11 digits");
+  };
+
   const handleCreateCustomer = () => {
-    createCustomer.mutate(newCustomer, {
+    const payload = {
+      ...newCustomer,
+      customer_phone: clamp11(newCustomer.customer_phone),
+    };
+
+    if (!/^\d{11}$/.test(payload.customer_phone)) {
+      notifications.show({
+        title: "Invalid phone",
+        message: "Please enter an 11-digit phone number (numbers only).",
+        color: "red",
+      });
+      return;
+    }
+
+    createCustomer.mutate(payload, {
       onSuccess: (response) => {
         const customerID = response?.data?.customerID;
         if (customerID) {
-          // ✅ this is a user action; it's fine to notify parent here
           onCustomerSelect(customerID);
           setSearchTerm(newCustomer.customer_name);
           setIsAddingCustomer(false);
-
           setCustomer({ id: customerID, name: newCustomer.customer_name });
 
           notifications.show({
@@ -135,6 +173,8 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     setCustomer({ id: c.customerID, name: c.customer_name });
   };
 
+  
+
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <header
@@ -142,11 +182,15 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
         onClick={collapsible ? toggleExpand : undefined}
         aria-expanded={isOpen}
       >
-        <div className={`flex items-center ${hasIcon ? "justify-between" : "justify-start"}`}>
+        <div
+          className={`flex items-center ${
+            hasIcon ? "justify-between" : "justify-start"
+          }`}
+        >
           <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
             {isAddingCustomer ? "Add New Customer" : "Customer"}
           </Text>
-          {hasIcon && (isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />)}
+          {/* {hasIcon && (isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />)} */}
         </div>
       </header>
 
@@ -178,7 +222,10 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                         className="focus:outline-none"
                         aria-label="Clear selected customer"
                       >
-                        <X size={18} className="text-gray-400 hover:text-gray-600" />
+                        <X
+                          size={18}
+                          className="text-gray-400 hover:text-gray-600"
+                        />
                       </button>
                     )}
                   </div>
@@ -194,9 +241,15 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                             className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-b last:border-none"
                             onClick={() => handleSelectCustomer(c)}
                           >
-                            <p className="font-medium text-gray-900">{c.customer_name}</p>
-                            <p className="text-sm text-gray-700">{c.customer_phone}</p>
-                            <p className="text-sm text-gray-700">{c.customer_email}</p>
+                            <p className="font-medium text-gray-900">
+                              {c.customer_name}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              {c.customer_phone}
+                            </p>
+                            <p className="text-sm text-gray-700">
+                              {c.customer_email}
+                            </p>
                           </div>
                         ))}
                       </div>
@@ -204,15 +257,76 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                 </div>
 
                 <div className="mt-[1em] text-[#EB5017] cursor-pointer">
-                  <span onClick={() => setIsAddingCustomer(true)}>+ Add New Customer</span>
+                  <span onClick={() => setIsAddingCustomer(true)}>
+                    + Add New Customer
+                  </span>
                 </div>
               </>
             ) : (
               <div className="flex flex-col gap-4 w-full mt-4">
+                {" "}
                 <div className="grid grid-cols-2 gap-4 ">
-                  {/* your FormInput fields here (unchanged) */}
+                  {" "}
+                  <FormInput
+                    label="Customer Name"
+                    value={newCustomer.customer_name}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_name: e.target.value,
+                      })
+                    }
+                  />{" "}
+                  <FormInput
+                    label="Email"
+                    value={newCustomer.customer_email}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_email: e.target.value,
+                      })
+                    }
+                  />{" "}
+                </div>{" "}
+                <div className="grid grid-cols-2 gap-4">
+                  {" "}
+                  {/* <FormInput
+                    label="Phone"
+                    value={newCustomer.customer_phone}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_phone: e.target.value,
+                      })
+                    }
+                  />{" "} */}
+                   <FormInput
+              label="Phone Number"
+              placeholder="Enter phone number"
+              value={newCustomer.customer_phone}
+              onChange={handlePhoneChange}
+              // @ts-ignore
+              inputMode="numeric"
+              pattern="\d*"
+              autoComplete="tel"
+              maxLength={11}
+              onKeyDown={blockNonNumericKeys}
+              onPaste={onPhonePaste}
+            />
+            {phoneError && (
+              <div className="text-sm text-red-600 -mt-3">{phoneError}</div>
+            )}
+                  <FormInput
+                    label="Address"
+                    value={newCustomer.customer_address}
+                    onChange={(e: { target: { value: any } }) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_address: e.target.value,
+                      })
+                    }
+                  />
                 </div>
-
                 <div className="flex gap-4 justify-start text-right items-end">
                   <button
                     className="mt-2  w-[150px] px-2 h-[44px]  border border-[#F16722] text-[#F16722] bg-[white]  rounded-lg"
@@ -237,4 +351,3 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 };
 
 export default SearchCustomer;
-

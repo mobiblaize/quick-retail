@@ -1,35 +1,36 @@
-
 import { Button, Menu, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import TrailTable from "../../../components/dashboard/adminPage/auditTrail/trailTable";
 import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
-import { useState } from "react";
-// import Dropdown from "../../../components/General/dropdown";
-// @ts-ignore
-import Papa from "papaparse";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
-import { useMemo } from "react";
+import { useState, useMemo } from "react";
 import { useSearchParams } from "react-router";
 import { ChevronDown } from "lucide-react";
-
-
+import * as Papa from "papaparse";
+import jsPDF from "jspdf";
+import autoTable from "jspdf-autotable";
 
 const AuditTrailPage = () => {
-  const [, setFilters] = useState<FilterValues | null>(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
+  const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(10);
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handlePageChange = (newPage: number) => {
-    console.log("Page changed to:", newPage);
-    // setPage(newPage);
+  const handleSearchChange = (value: string) => {
+    setSearchTerm(value);
+    setCurrentPage(1);
+  };
 
-    // 👇 trigger your API fetch here with newPage
-    // fetchData({ page: newPage });
+  const handleSortChange = (value: string) => {
+    setActiveSort(value);
+    setCurrentPage(1);
   };
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
+    setCurrentPage(1);
 
     const queryObj: Record<string, string> = {
       ...(newFilters.startDate && { start_date: newFilters.startDate }),
@@ -46,33 +47,28 @@ const AuditTrailPage = () => {
     const entries = Object.fromEntries(searchParams.entries());
     return {
       ...entries,
+      search: searchTerm,
+      sort_by: activeSort,
+      page: currentPage,
+      per_page: perPage,
       paginate: "true",
     };
-  }, [searchParams]);
+  }, [searchParams, searchTerm, activeSort, currentPage, perPage]);
 
   const { data, isLoading, error } = useFetchAuditTrails(queryParams);
 
-
-  // const exportOptions = [
-  //   { label: "CSV", value: "csv" },
-  //   { label: "PDF", value: "pdf" },
-  // ];
-
-
-  //   const { data, isLoading, error } = useFetchAuditTrails();
   const handleExport = (format: string) => {
     const logs = data?.data?.data || [];
-
-    if (!logs || logs.length === 0) return;
+    if (!logs.length) return;
 
     const tableData = logs.map((log: any) => ({
       timestamp: new Date(log.created_at).toLocaleString(),
-      name: `${log.causer?.firstname || ''} ${log.causer?.lastname || ''}`,
-      email: log.causer?.email || 'N/A',
-      role: log.causer?.roles || 'N/A',
-      activity: log.log_name || '',
-      module: log.action_module || '',
-      ipAddress: log.ip_address || '',
+      name: `${log.causer?.firstname || ""} ${log.causer?.lastname || ""}`,
+      email: log.causer?.email || "N/A",
+      role: log.causer?.roles || "N/A",
+      activity: log.log_name || "",
+      module: log.action_module || "",
+      ipAddress: log.ip_address || "",
     }));
 
     if (format === "csv") {
@@ -89,17 +85,8 @@ const AuditTrailPage = () => {
 
     if (format === "pdf") {
       const doc = new jsPDF();
-
       autoTable(doc, {
-        head: [[
-          "Timestamp",
-          "Name",
-          "Email",
-          "Role",
-          "Activity",
-          "Module",
-          "IP Address"
-        ]],
+        head: [["Timestamp", "Name", "Email", "Role", "Activity", "Module", "IP Address"]],
         body: tableData.map((row: { timestamp: any; name: any; email: any; role: any; activity: any; module: any; ipAddress: any; }) => [
           row.timestamp,
           row.name,
@@ -107,37 +94,20 @@ const AuditTrailPage = () => {
           row.role,
           row.activity,
           row.module,
-          row.ipAddress
+          row.ipAddress,
         ]),
-        styles: {
-          fontSize: 8,
-          cellPadding: 3,
-        },
-        headStyles: {
-          fillColor: [241, 103, 34], // orange: #F16722
-          textColor: 255,
-          fontStyle: 'bold',
-        },
+        styles: { fontSize: 8, cellPadding: 3 },
+        headStyles: { fillColor: [241, 103, 34], textColor: 255, fontStyle: "bold" },
         margin: { top: 20 },
       });
-
       doc.save("audit_trail.pdf");
     }
   };
 
-
   const subHeaders = [
-    <div
-      key="1"
-      className="py-2.5 flex justify-between items-center flex-wrap gap-3"
-    >
+    <div key="1" className="py-2.5 flex justify-between items-center flex-wrap gap-3">
       <div className="flex gap-8 items-center">
-
-        <div className="flex items-center mt-2">
-          <Text c="black" fw={500}>
-            Audit Trail
-          </Text>
-        </div>
+        <Text c="black" fw={500}>Audit Trail</Text>
       </div>
       <div className="flex items-center gap-3">
         <Menu>
@@ -147,7 +117,6 @@ const AuditTrailPage = () => {
               <ChevronDown className="ml-2" />
             </Button>
           </Menu.Target>
-
           <Menu.Dropdown
             style={{
               backgroundColor: "white",
@@ -156,16 +125,10 @@ const AuditTrailPage = () => {
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Menu.Item
-              style={{ fontSize: 14, color: "#333" }}
-              onClick={() => handleExport("csv")}
-            >
+            <Menu.Item style={{ fontSize: 14, color: "#333" }} onClick={() => handleExport("csv")}>
               Export CSV
             </Menu.Item>
-            <Menu.Item
-              style={{ fontSize: 14, color: "#333" }}
-              onClick={() => handleExport("pdf")}
-            >
+            <Menu.Item style={{ fontSize: 14, color: "#333" }} onClick={() => handleExport("pdf")}>
               Export PDF
             </Menu.Item>
           </Menu.Dropdown>
@@ -178,10 +141,16 @@ const AuditTrailPage = () => {
     <PageContainer subHeaders={subHeaders}>
       <TrailTable
         isLoading={isLoading}
+    
         error={error}
         logs={data?.data?.data || []}
         onFilterChange={handleFilterChange}
-        onPageChange={handlePageChange}
+        onPageChange={setCurrentPage}
+        searchTerm={searchTerm}
+        setSearchTerm={handleSearchChange}
+        activeSort={activeSort}
+        setSort={handleSortChange}
+        filters={filters}
       />
     </PageContainer>
   );

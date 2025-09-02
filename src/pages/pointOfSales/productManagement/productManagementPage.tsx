@@ -58,7 +58,7 @@ const TableSkeleton = () => (
   </section>
 );
 
-const ProductManagementPage = () => {
+const ProductManagementPage = () => { 
   const navigate = useNavigate();
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");

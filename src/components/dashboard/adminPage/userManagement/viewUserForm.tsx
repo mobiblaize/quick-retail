@@ -30,16 +30,24 @@ const ViewUserForm = ({ setUser }: { setUser: (user: any) => void }) => {
   <Box p="md">
     {/* Row: icon + content (flex items-center gap-3 mb-4) */}
     <Group align="center" gap={12} mb={16}>
-      {/* Icon circle (w-20 h-20, bg-gray-100, text-gray-600, p-2, border-2 #FA9874, rounded-full) */}
-      <ThemeIcon
-        size={80}
-        radius="xl"
-        variant="light"
-        color="gray"
-        style={{ backgroundColor: "#F3F4F6", border: "2px solid #FA9874" }}
-      >
-        <UserIcon size={56} color="#4B5563" />
-      </ThemeIcon>
+      {!user.profile_picture ? (
+        <ThemeIcon
+          size={80}
+          radius="xl"
+          variant="light" 
+          color="gray"
+          style={{ backgroundColor: "#F3F4F6", border: "2px solid #FA9874" }}
+        >
+          <UserIcon size={56} color="#4B5563" />
+        </ThemeIcon>
+      ) : (
+        <img
+          src={user.profile_picture}
+          alt="Profile"
+          style={{ width: 80, height: 80, borderRadius: "50%", objectFit: "cover", border: "2px solid #FA9874" }}
+        />
+      )}
+
 
       {/* Right side */}
       <div>
