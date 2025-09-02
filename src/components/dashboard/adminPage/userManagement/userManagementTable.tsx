@@ -28,7 +28,7 @@ export interface UserRowData {
 }
 
 export default function UserManagementTable() {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
+  const [, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [currentPage, setCurrentPage] = useState(1);
   const [queryParams, setQueryParams] = useState({ page: currentPage });
   const { data, isLoading, isError } = useFetchUsers(queryParams);

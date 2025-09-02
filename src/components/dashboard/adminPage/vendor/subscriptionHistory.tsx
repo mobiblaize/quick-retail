@@ -17,8 +17,8 @@ interface Subscription {
 }
 
 const HistoryTable = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
-  const [dateRange] = useState({ startDate: "", endDate: "" });
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  // const [dateRange] = useState({ startDate: "", endDate: "" });
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(5);
   const [searchTerm, setSearchTerm] = useState("");
@@ -26,7 +26,7 @@ const HistoryTable = () => {
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
-    return status.toLowerCase();
+    return status.toLowerCaddase();
   };
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
@@ -47,7 +47,7 @@ const HistoryTable = () => {
     page: currentPage,
     per_page: perPage,
   };
-
+// @ts-ignore
   const { data = {}, isLoading = false, refetch } = useFetchAllSub(payload);
   const subscriptions: Subscription[] = data?.data?.data || [];
 
