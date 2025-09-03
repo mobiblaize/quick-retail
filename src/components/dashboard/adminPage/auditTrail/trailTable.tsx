@@ -29,8 +29,8 @@ export default function TrailTable({
   setSort,
   onFilterChange,
   filters,
-  // error,  
-}: TrailTableProps) {
+}: // error,
+TrailTableProps) {
   const navigate = useNavigate();
   const formatTime = (dateStr: string) =>
     dateStr
@@ -118,12 +118,10 @@ export default function TrailTable({
 
   const actions = (row: any) => (
     <button
-      onClick={() =>
-        navigate(ROUTES.viewTrail, { state: { uuid: row.uuid } })
-      }
+      onClick={() => navigate(ROUTES.viewTrail, { state: { uuid: row.uuid } })}
       className="text-[#F16722] hover:underline cursor-pointer text-sm"
     >
-      <Text size="sm" fw={500} c="#F16722">
+      <Text size="sm" fw={800} c="#F16722">
         View
       </Text>
     </button>
@@ -155,8 +153,9 @@ export default function TrailTable({
             All User Trails
           </Text>
           <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-            <Text c="customPrimary.10">{paginationData?.total || logs.length}</Text>
-
+            <Text c="customPrimary.10">
+              {paginationData?.total || logs.length}
+            </Text>
           </div>
         </div>
       }

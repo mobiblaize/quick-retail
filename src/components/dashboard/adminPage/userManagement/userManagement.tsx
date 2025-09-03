@@ -120,26 +120,25 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
         </UnstyledButton>
       </Group>
 
-      <UserAnalyticsOverview />
-
-      {/* Tab Content */}
       {activeTab === "userManage" && (
-        <UserManagementTable
-          users={users}
-          isLoading={isLoading}
-          paginationData={paginationData}
-          onPageChange={setCurrentPage}
-          searchTerm={searchTerm}
-          setSearchTerm={handleSearchChange}
-          activeSort={activeSort}
-          setSort={handleSortChange}
-          onFilterChange={handleFilterChange}
-          filters={filters}
-        />
-      )}
-      {activeTab === "roleGrid" && <RoleGrid />}
-    </div>
-  );
+  <>
+    <UserAnalyticsOverview />
+    <UserManagementTable
+      users={users}
+      isLoading={isLoading}
+      paginationData={paginationData}
+      onPageChange={setCurrentPage}
+      searchTerm={searchTerm}
+      setSearchTerm={handleSearchChange}
+      activeSort={activeSort}
+      setSort={handleSortChange}
+      onFilterChange={handleFilterChange}
+      filters={filters}
+    />
+  </>
+)}
+{activeTab === "roleGrid" && <RoleGrid />}
+</div>  );
 };
 
 export default UserManagementComp;
