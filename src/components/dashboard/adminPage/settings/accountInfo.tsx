@@ -2,17 +2,14 @@ import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
 import {
   Badge,
-  Box,
   Button,
   Select,
   Text,
-  TextInput,
   Title,
 } from "@mantine/core";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import ContactSupportModal from "../helpComponent/modal/sendMessageModal";
 import FormInput from "../../../General/formInput";
-import Dropdown from "../../../General/dropdown";
 
 interface ProfileSectionProps {
   profile: {
