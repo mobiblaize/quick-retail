@@ -530,19 +530,25 @@ const SubscriptionPlanCard = ({ data }: any) => {
       <Modal
         opened={seatInfoOpen}
         onClose={() => setSeatInfoOpen(false)}
-        title={<Text fw={600}>Seat Information</Text>}
+        title={<Text fw={600} color="gray.8"
+              style={{ fontFamily: "DM Sans, sans-serif" }}>Seat Information</Text>}
         centered
         radius="md"
       >
-        <Text size="sm" mb="md">
+        <Text size="sm" mb="md" color="gray.8"
+              style={{ fontFamily: "DM Sans, sans-serif" }}
+        
+        >
           This modal provides detailed information about user seats.
         </Text>
-        <Text size="sm" mb="md">
+        <Text size="sm" mb="md" color="gray.8"
+              style={{ fontFamily: "DM Sans, sans-serif" }}>
           **Free Seats:** These are included with your base subscription plan
           and allow a certain number of users to access the application without
           additional charges.
         </Text>
-        <Text size="sm">
+        <Text size="sm" color="gray.8"
+              style={{ fontFamily: "DM Sans, sans-serif" }}>
           **Additional User Seats:** If you need more users to access the
           application beyond your free allocation, you can purchase additional
           seats at the specified price per seat.

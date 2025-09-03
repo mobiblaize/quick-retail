@@ -155,8 +155,8 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
           </Text>
         )}
 
-        <div className="flex gap-4 mt-[2em] justify-center rounded-lg">
-          <Button variant="outline" onClick={onClose}>
+        <div className="flex gap-8 mt-[2em] justify-center rounded-lg">
+          <Button variant="outline" onClick={onClose} w={"100%"}>
             No
           </Button>
 
@@ -164,6 +164,7 @@ export default function ChangePasswordModal({ opened, onClose }: Props) {
             onClick={handleSubmit}
             disabled={!isValid || isLoading}
             loading={isLoading}
+            w={"100%"}
           >
             Save
           </Button>

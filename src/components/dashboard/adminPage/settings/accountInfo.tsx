@@ -1,12 +1,6 @@
 import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
-import {
-  Badge,
-  Button,
-  Select,
-  Text,
-  Title,
-} from "@mantine/core";
+import { Badge, Button, Select, Text, Title } from "@mantine/core";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import ContactSupportModal from "../helpComponent/modal/sendMessageModal";
 import FormInput from "../../../General/formInput";
@@ -86,13 +80,15 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
           </div>
 
           {/* Profile Info */}
-          <div className="text-center sm:text-left">
+          <div className="text-center sm:text-left ">
             <Badge
               color="orange"
               variant="filled"
               radius="md"
               size="sm"
               mb="md"
+              style={{ fontFamily: "DM Sans, sans-serif" }}
+              fw={500}
             >
               User ID: #{shortenTransactionId(user_id)}
             </Badge>
@@ -248,12 +244,8 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
             </Text>
             <Select
               placeholder="Select company size"
-              data={[
-                { value: "small", label: "Small" },
-                { value: "medium", label: "Medium" },
-                { value: "large", label: "Large" },
-              ]}
-              defaultValue={company_size}
+              data={[{label: company_size, value: company_size}]}
+              value={company_size}
               disabled
               styles={{
                 label: {

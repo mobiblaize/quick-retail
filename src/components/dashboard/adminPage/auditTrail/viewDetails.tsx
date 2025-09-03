@@ -92,7 +92,7 @@
 
 
 
-import { Paper, Text, SimpleGrid, Badge, Box } from "@mantine/core";
+import { Paper, Text, SimpleGrid, Box } from "@mantine/core";
 
 interface CauserProfile {
   store_name: string;
@@ -104,6 +104,7 @@ interface CauserProfile {
   ip_address: string;
   store_address: string;
   action_type: string;
+  browser: string;
 }
 
 interface ProfileHeaderProps {
@@ -116,48 +117,49 @@ export default function ViewDetails({ profile }: ProfileHeaderProps) {
     id,
     created_at,
     log_name,
-    action_module,
+    // action_module,
     ip_address,
     store_address,
-    action_type,
+    browser,
+    action_type
   } = profile;
 
-  // Detect color dynamically from API value
-  const getColor = (status: string = ""): string => {
-    const normalized = status.trim().toLowerCase();
+  // // Detect color dynamically from API value
+  // const getColor = (status: string = ""): string => {
+  //   const normalized = status.trim().toLowerCase();
 
-    if (normalized.includes("success") || normalized.includes("completed")) {
-      return "green";
-    }
-    if (normalized.includes("fail") || normalized.includes("error")) {
-      return "red";
-    }
-    if (normalized.includes("pending") || normalized.includes("waiting")) {
-      return "yellow";
-    }
-    if (normalized.includes("code") || normalized.includes("generate")) {
-      return "blue";
-    }
+  //   if (normalized.includes("success") || normalized.includes("completed")) {
+  //     return "green";
+  //   }
+  //   if (normalized.includes("fail") || normalized.includes("error")) {
+  //     return "red";
+  //   }
+  //   if (normalized.includes("pending") || normalized.includes("waiting")) {
+  //     return "yellow";
+  //   }
+  //   if (normalized.includes("code") || normalized.includes("generate")) {
+  //     return "blue";
+  //   }
 
-    return "gray"; // default for unknown statuses
-  };
+  //   return "gray"; // default for unknown statuses
+  // };
 
-  const statusBadge = (
-    <Badge color={getColor(log_name)} variant="light" radius="sm">
-      {log_name || "—"}
-    </Badge>
-  );
+  // const statusBadge = (
+  //   <Badge color={getColor(log_name)} variant="light" radius="sm">
+  //     {log_name || "—"}
+  //   </Badge>
+  // );
 
   const profileInfo: { label: string; value: React.ReactNode }[] = [
     { label: "Audit ID", value: id || "—" },
     { label: "Timestamp", value: created_at || "—" },
     { label: "Activity", value: log_name || "—" },
-    { label: "Activity Status", value: statusBadge },
-    { label: "Module", value: action_module || "—" },
+    // { label: "Activity Status", value: statusBadge },
+    { label: "Module", value: action_type || "—" },
     { label: "Store/Warehouse", value: store_name || "—" },
     { label: "IP Address", value: ip_address || "—" },
     { label: "Location", value: store_address || "—" },
-    { label: "Browser", value: action_type || "—" },
+    { label: "Browser", value: browser || "—" },
   ];
 
   return (
