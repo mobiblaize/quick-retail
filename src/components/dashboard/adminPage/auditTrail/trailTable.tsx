@@ -32,7 +32,6 @@ export default function TrailTable({
   // error,  
 }: TrailTableProps) {
   const navigate = useNavigate();
-
   const formatTime = (dateStr: string) =>
     dateStr
       ? new Intl.DateTimeFormat("en-US", {
@@ -115,6 +114,7 @@ export default function TrailTable({
       ),
     },
   ];
+  console.log(paginationData);
 
   const actions = (row: any) => (
     <button
@@ -156,6 +156,7 @@ export default function TrailTable({
           </Text>
           <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
             <Text c="customPrimary.10">{paginationData?.total || logs.length}</Text>
+
           </div>
         </div>
       }

@@ -22,6 +22,7 @@ interface CustomDropdownProps {
   paddingY?: number | string;
   borderWidth?: number | string;
   leftPrefix?: string;
+  disabled?: boolean;
 }
 
 const Dropdown = ({
@@ -30,6 +31,7 @@ const Dropdown = ({
   placeholder = "Select...",
   value,
   onChange,
+  // disabled,
   required,
   optional,
   error,

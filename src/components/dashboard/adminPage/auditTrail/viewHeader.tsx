@@ -118,6 +118,7 @@ interface CauserProfile {
   store_name: string;
   roles: any[]; // kept flexible as before
   id: string;
+  causer_id: string;
 }
 
 interface ProfileHeaderProps {
@@ -125,7 +126,7 @@ interface ProfileHeaderProps {
 }
 
 export default function ViewHeader({ profile }: ProfileHeaderProps) {
-  const { profile_picture, firstname, lastname, email, store_name, id, roles } =
+  const { profile_picture, firstname, lastname, email, store_name, roles, causer_id } =
     profile;
   const { mutate: updatePhoto } = useFetchPhoto();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -235,7 +236,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
                   fontSize: 14,
                 }}
               >
-                User ID: #{id}
+                User ID: #{causer_id}
               </Box>
 
               <Box

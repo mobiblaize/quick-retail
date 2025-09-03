@@ -11,6 +11,7 @@ type Props = {
   activeTab: "userManage" | "roleGrid";
   onTabChange: (tab: "userManage" | "roleGrid") => void;
   users?: UserRowData;
+  filters?: FilterValues | null;
 };
 
 const UserManagementComp = ({ activeTab, onTabChange }: Props) => {

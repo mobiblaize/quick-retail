@@ -99,7 +99,11 @@ const AuditTrailPage = () => {
           row.ipAddress,
         ]),
         styles: { fontSize: 8, cellPadding: 3 },
-        headStyles: { fillColor: [241, 103, 34], textColor: 255, fontStyle: "bold" },
+        headStyles: {
+          fillColor: [241, 103, 34],
+          textColor: 255,
+          fontStyle: "bold",
+        },
         margin: { top: 20 },
       });
       doc.save("audit_trail.pdf");
@@ -107,9 +111,14 @@ const AuditTrailPage = () => {
   };
 
   const subHeaders = [
-    <div key="1" className="py-2.5 flex justify-between items-center flex-wrap gap-3">
+    <div
+      key="1"
+      className="py-2.5 flex justify-between items-center flex-wrap gap-3"
+    >
       <div className="flex gap-8 items-center">
-        <Text c="black" fw={500}>Audit Trail</Text>
+        <Text c="black" fw={500}>
+          Audit Trail
+        </Text>
       </div>
       <div className="flex items-center gap-3">
         <Menu>
@@ -127,16 +136,22 @@ const AuditTrailPage = () => {
               boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
             }}
           >
-            <Menu.Item style={{ fontSize: 14, color: "#333" }} onClick={() => handleExport("csv")}>
+            <Menu.Item
+              style={{ fontSize: 14, color: "#333" }}
+              onClick={() => handleExport("csv")}
+            >
               Export CSV
             </Menu.Item>
-            <Menu.Item style={{ fontSize: 14, color: "#333" }} onClick={() => handleExport("pdf")}>
+            <Menu.Item
+              style={{ fontSize: 14, color: "#333" }}
+              onClick={() => handleExport("pdf")}
+            >
               Export PDF
             </Menu.Item>
           </Menu.Dropdown>
         </Menu>
       </div>
-    </div>,
+    </div>
   ];
 
   return (
@@ -153,6 +168,7 @@ const AuditTrailPage = () => {
         activeSort={activeSort}
         setSort={handleSortChange}
         filters={filters}
+        paginationData={data?.data || null}
       />
     </PageContainer>
   );

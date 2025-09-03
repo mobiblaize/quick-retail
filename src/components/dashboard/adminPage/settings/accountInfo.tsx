@@ -1,8 +1,15 @@
 import { useRef, useState } from "react";
 import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
-import { Badge, Button, Select, Text, TextInput, Title } from "@mantine/core";
+import {
+  Badge,
+  Button,
+  Select,
+  Text,
+  Title,
+} from "@mantine/core";
 import { shortenTransactionId } from "../../../../utils/helpers";
 import ContactSupportModal from "../helpComponent/modal/sendMessageModal";
+import FormInput from "../../../General/formInput";
 
 interface ProfileSectionProps {
   profile: {
@@ -63,10 +70,11 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
     // <div className="space-y-6">
     <div className="bg-white p-6">
       {/* Profile Header */}
-      <div className="bg-white rounded-lg p-6 w-full 
+      <div
+        className="bg-white rounded-lg p-6 w-full 
   grid gap-4 place-items-center 
-  sm:flex sm:items-center sm:justify-between">
-
+  sm:flex sm:items-center sm:justify-between"
+      >
         {/* Profile Image */}
         <div className="flex flex-col items-center sm:flex-row sm:items-center gap-4">
           <div className="w-[100px] h-[100px] sm:w-[100px] sm:h-[100px] border-4 border-orange-500 rounded-full overflow-hidden">
@@ -104,6 +112,7 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
               radius="md"
               onClick={() => fileInputRef.current?.click()}
               disabled={isLoading}
+              style={{ fontFamily: "DM Sans, sans-serif" }}
             >
               {isLoading ? "Uploading..." : "Change profile picture"}
             </Button>
@@ -119,17 +128,17 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
         </div>
       </div>
 
-
       {/* Tabs */}
       <div className="flex gap-4 border-b border-gray-200">
         <Text
           unstyled
           fw={500}
           size="xl"
-          className={`cursor-pointer border-b-2 pb-1 ${activeTab === "account"
-            ? "text-[#F16722] border-orange-500"
-            : "text-gray-400 border-transparent"
-            }`}
+          className={`cursor-pointer border-b-2 pb-1 ${
+            activeTab === "account"
+              ? "text-[#F16722] border-orange-500"
+              : "text-gray-400 border-transparent"
+          }`}
           onClick={() => setActiveTab("account")}
         >
           Account
@@ -138,93 +147,88 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
           unstyled
           fw={500}
           size="xl"
-          className={`cursor-pointer border-b-2 pb-1 ${activeTab === "security"
-            ? "text-orange-500 border-orange-500"
-            : "text-gray-400 border-transparent"
-            }`}
+          className={`cursor-pointer border-b-2 pb-1 ${
+            activeTab === "security"
+              ? "text-orange-500 border-orange-500"
+              : "text-gray-400 border-transparent"
+          }`}
           onClick={() => setActiveTab("security")}
         >
           Security
         </Text>
-
       </div>
-
 
       {/* Account Info */}
       <div className="border p-3 border-gray-200 rounded-lg mt-[2em]">
-        <ContactSupportModal opened={modalOpen} onClose={() => setModalOpen(false)} />
+        <ContactSupportModal
+          opened={modalOpen}
+          onClose={() => setModalOpen(false)}
+        />
         <Title order={3} size="lg" fw={500} mb="md" c="#101928">
           ACCOUNT INFORMATION
         </Title>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           <div>
-            <Text size="sm" c="gray.6" mb={4}>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               First Name
             </Text>
-            <TextInput
-              defaultValue={first_name}
+
+            <FormInput
+              type="text"
+              paddingY={"0.7rem"}
+              value={first_name}
               disabled
-              radius="sm"
-              styles={{
-                input: {
-                  borderColor: 'var(--mantine-color-gray-2)',
-                  padding: '0.5rem 1rem', // px-4 py-2
-                },
-              }}
             />
           </div>
 
           <div>
-            <Text size="sm" c="gray.6" mb={4}>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Last Name
             </Text>
-            <TextInput
+
+            <FormInput
+              type="text"
+              paddingY={"0.7rem"}
               value={last_name}
               disabled
-              styles={{
-                input: { backgroundColor: "#f9fafb" }, // subtle gray background
-              }}
             />
           </div>
 
           <div>
-            <Text size="sm" c="gray.6" mb={4}>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Email Address
             </Text>
-            <TextInput
+            <FormInput
               type="email"
+              paddingY={"0.7rem"}
               value={email}
               disabled
-              styles={{
-                input: { backgroundColor: "#f9fafb" },
-              }}
             />
           </div>
 
           <div>
-            <Text size="sm" c="gray.6" mb={4}>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Phone Number
             </Text>
-            <TextInput
+
+            <FormInput
               type="tel"
+              paddingY={"0.7rem"}
               value={phone_number}
               disabled
-              styles={{
-                input: { backgroundColor: "#f9fafb" },
-              }}
             />
           </div>
 
           <div>
-            <Text size="sm" c="gray.6" mb={4}>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Business Name
             </Text>
-            <TextInput
+
+            <FormInput
+              type="text"
+              paddingY={"0.7rem"}
               value={company_name}
               disabled
-              styles={{
-                input: { backgroundColor: "#f9fafb" },
-              }}
             />
           </div>
 
@@ -239,7 +243,7 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
               <option value="medium">Medium</option>
               <option value="large">Large</option>
             </select> */}
-            <Text size="sm" c="gray.6" mb={4}>
+            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Company Size
             </Text>
             <Select
@@ -252,33 +256,53 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
               defaultValue={company_size}
               disabled
               styles={{
-                label: { fontSize: "14px", color: "#4B5563", marginBottom: "4px" },
+                label: {
+                  fontSize: "16px",
+                  color: "white",
+                  marginBottom: "4px",
+                },
+                input: {
+                  // borderWidth: borderWidthValue,
+                  // borderColor: error ? "#D42620" : "#E5E7EB",
+                  borderStyle: "solid",
+                  borderRadius: "0.375rem",
+                  backgroundColor: "#fff",
+                  color: "#111827",
+                  paddingLeft: "1rem",
+                  paddingRight: "2.5rem",
+                  paddingTop: "0.6rem",
+                  paddingBottom: "0.6rem",
+                  height: "auto",
+                  minHeight: "2.5rem",
+                  fontSize: "16px",
+                  boxShadow: "none",
+                  outline: "none",
+                  "&::placeholder": { color: "#111827" },
+                },
               }}
             />
           </div>
-
         </div>
 
         <Text
           size="sm"
           c="orange"
           mt="md"
-          style={{ cursor: 'pointer' }}
+          style={{ cursor: "pointer" }}
           onClick={() => setModalOpen(true)}
         >
-          Contact support{' '}
+          Contact support{" "}
           <Text
             component="span"
             c="black"
             inherit
             onClick={() => setModalOpen(true)}
-            style={{ cursor: 'pointer' }}
+            style={{ cursor: "pointer" }}
           >
             to edit your business profile
           </Text>
         </Text>
       </div>
     </div>
-
   );
 }
