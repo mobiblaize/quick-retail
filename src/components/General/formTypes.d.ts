@@ -36,6 +36,7 @@ interface iFormProps {
   paddingY?: string;
   labelPosition?: "block" | "flex";
   id?: string;
+  disabled?: boolean;
 }
 
 interface iInputField extends iFormProps {
