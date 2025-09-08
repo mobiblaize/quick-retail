@@ -1,10 +1,10 @@
-import { useState } from "react";
+// import { useState } from "react";
 import { Text } from "@mantine/core";
-import GenericTable from "../../../General/genericTable";
-import { useFetchAllSub } from "../../../../hooks/backendApis/admin/profile";
+import GenericTable, { PaginationData } from "../../../General/genericTable";
+// import { useFetchAllSub } from "../../../../hooks/backendApis/admin/profile";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 
-interface Subscription {
+export interface Subscription {
   id: string;
   name: string;
   status: string;
@@ -16,88 +16,60 @@ interface Subscription {
   billing_start: string;
 }
 
-const HistoryTable = () => {
-  // States
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues| null>(null);
-  const [dateRange] = useState({ startDate: "", endDate: "" });
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(5);
-  const [searchTerm, setSearchTerm] = useState("");
-  const [activeSort, setActiveSort] = useState("");
+interface HistoryTableProps {
+  data: any;
+  isLoading: boolean;
+  error?: Error | null;
+  searchTerm?: string;
+  setSearchTerm?: (value: string) => void;
+  activeSort?: string;
+  setSort?: (sortBy: string) => void;
+  onFilterChange?: (filters: FilterValues) => void;
+  onPageChange: (page: number) => void;
+  currentPage: number;
+  perPage: number;
+  filters?: FilterValues;
+  paginationData?: PaginationData;
+}
 
-  // Map order status
-  const mapOrderStatus = (status: string | undefined) => {
-    if (!status || status.toLowerCase() === "all") return "";
-    return status.toLowerCase();
-  };
-
-  // Map filters to API payload
-  const mapFiltersToPayload = (filters: FilterValues) => ({
-    search: filters.search ?? "",
-    sort_by: filters.sortBy ?? "",
-    start_date: filters.startDate ?? "",
-    end_date: filters.endDate ?? "",
-    page: currentPage.toString(),
-    per_page: perPage.toString(),
-    status: mapOrderStatus(filters.paymentStatus),
-    paginate: true,
-    price_from: filters.priceFrom ?? 100,
-    price_to: filters.priceTo ?? "",
-    // status: filters.status ?? "",
-    // trial: filters.trial ?? "",
-  });
-
-  // Merge filters with dateRange
-  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
-  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
-
-  const payload = {
-    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-    ...(startDate ? { start_date: startDate } : {}),
-    ...(endDate ? { end_date: endDate } : {}),
-    page: currentPage,
-    per_page: perPage,
-    sort_by: activeSort,
-    search: searchTerm,
-  };
-
-  // Fetch data
-  const { data = {}, isLoading = false } = useFetchAllSub(payload);
-  const subscriptions: Subscription[] = data?.data?.data || [];
-
-  // Format price
-  const formatPrice = (amount: number) =>
-    new Intl.NumberFormat("en-US", {
-      style: "currency",
-      currency: "USD",
-    }).format(amount);
-
-  // Handle filter changes
-  const handleFilterChange = (filters: FilterValues) => {
-    setAppliedFilters(filters);
-  };
-
-  // Handle page change
-  const handlePageChange = (page: number) => setCurrentPage(page);
-
-  // Define table columns
+const HistoryTable = ({
+  data,
+  isLoading,
+  // error,
+  paginationData,
+  searchTerm,
+  setSearchTerm,
+  activeSort,
+  setSort,
+  onFilterChange,
+  onPageChange,
+  filters,
+}: HistoryTableProps) => {
   const columns = [
     {
       key: "subscriptionID",
       header: "Transaction ID",
-      render: (s: Subscription) => <Text size="sm" c="#475569">{s.subscriptionID}</Text>,
+      render: (s: Subscription) => (
+        <Text size="sm" c="#475569">
+          {s.subscriptionID}
+        </Text>
+      ),
     },
     {
       key: "billing_type",
       header: "Plan",
-      render: (s: Subscription) => <Text size="sm" c="#475569">{s.billing_type} Plan</Text>,
+      render: (s: Subscription) => (
+        <Text size="sm" c="#475569">
+          {s.billing_type} Plan
+        </Text>
+      ),
     },
     {
       key: "total_amount",
       header: "Amount",
       render: (s: Subscription) => (
         <Text size="sm" fw={500} style={{ color: "#1e293b" }}>
-          {formatPrice(s.total_amount)}
+          {s.total_amount}
         </Text>
       ),
     },
@@ -130,7 +102,6 @@ const HistoryTable = () => {
     },
   ];
 
-  // Loading state
   if (isLoading) {
     return (
       <div className="flex justify-center items-center py-10">
@@ -140,24 +111,26 @@ const HistoryTable = () => {
       </div>
     );
   }
-
-  // Render table
+  console.log(data);
   return (
     <GenericTable
       columns={columns}
-      data={subscriptions}
+      data={data || []}
       isLoading={isLoading}
       activeSort={activeSort}
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
-      onSortChange={setActiveSort}
+      onSortChange={setSort}
       enableSearch={true}
       enableSort={true}
       showFilter={true}
       tableType="inventory"
       searchPlaceholder="Search inventory"
-      onFilterChange={handleFilterChange}
-      onPageChange={handlePageChange}
+      onFilterChange={onFilterChange}
+      onPageChange={onPageChange}
+      paginationData={paginationData}
+      filters={filters}
+      emptyMessage="No subscriptions found"
       titleSection={
         <div className="flex gap-2.5">
           <Text fw={500} size="xl" c="textSecondary.9">
@@ -165,7 +138,7 @@ const HistoryTable = () => {
           </Text>
           <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
             <Text c="customPrimary.10">
-              {data?.data?.sales?.total || subscriptions.length}
+              {paginationData?.total || data?.length}
             </Text>
           </div>
         </div>

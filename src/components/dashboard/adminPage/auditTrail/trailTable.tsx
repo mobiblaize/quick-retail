@@ -129,8 +129,8 @@ TrailTableProps) {
 
   return (
     <GenericTable
-      enableSearch
-      enableSort
+      enableSearch = {true}
+      enableSort = {true}
       data={logs}
       isLoading={isLoading}
       paginationData={paginationData}
@@ -143,8 +143,8 @@ TrailTableProps) {
       activeSort={activeSort}
       onSortChange={setSort}
       onFilterChange={onFilterChange}
-      showFilter
-      tableType="audit"
+      showFilter = {true}
+      tableType="inventory"
       searchPlaceholder="Search trails"
       filters={filters}
       titleSection={
