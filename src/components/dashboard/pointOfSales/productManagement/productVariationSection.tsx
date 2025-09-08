@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { Trash2, Plus } from "lucide-react";
 import { useFetchProductVariations } from "../../../../hooks/backendApis/pos/products";
-import { Input } from "@mantine/core";
+import { Button, Input, Text } from "@mantine/core";
 
 const ProductVariationSection = ({ form_data }: any) => {
   const productId = form_data?.product?.productID;
@@ -25,6 +25,7 @@ const ProductVariationSection = ({ form_data }: any) => {
 
         return {
           id: variant.id,
+          variationID: variant.variationID,
           cost_price: variant.cost_price || "",
           selling_price: variant.selling_price || "",
           reorder_level: variant.reorder_level || "",
@@ -45,17 +46,44 @@ const ProductVariationSection = ({ form_data }: any) => {
     setVariants((prev) => [
       ...prev,
       {
-        id: Date.now(), // temporary unique ID
+        id: Date.now(),
+        variationID: "",
+        product_id: productId,
         cost_price: "",
         selling_price: "",
         reorder_level: "",
         size: "",
         color: "",
+
       },
     ]);
   };
 
-  if (!hasVariations || !productId) return null;
+
+  if (!form_data?.product) {
+    return (
+      <Text size="sm" p="md">
+        Loading product...
+      </Text>
+    );
+  }
+
+  if (!productId) {
+    return (
+      <Text size="sm" c="red" p="md">
+        Invalid product data
+      </Text>
+    );
+  }
+
+  if (!hasVariations) {
+    return (
+      <Text size="sm" p="md">
+        This product has no variations
+      </Text>
+    );
+  }
+
 
   if (isLoading) return <p className="text-sm p-4">Loading variations...</p>;
   if (isError) return <p className="text-sm text-red-500 p-4">Error loading variations</p>;
@@ -64,12 +92,12 @@ const ProductVariationSection = ({ form_data }: any) => {
     <div className="overflow-auto">
       <div className="min-w-[1000px]">
         <div className="grid grid-cols-8 gap-4 px-4 py-2 bg-gray-100 rounded-t-md text-sm font-medium">
-          <div>Cost Price</div>
-          <div>Selling Price</div>
-          <div>Reorder Level</div>
-          <div>Size</div>
-          <div>Color</div>
-          <div className="col-span-3 text-right pr-2">Actions</div>
+          <Text fw={500}>Cost Price</Text>
+          <Text fw={500}>Selling Price</Text>
+          <Text fw={500}>Reorder Level</Text>
+          <Text fw={500}>Size</Text>
+          <Text fw={500}>Color</Text>
+          <Text fw={500} ta="right" pr="sm" className="col-span-3">Actions</Text>
         </div>
 
         {variants.map((variant) => (
@@ -144,14 +172,16 @@ const ProductVariationSection = ({ form_data }: any) => {
         ))}
       </div>
 
-      <div className="flex justify-end mt-4">
-        <button
-          className="flex items-center px-4 py-2 bg-orange-100 hover:bg-orange-200 text-orange-700 text-sm font-medium rounded transition"
+      <div style={{ display: "flex", justifyContent: "flex-end", marginTop: 16 }}>
+        <Button
           onClick={handleAddVariant}
+          leftSection={<Plus size={16} />}
+          variant="light"
+          color="orange"
+          radius="md"
         >
-          <Plus className="w-4 h-4 mr-2" />
           Add Variation
-        </button>
+        </Button>
       </div>
     </div>
   );

@@ -220,11 +220,12 @@ export default function EditUserModal({ opened, onClose, userUUID, initialData }
                     </div> */}
 
                     {/* Buttons */}
-                    <div className="flex gap-4 mt-6 justify-center">
-                        <Button variant="outline-primary" onClick={onClose}>
+                    <div className="flex gap-7 mt-6 justify-center">
+                        <Button className="!w-full" variant="outline-primary" onClick={onClose}>
                             Cancel
                         </Button>
                         <Button
+                        className="!w-full"
                             variant="filled-primary"
                             onClick={handleSubmit}
                             loading={isPending}

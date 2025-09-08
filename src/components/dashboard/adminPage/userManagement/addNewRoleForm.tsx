@@ -61,7 +61,8 @@ const AddNewRoleForm = () => {
             </Title>
 
             <div className="grid grid-cols-1 md:grid-cols-2 gap-x-6 gap-y-2">
-              <Text size="sm" c="gray.6" mb={1}>
+              <div className="col-span-1">
+              <Text fw={500}  size="sm" c="#101928" mb={1}>
                 Role Name
               </Text>
               <FormInput
@@ -71,8 +72,9 @@ const AddNewRoleForm = () => {
                 value={name}
                 onChange={(e: any) => setName(e.target.value)}
               />
-
-              <Text size="sm" c="gray.6" mb={1}>
+              </div>
+              <div className="col-span-1">
+              <Text fw={500}  size="sm" c="#101928"  mb={1}>
                 Role Description
               </Text>
               <FormInput
@@ -82,6 +84,7 @@ const AddNewRoleForm = () => {
                 value={description}
                 onChange={(e: any) => setDescription(e.target.value)}
               />
+              </div>
             </div>
           </div>
         </div>
@@ -116,11 +119,12 @@ const AddNewRoleForm = () => {
       >
         <p>Are you sure you want to create this role? Once created, users can be assigned to a role.</p>
 
-        <div className="mt-4 flex justify-end gap-4">
-          <Button variant="outline" onClick={() => setConfirmModalOpen(false)}>
+        <div className="mt-4 flex justify-end gap-7 w-full">
+          <Button className="!w-full" variant="outline" onClick={() => setConfirmModalOpen(false)}>
             No
           </Button>
           <Button
+          className="!w-full"
             variant="filled"
             color="orange"
             loading={isPending}

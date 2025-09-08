@@ -48,7 +48,7 @@ export default function SubscriptionComponent() {
       <div className="border rounded-lg p-4 bg-orange-50 border-orange-700">
         <div className="flex justify-between items-center mb-2">
           <div>
-            <Text size="lg" fw={600} c="secondary.9">{plan} Plan</Text>
+            <Text size="lg" fw={600} c="secondary.9" className="!capitalize">{plan} Plan</Text>
             <Text size="xl" fw={500} c="#F56630">
               {formattedAmount}
             </Text>

@@ -280,6 +280,9 @@ type OverviewProps = {
   product: {
     category: string;
     has_variations: number;
+    product_name: string;
+    long_description: string;
+    short_description: string;
   };
   cost_price: number;
   selling_price: number;
@@ -338,7 +341,7 @@ export default function ProductForm({ overview }: { overview: OverviewProps }) {
             </Text>
           </div>
           <Text size="1.8rem" c="black" fw={600}>
-            {overview?.name || "N/A"}
+            {overview?.product?.product_name || "N/A"}
           </Text>
         </section>
         <div className="flex mt-5 gap-10">
@@ -375,29 +378,31 @@ export default function ProductForm({ overview }: { overview: OverviewProps }) {
           placeholder="₦"
           value={overview?.selling_price ?? ""}
         />
-        <FormInput
+        {/* <FormInput
           type="text"
           label="Discount (optional)"
           paddingY={"0.7rem"}
           placeholder="₦"
           value={overview?.discount_percentage ?? ""}
-        />
+        /> */}
       </Section>
 
       {/* ✅ Updated Product Variation Display */}
       {Array.isArray(overview?.variation_attributes) &&
         overview.variation_attributes.length > 0 && (
-          <Section title="PRODUCT VARIATION">
-            <div className="flex gap-4 mt-3 flex-wrap">
+          <Section title="PRODUCT VARIATIONS">
+            <div className="flex gap-6 mt-3 flex-wrap">
               {overview.variation_attributes.map((attr) => (
                 <div key={attr.id} className="flex items-center gap-2">
-                  <Text c="#667185" fw="500" size="xl">
-                    {attr.option_type.charAt(0).toUpperCase() +
-                      attr.option_type.slice(1)}
+                  <Text c="#667185" fw={500} size="lg">
+                    {attr.option_type
+                      ? attr.option_type.charAt(0).toUpperCase() +
+                      attr.option_type.slice(1)
+                      : "N/A"}
                     :
                   </Text>
-                  <Text c="black" fw="500" size="xl" className="capitalize">
-                    {attr.option_value}
+                  <Text c="black" fw={600} size="lg" className="capitalize">
+                    {attr.option_value || "N/A"}
                   </Text>
                 </div>
               ))}
@@ -405,21 +410,22 @@ export default function ProductForm({ overview }: { overview: OverviewProps }) {
           </Section>
         )}
 
+
       {/* Additional Information */}
       <Section title="ADDITIONAL INFORMATION">
         <FormInput
           type="text"
-          label="Long Description (optional)"
+          label="Long Description"
           paddingY={"0.7rem"}
           placeholder="Enter description"
-          value={overview?.long_description ?? ""}
+          value={overview?.product?.long_description ?? ""}
         />
         <FormInput
           type="text"
-          label="Note"
+          label="Short Description"
           paddingY={"0.7rem"}
-          placeholder="e.g. A new stock has been ordered"
-          value={overview?.notes ?? ""}
+          placeholder="Enter description"
+          value={overview?.product?.short_description ?? ""}
         />
         <FormInput
           type="text"

@@ -42,9 +42,13 @@ export const useFetchingleOrderProducts = (orderId: string, customPayload?: Part
     sort_by: "",
     per_page: "500",
     paginate: true,
-  };
+  }
 
   const payload = { ...defaultPayload, ...customPayload };
 
   return useFetchPostData(`pos/sales/sales-order-products/${orderId}`, payload);
+};
+
+export const usePaymentDetails = () => {
+  return usePostData("pos/sales/payment-breakdown");
 };

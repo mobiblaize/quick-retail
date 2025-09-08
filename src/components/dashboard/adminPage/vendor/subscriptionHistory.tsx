@@ -1,202 +1,96 @@
-// import { ColumnDef } from "@tanstack/react-table";
-// import { Text } from "@mantine/core";
-// import TanTable from "../../../General/table";
-// import { useFetchAllSub } from "../../../../hooks/backendApis/admin/profile";
-
-
-// const HistoryTable = () => {
-//   const { data, isLoading, error } = useFetchAllSub();
-
-//   const subscriptions = data?.data?.data || [];
-//   // const 
-
-//   const columns: ColumnDef<any>[] = [
-//     // {
-//     //   id: "select",
-//     //   header: ({ table }) => (
-//     //     <input
-//     //       type="checkbox"
-//     //       checked={table.getIsAllRowsSelected()}
-//     //       onChange={table.getToggleAllRowsSelectedHandler()}
-//     //     />
-//     //   ),
-//     //   cell: ({ row }) => (
-//     //     <input
-//     //       type="checkbox"
-//     //       checked={row.getIsSelected()}
-//     //       onChange={row.getToggleSelectedHandler()}
-//     //     />
-//     //   ),
-//     //   enableSorting: false,
-//     //   enableColumnFilter: false,
-//     //   size: 10,
-//     // },
-//     {
-//       header: "Transaction ID",
-//       accessorKey: "subscriptionID",
-//       enableSorting: false,
-//       cell: ({ row }) => (
-//         <Text fw={400} className="text-sm" c="#667185">
-//           {row.original.subscriptionID}
-//         </Text>
-//       ),
-//     },
-//     {
-//         header: "Plan",
-//         accessorKey: "billing_type",
-//         enableSorting: false,
-//         cell: ({ row }) => (
-//           <Text fw={400} c="#667185">
-//             {row.original.billing_type} Plan
-//           </Text>
-//         ),
-//       },
-//       {
-//         header: "Amount",
-//         accessorKey: "total_amount",
-//         enableSorting: false,
-//         sortingFn: "alphanumeric",
-//         cell: ({ row }) => (
-//           <Text fw={500} c="#667185">
-//             ₦{Number(row.original.total_amount).toLocaleString()}
-//           </Text>
-//         ),
-//       },
-//     {
-//       header: "Date",
-//       accessorKey: "billing_start",
-//       enableSorting: false, 
-//     sortingFn: "datetime",
-//       cell: ({ row }) => (
-//         <Text fw={400} className="text-sm" c="#667185">
-//           {new Date(row.original.billing_start).toLocaleDateString()}
-//         </Text>
-//       ),
-//     },
-   
-   
-//     {
-//         header: "Status",
-//         accessorKey: "status",
-//       enableSorting: false, 
-
-//         cell: ({ row }) => {
-//           const status = row.original.status;
-      
-//           const statusMap: Record<
-//             string,
-//             { bg: string; text: string; dot: string }
-//           > = {
-//             Active: {
-//               bg: "bg-[#ECFDF3]",
-//               text: "text-[#027A48]",
-//               dot: "bg-[#12B76A]", 
-//             },
-//             Cancelled: {
-//               bg: "bg-[#FEF3F2]",
-//               text: "text-[#B42318]",
-//               dot: "bg-[#F04438]", 
-//             },
-//             Expired: {
-//               bg: "bg-[#F2F4F7]",
-//               text: "text-[#667085]",
-//               dot: "bg-[#D0D5DD]", 
-//             },
-//           };
-      
-//           const { bg, text, dot } = statusMap[status] || {
-//             bg: "bg-gray-100",
-//             text: "text-gray-500",
-//             dot: "bg-gray-400",
-//           };
-      
-//           return (
-//             <div className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bg} ${text}`}>
-//               <span className={`w-2 h-2 rounded-full mr-2 ${dot}`} />
-//               {status}
-//             </div>
-//           );
-//         },
-//       }
-      
-      
-    
-//   ];
-
-//   return (
-//     <main className="w-full h-auto py-6 rounded-lg bg-white">
-//       {isLoading ? (
-//         <Text>Loading...</Text>
-//       ) : error ? (
-//         <Text c="red">Failed to load subscriptions.</Text>
-//       ) : (
-//         <TanTable
-//         // @ts-ignore
-//           columnData={columns}
-//           data={subscriptions}
-//           showSearch
-//           showSortFilter
-//           searchPlaceholder="Search orders"
-//           length={10}
-//           tableTitle={
-//             <div className="flex gap-2.5">
-//               <Text fw={500} size="xl" c="textSecondary.9">
-//                 All Subscriptions
-//               </Text>
-//               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-//                 <Text c="customPrimary.10">{subscriptions.length}</Text>
-//               </div>
-//             </div>
-//           }
-//         />
-//       )}
-//     </main>
-//   );
-// };
-
-// export default HistoryTable;
-
-
-
-
-import { Text, Badge } from "@mantine/core";
+import { useState } from "react";
+import { Text } from "@mantine/core";
 import GenericTable from "../../../General/genericTable";
 import { useFetchAllSub } from "../../../../hooks/backendApis/admin/profile";
-import HistoryFilters from "./HistoryFilters";
+import { FilterValues } from "../../../General/table/reuseableFilter";
 
 interface Subscription {
+  id: string;
+  name: string;
+  status: string;
+  trial: string;
+  created_at: string;
   subscriptionID: string;
   billing_type: string;
   total_amount: number;
   billing_start: string;
-  status: string;
 }
 
-export default function HistoryTable() {
-  const { data, isLoading } = useFetchAllSub();
+const HistoryTable = () => {
+  // States
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues| null>(null);
+  const [dateRange] = useState({ startDate: "", endDate: "" });
+  const [currentPage, setCurrentPage] = useState(1);
+  const [perPage] = useState(5);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [activeSort, setActiveSort] = useState("");
+
+  // Map order status
+  const mapOrderStatus = (status: string | undefined) => {
+    if (!status || status.toLowerCase() === "all") return "";
+    return status.toLowerCase();
+  };
+
+  // Map filters to API payload
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    search: filters.search ?? "",
+    sort_by: filters.sortBy ?? "",
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
+    status: mapOrderStatus(filters.paymentStatus),
+    paginate: true,
+    price_from: filters.priceFrom ?? 100,
+    price_to: filters.priceTo ?? "",
+    // status: filters.status ?? "",
+    // trial: filters.trial ?? "",
+  });
+
+  // Merge filters with dateRange
+  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
+  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+
+  const payload = {
+    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    ...(startDate ? { start_date: startDate } : {}),
+    ...(endDate ? { end_date: endDate } : {}),
+    page: currentPage,
+    per_page: perPage,
+    sort_by: activeSort,
+    search: searchTerm,
+  };
+
+  // Fetch data
+  const { data = {}, isLoading = false } = useFetchAllSub(payload);
   const subscriptions: Subscription[] = data?.data?.data || [];
 
+  // Format price
   const formatPrice = (amount: number) =>
-    `₦ ${Number(amount).toLocaleString()}`;
+    new Intl.NumberFormat("en-US", {
+      style: "currency",
+      currency: "USD",
+    }).format(amount);
 
+  // Handle filter changes
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters);
+  };
+
+  // Handle page change
+  const handlePageChange = (page: number) => setCurrentPage(page);
+
+  // Define table columns
   const columns = [
     {
       key: "subscriptionID",
       header: "Transaction ID",
-      render: (s: Subscription) => (
-        <Text size="sm" c="#475569">
-          {s.subscriptionID}
-        </Text>
-      ),
+      render: (s: Subscription) => <Text size="sm" c="#475569">{s.subscriptionID}</Text>,
     },
     {
       key: "billing_type",
       header: "Plan",
-      render: (s: Subscription) => (
-        <Text size="sm" c="#475569">
-          {s.billing_type} Plan
-        </Text>
-      ),
+      render: (s: Subscription) => <Text size="sm" c="#475569">{s.billing_type} Plan</Text>,
     },
     {
       key: "total_amount",
@@ -219,95 +113,65 @@ export default function HistoryTable() {
     {
       key: "status",
       header: "Status",
-      render: (s: Subscription) => {
-        const statusMap: Record<
-          string,
-          { bg: string; text: string }
-        > = {
-          Active: { bg: "#dcfce7", text: "#166534" },
-          Cancelled: { bg: "#fee2e2", text: "#dc2626" },
-          Expired: { bg: "#f2f4f7", text: "#667085" },
-        };
-
-        const { bg, text } = statusMap[s.status] || {
-          bg: "#f1f5f9",
-          text: "#475569",
-        };
-
+      render: (u: Subscription) => {
+        const isActive = u.status?.toLowerCase() === "active";
         return (
-          <Badge
-            variant="light"
-            size="sm"
-            styles={{
-              root: {
-                backgroundColor: bg,
-                color: text,
-                fontWeight: 500,
-                border: "none",
-                display: "flex",
-                alignItems: "center",
-                gap: "4px",
-                textTransform: "none",
-              },
-            }}
+          <div
+            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
+              isActive
+                ? "bg-[#ECFDF3] text-[#027A48]"
+                : "bg-[#FEF3F2] text-[#B42318]"
+            }`}
           >
-            {s.status}
-          </Badge>
+            <span className="ml-2 capitalize">{u.status}</span>
+          </div>
         );
       },
     },
   ];
 
+  // Loading state
+  if (isLoading) {
+    return (
+      <div className="flex justify-center items-center py-10">
+        <Text fw={500} size="md" c="dimmed">
+          Loading Subscriptions...
+        </Text>
+      </div>
+    );
+  }
+
+  // Render table
   return (
     <GenericTable
+      columns={columns}
       data={subscriptions}
       isLoading={isLoading}
-      columns={columns}
-      emptyMessage="No subscriptions found"
+      activeSort={activeSort}
+      searchTerm={searchTerm}
+      setSearchTerm={setSearchTerm}
+      onSortChange={setActiveSort}
+      enableSearch={true}
+      enableSort={true}
+      showFilter={true}
+      tableType="inventory"
+      searchPlaceholder="Search inventory"
+      onFilterChange={handleFilterChange}
+      onPageChange={handlePageChange}
       titleSection={
-        <div
-          style={{
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-            width: "100%",
-            padding: "16px 24px",
-            borderBottom: "1px solid #f1f5f9",
-            backgroundColor: "white",
-          }}
-        >
-          {/* Left: Title + Total */}
-          <div style={{ display: "flex", alignItems: "center", gap: "12px" }}>
-            <Text size="xl" fw={600} style={{ color: "#1e293b" }}>
-              All Subscriptions
+        <div className="flex gap-2.5">
+          <Text fw={500} size="xl" c="textSecondary.9">
+            All Subscriptions
+          </Text>
+          <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+            <Text c="customPrimary.10">
+              {data?.data?.sales?.total || subscriptions.length}
             </Text>
-            <Badge
-              variant="filled"
-              styles={{
-                root: {
-                  backgroundColor: "#fed7aa",
-                  color: "#ea580c",
-                  fontWeight: 600,
-                  fontSize: "12px",
-                  height: "20px",
-                  minHeight: "20px",
-                  paddingLeft: "8px",
-                  paddingRight: "8px",
-                  textTransform: "none",
-                },
-              }}
-            >
-              {subscriptions.length}
-            </Badge>
-          </div>
-
-          {/* Right: Filters placeholder (like in ProductTable) */}
-          <div style={{ display: "flex", alignItems: "center", gap: "16px" }}>
-             <HistoryFilters onFilterChange={() => { }} />
-
           </div>
         </div>
       }
     />
   );
-}
+};
+
+export default HistoryTable;

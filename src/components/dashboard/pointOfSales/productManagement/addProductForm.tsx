@@ -1,7 +1,7 @@
-import { UploadCloud } from "lucide-react";
+import { UploadCloud, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import FormInput from "../../../General/formInput";
-import FormSelect from "../../../General/select";
+// import FormSelect from "../../../General/select";
 import useStore, { initialFormState } from "./addProductStore";
 import {
   useFetchAllCategories,
@@ -12,9 +12,11 @@ import {
   useFetchAllLocations,
   useCreateProduct,
 } from "../../../../hooks/backendApis/pos/products";
-import { Button, Divider, Text, Title } from "@mantine/core";
+import { Button, Divider, Text, Textarea, Title, Box } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
+import Select, { MultiValue } from "react-select";
+
 
 const AddProductForm = () => {
   const navigate = useNavigate();
@@ -25,6 +27,27 @@ const AddProductForm = () => {
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>(
     ""
   );
+  const [priceError, setPriceError] = useState<string | null>(null);
+  const [quantityError, setQuantityError] = useState<string | null>(null);
+
+
+  const tagOptions = [
+    { value: "electronics", label: "Electronics" },
+    { value: "clothing", label: "Clothing" },
+    { value: "food", label: "Food" },
+    { value: "item", label: "Item" },
+    { value: "phone", label: "Phone" },
+    { value: "Gadget", label: "Gadget" },
+    { value: "book", label: "Book" },
+    { value: "accessory", label: "Accessory" },
+  ];
+
+  // Handler to update tags in state
+  const handleTagChange = (selected: MultiValue<{ value: string; label: string }>) => {
+    const values = selected.map((item: any) => item.value);
+    setFormData({ ...formData, tags: values });
+  };
+
 
   const { data: locationData } = useFetchAllLocations();
   const locations = Array.isArray(locationData?.data?.stores)
@@ -58,7 +81,11 @@ const AddProductForm = () => {
     })
   );
 
-  const [formData, setFormData] = useState({ ...initialFormState });
+  // const [formData, setFormData] = useState({ ...initialFormState });
+  const [formData, setFormData] = useState({
+    ...initialFormState,
+    tags: [] as string[], // make sure tags is an array
+  });
 
   useEffect(() => {
     updateForm(formData);
@@ -79,21 +106,11 @@ const AddProductForm = () => {
 
     Promise.all(files.map(fileToBase64))
       .then((base64Images) => {
-        const updatedImage = formData.image || base64Images[0];
-        const remainingImages =
-          formData.image || base64Images.length > 1
-            ? base64Images.slice(formData.image ? 0 : 1)
-            : [];
-
-        setFormData({
-          ...formData,
-          image: updatedImage,
-          image_path: [...formData.image_path, ...remainingImages],
-        });
+        setFormData((prev) => ({
+          ...prev,
+          image_path: [...prev.image_path, ...base64Images],
+        }));
       })
-      .catch((err) => {
-        console.error("Failed to read files:", err);
-      });
   };
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -138,6 +155,21 @@ const AddProductForm = () => {
       return;
     }
 
+    // ✅ New image check
+    if (
+      !formData.has_variations &&
+      (!formData.image_path || formData.image_path.length === 0)
+    ) {
+      notifications.show({
+        title: "Validation Error",
+        message: "At least one product image is required",
+        color: "red",
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return;
+    }
+
+
     const payload = {
       product_name: formData.product_name,
       sku: formData.sku,
@@ -146,24 +178,63 @@ const AddProductForm = () => {
       short_description: formData.short_description,
       long_description: formData.long_description,
       location_id: Number(formData.location_id),
-      has_variations: formData.has_variations,
+      has_variations: formData.has_variations ? 1 : 0,
+      image_path: formData.image_path || [],
       cost_price: costPrice,
       selling_price: sellingPrice,
       total_quantity: Number(formData.quantity),
       reorder_level: Number(formData.reorder_level),
-      tags: formData.tags,
+      // tags: formData.tags,
+      tags: formData.tags.join(","),
       promotional_price: Number(formData.promotional_price),
       promotional_start_date: formData.promotional_start_date || null,
       promotional_end_date: formData.promotional_end_date || null,
       safety_instructions: formData.safety_instructions || "",
       certificates: formData.certificates || [],
-      image_path: formData.image_path || [],
+      // image_path: formData.image_path || [],
       variations: [],
       notes: formData.notes || "",
     };
 
     setLoading(true);
+    const quantity = Number(formData.quantity);
+    const reorder = Number(formData.reorder_level);
 
+    if (priceError) {
+      notifications.show({
+        title: "Invalid Pricing",
+        message: priceError,
+        color: "red",
+      });
+      return; 
+    }
+
+    if (quantityError || reorder > quantity) {
+      notifications.show({
+        title: "Validation Error",
+        message: "Product quantity should be higher than order level",
+        color: "red",
+      });
+      return; 
+    }
+
+    if (
+      !formData.product_name ||
+      !formData.sku ||
+      !formData.category_id ||
+      !formData.sub_category_id
+    ) {
+      notifications.show({
+        title: "Validation Error",
+        message: "Please fill all required fields",
+        color: "red",
+      });
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      return; // stop submission
+    }
+
+    // ✅ Now safe to call mutate
+    setLoading(true);
     mutate(payload, {
       onSuccess: () => {
         setLoading(false);
@@ -172,19 +243,17 @@ const AddProductForm = () => {
           message: "Product added successfully",
           color: "green",
         });
-        setFormData({ ...initialFormState }); // reset form
+        setFormData({ ...initialFormState });
         window.scrollTo({ top: 0, behavior: "smooth" });
-
-        // ✅ Navigate back after success
         navigate(-1);
       },
-      onError: (error: any) => {
+      onError: () => {
         setLoading(false);
-        notifications.show({
-          title: "Error",
-          message: error?.response?.data?.message || "Failed to add product",
-          color: "red",
-        });
+        // notifications.show({
+        //   title: "Error",
+        //   message: error?.response?.data?.message || "Failed to add product",
+        //   color: "red",
+        // });
       },
     });
 
@@ -231,41 +300,41 @@ const AddProductForm = () => {
           </div>
 
           {/* Category */}
-          <div>
-            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+          <Box>
+            <Text size="sm" fw={600} mb="md">
               Category
             </Text>
-            <FormSelect
-              placeholder="Select product category"
-              options={categoryOptions}
-              name="category"
-              paddingY="4"
-              value={selectedCategoryId}
-              onChange={(e: any) => {
-                setSelectedCategoryId(Number(e.target.value));
-                setFormData({ ...formData, category_id: e.target.value });
+            <Dropdown
+              options={categoryOptions} // [{ label: string, value: string | number }]
+              value={selectedCategoryId} // can be number directly
+              paddingY={"0.7rem"}
+              onChange={(val) => {
+                setSelectedCategoryId(val);
+                setFormData({ ...formData, category_id: String(val) });
               }}
+              placeholder="Select product category"
+              required
             />
-          </div>
+          </Box>
+
 
           {/* Sub-category */}
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Sub-category
             </Text>
-            <FormSelect
-              placeholder="Select sub-category"
+            <Dropdown
               options={subCategoryOptions}
-              name="sub-category"
-              paddingY="4"
               value={formData.sub_category_id}
-              onChange={(e: any) =>
-                setFormData({ ...formData, sub_category_id: e.target.value })
+              paddingY={"0.7rem"}
+              onChange={(val) =>
+                setFormData({ ...formData, sub_category_id: String(val) })
               }
+              placeholder="Select sub-category"
+              required
             />
           </div>
 
-          {/* Cost Price */}
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Cost Price
@@ -273,14 +342,22 @@ const AddProductForm = () => {
             <FormInput
               type="number"
               placeholder="₦"
+              paddingY={"0.7rem"}
               value={formData.cost_price}
-              onChange={(e: any) =>
-                setFormData({ ...formData, cost_price: e.target.value })
-              }
+              onChange={(e: any) => {
+                const cost = Number(e.target.value);
+                setFormData({ ...formData, cost_price: e.target.value });
+
+                if (formData.selling_price && cost > Number(formData.selling_price)) {
+                  setPriceError("Selling price must be greater than cost price");
+                } else {
+                  setPriceError(null);
+                }
+              }}
             />
+           
           </div>
 
-          {/* Selling Price */}
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Selling Price
@@ -288,12 +365,26 @@ const AddProductForm = () => {
             <FormInput
               type="number"
               placeholder="₦"
+              paddingY={"0.7rem"}
               value={formData.selling_price}
-              onChange={(e: any) =>
-                setFormData({ ...formData, selling_price: e.target.value })
-              }
+              onChange={(e: any) => {
+                const selling = Number(e.target.value);
+                setFormData({ ...formData, selling_price: e.target.value });
+
+                if (formData.cost_price && Number(formData.cost_price) > selling) {
+                  setPriceError("Selling price must be greater than cost price");
+                } else {
+                  setPriceError(null);
+                }
+              }}
             />
+             {priceError && (
+              <Text size="sm" c="red" mt={5} fw="600">
+                {priceError}
+              </Text>
+            )}
           </div>
+
         </div>
       </div>
 
@@ -304,6 +395,7 @@ const AddProductForm = () => {
         <Divider mb="md" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Quantity
@@ -313,10 +405,22 @@ const AddProductForm = () => {
               placeholder="Enter Quantity"
               paddingY={"0.7rem"}
               value={formData.quantity}
-              onChange={(e: any) =>
-                setFormData({ ...formData, quantity: e.target.value })
-              }
+              onChange={(e: any) => {
+                const quantity = Number(e.target.value);
+                setFormData({ ...formData, quantity: e.target.value });
+
+                if (formData.reorder_level && quantity < Number(formData.reorder_level)) {
+                  setQuantityError("Product quantity should be higher than order level");
+                } else {
+                  setQuantityError(null);
+                }
+              }}
             />
+            {/* {quantityError && (
+              <Text size="sm" c="red" mt={5} fw="600">
+                {quantityError}
+              </Text>
+            )} */}
           </div>
 
           <div>
@@ -325,13 +429,25 @@ const AddProductForm = () => {
             </Text>
             <FormInput
               type="number"
-              placeholder="Enter Quantity"
+              placeholder="Enter Re-order Level"
               paddingY={"0.7rem"}
               value={formData.reorder_level}
-              onChange={(e: any) =>
-                setFormData({ ...formData, reorder_level: e.target.value })
-              }
+              onChange={(e: any) => {
+                const reorder = Number(e.target.value);
+                setFormData({ ...formData, reorder_level: e.target.value });
+
+                if (formData.quantity && reorder > Number(formData.quantity)) {
+                  setQuantityError("Product quantity should be higher than order level");
+                } else {
+                  setQuantityError(null);
+                }
+              }}
             />
+            {quantityError && (
+              <Text size="sm" c="red" mt={5} fw="600">
+                {quantityError}
+              </Text>
+            )}
           </div>
 
           <div>
@@ -341,12 +457,13 @@ const AddProductForm = () => {
             <Dropdown
               options={locationOptions}
               value={formData.location_id}
+              paddingY={"0.7rem"}
               onChange={
                 // @ts-ignore
                 (val) => setFormData({ ...formData, location_id: val })
               }
               required
-              textColorClass="text-gray-800"
+              // textColorClass="text-gray-800"
               placeholder="Select location"
             />
           </div>
@@ -379,30 +496,74 @@ const AddProductForm = () => {
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Long Description
             </Text>
-            <FormInput
-              type="text"
+            <Textarea
+              // type="text"
               placeholder="Enter detailed product description"
-              paddingY={"0.7rem"}
-              optional
+              // style={{ padding: "0.7rem" }}
+              // optional
               value={formData.long_description}
               onChange={(e: any) =>
                 setFormData({ ...formData, long_description: e.target.value })
               }
             />
           </div>
-
+        
           <div>
-            <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
+            <Text size="sm" fw={600} mb={8} mt={6}>
               Tags
             </Text>
-            <FormInput
-              type="text"
+            <Select
+              options={tagOptions}
+              isMulti
               placeholder="Enter tags"
-              paddingY={"0.7rem"}
-              value={formData.tags}
-              onChange={(e: any) =>
-                setFormData({ ...formData, tags: e.target.value })
-              }
+              value={tagOptions.filter((tag) => formData.tags.includes(tag.value))}
+              onChange={handleTagChange}
+              styles={{
+                control: (provided) => ({
+                  ...provided,
+                  minHeight: "2.5rem",
+                  borderWidth: "1px",
+                  paddingTop: "5px",
+                  paddingBottom: 16,
+                  fontSize: "16px",
+                  borderColor: "#D1D5DB",
+                  borderStyle: "light",
+                  borderRadius: "0.375rem",
+                  boxShadow: "none",
+                  outline: "none",
+                  fontFamily: "DM Sans, sans-serif",
+                }),
+                multiValue: (provided) => ({
+                  ...provided,
+                  // backgroundColor: "#E7F5FF", // light blue
+                  // color: "#1C7ED6",
+                  borderRadius: 4,
+                  padding: "2px 6px",
+                  fontFamily: "DM Sans, sans-serif",
+                }),
+                multiValueLabel: (provided) => ({
+                  ...provided,
+                  // color: "#1C7ED6",
+                  fontFamily: "DM Sans, sans-serif"
+                }),
+                multiValueRemove: (provided) => ({
+                  ...provided,
+                  // color: "#1C7ED6",
+                  ":hover": { backgroundColor: "transparent", color: "red" },
+                }),
+                placeholder: (provided) => ({
+                  ...provided,
+                  color: "#868E96",
+                  fontFamily: "DM Sans, sans-serif",
+                  marginTop: "0.7rem",
+                }),
+                menu: (provided) => ({
+                  ...provided,
+                  borderRadius: 8,
+                  zIndex: 9999,
+                  fontFamily: "DM Sans, sans-serif",
+                }),
+              }}
             />
           </div>
 
@@ -425,70 +586,78 @@ const AddProductForm = () => {
 
         {/* Product Images Upload Section */}
         <div className="mt-6">
-          <h3 className="text-gray-800 font-medium mb-2">Product Images</h3>
+          <Text size="lg" fw={500} c="gray.8" mb="sm">
+            Product Images
+          </Text>
 
           <div className="flex md:flex-row flex-col md:items-center gap-6">
+            {/* Previews with Remove Option */}
+            {images.length > 0 && (
+              <div className="flex flex-wrap gap-4">
+                {images.map((file, index) => (
+                  <div key={index} className="relative w-50 h-50 group">
+                    <img
+                      src={URL.createObjectURL(file) || "/placeholder.svg"}
+                      alt={`preview-${index}`}
+                      className="w-full h-full object-cover rounded"
+                    />
+                    <button
+                      type="button"
+                      onClick={() => handleRemoveImage(index)}
+                      className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-10 h-10 flex items-center justify-center shadow-lg hover:bg-red-600 transition-all duration-200 opacity-0 group-hover:opacity-100 border-2 border-white cursor-pointer"
+                      aria-label="Remove image"
+                    >
+                      <X size={16} strokeWidth={4.5} />
+                    </button>
+                  </div>
+                ))}
+              </div>
+            )}
+
+
             {/* Upload Box */}
             <div
-              className="w-48 h-48 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center rounded-md cursor-pointer hover:border-blue-500 transition"
+              className="w-50 h-50 border-2 border-dashed border-gray-300 flex flex-col items-center justify-center rounded-md cursor-pointer hover:border-blue-500 transition"
               onClick={handleUploadClick}
               role="button"
               aria-label="Upload images"
               tabIndex={0}
-              onKeyPress={(e) => {
+              onKeyDown={(e) => {
                 if (e.key === "Enter" || e.key === " ") handleUploadClick();
               }}
             >
               <UploadCloud className="text-gray-400" size={32} />
-              <p className="text-orange-500 text-sm font-medium mt-2">
+
+              <Text c="orange.5" size="sm" fw={600} mt="sm">
                 Click to upload
-              </p>
-              <p className="text-gray-500 text-xs">or drag and drop</p>
-              <p className="text-gray-400 text-xs mt-1">PNG, JPEG (max 5 MB)</p>
+              </Text>
+              <Text c="gray.5" size="xs">
+                or drag and drop
+              </Text>
+              <Text c="gray.4" size="xs" mt="xs">
+                PNG, JPEG (max 5 MB)
+              </Text>
+
+              {/* Hidden File Input */}
+              <input
+                type="file"
+                ref={fileInputRef}
+                onChange={handleFileImageChange}
+                accept="image/png, image/jpeg"
+                multiple
+                className="hidden"
+              />
             </div>
 
             {/* Add More Button */}
-            <button
+            {/* <button
               type="button"
               className="text-orange-500 flex items-center gap-2 font-medium text-sm"
               onClick={handleUploadClick}
             >
               + Add more photos
-            </button>
-
-            {/* Hidden File Input */}
-            <input
-              type="file"
-              ref={fileInputRef}
-              onChange={handleFileImageChange}
-              accept="image/png, image/jpeg"
-              multiple
-              className="hidden"
-            />
+            </button> */}
           </div>
-
-          {/* Previews with Remove Option */}
-          {images.length > 0 && (
-            <div className="mt-4 flex flex-wrap gap-4">
-              {images.map((file, index) => (
-                <div key={index} className="relative w-24 h-24 group">
-                  <img
-                    src={URL.createObjectURL(file)}
-                    alt={`preview-${index}`}
-                    className="w-full h-full object-cover rounded"
-                  />
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveImage(index)}
-                    className="absolute top-1 right-1 bg-white text-red-500 rounded-full p-1 shadow hover:bg-red-500 hover:text-white transition-opacity opacity-0 group-hover:opacity-100"
-                    aria-label="Remove image"
-                  >
-                    ×
-                  </button>
-                </div>
-              ))}
-            </div>
-          )}
         </div>
       </div>
 
@@ -496,14 +665,25 @@ const AddProductForm = () => {
         key="search-product-buttons"
         className="flex gap-4 justify-end mt-[4em] bg-[#fff] p-4"
       >
-        <Button variant="outline-primary" onClick={() => navigate(-1)}>
+        <Button
+          variant="outline-primary"
+          onClick={() => navigate(-1)}
+          style={{ width: 150 }}
+        >
           Cancel
         </Button>
 
-        <Button variant="filled-primary" loading={loading} onClick={handleSave}>
+        <Button
+          variant="filled-primary"
+          loading={loading}
+          onClick={handleSave}
+          style={{ width: 150 }}
+          disabled={!!priceError}
+        >
           Submit
         </Button>
       </div>
+
     </div>
   );
 };

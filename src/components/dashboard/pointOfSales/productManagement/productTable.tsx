@@ -127,7 +127,7 @@ export default function ProductTable({
           </Avatar>
 
           <div>
-            <Text size="sm" fw={500}>
+            <Text c="black" fw={500}>
               {p.product.product_name}
             </Text>
             <Text size="xs" c="dimmed">
@@ -141,7 +141,7 @@ export default function ProductTable({
       key: "code",
       header: "Product Code",
       render: (p: ApiProduct) => (
-        <Text size="sm" ff="monospace" style={{ color: "#475569" }}>
+        <Text size="sm" style={{ color: "#475569" }}>
           {p.code}
         </Text>
       ),

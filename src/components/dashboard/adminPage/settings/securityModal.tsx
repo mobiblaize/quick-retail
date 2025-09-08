@@ -126,7 +126,7 @@ export default function SecurityQuestionModal({ opened, onClose }: Props) {
           onChange={(e) => setNewAnswer(e.currentTarget.value)}
           required
         />
-        <div className="flex justify-center gap-[2em] mt-8">
+        <div className="flex justify-center gap-8 mt-8 w-full ">
           <Button
             variant="outline"
             onClick={onClose}
@@ -134,7 +134,7 @@ export default function SecurityQuestionModal({ opened, onClose }: Props) {
             style={{
               padding: "0.75rem 2rem",
               fontSize: "1rem",
-              minWidth: "150px",
+              minWidth: "100%",
             }}
           >
             No
@@ -147,7 +147,7 @@ export default function SecurityQuestionModal({ opened, onClose }: Props) {
             style={{
               padding: "0.75rem 2rem",
               fontSize: "1rem",
-              minWidth: "150px",
+              minWidth: "100%",
             }}
           >
             Save

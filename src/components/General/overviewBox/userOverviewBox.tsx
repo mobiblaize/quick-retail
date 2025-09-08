@@ -33,16 +33,17 @@ const  UserOverviewBox = () => {
     activeUsers: 0,
     inactiveUsers: 0,
   };
+  // const innerColor ="text-[#099137]"
 
   const cards = [
     {
       title: "Total Users",
       value: stats.totalUsers.toString(),
       icon: customer,
-      iconColor: "#FFFFFF",
-      // textColor: "white",
+      iconColor: "#099137",
+      textColor: "white",
       // cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
-      cardBgColor: "#F4F3FF",
+      cardBgColor: "#F16722",
       percentageValue: 0,
        borderColor: "#98A2B3",
       altText: "dollar-sign",
@@ -51,18 +52,19 @@ const  UserOverviewBox = () => {
       title: "Total Active Users",
       value: stats.activeUsers.toString(),
       icon: customer,
-      iconColor: "#E17036",
-      cardBgColor: "#EFF8FF",
+      iconColor: "#099137",
+      cardBgColor: "#E7F6EC",
       percentageValue: 0,
       borderColor: "#98A2B3",
+      innerColor: "#099137",
       altText: "orders-icon",
     },
     {
       title: "Total Inactive Users",
       value: stats.inactiveUsers.toString(),
       icon: customer,
-      iconColor: "#E17036",
-      cardBgColor: "#F4F3FF",
+      iconColor: "#099137",
+      cardBgColor: "#FBEAE9",
       percentageValue: 0,
       borderColor: "#98A2B3",
       altText: "customer-icon",
@@ -110,10 +112,14 @@ const  UserOverviewBox = () => {
               title={card.title}
               value={card.value}
               icon={
-                <img src={card.icon} alt={card.title} className="w-6 h-6" />
+                <img 
+                  src={card.icon} 
+                  alt={card.altText} 
+                  className="w-8 h-8 rounded-lg bg-[#FFECE5]"
+                />
               }
               iconColor={card.iconColor}
-              // textColor={card.textColor}
+              textColor={card.textColor}
               cardBgColor={card.cardBgColor}
               borderColor={card.borderColor}
             />

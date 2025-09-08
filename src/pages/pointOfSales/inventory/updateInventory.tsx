@@ -1,4 +1,4 @@
-import {  Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
@@ -76,7 +76,7 @@ const UpdateInventory = () => {
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-        Trigger Reorder
+          Trigger Reorder
         </Text>
       </div>,
     ];
@@ -84,19 +84,19 @@ const UpdateInventory = () => {
 
   const subHeaderButtom = () => {
     return [
-//       <div key="search-product-buttons" className="flex gap-4 justify-end">
-//         <Button variant="outline-primary" onClick={() => navigate(-1)}>
-//           Cancel
-//         </Button>
-//         <Button
-//   variant="filled-primary"
-//   style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600
-//   onClick={handleActivateInventory}
-// >
-//   Trigger reorder
-// </Button>
+      //       <div key="search-product-buttons" className="flex gap-4 justify-end">
+      //         <Button variant="outline-primary" onClick={() => navigate(-1)}>
+      //           Cancel
+      //         </Button>
+      //         <Button
+      //   variant="filled-primary"
+      //   style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600
+      //   onClick={handleActivateInventory}
+      // >
+      //   Trigger reorder
+      // </Button>
 
-//       </div>,
+      //       </div>,
     ];
   };
   return (
@@ -104,10 +104,10 @@ const UpdateInventory = () => {
       subHeaders={subHeaders()}
       subHeaderButtom={subHeaderButtom()}
     >
-<Product product={inventories} />
+      <Product product={inventories} />
 
 
-     
+
       <NewInventoryDetails
         current_level={current_level}
         setCurrentLevel={setCurrentLevel}

@@ -23,7 +23,7 @@ export default function RoleGrid() {
           title={`${role.display_name} Role`}
           userCount={Math.floor(Math.random() * 10) + 1} 
           description={role.description}
-          status={true} 
+          status={role.is_active === 1} 
           date={new Date(role.created_at).toLocaleDateString("en-US", {
             year: "numeric",
             month: "long",

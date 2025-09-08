@@ -3,7 +3,7 @@ import { useState, useEffect, SetStateAction } from "react";
 import { Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
-import { SqrCode } from "../../../../assets/svg";
+// import { SqrCode } from "../../../../assets/svg";
 import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
 import { formatMoney } from "../../../../utils/helpers";
 
@@ -138,7 +138,7 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
             setSearchTerm(e.target.value)
           }
           leftIcon={<Search color="#667185" />}
-          rightIcon={<SqrCode />}
+          // rightIcon={<SqrCode />}
         />
       </div>
 
