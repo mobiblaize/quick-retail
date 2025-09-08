@@ -3,7 +3,8 @@ import axios from "axios";
 import { notifications } from "@mantine/notifications";
 import { clearUser } from "../hooks/useCustomSession";
 
-export const baseUrl = "https://api-quick-retail.sbscuk.co.uk/public/api/v1/";
+// export const baseUrl = "https://api-quick-retail.sbscuk.co.uk/public/api/v1/";
+export const baseUrl = "https://api.quick-retail.com/public";
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
