@@ -287,7 +287,7 @@ const TanTable = <T extends Record<string, any>>({
   ];
 
   // Define table types that should exclude A-Z and Z-A
-  const tablesWithoutAZSort = ["transaction", "returns"];
+  const tablesWithoutAZSort = ["transaction", "returns", "audit"];
 
   // Define table types that should include price sorting
   // const tablesWithPriceSort = ["sales", "product"];
