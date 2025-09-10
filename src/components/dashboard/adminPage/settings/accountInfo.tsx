@@ -110,7 +110,7 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
               disabled={isLoading}
               style={{ fontFamily: "DM Sans, sans-serif" }}
             >
-              {isLoading ? "Uploading..." : "Change profile picture"}
+              <Text>{isLoading ? "Uploading..." : "Change profile picture"}</Text>
             </Button>
 
             <input
