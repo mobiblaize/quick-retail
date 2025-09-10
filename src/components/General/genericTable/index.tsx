@@ -1,4 +1,4 @@
-import { Table, Box, Loader, Pagination, Text } from "@mantine/core";
+import { Table, Box, Pagination, Text } from "@mantine/core";
 import type { ReactNode } from "react";
 import * as React from "react";
 import EmptyState2 from "../table/EmptyStte2";
@@ -93,14 +93,18 @@ export default function GenericTable<T>({
     module: ""
   },
 }: GenericTableProps<T>) {
+  // if (isLoading) {
+  //   return (
+  //     <Box
+  //       style={{ display: "flex", justifyContent: "center", padding: "2rem" }}
+  //     >
+  //       <Loader size="lg" />
+  //     </Box>
+  //   );
+  // }
+
   if (isLoading) {
-    return (
-      <Box
-        style={{ display: "flex", justifyContent: "center", padding: "2rem" }}
-      >
-        <Loader size="lg" />
-      </Box>
-    );
+    return null;  // 👈 no spinner, no skeleton here
   }
 
   // if (!data || data.length === 0) {

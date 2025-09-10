@@ -132,7 +132,8 @@ const FormInput = ({
         )
       }
       value={value}
-      onChange={onChange}
+      // onChange={onChange}
+      onChange={(event) => onChange?.(event.currentTarget.value)} 
       placeholder={placeholder}
       required={required}
       name={name}

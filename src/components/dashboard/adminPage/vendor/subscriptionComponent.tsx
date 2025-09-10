@@ -59,11 +59,11 @@ export default function SubscriptionComponent() {
               } border border-gray-200 rounded-lg px-3 py-1`}
             disabled={status === "Active"}
           >
-            Renew Plan
+            <Text>Renew Plan</Text>
           </button>
         </div>
         <span className="inline-block bg-green-100 text-[#40B869] text-xs px-2 py-1 rounded-full">
-          {status}
+          <Text>{status}</Text>
         </span>
         <Text size="xs" c="dimmed" mt="xs">
           Expires: {formattedExpiry}

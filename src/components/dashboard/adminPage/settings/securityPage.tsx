@@ -113,7 +113,7 @@ export default function SecurityPage({ profile }: ProfileSectionProps) {
       onClick={() => fileInputRef.current?.click()}
       disabled={isLoading}
     >
-      {isLoading ? "Uploading..." : "Change profile picture"}
+      <Text>{isLoading ? "Uploading..." : "Change profile picture"}</Text>
     </Button>
     <input
       type="file"
