@@ -7,7 +7,8 @@ on:
 
 jobs:
   deploy:
-    runs-on: ubuntu-latest
+    # runs-on: ubuntu-latest
+    runs-on: self-hosted
 
     steps:
       - name: Checkout code
@@ -18,8 +19,8 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
-          cache: 'npm'
+          node-version: "20"
+          cache: "npm"
 
       - name: Install and build
         run: |
@@ -38,12 +39,12 @@ jobs:
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^(.*)$ /index.html [QSA,L]
-          
+
           # Security headers
           Header always set X-Frame-Options DENY
           Header always set X-Content-Type-Options nosniff
           Header always set Referrer-Policy strict-origin-when-cross-origin
-          
+
           # Cache static assets
           <filesMatch \".(css|jpg|jpeg|png|gif|js|ico|svg|woff|woff2|ttf|eot)$\">
             ExpiresActive On
@@ -60,12 +61,12 @@ jobs:
           port: 22
           script: |
             cd httpdocs
-            
+
             # Remove only frontend files, preserve api folder
             find . -maxdepth 1 -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.ico" -o -name "*.png" -o -name "*.jpg" -o -name "*.svg" \) -delete 2>/dev/null || true
             find . -maxdepth 1 -type d -name "assets" -exec rm -rf {} + 2>/dev/null || true
             find . -maxdepth 1 -type d -name "static" -exec rm -rf {} + 2>/dev/null || true
-            
+
             echo "Frontend cleanup completed, API folder preserved"
 
       - name: Deploy to production
@@ -75,9 +76,9 @@ jobs:
           server: ${{ secrets.PLESK_SFTP_HOST }}
           password: ${{ secrets.PLESK_SFTP_PASSWORD }}
           port: 22
-          local_path: './dist/*'
-          remote_path: './httpdocs/'
-          sftpArgs: '-o ConnectTimeout=5'
+          local_path: "./dist/*"
+          remote_path: "./httpdocs/"
+          sftpArgs: "-o ConnectTimeout=5"
           sftp_only: true
 
       - name: Upload deployment success file
@@ -86,18 +87,18 @@ jobs:
           username: ${{ secrets.PLESK_SFTP_USER }}
           server: ${{ secrets.PLESK_SFTP_HOST }}
           password: ${{ secrets.PLESK_SFTP_PASSWORD }}
-          local_path: './deploy-success.json'
-          remote_path: './httpdocs/deploy-success.json'
+          local_path: "./deploy-success.json"
+          remote_path: "./httpdocs/deploy-success.json"
           sftp_only: true
 
       - name: Health Check
         run: |
           echo "Waiting for deployment to be ready..."
           sleep 30
-          
+
           # Check if site is responding
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quick-retail.com)
-          
+
           if [ $HTTP_STATUS -eq 200 ]; then
             echo "Deployment successful - Site is responding with HTTP $HTTP_STATUS"
             echo "React app is now live alongside the API at https://quick-retail.com"
