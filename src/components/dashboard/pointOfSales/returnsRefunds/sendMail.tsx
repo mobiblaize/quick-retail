@@ -6,7 +6,7 @@ import {
   ForwardRefRenderFunction,
   useEffect,
 } from "react";
-import { Text } from "@mantine/core";
+import { Text, Textarea } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import FormInput from "../../../General/formInput";
 import { useSendMail } from "../../../../hooks/backendApis/pos/returns";
@@ -184,9 +184,9 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
         <Text c="black" size="lg" fw={500}>
           Description
         </Text>
-        <textarea
+        <Textarea
           placeholder="Description of the issue or request"
-          className="flex-1 w-full mt-2 p-2 border rounded"
+          // className="flex-1 w-full mt-2 p-2 border rounded border-[#D0D5DD]"
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}

@@ -206,7 +206,7 @@ const AddProductForm = () => {
         message: priceError,
         color: "red",
       });
-      return; 
+      return;
     }
 
     if (quantityError || reorder > quantity) {
@@ -215,7 +215,7 @@ const AddProductForm = () => {
         message: "Product quantity should be higher than order level",
         color: "red",
       });
-      return; 
+      return;
     }
 
     if (
@@ -355,7 +355,7 @@ const AddProductForm = () => {
                 }
               }}
             />
-           
+
           </div>
 
           <div>
@@ -378,7 +378,7 @@ const AddProductForm = () => {
                 }
               }}
             />
-             {priceError && (
+            {priceError && (
               <Text size="sm" c="red" mt={5} fw="600">
                 {priceError}
               </Text>
@@ -505,9 +505,17 @@ const AddProductForm = () => {
               onChange={(e: any) =>
                 setFormData({ ...formData, long_description: e.target.value })
               }
+              autosize={false}
+              minRows={3}
+              styles={{
+                input: {
+                  display: "flex",
+                  alignItems: "center", // vertical center
+                },
+              }}
             />
           </div>
-        
+
           <div>
             <Text size="sm" fw={600} mb={8} mt={6}>
               Tags
