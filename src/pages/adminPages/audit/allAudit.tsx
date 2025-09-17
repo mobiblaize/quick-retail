@@ -3,8 +3,8 @@ import PageContainer from "../../../layout/pageContainer";
 import TrailTable from "../../../components/dashboard/adminPage/auditTrail/trailTable";
 import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
-import { useState, useMemo } from "react";
-import { useSearchParams } from "react-router";
+import { useState } from "react";
+// import { useSearchParams } from "react-router";
 import { ChevronDown } from "lucide-react";
 // import * as Papa from "papaparse";
 import jsPDF from "jspdf";
@@ -16,17 +16,20 @@ const AuditTrailPage = () => {
   const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
 
   const handleSearchChange = (value: string) => {
     setSearchTerm(value);
     setCurrentPage(1);
   };
 
-  const handleSortChange = (value: string) => {
-    setActiveSort(value);
-    setCurrentPage(1);
-  };
+ const handleSortChange = (value: string) => {
+  // Remove literal 'a-z' or 'z-a' (case-insensitive)
+  const cleanedValue = value.replace(/a-z|z-a/gi, '');
+  setActiveSort(cleanedValue.trim());
+  setCurrentPage(1);
+};
+
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
@@ -40,22 +43,45 @@ const AuditTrailPage = () => {
       paginate: "true",
     };
 
-    setSearchParams(queryObj);
+    setSearchTerm(queryObj.role || queryObj.status || queryObj.location || "");
   };
 
-  const queryParams = useMemo(() => {
-    const entries = Object.fromEntries(searchParams.entries());
-    return {
-      ...entries,
-      search: searchTerm,
-      sort_by: activeSort,
-      page: currentPage,
-      per_page: perPage,
-      paginate: "true",
-    };
-  }, [searchParams, searchTerm, activeSort, currentPage, perPage]);
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+      search: filters.search ?? "",
+      sort_by: filters.sortBy ?? "",
+      per_page: perPage.toString(),
+      paginate: true,
+      location_name: filters.location ?? "",
+      category_name: filters.category ?? "", 
+      start_date: filters.startDate ?? "",
+      end_date: filters.endDate ?? "",
+      status: filters.status ?? "",
+      page: currentPage.toString(),
+      role: filters.role ?? "",
+      module: filters.module ?? ""
+    });
 
-  const { data, isLoading, error } = useFetchAuditTrails(queryParams);
+    const payload = {
+    ...(filters ? mapFiltersToPayload(filters) : {}),
+    page: currentPage,
+    per_page: perPage,
+    search: searchTerm,
+    sort_by: activeSort,
+  };
+  
+  // const queryParams = useMemo(() => {
+  //   const entries = Object.fromEntries(searchParams.entries());
+  //   return {
+  //     ...entries,
+  //     search: searchTerm,
+  //     sort_by: activeSort,
+  //     page: currentPage,
+  //     per_page: perPage,
+  //     paginate: "true",
+  //   };
+  // }, [searchParams, searchTerm, activeSort, currentPage, perPage]);
+
+  const { data, isLoading, error } = useFetchAuditTrails(payload);
 
   const handleExport = (format: string) => {
     const logs = data?.data?.data || [];
