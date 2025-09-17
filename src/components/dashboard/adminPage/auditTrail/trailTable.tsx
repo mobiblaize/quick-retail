@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
 import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
-import { format } from 'date-fns';
 
 interface TrailTableProps {
   logs: any[];
@@ -34,13 +33,13 @@ export default function TrailTable({
 }: // error,
 TrailTableProps) {
   const navigate = useNavigate();
-  const formatTime = (dateStr: string) =>
-    dateStr
-      ? new Intl.DateTimeFormat("en-US", {
-          dateStyle: "long",
-          timeStyle: "short",
-        }).format(new Date(dateStr))
-      : "";
+  // const formatTime = (dateStr: string) =>
+  //   dateStr
+  //     ? new Intl.DateTimeFormat("en-US", {
+  //         dateStyle: "long",
+  //         timeStyle: "short",
+  //       }).format(new Date(dateStr))
+  //     : "";
 
   const columns = [
     {
