@@ -23,10 +23,13 @@ const AuditTrailPage = () => {
     setCurrentPage(1);
   };
 
-  const handleSortChange = (value: string) => {
-    setActiveSort(value);
-    setCurrentPage(1);
-  };
+ const handleSortChange = (value: string) => {
+  // Remove literal 'a-z' or 'z-a' (case-insensitive)
+  const cleanedValue = value.replace(/a-z|z-a/gi, '');
+  setActiveSort(cleanedValue.trim());
+  setCurrentPage(1);
+};
+
 
   const handleFilterChange = (newFilters: FilterValues) => {
     setFilters(newFilters);
@@ -65,7 +68,7 @@ const AuditTrailPage = () => {
     search: searchTerm,
     sort_by: activeSort,
   };
-
+  
   // const queryParams = useMemo(() => {
   //   const entries = Object.fromEntries(searchParams.entries());
   //   return {

@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
 import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { format } from 'date-fns';
 
 interface TrailTableProps {
   logs: any[];
@@ -17,6 +18,7 @@ interface TrailTableProps {
   onFilterChange?: (filters: FilterValues) => void;
   filters?: FilterValues;
 }
+
 
 export default function TrailTable({
   logs,
@@ -42,14 +44,23 @@ TrailTableProps) {
 
   const columns = [
     {
-      key: "timestamp",
-      header: "Timestamp",
-      render: (row: any) => (
-        <Text size="sm" style={{ color: "#475569" }}>
-          {formatTime(row.created_at)}
-        </Text>
-      ),
-    },
+  key: "timestamp",
+  header: "Timestamp",
+  render: (row: any) => (
+    <Text size="sm" style={{ color: "#475569" }}>
+      {new Date(row.created_at).toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,   // or false for 24-hour
+      })}
+    </Text>
+  ),
+}
+,
     {
       key: "user",
       header: "User Details",
@@ -144,7 +155,7 @@ TrailTableProps) {
       onSortChange={setSort}
       onFilterChange={onFilterChange}
       showFilter = {true}
-      tableType="inventory"
+      tableType="audit"
       searchPlaceholder="Search trails"
       filters={filters}
       titleSection={
