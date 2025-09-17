@@ -70,7 +70,7 @@ const AddNewRoleForm = () => {
                 placeholder="Enter role name"
                 paddingY="0.7rem"
                 value={name}
-                onChange={(e: any) => setName(e.target.value)}
+                onChange={(val: string) => setName(val)}
               />
               </div>
               <div className="col-span-1">
@@ -82,7 +82,7 @@ const AddNewRoleForm = () => {
                 placeholder="Enter role description"
                 paddingY="0.7rem"
                 value={description}
-                onChange={(e: any) => setDescription(e.target.value)}
+                onChange={(val: string) => setDescription(val)}
               />
               </div>
             </div>

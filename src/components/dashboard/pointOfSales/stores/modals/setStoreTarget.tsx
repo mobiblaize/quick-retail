@@ -1,4 +1,4 @@
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { CircleHelp } from "lucide-react";
@@ -100,9 +100,7 @@ const SetStoreTarget = ({ opened, onClose }: AddNewStoreModalProps) => {
             <FormInput
               type="number"
               value={duration}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setDuration(e.target.value)
-              }
+              onChange={(val: string) => setDuration(val)}
               paddingY="6px"
               className="w-full"
             />
@@ -119,9 +117,7 @@ const SetStoreTarget = ({ opened, onClose }: AddNewStoreModalProps) => {
             <FormInput
               type="number"
               value={transactionValue}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setTransactionValue(e.target.value)
-              }
+              onChange={(val: string) => setTransactionValue(val)}
               paddingY="6px"
             />
           </div>
@@ -133,9 +129,7 @@ const SetStoreTarget = ({ opened, onClose }: AddNewStoreModalProps) => {
             <FormInput
               type="number"
               value={conversionRate}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setConversionRate(e.target.value)
-              }
+              onChange={(val: string) => setConversionRate(val)}
               paddingY="6px"
             />
           </div>

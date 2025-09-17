@@ -21,7 +21,7 @@ import {
   useFetchSubCatOfCat,
 } from "../../../../hooks/backendApis/pos/categories";
 import {
-  useFetchAllLocations,              
+  useFetchAllLocations,
   useUpdateProduct,
 } from "../../../../hooks/backendApis/pos/products";
 import ProductVariationSection from "./productVariationSection";
@@ -246,8 +246,8 @@ const EditProductForm = () => {
               placeholder="Enter product name"
               paddingY={"0.7rem"}
               value={formData?.product?.product_name}
-              onChange={(e: any) =>
-                setFormData({ ...formData, product_name: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, product_name: val })
               }
             />
           </Grid.Col>
@@ -258,8 +258,8 @@ const EditProductForm = () => {
               placeholder="Enter SKU"
               paddingY={"0.7rem"}
               value={formData.sku}
-              onChange={(e: any) =>
-                setFormData({ ...formData, sku: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, sku: val })
               }
             />
           </Grid.Col>
@@ -316,7 +316,7 @@ const EditProductForm = () => {
                   sub_category_id: "", // reset subcategory when category changes
                 });
               }}
-              />
+            />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
@@ -329,9 +329,9 @@ const EditProductForm = () => {
               paddingY="0.7rem"
               value={formData.sub_category_id?.toString() || ""}
               onChange={(value) =>
-                setFormData({ 
-                  ...formData, 
-                  sub_category_id: value?.toString() || "" 
+                setFormData({
+                  ...formData,
+                  sub_category_id: value?.toString() || ""
                 })
               }
             />
@@ -359,10 +359,10 @@ const EditProductForm = () => {
                 placeholder="₦"
                 value={formData.cost_price}
                 paddingY={"0.7rem"}
-                onChange={(value: any) =>
+                onChange={(val: string) =>
                   setFormData({
                     ...formData,
-                    cost_price: value?.toString() || "",
+                    cost_price: val,
                   })
                 }
               />
@@ -373,10 +373,10 @@ const EditProductForm = () => {
                 placeholder="₦"
                 value={formData.selling_price}
                 paddingY={"0.7rem"}
-                onChange={(value: any) =>
+                onChange={(val: string) =>
                   setFormData({
                     ...formData,
-                    selling_price: value?.toString() || "",
+                    selling_price: val,
                   })
                 }
               />
@@ -404,8 +404,8 @@ const EditProductForm = () => {
               placeholder="Enter short product description"
               value={formData.product.short_description}
               paddingY={"0.7rem"}
-              onChange={(e: any) =>
-                setFormData({ ...formData, short_description: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, product: { ...formData.product, short_description: val } })
               }
             />
           </Grid.Col>
@@ -427,10 +427,13 @@ const EditProductForm = () => {
             <FormInput
               label="Tags"
               placeholder="Enter tags"
-              paddingY={"0.7rem"}
+              paddingY="0.7rem"
               value={formData.product.tags}
-              onChange={(e: any) =>
-                setFormData({ ...formData, tags: e.target.value })
+              onChange={(val: string) =>
+                setFormData({
+                  ...formData,
+                  product: { ...formData.product, tags: val }, // keep product fields safe
+                })
               }
             />
           </Grid.Col>
@@ -620,12 +623,12 @@ const EditProductForm = () => {
             <FormInput
               label="Reorder Level"
               placeholder="Enter a reorder level"
-              paddingY={"0.7rem"}
+              paddingY="0.7rem"
               value={formData.reorder_level}
-              onChange={(value: any) =>
+              onChange={(val: string) =>
                 setFormData({
                   ...formData,
-                  reorder_level: value?.toString() || "",
+                  reorder_level: val,
                 })
               }
             />

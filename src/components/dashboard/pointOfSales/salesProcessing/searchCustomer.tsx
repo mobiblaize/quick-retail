@@ -24,12 +24,11 @@ interface SearchCustomerProps {
 
 const SearchCustomer: React.FC<SearchCustomerProps> = ({
   onCustomerSelect,
-  // initialCustomerId,
-  initialCustomerName,
+  // initialCustomerName,
   collapsible = true,
   showIcon,
 }) => {
-  const { customer, setCustomer } = useOrderStore();
+  const { setCustomer, } = useOrderStore();
 
   // --- collapsing UI (if you kept it)
   const [isExpanded, setIsExpanded] = useState(true);
@@ -40,9 +39,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
 
   // seed search input from props or store
-  const [searchTerm, setSearchTerm] = useState(
-    initialCustomerName || customer?.name || ""
-  );
+  const [searchTerm, setSearchTerm] = useState("");
 
   const [newCustomer, setNewCustomer] = useState({
     customer_name: "",
@@ -53,38 +50,26 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 
   const createCustomer = useCreateCustomer();
 
-  // ✅ IMPORTANT: do NOT call onCustomerSelect in an effect.
-  // Only seed local UI once so we don't bounce state with parent.
   const seededRef = useRef(false);
   useEffect(() => {
     if (seededRef.current) return;
-    // set local input only, don't call parent
-    if (initialCustomerName) setSearchTerm(initialCustomerName);
+    // Set the search term as empty when navigating away
+    setSearchTerm(""); // Reset search term
     seededRef.current = true;
-  }, [initialCustomerName]);
+  }, []);
 
   // Local "selected" card state (purely visual)
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
-    customer?.id
-      ? {
-        customerID: customer.id,
-        customer_name: customer.name,
-        customer_email: "",
-        customer_phone: "",
-      }
-      : null
-  );
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(null);
 
-  const { data, refetch } = useSearchAllCustomers(
-    { search: searchTerm },
-    false
-  );
+  useEffect(() => {
+    // Reset the selected customer when the component unmounts
+    return () => {
+      setSelectedCustomer(null); // Clear the selected customer on unmount
+    };
+  }, []);
 
-  const customerList: CustomerData[] = data
-    ? Array.isArray(data)
-      ? data
-      : [data]
-    : [];
+  const { data, refetch } = useSearchAllCustomers({ search: searchTerm }, false);
+  const customerList: CustomerData[] = Array.isArray(data) ? data : data ? [data] : [];
 
   useEffect(() => {
     if (searchTerm.length > 2) {
@@ -98,7 +83,6 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   const digitsOnly = (s: string) => s.replace(/\D/g, "");
   const clamp11 = (s: string) => digitsOnly(s).slice(0, 11);
 
-  // Block typing of non-digits (but allow navigation keys)
   const blockNonNumericKeys = (e: React.KeyboardEvent<HTMLInputElement>) => {
     if (e.ctrlKey || e.metaKey) return; // allow copy/paste shortcuts
     const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"];
@@ -137,7 +121,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
         const customerID = response?.data?.customerID;
         if (customerID) {
           onCustomerSelect(customerID);
-          setSearchTerm(newCustomer.customer_name);
+          setSearchTerm(newCustomer.customer_name); // Reset search term to new customer name
           setIsAddingCustomer(false);
           setCustomer({ id: customerID, name: newCustomer.customer_name });
 
@@ -158,22 +142,18 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     });
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setSelectedCustomer(null);
-  };
+  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(e.target.value);
+  //   setSelectedCustomer(null); // Reset selected customer when searching
+  // };
 
   const handleSelectCustomer = (c: CustomerData) => {
     setSelectedCustomer(c);
     setSearchTerm(c.customer_name);
 
-    // ✅ user action → tell parent
     onCustomerSelect(c.customerID);
-
     setCustomer({ id: c.customerID, name: c.customer_name });
   };
-
-  
 
   return (
     <main className="w-full h-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
@@ -182,15 +162,10 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
         onClick={collapsible ? toggleExpand : undefined}
         aria-expanded={isOpen}
       >
-        <div
-          className={`flex items-center ${
-            hasIcon ? "justify-between" : "justify-start"
-          }`}
-        >
+        <div className={`flex items-center ${hasIcon ? "justify-between" : "justify-start"}`}>
           <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
             {isAddingCustomer ? "Add New Customer" : "Customer"}
           </Text>
-          {/* {hasIcon && (isOpen ? <ChevronUp size={20} /> : <ChevronDown size={20} />)} */}
         </div>
       </header>
 
@@ -207,9 +182,19 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                   </Text>
 
                   <div className="flex items-center gap-2">
-                    <FormInput
+                    {/* <FormInput
                       value={searchTerm}
                       onChange={handleSearchChange}
+                      placeholder="Enter Customer Name"
+                      paddingY={"0.7rem"}
+                      className="w-full "
+                    /> */}
+                    <FormInput
+                      value={searchTerm}
+                      onChange={(val: string) => {
+                        setSearchTerm(val);
+                        setSelectedCustomer(null);
+                      }}
                       placeholder="Enter Customer Name"
                       paddingY={"0.7rem"}
                       className="w-full "
@@ -218,45 +203,40 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                       <button
                         onClick={() => {
                           setSelectedCustomer(null);
-                          setSearchTerm("");
+                          setSearchTerm(""); // Clear search term when customer is cleared
                           onCustomerSelect(null); // user action
                         }}
                         type="button"
                         className="focus:outline-none"
                         aria-label="Clear selected customer"
                       >
-                        <X
-                          size={18}
-                          className="text-gray-400 hover:text-gray-600"
-                        />
+                        <X size={18} className="text-gray-400 hover:text-gray-600" />
                       </button>
                     )}
                   </div>
 
                   {/* dropdown */}
-                  {!selectedCustomer &&
-                    searchTerm.length > 2 &&
-                    customerList.length > 0 && (
-                      <div className="absolute left-0 right-0 border border-gray-300 mt-1 rounded shadow-md max-h-48 overflow-y-auto z-10 bg-white">
-                        {customerList.map((c) => (
-                          <div
-                            key={c.customerID}
-                            className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-b last:border-none"
-                            onClick={() => handleSelectCustomer(c)}
-                          >
-                            <Text fw={500} c="dark">
-                              {c.customer_name}
-                            </Text>
-                            <Text size="sm" c="dimmed">
-                              {c.customer_phone}
-                            </Text>
-                            <Text size="sm" c="dimmed">
-                              {c.customer_email}
-                            </Text>
-                          </div>
-                        ))}
-                      </div>
-                    )}
+                  {!selectedCustomer && searchTerm.length > 2 && customerList.length > 0 && (
+                    <div className="absolute left-0 right-0 border border-gray-300 mt-1 rounded shadow-md max-h-48 overflow-y-auto z-10 bg-white">
+                      {customerList.map((c) => (
+                        <div
+                          key={c.customerID}
+                          className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-b last:border-none"
+                          onClick={() => handleSelectCustomer(c)}
+                        >
+                          <Text fw={500} c="dark">
+                            {c.customer_name}
+                          </Text>
+                          <Text size="sm" c="dimmed">
+                            {c.customer_phone}
+                          </Text>
+                          <Text size="sm" c="dimmed">
+                            {c.customer_email}
+                          </Text>
+                        </div>
+                      ))}
+                    </div>
+                  )}
                 </div>
 
                 <Text
@@ -270,85 +250,72 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
               </>
             ) : (
               <div className="flex flex-col gap-4 w-full mt-4">
-                {" "}
                 <div className="grid grid-cols-2 gap-4 ">
-                  {" "}
                   <FormInput
                     label="Customer Name"
                     value={newCustomer.customer_name}
                     placeholder="Enter customer name"
                     paddingY="0.7rem"
-                    onChange={(e: { target: { value: any } }) =>
+                    onChange={(val: string) =>
                       setNewCustomer({
                         ...newCustomer,
-                        customer_name: e.target.value,
+                        customer_name: val,
                       })
                     }
-                  />{" "}
+                  />
+
                   <FormInput
                     label="Email"
                     value={newCustomer.customer_email}
                     placeholder="Enter customer email"
-                     paddingY="0.7rem"
-                    onChange={(e: { target: { value: any } }) =>
+                    paddingY="0.7rem"
+                    onChange={(val: string) =>
                       setNewCustomer({
                         ...newCustomer,
-                        customer_email: e.target.value,
-                      })
-                    }
-                  />{" "}
-                </div>{" "}
-                <div className="grid grid-cols-2 gap-4">
-                  {" "}
-                  {/* <FormInput
-                    label="Phone"
-                    value={newCustomer.customer_phone}
-                    onChange={(e: { target: { value: any } }) =>
-                      setNewCustomer({
-                        ...newCustomer,
-                        customer_phone: e.target.value,
-                      })
-                    }
-                  />{" "} */}
-                   <FormInput
-              label="Phone Number"
-              placeholder="Enter phone number"
-              value={newCustomer.customer_phone}
-              onChange={handlePhoneChange}
-               paddingY="0.7rem"
-              // @ts-ignore
-              inputMode="numeric"
-              pattern="\d*"
-              autoComplete="tel"
-              maxLength={11}
-              onKeyDown={blockNonNumericKeys}
-              onPaste={onPhonePaste}
-            />
-            {phoneError && (
-              <div className="text-sm text-red-600 -mt-3">{phoneError}</div>
-            )}
-                  <FormInput
-                    label="Address"
-                    value={newCustomer.customer_address}
-                  placeholder="Enter customer address"
-                     paddingY="0.7rem"
-                    onChange={(e: { target: { value: any } }) =>
-                      setNewCustomer({
-                        ...newCustomer,
-                        customer_address: e.target.value,
+                        customer_email: val,
                       })
                     }
                   />
+
+                </div>
+                <div className="grid grid-cols-2 gap-4">
+                  <FormInput
+                    label="Phone Number"
+                    placeholder="Enter phone number"
+                    value={newCustomer.customer_phone}
+                    onChange={handlePhoneChange}
+                    paddingY="0.7rem"
+                    // @ts-ignore
+                    inputMode="numeric"
+                    pattern="\d*"
+                    autoComplete="tel"
+                    maxLength={11}
+                    onKeyDown={blockNonNumericKeys}
+                    onPaste={onPhonePaste}
+                  />
+                  <FormInput
+                    label="Address"
+                    value={newCustomer.customer_address}
+                    placeholder="Enter customer address"
+                    paddingY="0.7rem"
+                    onChange={(val: string) =>
+                      setNewCustomer({
+                        ...newCustomer,
+                        customer_address: val,
+                      })
+                    }
+                  />
+                  {phoneError && <div className="text-sm text-red-600 mt-3">{phoneError}</div>}
                 </div>
                 <div className="flex gap-4 justify-start text-right items-end">
                   <button
-                    className="mt-2  w-[150px] px-2 h-[44px]  border border-[#F16722] text-[#F16722] bg-[white]  rounded-lg"
+                    className="mt-2 w-[150px] px-2 h-[44px] border border-[#F16722] text-[#F16722] bg-[white] rounded-lg"
                     onClick={() => setIsAddingCustomer(false)}
                   >
                     <Text c="#f16722">Cancel</Text>
                   </button>
                   <button
-                    className="mt-4  w-[150px] h-[44px] px-2 rounded-lg text-[white] bg-[#F16722] font-medium "
+                    className="mt-4 w-[150px] h-[44px] px-2 rounded-lg text-[white] bg-[#F16722] font-medium"
                     onClick={handleCreateCustomer}
                   >
                     <Text c="#fff">Create Customer</Text>
@@ -364,3 +331,4 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 };
 
 export default SearchCustomer;
+

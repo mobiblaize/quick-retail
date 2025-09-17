@@ -1,4 +1,4 @@
-import { Avatar, Text } from "@mantine/core";
+import { Alert, Avatar, Center, Loader, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 
@@ -47,8 +47,24 @@ interface ViewOrderReceiptDraftProps {
 const ViewPending = ({ saleData, isLoading, isError }: ViewOrderReceiptDraftProps) =>
 {
 
-  if (isLoading) return <div>Loading receipt...</div>;
-  if (isError || !saleData) return <div>Failed to load receipt data.</div>;
+  if (isLoading)
+    return (
+      <Center>
+        <Loader size="sm" color="orange" />
+        <Text c="gray.6" size="sm" fw={500} ml="sm">
+          Loading receipt...
+        </Text>
+      </Center>
+    );
+  
+  if (isError || !saleData)
+    return (
+      <Center>
+        <Alert  color="red" radius="md" variant="light">
+          Failed to load receipt data.
+        </Alert>
+      </Center>
+    );
 
 
   

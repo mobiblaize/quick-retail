@@ -160,7 +160,7 @@ const SubscriptionPlan = () => {
                             setActivePlan(plan.slug as billingType);
                           }}
                         >
-                          {plan.name}
+                          <Text>{plan.name}</Text>
                         </Button>
                       ))}
                 </Group>

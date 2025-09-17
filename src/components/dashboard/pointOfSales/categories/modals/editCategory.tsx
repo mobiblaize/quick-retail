@@ -83,9 +83,7 @@ const EditCategory = ({ opened, onClose, subCategory,  onUpdate  }: ResolveProps
           placeholder=""
           paddingY={6}
           value={subCategoryName}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-            setSubCategoryName(e.target.value)
-          }
+          onChange={(val: string) =>  setSubCategoryName(val)}
         />
       </div>
 

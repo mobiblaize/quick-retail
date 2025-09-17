@@ -196,6 +196,7 @@ const ViewReturnsContent: React.FC = () => {
               variant="outline-primary"
               onClick={prevStep}
               className="flex-1 sm:flex-none"
+              style={{ width: 150 }}
             >
               Cancel
             </Button>
@@ -205,6 +206,7 @@ const ViewReturnsContent: React.FC = () => {
               onClick={() => {
                 sendMailRef.current?.handleSave();
               }}
+              style={{ width: 150 }}
             >
               Send
             </Button>

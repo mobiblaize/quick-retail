@@ -85,7 +85,7 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
               },
             })}
           >
-            {isLoading ? "Uploading..." : "Change profile picture"}
+            <Text>{isLoading ? "Uploading..." : "Change profile picture"}</Text>
           </Button>
 
           <input

@@ -1,4 +1,4 @@
-import { Avatar, Text } from "@mantine/core";
+import { Avatar, Center, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png"; // fallback
 import { useLocation } from "react-router";
@@ -10,13 +10,37 @@ const ViewOrderReceipt = () => {
   const orderId = location.state?.orderID;
   const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
 
-  if (!orderId) return <div>Preparing receipt...</div>;
-  if (isLoading) return <div>Loading receipt...</div>;
+  if (!orderId)
+    return (
+      <Center>
+        <Text c="gray.6" size="sm" fw={500}>
+          Preparing receipt...
+        </Text>
+      </Center>
+    );
+
+  if (isLoading)
+    return (
+      <Center>
+        <Loader size="sm" color="orange" />
+        <Text c="gray.6" size="sm" fw={500} ml="sm">
+          Loading receipt...
+        </Text>
+      </Center>
+    );
+
   if (isError || !saleData?.data)
-    return <div>Failed to load receipt data.</div>;
+    return (
+      <Center>
+        <Text c="red" size="sm" fw={500}>
+          {/* Failed to load receipt data. */}
+          Loading receipt...
+        </Text>
+      </Center>
+    );
 
   const order = saleData.data;
-  
+
 
   // Parse fees
   const fees = JSON.parse(order.fees || "{}");
@@ -31,16 +55,15 @@ const ViewOrderReceipt = () => {
             <Text size="2rem" c="black" fw={600}>
               Order ID: {order.order_number}
             </Text>
-           <div
-  className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-    order.payment_status?.toLowerCase() === "pending"
-      ? "bg-yellow-100 text-[#B54708]"
-      : "bg-green-100 text-green-800"
-  }`}
->
-  {order.payment_status?.toLowerCase() === "pending" ? <UnpaidDot /> : <PaidDot />}
-  <span className="ml-2 capitalize">{order.payment_status}</span>
-</div>
+            <div
+              className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${order.payment_status?.toLowerCase() === "pending"
+                  ? "bg-yellow-100 text-[#B54708]"
+                  : "bg-green-100 text-green-800"
+                }`}
+            >
+              {order.payment_status?.toLowerCase() === "pending" ? <UnpaidDot /> : <PaidDot />}
+              <span className="ml-2 capitalize">{order.payment_status}</span>
+            </div>
           </div>
           <div className="flex flex-wrap mt-2 gap-5">
             <Text fw={400} className="text-xl">
@@ -111,13 +134,13 @@ const ViewOrderReceipt = () => {
                     </Text>
                   </div>
                   <div className="grid grid-cols-[100px_1fr] gap-2">
-  <Text size="lg" fw={400}>
-    Code:
-  </Text>
-  <Text c="#101928" fw={600}>
-    {item.product_variation?.code || "-"}
-  </Text>
-</div>
+                    <Text size="lg" fw={400}>
+                      Code:
+                    </Text>
+                    <Text c="#101928" fw={600}>
+                      {item.product_variation?.code || "-"}
+                    </Text>
+                  </div>
 
                 </div>
               </div>

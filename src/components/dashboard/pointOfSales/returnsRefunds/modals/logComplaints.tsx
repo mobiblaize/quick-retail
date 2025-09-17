@@ -278,7 +278,7 @@ const LogComplaints = ({ opened, onClose }: LogComplaintsProps) => {
           placeholder="Enter description"
           paddingY="3"
           value={description}
-          onChange={(e: any) => setDescription(e.currentTarget.value)}
+          onChange={(val: string) => setDescription(val)}
         />
 
         <div className="flex mt-7 justify-between">

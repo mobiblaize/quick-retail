@@ -1,7 +1,7 @@
 import { TextInput, Text, Group } from "@mantine/core";
 import { iInputField } from "./formTypes";
 import { useRef } from "react";
-import { DateInput } from "@mantine/dates"; 
+import { DateInput } from "@mantine/dates";
 import "dayjs/locale/en";
 
 interface FlexibleInputField
@@ -92,6 +92,28 @@ const FormInput = ({
     },
   };
 
+  // if (type === "date") {
+  //   return (
+  //     <DateInput
+  //       id={id}
+  //       label={sharedLabel}
+  //       value={value ? new Date(value) : undefined}
+  //       onChange={(date) => {
+  //         const formattedDate = date?.toISOString().split("T")[0] ?? "";
+  //         const syntheticEvent = { target: { value: formattedDate } };
+  //         onChange?.(syntheticEvent as any);
+  //       }}
+  //       placeholder={placeholder}
+  //       required={required}
+  //       name={name}
+  //       error={error}
+  //       readOnly={readOnly}
+  //       className={className}
+  //       styles={commonStyles}
+  //       {...rest}
+  //     />
+  //   );
+  // }
   if (type === "date") {
     return (
       <DateInput
@@ -100,8 +122,7 @@ const FormInput = ({
         value={value ? new Date(value) : undefined}
         onChange={(date) => {
           const formattedDate = date?.toISOString().split("T")[0] ?? "";
-          const syntheticEvent = { target: { value: formattedDate } };
-          onChange?.(syntheticEvent as any);
+          onChange?.(formattedDate); // send plain string, not fake event
         }}
         placeholder={placeholder}
         required={required}
@@ -114,6 +135,7 @@ const FormInput = ({
       />
     );
   }
+
   return (
     <TextInput
       id={id}
@@ -132,7 +154,9 @@ const FormInput = ({
         )
       }
       value={value}
-      onChange={onChange}
+      // onChange={onChange}
+      // onChange={(event) => onChange?.(event.currentTarget.value)} 
+      onChange={(event) => onChange?.(event.currentTarget.value)}
       placeholder={placeholder}
       required={required}
       name={name}
@@ -144,15 +168,15 @@ const FormInput = ({
             {leftIcon}
           </div>
         ) : leftPrefix ? (
-          <div style={{ 
-            color: "#374151", 
-            fontSize: "14px", 
-            padding: "0 12px", 
-            display: "flex", 
-            alignItems: "center", 
-            height: "100%", 
-            borderRight: "1px solid #D1D5DB", 
-            borderRadius: "0.375rem 0 0 0.375rem" 
+          <div style={{
+            color: "#374151",
+            fontSize: "14px",
+            padding: "0 12px",
+            display: "flex",
+            alignItems: "center",
+            height: "100%",
+            borderRight: "1px solid #D1D5DB",
+            borderRadius: "0.375rem 0 0 0.375rem"
           }}>
             {leftPrefix}
           </div>

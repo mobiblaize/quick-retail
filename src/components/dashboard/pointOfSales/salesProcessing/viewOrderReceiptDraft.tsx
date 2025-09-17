@@ -1,4 +1,4 @@
-import { Avatar, Text } from "@mantine/core";
+import { Alert, Avatar, Center, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png";
 import { formatMoney } from "../../../../utils/helpers";
@@ -48,14 +48,29 @@ interface ViewOrderReceiptDraftProps {
   isError: boolean;
 }
 
-const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceiptDraftProps) =>
-{
+const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceiptDraftProps) => {
 
-  if (isLoading) return <div>Loading receipt...</div>;
-  if (isError || !saleData) return <div>Failed to load receipt data.</div>;
+  if (isLoading)
+    return (
+      <Center>
+        <Loader size="sm" color="orange" />
+        <Text c="gray.6" size="sm" fw={500} ml="sm">
+          Loading receipt...
+        </Text>
+      </Center>
+    );
+
+  if (isError || !saleData)
+    return (
+      <Center>
+        <Alert color="red" radius="md" variant="light">
+          Failed to load receipt data.
+        </Alert>
+      </Center>
+    );
 
 
-  
+
 
   const order = saleData.data;
 
@@ -72,15 +87,14 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
               Order ID: {order.order_number}
             </Text>
             <div
-  className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${
-    order.payment_status?.toLowerCase() === "pending"
-      ? "bg-yellow-100 text-[#B54708]"
-      : "bg-green-100 text-green-800"
-  }`}
->
-  {order.payment_status?.toLowerCase() === "pending" ? <UnpaidDot /> : <PaidDot />}
-  <span className="ml-2 capitalize">{order.payment_status}</span>
-</div>
+              className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${order.payment_status?.toLowerCase() === "pending"
+                  ? "bg-yellow-100 text-[#B54708]"
+                  : "bg-green-100 text-green-800"
+                }`}
+            >
+              {order.payment_status?.toLowerCase() === "pending" ? <UnpaidDot /> : <PaidDot />}
+              <span className="ml-2 capitalize">{order.payment_status}</span>
+            </div>
 
           </div>
           <div className="flex flex-wrap mt-2 gap-5">
@@ -171,26 +185,26 @@ const ViewOrderReceiptDraft = ({ saleData, isLoading, isError }: ViewOrderReceip
           <div className="flex flex-col gap-6">
             <div className="flex items-center justify-between">
               <Text fw={500}>Subtotal</Text>
-              <Text  c="#101928">₦{formatMoney(fees.sub_total)}</Text>
+              <Text c="#101928">₦{formatMoney(fees.sub_total)}</Text>
             </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Tax {fees.tax_rate}%</Text>
-              <Text  c="#101928">₦{formatMoney(fees.tax)}</Text>
+              <Text c="#101928">₦{formatMoney(fees.tax)}</Text>
             </div>
             <div className="flex items-center justify-between">
               <Text fw={500}>Discount</Text>
-              <Text  c="#101928">₦{formatMoney(fees.discount)}</Text>
+              <Text c="#101928">₦{formatMoney(fees.discount)}</Text>
             </div>
             <div className=" border-t border-[#E4E7EC]">
-            <div className="flex items-center justify-between font-bold text-lg mt-4">
-              <Text  c="#101928"  fw={700} >Total Paid</Text>
-              <Text  c="#101928" fw={500}  >₦{formatMoney(order.order_total)}</Text>
-            </div>
+              <div className="flex items-center justify-between font-bold text-lg mt-4">
+                <Text c="#101928" fw={700} >Total Paid</Text>
+                <Text c="#101928" fw={500}  >₦{formatMoney(order.order_total)}</Text>
+              </div>
             </div>
             <div className="border-t border-[#E4E7EC]">
-            <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
-              <Text>Cashier</Text>
-              <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
+              <div className="flex items-center justify-between font-bold text-lg mt-[3em]">
+                <Text>Cashier</Text>
+                <Text>{`${order.cashier.firstname} ${order.cashier.lastname}`}</Text>
               </div>
             </div>
           </div>

@@ -139,9 +139,9 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
               label="Amount Collected"
               placeholder="Enter the amount customer paid in cash"
               value={localAmount}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+              onChange={(val: string) => {
                 // Remove non-numeric chars except decimal
-                const rawValue = e.target.value.replace(/[^\d.]/g, "");
+                const rawValue = val.replace(/[^\d.]/g, "");
                 const numericAmount = parseFloat(rawValue || "0");
                 const numericTotal = parseFloat(sanitizeAmount(total));
 
@@ -158,6 +158,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
               leftPrefix="₦"
               paddingY="0.7rem"
             />
+
 
             <FormInput
               type="text"

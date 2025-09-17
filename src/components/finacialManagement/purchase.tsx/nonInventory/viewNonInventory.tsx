@@ -22,7 +22,7 @@ export default function ViewNonInventory() {
             <div className="flex flex-col">
               <div className="flex flex-row gap-8">
                 {/* desktop */}
-                <div className="flex flex-col w-[70%] md:block hidden ">
+                <div className="flex flex-col w-[70%] md:block ">
                   <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
                     <h2 className="text-lg font-medium text-gray-800 mb-4 border-b border-gray-200 uppercase">
                       Basic information <span className="text-[red]"> *</span>
