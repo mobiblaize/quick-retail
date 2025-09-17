@@ -1,6 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useCreateStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 
@@ -21,7 +21,7 @@ const AddNewStore = ({
   const [name, setName] = useState("");
   // const [gla, setGla] = useState("");
   // const [gsa, setGsa] = useState("");
-  const [staff_no, ] = useState();
+  const [staff_no,] = useState();
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
@@ -52,13 +52,13 @@ const AddNewStore = ({
 
         if (refetchStores) {
           try {
-            await refetchStores(); 
+            await refetchStores();
           } catch (err) {
             console.error("Error while refetching stores:", err);
           }
         }
 
-        onClose(); 
+        onClose();
       },
       onError: (err: any) => {
         console.error("Failed to create store", err);
@@ -80,7 +80,7 @@ const AddNewStore = ({
         title={
           <div>
             <Text size="1.5rem" c="black" fw={700}>
- New Store
+              New Store
             </Text>
             <Text mt="5">Fill the details below to create a new store.</Text>
           </div>
@@ -91,24 +91,22 @@ const AddNewStore = ({
         padding="xl"
       >
         <div className="flex flex-col space-y-6">
-         
+
 
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-           
-          <div className="">
-            <label className=" items-center gap-2 mb-1.5">
-              Store Name 
-            </label>
-            <FormInput
-              type="text"
-              paddingY="6px"
-              value={name}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setName(e.target.value)
-              }
-            />
-                     </div>
-               <div className="">
+
+            <div className="">
+              <label className=" items-center gap-2 mb-1.5">
+                Store Name
+              </label>
+              <FormInput
+                type="text"
+                paddingY="6px"
+                value={name}
+                onChange={(val: string) => setName(val)}
+              />
+            </div>
+            <div className="">
               <label className=" items-center gap-2 mb-1.5">
                 Country
               </label>
@@ -116,12 +114,10 @@ const AddNewStore = ({
                 type="text"
                 paddingY="6px"
                 value={country}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setCountry(e.target.value)
-                }
+                onChange={(val: string) => setCountry(val)}
               />
             </div>
- 
+
             <div>
               <label className="flex items-center gap-2 mb-1.5">
                 State
@@ -130,36 +126,30 @@ const AddNewStore = ({
                 type="text"
                 paddingY="6px"
                 value={stateVal}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setStateVal(e.target.value)
-                }
+                onChange={(val: string) => setStateVal(val)}
               />
             </div>
             <div>
               <label className="flex items-center gap-2 mb-1.5">
-              Region/LGA 
+                Region/LGA
               </label>
               <FormInput
                 type="text"
                 paddingY="6px"
                 value={lga}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setLga(e.target.value)
-                }
+                onChange={(val: string) => setLga(val)}
               />
             </div>
-         
+
             <div className="col-span-1 sm:col-span-2">
               <label className="flex items-center gap-2 mb-1.5">
-                Address 
+                Address
               </label>
               <FormInput
                 type="text"
                 paddingY="6px"
                 value={address}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setAddress(e.target.value)
-                }
+                onChange={(val: string) => setAddress(val)}
               />
             </div>
             {/* <div className="col-span-1 sm:col-span-2">

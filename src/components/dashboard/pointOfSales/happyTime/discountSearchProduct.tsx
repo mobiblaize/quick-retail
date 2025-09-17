@@ -1,5 +1,5 @@
 
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
@@ -29,7 +29,7 @@ interface SearchProductProps {
   initialItems?: SelectedItem[];
 }
 
-const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: SearchProductProps) => {
+const DiscountSearchProduct = ({ onSelect, onItemsChange, initialItems = [] }: SearchProductProps) => {
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
@@ -49,16 +49,16 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
       setHasSetInitial(true);
     }
   }, [initialItems, hasSetInitial]);
-  
+
 
 
 
   useEffect(() => {
-  //  @ts-ignore */
+    //  @ts-ignore */
     onItemsChange(selectedItems);
   }, [selectedItems, onItemsChange]);
 
-  
+
   useEffect(() => {
     const timeout = setTimeout(() => {
       setDebouncedSearch(searchTerm);
@@ -74,39 +74,39 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
   const products = data?.products?.data
     ? data.products.data
     : data?.data
-    ? [data.data]
-    : [];
+      ? [data.data]
+      : [];
 
 
-    const handleSelect = (item: {
-      name: string;
-      custom: boolean;
-      variationId?: string;
-      [key: string]: any;
-    }) => {
-      const itemWithDefaultQuantity = {
-        ...item,
-        quantity: 1, 
-      };
-    
-      setSelectedItems((prev) => {
-        const exists = item.custom
-          ? prev.some((i) => i.custom && i.name === item.name)
-          : prev.some((i) => i.variationId === item.variationId);
-    
-        if (exists) return prev;
-        return [...prev, itemWithDefaultQuantity];
-      });
-    
-      if (item.custom) {
-        onSelect({ custom: true, name: item.name });
-      } else if (item.variationId) {
-        onSelect(item.variationId);
-      }
-    
-      setSearchTerm("");
+  const handleSelect = (item: {
+    name: string;
+    custom: boolean;
+    variationId?: string;
+    [key: string]: any;
+  }) => {
+    const itemWithDefaultQuantity = {
+      ...item,
+      quantity: 1,
     };
-    
+
+    setSelectedItems((prev) => {
+      const exists = item.custom
+        ? prev.some((i) => i.custom && i.name === item.name)
+        : prev.some((i) => i.variationId === item.variationId);
+
+      if (exists) return prev;
+      return [...prev, itemWithDefaultQuantity];
+    });
+
+    if (item.custom) {
+      onSelect({ custom: true, name: item.name });
+    } else if (item.variationId) {
+      onSelect(item.variationId);
+    }
+
+    setSearchTerm("");
+  };
+
 
   // const handleQuantityChange = (itemKey: any, value: number) => {
   //        /* @ts-ignore */
@@ -122,7 +122,7 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
   // };
   useEffect(() => {
   }, [initialItems]);
-  
+
   return (
     <main className="w-full h-auto rounded-lg bg-white">
       <div className="px-6 py-2">
@@ -134,11 +134,8 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
         <FormInput
           placeholder="Search by Name."
           value={searchTerm}
-          onChange={(e: { target: { value: SetStateAction<string> } }) =>
-            setSearchTerm(e.target.value)
-          }
+          onChange={(val: string) => setSearchTerm(val)}
           leftIcon={<Search color="#667185" />}
-          // rightIcon={<SqrCode />}
         />
       </div>
 
@@ -163,25 +160,25 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
               }) => (
                 <li
                   key={item.variationID}
-                       /* @ts-ignore */
+                  /* @ts-ignore */
 
                   onClick={() =>
                     handleSelect({
-                    //  @ts-ignore */
+                      //  @ts-ignore */
                       name: item.name,
-                      custom: false,  
+                      custom: false,
                       variationId: item.variationID,
                       image_path: item.image_path,
-                        //  @ts-ignore */
+                      //  @ts-ignore */
                       selling_price: item.selling_price,
                       sku: item.sku,
-                        /* @ts-ignore */
+                      /* @ts-ignore */
                       ean: item.ean,
-                      quantity: 1, 
-                      ...item 
+                      quantity: 1,
+                      ...item
                     })
 
-                  
+
                   }
                   className="flex items-center gap-4 cursor-pointer px-4 py-3 rounded hover:bg-gray-100 border border-gray-200"
                 >
@@ -214,7 +211,7 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
               onClick={() =>
                 handleSelect({ name: debouncedSearch, custom: true })
               }
-              // className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
+            // className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
             >
               {/* Use custom entry: <strong>{debouncedSearch}</strong> */}
             </li>
@@ -226,36 +223,36 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
       {selectedItems.length > 0 && (
         <section className="px-6 py-4 mt-6 border-t border-gray-300 w-full">
           <Text size="md" fw={600} c="black" className="mb-3">
-          SELECTED PRODUCTS ({selectedItems.length})
+            SELECTED PRODUCTS ({selectedItems.length})
           </Text>
           <ul className="">
             {selectedItems.map((item) => {
-                   {/* @ts-ignore */}
+              {/* @ts-ignore */ }
               const itemKey = item.custom
-                   /* @ts-ignore */
+                /* @ts-ignore */
                 ? `custom-${item.name}`
-                     /* @ts-ignore */
+                /* @ts-ignore */
                 : item.variationId;
-                     /* @ts-ignore */
+              /* @ts-ignore */
               const quantity = item.quantity ?? 0;
-                   /* @ts-ignore */
+              /* @ts-ignore */
               const unitPrice = Number(item.selling_price || 0);
               // const totalPrice = unitPrice * quantity;
 
               return (
                 <li
-                     /* @ts-ignore */
+                  /* @ts-ignore */
                   key={itemKey}
                   className="flex items-center gap-4 p-3 rounded bg-gray-50"
                 >
                   {/* Image */}
-                        {/* @ts-ignore  */}
+                  {/* @ts-ignore  */}
                   {!item.custom && (
-                         /* @ts-ignore */
+                    /* @ts-ignore */
                     <img
-                         /* @ts-ignore */
+                      /* @ts-ignore */
                       src={item.image_path}
-                           /* @ts-ignore */
+                      /* @ts-ignore */
                       alt={item.name}
                       className="w-16 h-16 object-cover rounded"
                     />
@@ -263,43 +260,43 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
 
                   {/* Name, color, sku */}
                   <div className="flex justify-around gap-[2em] w-full">
-                        {/* /* @ts-ignore */ 
-                    <div className="flex flex-col ">
-                      <span className="font-medium text-gray-900">
-                       {/* @ts-ignore */}
-                        {item.name}
-                      </span>
-                      {/* @ts-ignore */}
-                      {item.ean && (
-                        <span className="text-sm text-gray-600">
+                    {/* /* @ts-ignore */
+                      <div className="flex flex-col ">
+                        <span className="font-medium text-gray-900">
                           {/* @ts-ignore */}
-                          EAN: <span className="font-medium">{item.ean}</span>
+                          {item.name}
                         </span>
-                      )}
-                      {/* @ts-ignore */}
-                      {item.sku && (
-                        <span className="text-sm text-gray-600">
-                          {/* @ts-ignore */}
-                          SKU:  <span className="font-medium">{item.sku}</span>
-                        </span>
-                      )}
-                    </div>
+                        {/* @ts-ignore */}
+                        {item.ean && (
+                          <span className="text-sm text-gray-600">
+                            {/* @ts-ignore */}
+                            EAN: <span className="font-medium">{item.ean}</span>
+                          </span>
+                        )}
+                        {/* @ts-ignore */}
+                        {item.sku && (
+                          <span className="text-sm text-gray-600">
+                            {/* @ts-ignore */}
+                            SKU:  <span className="font-medium">{item.sku}</span>
+                          </span>
+                        )}
+                      </div>
 
                     /* Unit Price */}
                     <div className="flex flex-col items-center min-w-[70px]">
                       <span className="text-xs text-gray-700">Unit Price</span>
                       <span className="font-medium text-gray-700">
-                      ₦ {formatMoney(unitPrice.toFixed(2))}
+                        ₦ {formatMoney(unitPrice.toFixed(2))}
                       </span>
                     </div>
 
-               
+
 
                     {/* Stock */}
                     <div className="flex flex-col items-center min-w-[70px]">
                       <span className="text-xs text-gray-700">Stock Quantity</span>
                       <span className="font-medium text-gray-700">
-                      {item.quantity_available}
+                        {item.quantity_available}
                       </span>
                     </div>
 
@@ -308,11 +305,11 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange,  initialItems = [] }: 
                       onClick={() => {
                         setSelectedItems((prev) =>
                           prev.filter((i) =>
-                          // @ts-ignore
+                            // @ts-ignore
                             item.custom
                               // @ts-ignore
                               ? !(i.custom && i.name === item.name)
-                                // @ts-ignore
+                              // @ts-ignore
                               : i.variationID !== item.variationID
                           )
                         );
