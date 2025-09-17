@@ -73,7 +73,7 @@ const FiledRemittanceTable = () => {
               paddingY={6}
               bgColor="#D0D5DD"
               className="w-[128px] rounded-lg"
-              onChange={(e: { target: { value: any } }) => {
+              onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
                 const value = e.target.value;
 
                 if (value.trim()) {
@@ -81,6 +81,7 @@ const FiledRemittanceTable = () => {
                 }
               }}
             />
+
           </div>
         </div>
       ),

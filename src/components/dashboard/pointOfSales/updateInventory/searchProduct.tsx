@@ -1,4 +1,4 @@
-import { useState, useEffect, SetStateAction } from "react";
+import { useState, useEffect } from "react";
 import { Divider, Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
@@ -97,9 +97,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
         <FormInput
           placeholder="Search by Name."
           value={searchTerm}
-          onChange={(e: { target: { value: SetStateAction<string> } }) =>
-            setSearchTerm(e.target.value)
-          }
+          onChange={(val: string) => setSearchTerm(val)}
           leftIcon={<Search color="#667185" />}
           rightIcon={<SqrCode />}
         />

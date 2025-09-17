@@ -28,7 +28,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   collapsible = true,
   showIcon,
 }) => {
-  const {  setCustomer,  } = useOrderStore();
+  const { setCustomer, } = useOrderStore();
 
   // --- collapsing UI (if you kept it)
   const [isExpanded, setIsExpanded] = useState(true);
@@ -142,10 +142,10 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     });
   };
 
-  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchTerm(e.target.value);
-    setSelectedCustomer(null); // Reset selected customer when searching
-  };
+  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  //   setSearchTerm(e.target.value);
+  //   setSelectedCustomer(null); // Reset selected customer when searching
+  // };
 
   const handleSelectCustomer = (c: CustomerData) => {
     setSelectedCustomer(c);
@@ -182,9 +182,19 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                   </Text>
 
                   <div className="flex items-center gap-2">
-                    <FormInput
+                    {/* <FormInput
                       value={searchTerm}
                       onChange={handleSearchChange}
+                      placeholder="Enter Customer Name"
+                      paddingY={"0.7rem"}
+                      className="w-full "
+                    /> */}
+                    <FormInput
+                      value={searchTerm}
+                      onChange={(val: string) => {
+                        setSearchTerm(val);
+                        setSelectedCustomer(null);
+                      }}
                       placeholder="Enter Customer Name"
                       paddingY={"0.7rem"}
                       className="w-full "
@@ -246,25 +256,27 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                     value={newCustomer.customer_name}
                     placeholder="Enter customer name"
                     paddingY="0.7rem"
-                    onChange={(e: { target: { value: any } }) =>
+                    onChange={(val: string) =>
                       setNewCustomer({
                         ...newCustomer,
-                        customer_name: e.target.value,
+                        customer_name: val,
                       })
                     }
                   />
+
                   <FormInput
                     label="Email"
                     value={newCustomer.customer_email}
                     placeholder="Enter customer email"
                     paddingY="0.7rem"
-                    onChange={(e: { target: { value: any } }) =>
+                    onChange={(val: string) =>
                       setNewCustomer({
                         ...newCustomer,
-                        customer_email: e.target.value,
+                        customer_email: val,
                       })
                     }
                   />
+
                 </div>
                 <div className="grid grid-cols-2 gap-4">
                   <FormInput
@@ -286,10 +298,10 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                     value={newCustomer.customer_address}
                     placeholder="Enter customer address"
                     paddingY="0.7rem"
-                    onChange={(e: { target: { value: any } }) =>
+                    onChange={(val: string) =>
                       setNewCustomer({
                         ...newCustomer,
-                        customer_address: e.target.value,
+                        customer_address: val,
                       })
                     }
                   />

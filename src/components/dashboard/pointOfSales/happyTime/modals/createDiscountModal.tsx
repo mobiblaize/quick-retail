@@ -1,6 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
-import { SetStateAction, useMemo, useState } from "react";
+import {  useMemo, useState } from "react";
 import {
   useCreateDiscount,
   useFetchDiscountProduct,
@@ -106,9 +106,10 @@ const CreateDiscountModal = ({
               placeholder="Enter discount name"
               paddingY="6px"
               value={name}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setName(e.target.value)
-              }
+              // onChange={(e: { target: { value: SetStateAction<string> } }) =>
+              //   setName(e.target.value)
+              // }
+              onChange={(val: string) => setName(val)}
             />
 
             <FormInput
@@ -117,9 +118,10 @@ const CreateDiscountModal = ({
               placeholder="Enter discount code"
               paddingY="6px"
               value={code}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setCode(e.target.value)
-              }
+              // onChange={(e: { target: { value: SetStateAction<string> } }) =>
+              //   setCode(e.target.value)
+              // }
+              onChange={(val: string) => setCode(val)}
             />
 
             <FormInput
@@ -127,9 +129,10 @@ const CreateDiscountModal = ({
               label="Date From"
               paddingY="6px"
               value={from}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setFrom(e.target.value)
-              }
+              // onChange={(e: { target: { value: SetStateAction<string> } }) =>
+              //   setFrom(e.target.value)
+              // }
+              onChange={(val: string) => setFrom(val)}
             />
 
             <FormInput
@@ -137,9 +140,10 @@ const CreateDiscountModal = ({
               label="Date To"
               paddingY="6px"
               value={to}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setTo(e.target.value)
-              }
+              // onChange={(e: { target: { value: SetStateAction<string> } }) =>
+              //   setTo(e.target.value)
+              // }
+              onChange={(val: string) => setTo(val)}
             />
             <div className="col-span-2">
               <Dropdown
@@ -157,9 +161,10 @@ const CreateDiscountModal = ({
                 label="Redemption Count"
                 paddingY="6px"
                 value={redemptionCount}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setRedemptionCount(e.target.value)
-                }
+                // onChange={(e: { target: { value: SetStateAction<string> } }) =>
+                //   setRedemptionCount(e.target.value)
+                // }
+                onChange={(val: string) => setRedemptionCount(val)}
               />
             </div>
 
@@ -195,8 +200,7 @@ const CreateDiscountModal = ({
                   placeholder="%"
                   paddingY="6px"
                   value={percentage}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    const val = e.target.value;
+                  onChange={(val: string) => {
                     if (
                       !isNaN(Number(val)) &&
                       Number(val) >= 0 &&

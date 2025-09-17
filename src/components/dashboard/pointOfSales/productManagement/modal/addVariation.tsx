@@ -12,7 +12,7 @@ interface ResolveProps {
 
 const AddVariation = ({ opened, onClose }: ResolveProps) => {
   const [categoryName, setCategoryName] = useState("");
-  const { mutate, isPending  } = useCreateCategory();
+  const { mutate, isPending } = useCreateCategory();
 
   const handleSave = () => {
     if (!categoryName.trim()) {
@@ -71,9 +71,7 @@ const AddVariation = ({ opened, onClose }: ResolveProps) => {
             placeholder="enter color"
             paddingY={6}
             value={categoryName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setCategoryName(e.target.value)
-            }
+            onChange={(val: string) => setCategoryName(val)}
           />
 
           <FormInput
@@ -104,7 +102,7 @@ const AddVariation = ({ opened, onClose }: ResolveProps) => {
           <Button
             variant="filled-primary"
             onClick={handleSave}
-            loading={isPending }
+            loading={isPending}
             style={{
               color: "white",
               borderRadius: "0.4rem",

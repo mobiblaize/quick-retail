@@ -101,10 +101,10 @@ export default function InventoryForm() {
           type="text"
           label="Total Stock Quantity"
           placeholder="Enter stock quantity"
-          paddingY={"0.3rem"}
+          paddingY="0.3rem"
           value={formData.quantity}
-          onChange={(e: any) =>
-            setFormData({ ...formData, quantity: e.target.value })
+          onChange={(val: string) =>
+            setFormData({ ...formData, quantity: val })
           }
         />
 
