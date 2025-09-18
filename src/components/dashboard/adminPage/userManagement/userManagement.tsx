@@ -1,6 +1,6 @@
-import { useState, useMemo } from "react";
+import { useState } from "react";
 import { Group, Text, UnstyledButton, Loader } from "@mantine/core";
-import { useSearchParams } from "react-router";
+// import { useSearchParams } from "react-router";
 import UserManagementTable, { UserRowData } from "./userManagementTable";
 import RoleGrid from "./roleGrid";
 import UserAnalyticsOverview from "./userAnalyticsOverview";
@@ -15,7 +15,7 @@ type Props = {
 };
 
 const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
-  const [searchParams, setSearchParams] = useSearchParams();
+  // const [searchParams, setSearchParams] = useSearchParams();
 
   // --- State ---
   const [searchTerm, setSearchTerm] = useState("");
@@ -49,26 +49,32 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
       paginate: "true",
     };
 
-    setSearchParams(queryObj);
+    setSearchTerm(queryObj.role || queryObj.status || queryObj.location || "");
   };
 
-  // --- Build query params for API call ---
-  const queryParams = useMemo(() => {
-    const entries = Object.fromEntries(searchParams.entries());
-    return {
-      ...entries,
-      search: searchTerm,
-      sort_by: activeSort,
-      page: currentPage,
-      per_page: perPage,
-      paginate: "true",
-    };
-  }, [searchParams, searchTerm, activeSort, currentPage, perPage]);
+  const mapFiltersToPayload = (filters: FilterValues) => ({
+    search: filters.search ?? "",
+    sort_by: filters.sortBy ?? "",
+    per_page: perPage.toString(),
+    paginate: true,
+    location_name: filters.location ?? "",
+    category_name: filters.category ?? "", 
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+    status: filters.status ?? "",
+    page: currentPage.toString(),
+    role: filters.role ?? ""
+  });
 
-  // --- API Call ---
-  const { data, isLoading } = useFetchUsers(queryParams);
+  const payload = {
+    ...(filters ? mapFiltersToPayload(filters) : {}),
+    page: currentPage,
+    per_page: perPage,
+    search: searchTerm,
+    sort_by: activeSort,
+  };
 
-  // --- Extract Data ---
+  const { data, isLoading } = useFetchUsers(payload);
   const users = data?.data?.users?.data || [];
   const paginationData = data?.data?.users
     ? {
@@ -78,6 +84,7 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
         total: data.data.users.total,
       }
     : undefined;
+
 
   return (
     <div className="w-full bg-white p-8">

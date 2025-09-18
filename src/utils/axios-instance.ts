@@ -72,4 +72,4 @@ const handleError = (error: any) => {
 axiosInstance.interceptors.request.use(attachToken, Promise.reject);
 axiosInstance.interceptors.response.use((res: any) => res, handleError);
 
-export { axiosInstance };
+export { axiosInstance};

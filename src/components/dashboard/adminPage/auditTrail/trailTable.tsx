@@ -18,6 +18,7 @@ interface TrailTableProps {
   filters?: FilterValues;
 }
 
+
 export default function TrailTable({
   logs,
   isLoading,
@@ -32,24 +33,33 @@ export default function TrailTable({
 }: // error,
 TrailTableProps) {
   const navigate = useNavigate();
-  const formatTime = (dateStr: string) =>
-    dateStr
-      ? new Intl.DateTimeFormat("en-US", {
-          dateStyle: "long",
-          timeStyle: "short",
-        }).format(new Date(dateStr))
-      : "";
+  // const formatTime = (dateStr: string) =>
+  //   dateStr
+  //     ? new Intl.DateTimeFormat("en-US", {
+  //         dateStyle: "long",
+  //         timeStyle: "short",
+  //       }).format(new Date(dateStr))
+  //     : "";
 
   const columns = [
     {
-      key: "timestamp",
-      header: "Timestamp",
-      render: (row: any) => (
-        <Text size="sm" style={{ color: "#475569" }}>
-          {formatTime(row.created_at)}
-        </Text>
-      ),
-    },
+  key: "timestamp",
+  header: "Timestamp",
+  render: (row: any) => (
+    <Text size="sm" style={{ color: "#475569" }}>
+      {new Date(row.created_at).toLocaleString("en-US", {
+        year: "numeric",
+        month: "short",
+        day: "2-digit",
+        hour: "2-digit",
+        minute: "2-digit",
+        second: "2-digit",
+        hour12: true,   // or false for 24-hour
+      })}
+    </Text>
+  ),
+}
+,
     {
       key: "user",
       header: "User Details",
@@ -129,8 +139,8 @@ TrailTableProps) {
 
   return (
     <GenericTable
-      enableSearch
-      enableSort
+      enableSearch = {true}
+      enableSort = {true}
       data={logs}
       isLoading={isLoading}
       paginationData={paginationData}
@@ -143,7 +153,7 @@ TrailTableProps) {
       activeSort={activeSort}
       onSortChange={setSort}
       onFilterChange={onFilterChange}
-      showFilter
+      showFilter = {true}
       tableType="audit"
       searchPlaceholder="Search trails"
       filters={filters}
