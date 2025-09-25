@@ -20,54 +20,48 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
   // --- State ---
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
-  const [filters, setFilters] =useState<FilterValues>({} as FilterValues);
+  const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
+  const [dateRange] = useState<{ startDate: string; endDate: string }>({
+    startDate: "",
+    endDate: "",
+  });
 
   // --- Handlers ---
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
-  };
 
-  const handleSortChange = (value: string) => {
-    setActiveSort(value);
-    setCurrentPage(1);
-  };
+  const handleFilterChange = (filters: FilterValues) => setFilters(filters);
 
-  const handleFilterChange = (newFilters: FilterValues) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-
-    // Update URL query params like AuditTrailPage
-    const queryObj: Record<string, string> = {
-      ...(newFilters.role && { role: newFilters.role }),
-      ...(newFilters.status && { status: newFilters.status }),
-      ...(newFilters.location && { location: newFilters.location }),
-      ...(newFilters.startDate && { start_date: newFilters.startDate }),
-      ...(newFilters.endDate && { end_date: newFilters.endDate }),
-      paginate: "true",
-    };
-
-    setSearchTerm(queryObj.role || queryObj.status || queryObj.location || "");
+  // Update URL query params like AuditTrailPage
+  const mapOrderStatus = (status: string | undefined) => {
+    if (!status || status.toLowerCase() === "all") return "";
+    if (status.toLowerCase() === "active") return "active";
+    if (status.toLowerCase() === "inactive") return "inactive";
+    if (status.toLowerCase() === "expired") return "expired";
+    return status.toLowerCase();
   };
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
     search: filters.search ?? "",
     sort_by: filters.sortBy ?? "",
-    per_page: perPage.toString(),
+    per_page: "",
     paginate: true,
     location_name: filters.location ?? "",
-    category_name: filters.category ?? "", 
+    category_name: filters.category ?? "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
-    status: filters.status ?? "",
+    status: mapOrderStatus(filters.userStatus),
     page: currentPage.toString(),
-    role: filters.role ?? ""
+    role: filters.role ?? "",
   });
+
+  const startDate = dateRange.startDate || filters?.startDate || "";
+  const endDate = dateRange.endDate || filters?.endDate || "";
 
   const payload = {
     ...(filters ? mapFiltersToPayload(filters) : {}),
+    ...(startDate ? { start_date: startDate } : {}),
+    ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
@@ -85,7 +79,6 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
       }
     : undefined;
 
-
   return (
     <div className="w-full bg-white p-8">
       {isLoading && (
@@ -95,15 +88,26 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
       )}
 
       {/* Tabs */}
-      <Group gap="sm" pb="md" mb="lg" style={{ borderBottom: "1px solid #E5E7EB" }}>
+      <Group
+        gap="sm"
+        pb="md"
+        mb="lg"
+        style={{ borderBottom: "1px solid #E5E7EB" }}
+      >
         <UnstyledButton
           onClick={() => onTabChange("userManage")}
           style={(theme) => ({
             padding: "6px 16px",
             borderRadius: theme.radius.md,
             fontWeight: 500,
-            backgroundColor: activeTab === "userManage" ? theme.colors.orange[0] : "transparent",
-            color: activeTab === "userManage" ? theme.colors.orange[9] : theme.colors.gray[7],
+            backgroundColor:
+              activeTab === "userManage"
+                ? theme.colors.orange[0]
+                : "transparent",
+            color:
+              activeTab === "userManage"
+                ? theme.colors.orange[9]
+                : theme.colors.gray[7],
             transition: "color 150ms ease, background-color 150ms ease",
             "&:hover": { color: theme.colors.orange[9] },
           })}
@@ -117,8 +121,12 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
             padding: "6px 16px",
             borderRadius: theme.radius.md,
             fontWeight: 500,
-            backgroundColor: activeTab === "roleGrid" ? theme.colors.orange[0] : "transparent",
-            color: activeTab === "roleGrid" ? theme.colors.orange[9] : theme.colors.gray[7],
+            backgroundColor:
+              activeTab === "roleGrid" ? theme.colors.orange[0] : "transparent",
+            color:
+              activeTab === "roleGrid"
+                ? theme.colors.orange[9]
+                : theme.colors.gray[7],
             transition: "color 150ms ease, background-color 150ms ease",
             "&:hover": { color: theme.colors.orange[9] },
           })}
@@ -128,24 +136,33 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
       </Group>
 
       {activeTab === "userManage" && (
-  <>
-    <UserAnalyticsOverview />
-    <UserManagementTable
-      users={users}
-      isLoading={isLoading}
-      paginationData={paginationData}
-      onPageChange={setCurrentPage}
-      searchTerm={searchTerm}
-      setSearchTerm={handleSearchChange}
-      activeSort={activeSort}
-      setSort={handleSortChange}
-      onFilterChange={handleFilterChange}
-      filters={filters}
-    />
-  </>
-)}
-{activeTab === "roleGrid" && <RoleGrid />}
-</div>  );
+        <>
+          <UserAnalyticsOverview />
+          <UserManagementTable
+            users={users}
+            isLoading={isLoading}
+            paginationData={paginationData}
+            onPageChange={setCurrentPage}
+            searchTerm={searchTerm}
+            setSearchTerm={(val: string) => {
+              setSearchTerm((prev) => {
+                if (prev !== val) setCurrentPage(1);
+                return val;
+              });
+            }}
+            activeSort={activeSort}
+            setSort={(sortBy) => {
+              setActiveSort(sortBy);
+              setCurrentPage(1);
+            }}
+            onFilterChange={handleFilterChange}
+            filters={filters}
+          />
+        </>
+      )}
+      {activeTab === "roleGrid" && <RoleGrid />}
+    </div>
+  );
 };
 
 export default UserManagementComp;
