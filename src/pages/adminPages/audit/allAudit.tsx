@@ -8,7 +8,6 @@ import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
-import { useFetchAllDiscount } from "../../../hooks/backendApis/pos/discount";
 
 const DiscountTableSkeleton = () => (
   <section className="bg-white rounded-lg shadow-sm p-4">

@@ -1,5 +1,5 @@
 import { useGetData } from "../../useApis";
-import { defaultDiscountPayload, defaultPayload2 } from "../../../types";
+import { defaultPayload2 } from "../../../types";
 
 
 // export const useFetchAuditTrails = () => {
