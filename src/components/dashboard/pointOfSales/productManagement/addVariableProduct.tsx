@@ -366,8 +366,8 @@ const AddVariableForm = () => {
             placeholder="Enter product name"
             paddingY={"0.7rem"}
             value={form_data.product_name}
-            onChange={(e: any) =>
-              updateForm({ ...form_data, product_name: e.target.value })
+            onChange={(val: string) =>
+              updateForm({ ...form_data, product_name: val })
             }
           />
 
@@ -377,8 +377,8 @@ const AddVariableForm = () => {
             placeholder="Enter SKU"
             paddingY={"0.7rem"}
             value={form_data.sku}
-            onChange={(e: any) =>
-              updateForm({ ...form_data, sku: e.target.value })
+            onChange={(val: string) =>
+              updateForm({ ...form_data, sku: val })
             }
           />
 
@@ -478,8 +478,8 @@ const AddVariableForm = () => {
             placeholder="Enter stock quantity"
             paddingY={"0.7rem"}
             value={form_data.quantity}
-            onChange={(e: any) =>
-              updateForm({ ...form_data, quantity: e.target.value })
+            onChange={(val: string) =>
+              updateForm({ ...form_data, quantity: val })
             }
           />
 
@@ -702,8 +702,8 @@ const AddVariableForm = () => {
             paddingY={"0.7rem"}
             placeholder="Enter short product description"
             value={form_data.short_description}
-            onChange={(e: any) =>
-              updateForm({ ...form_data, short_description: e.target.value })
+            onChange={(val: string) =>
+              updateForm({ ...form_data, short_description: val })
             }
           />
 

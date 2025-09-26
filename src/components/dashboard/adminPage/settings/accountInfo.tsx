@@ -85,7 +85,7 @@ export default function ProfileSection({ profile }: ProfileSectionProps) {
               color="orange"
               variant="filled"
               radius="md"
-              size="sm"
+              size="md"
               mb="md"
               style={{ fontFamily: "DM Sans, sans-serif" }}
               fw={500}

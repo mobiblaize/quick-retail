@@ -124,6 +124,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({ locationId }) => {
             variant="light"
             radius="lg"
             size="md"
+            className='!text-lg'
             style={{ textTransform: "none" }}
           >
             {neat}

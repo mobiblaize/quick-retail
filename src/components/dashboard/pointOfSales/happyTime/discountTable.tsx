@@ -156,8 +156,9 @@ DiscountTableProps) => {
             variant="light"
             radius="lg"
             size="md"
+            className='!font-sans !text-sm '
             // hard override in case any global css uppercases text
-            style={{ textTransform: "none", letterSpacing: 0, fontWeight: 500 }}
+            style={{ textTransform: "none", letterSpacing: 0, fontWeight: 500, fontFamily: "DM Sans, sans-serif" }}
           >
             {neat}
           </Badge>

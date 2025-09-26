@@ -1,4 +1,4 @@
-import { Avatar, Text } from "@mantine/core";
+import { Alert, Avatar, Center, Loader, Text } from "@mantine/core";
 import { PaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/productIMG.png"; // fallback
 import { useLocation } from "react-router";
@@ -10,9 +10,33 @@ const ViewTransactionReceipt = () => {
   const { data: saleData, isLoading, isError } = useFetchSingleSale(orderId);
 
 
-  if (!orderId) return <div>Preparing receipt...</div>;
-if (isLoading) return <div>Loading receipt...</div>;
-if (isError || !saleData?.data) return <div>Failed to load receipt data.</div>;
+  if (!orderId)
+    return (
+      <Center>
+        <Text c="gray.6" size="sm" fw={500}>
+          Preparing receipt...
+        </Text>
+      </Center>
+    );
+  
+  if (isLoading)
+    return (
+      <Center>
+        <Loader size="sm" color="orange" />
+        <Text c="gray.6" size="sm" fw={500} ml="sm">
+          Loading receipt...
+        </Text>
+      </Center>
+    );
+  
+  if (isError || !saleData?.data)
+    return (
+      <Center>
+        <Alert color="red" radius="md" variant="light">
+          Failed to load receipt data.
+        </Alert>
+      </Center>
+    );
 
 
   const order = saleData.data;

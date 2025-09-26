@@ -148,6 +148,7 @@ const ReturnsTable = ({
         return (
           <div
             className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bgColor} ${textColor}`}
+            style={{ fontFamily: "DM Sans, sans-serif" }}
           >
             {Dot}
             <span className="ml-2">{status}</span>

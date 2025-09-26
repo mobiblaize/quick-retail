@@ -422,9 +422,7 @@ const LogOrder = () => {
               placeholder="Enter random notes for return"
               // paddingY={7}
               value={notes}
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-                setNotes(e.target.value)
-              }
+              onChange={(val: string) => setNotes(val)}
             />
 
             <div className="md:col-span-2">

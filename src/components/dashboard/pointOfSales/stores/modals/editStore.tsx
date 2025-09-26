@@ -1,6 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useEditStore } from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 import { formatDate } from "../../../../../utils/helpers";
@@ -120,9 +120,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
               type="text"
               paddingY="6px"
               value={name}
-              onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                setName(e.target.value)
-              }
+              onChange={(val: string) => setName(val)}
             />
           </div>
           <div>
@@ -133,9 +131,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={country}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setCountry(e.target.value)
-                }
+                onChange={(val: string) => setCountry(val)}
               />
             </div>
             <div>
@@ -146,9 +142,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={stateVal}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setStateVal(e.target.value)
-                }
+                onChange={(val: string) => setStateVal(val)}
               />
             </div>
             <div>
@@ -159,9 +153,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={lga}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setLga(e.target.value)
-                }
+                onChange={(val: string) => setLga(val)}
               />
             </div>
             <div className="col-span-1 sm:col-span-2">
@@ -172,9 +164,7 @@ const EditStore = ({ opened, onClose, store,   setStore }: AddNewStoreModalProps
                 type="text"
                 paddingY="6px"
                 value={address}
-                onChange={(e: { target: { value: SetStateAction<string> } }) =>
-                  setAddress(e.target.value)
-                }
+                onChange={(val: string) => setAddress(val)}
               />
             </div>
             {/* <div className="col-span-1 sm:col-span-2">

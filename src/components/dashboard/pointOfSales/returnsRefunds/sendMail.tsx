@@ -6,7 +6,7 @@ import {
   ForwardRefRenderFunction,
   useEffect,
 } from "react";
-import { Text } from "@mantine/core";
+import { Text, Textarea } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import FormInput from "../../../General/formInput";
 import { useSendMail } from "../../../../hooks/backendApis/pos/returns";
@@ -40,7 +40,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
   useEffect(() => {
     setOrderID(initialOrderID || "");
   }, [initialOrderID]);
-  
+
   useEffect(() => {
     setProductID(initialProductID || "");
   }, [initialProductID]);
@@ -49,7 +49,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
 
   const { mutate } = useSendMail();
 
-  
+
 
   const handleSave = () => {
     if (!from || !to || !orderID || !productID || !subject || !description) {
@@ -60,7 +60,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
       });
       return;
     }
-  
+
     const payload = new FormData();
     payload.append("from", from);
     payload.append("to", to);
@@ -68,11 +68,11 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
     payload.append("productID", productID);
     payload.append("subject", subject);
     payload.append("description", description);
-  
+
     attachments.forEach((file) => {
       payload.append("attachments", file); // Note: use "attachments" not "attachments[]"
     });
-  
+
     mutate(payload, {
       onSuccess: () => {
         notifications.show({
@@ -80,7 +80,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
           message: "Mail successfully sent.",
           color: "green",
         });
-  
+
         setFrom("");
         setTo("");
         setOrderID("");
@@ -98,13 +98,13 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
       },
     });
   };
-  
-  
+
+
   useImperativeHandle(ref, () => ({
     handleSave,
   }));
 
-  
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     if (e.target.files && e.target.files.length > 0) {
       const files = Array.from(e.target.files);
@@ -112,7 +112,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
     } else {
     }
   };
-  
+
   const handleTriggerFileInput = () => {
     fileInputRef.current?.click();
   };
@@ -126,10 +126,10 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
             From:
           </Text>
           <FormInput
-            placeholder="victoriallc@gmail.com"
+            placeholder="Enter email"
             className="flex-1"
             value={from}
-            onChange={(e: any) => setFrom(e.target.value)}
+            onChange={(val: string) => setFrom(val)}
           />
         </div>
         <div className="flex flex-col sm:flex-row sm:items-center sm:space-x-10 space-y-2 sm:space-y-0">
@@ -137,10 +137,10 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
             To:
           </Text>
           <FormInput
-            placeholder="gratefuljigs.com"
+            placeholder="Enter email"
             className="flex-1"
             value={to}
-            onChange={(e: any) => setTo(e.target.value)}
+            onChange={(val: string) => setTo(val)}
           />
         </div>
         <div className="flex flex-col sm:flex-row w-full sm:space-x-6 space-y-6 sm:space-y-0">
@@ -151,7 +151,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
             <FormInput
               className="flex-1"
               value={shortenTransactionId(orderID)}
-              onChange={(e: any) => setOrderID(e.target.value)}
+              onChange={(val: string) => setOrderID(val)}
               readOnly
             />
           </div>
@@ -162,7 +162,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
             <FormInput
               className="flex-1"
               value={shortenTransactionId(productID)}
-              onChange={(e: any) => setProductID(e.target.value)}
+              onChange={(val: string) => setProductID(val)}
               readOnly
             />
           </div>
@@ -175,7 +175,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
             placeholder="Reason for Declined Refund Request"
             className="flex-1"
             value={subject}
-            onChange={(e: any) => setSubject(e.target.value)}
+            onChange={(val: string) => setSubject(val)}
           />
         </div>
       </div>
@@ -184,9 +184,9 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
         <Text c="black" size="lg" fw={500}>
           Description
         </Text>
-        <textarea
+        <Textarea
           placeholder="Description of the issue or request"
-          className="flex-1 w-full mt-2 p-2 border rounded"
+          // className="flex-1 w-full mt-2 p-2 border rounded border-[#D0D5DD]"
           rows={4}
           value={description}
           onChange={(e) => setDescription(e.target.value)}
@@ -195,13 +195,13 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
         {attachments.length > 0 && (
           <div className="mt-4 grid grid-cols-2 sm:grid-cols-4 gap-4">
             {attachments.map((file, idx) => (
-             <img
-             key={idx}
-             src={URL.createObjectURL(file)}
-             alt={`attachment-${idx}`}
-             className="w-full max-h-[200px] object-contain rounded border"
-           />
-           
+              <img
+                key={idx}
+                src={URL.createObjectURL(file)}
+                alt={`attachment-${idx}`}
+                className="w-full max-h-[200px] object-contain rounded border"
+              />
+
             ))}
           </div>
         )}
@@ -213,7 +213,7 @@ const SendMail: ForwardRefRenderFunction<SendMailRef, SendMailProps> = (
             className="cursor-pointer underline flex"
             onClick={handleTriggerFileInput}
           >
-     <span className=" pr-3"> <AttachIcon size={20} color="black" /></span> 
+            <span className=" pr-3"> <AttachIcon size={20} color="black" /></span>
             Attach File
           </Text>
           <input

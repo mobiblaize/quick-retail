@@ -120,14 +120,16 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
             placeholder="Enter first name"
             paddingY={6}
             value={firstName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
+            onChange={(val: string) =>  setFirstName(val)}
           />
           <FormInput
             label="Last Name"
             placeholder="Enter last name"
             paddingY={6}
             value={lastName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
+            onChange={(val: string) =>  setLastName(val)}
           />
         </div>
 
@@ -136,7 +138,8 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           placeholder="Enter customer email"
           paddingY={6}
           value={email}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
+          onChange={(val: string) =>  setEmail(val)}
         />
         <FormInput
           label="Phone Number"
@@ -151,7 +154,8 @@ const EditCustomer = ({ opened, onClose, onCreated, customer }: ResolveProps) =>
           placeholder="Enter address"
           paddingY={6}
           value={address}
-          onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
+          onChange={(val: string) =>  setAddress(val)}
         />
       </div>
 

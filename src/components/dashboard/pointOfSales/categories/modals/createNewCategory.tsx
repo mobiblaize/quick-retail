@@ -11,9 +11,9 @@ interface ResolveProps {
   onCreated?: () => void;
 }
 
-const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
+const CreateNewCategory = ({ opened, onClose, onCreated }: ResolveProps) => {
   const [categoryName, setCategoryName] = useState("");
-  const { mutate, isPending  } = useCreateCategory();
+  const { mutate, isPending } = useCreateCategory();
 
   const handleSave = () => {
     if (!categoryName.trim()) {
@@ -24,7 +24,7 @@ const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
       });
       return;
     }
-  
+
     mutate(
       { name: categoryName },
       {
@@ -52,7 +52,7 @@ const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
       }
     );
   };
-  
+
   return (
     <>
       <Modal
@@ -77,9 +77,7 @@ const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
             placeholder="Enter Category Name"
             paddingY={6}
             value={categoryName}
-            onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
-              setCategoryName(e.target.value)
-            }
+            onChange={(val: string) => setCategoryName(val)}
           />
         </div>
         <div className="flex mt-7 gap-5">
@@ -102,7 +100,7 @@ const CreateNewCategory = ({ opened, onClose,  onCreated}: ResolveProps) => {
           <Button
             variant="filled-primary"
             onClick={handleSave}
-            loading={isPending }
+            loading={isPending}
             style={{
               color: "white",
               borderRadius: "0.4rem",

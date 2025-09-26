@@ -113,9 +113,10 @@ export default function UserManagementTable({
 
   return (
     <GenericTable
-      enableSearch
-      enableSort
-      showFilter
+      enableSearch ={true}
+      enableSort ={true}
+      showFilter={true}
+      tableType="inventory"
       data={users}
       isLoading={isLoading}
       paginationData={paginationData}

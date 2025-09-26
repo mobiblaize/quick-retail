@@ -95,7 +95,7 @@ const Decline = ({ opened, onClose, returnID }: DeclineProps) => {
           placeholder="Enter reason"
           paddingY="0.3rem"
           value={declineReason}
-          onChange={(e: any) => setDeclineReason(e.target.value)} // 👈 bind input
+          onChange={(val: string) => setDeclineReason(val)}
         />
       </div>
 

@@ -440,7 +440,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
               color={isActive ? "green" : "gray"}
               variant="light"
               radius="lg"
-              size="md"
+              size="lg"
               style={{ textTransform: "none" }}
             >
               {statusText}

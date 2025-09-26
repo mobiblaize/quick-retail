@@ -12,7 +12,7 @@ import {
 import { useState } from "react";
 import { IconUpload, IconTrash, IconCheck } from "@tabler/icons-react";
 import { useHelp } from "../../../../../hooks/backendApis/admin/help";
-// import { notifications } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 
 type Props = {
   opened: boolean;
@@ -80,30 +80,13 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
       file: base64File,
     };
 
-    //     sendHelp(payload, {
-    //         onSuccess: () => {
-    //           notifications.show({
-    //             title: "Success",
-    //             message: "Message sent successfully",
-    //             color: "green",
-    //           });
-
-    //           // clear and close
-    //           setEmail("");
-    //           setConcern("");
-    //           setMessage("");
-    //           setFile(null);
-    //           onClose();
-    //         },
-    //         onError: (err) => {
-    //           console.error("Support request failed", err);
-    //         },
-    //       });
-
-    //   };
-
     sendHelp(payload, {
       onSuccess: () => {
+        notifications.show({
+          title: "Success",
+          message: "Message sent successfully",
+          color: "green",
+        });
         // clear and close
         setEmail("");
         setConcern("");
@@ -112,6 +95,11 @@ export default function ContactSupportModal({ opened, onClose }: Props) {
         onClose();
       },
       onError: (err) => {
+        notifications.show({
+          title: "Error",
+          message: "Failed to send message. Please try again.",
+          color: "red",
+        });
         console.error("Support request failed", err);
       },
     });

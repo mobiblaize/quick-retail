@@ -237,7 +237,7 @@ const ReceiptPreview = ({ order }: ReceiptPreviewProps) => {
       <Box style={{ overflowX: "auto" }}>
         <Table striped highlightOnHover withColumnBorders>
           <Table.Thead>
-            <Table.Tr>
+            <Table.Tr style={{ fontFamily: "DM Sans, sans-serif" }}>
               <Table.Th><Text c="#000" fw={500}>Item</Text></Table.Th>
               <Table.Th ta="center"><Text c="#000" fw={500}>Qty</Text></Table.Th>
               <Table.Th ta="center"><Text c="#000" fw={500}>Unit Price</Text></Table.Th>

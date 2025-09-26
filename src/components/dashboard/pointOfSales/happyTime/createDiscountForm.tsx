@@ -92,7 +92,8 @@ const CreateDiscountForm = () => {
             placeholder="Enter discount name"
             paddingY={"0.7rem"}
             value={name}
-            onChange={(e: any) => setName(e.target.value)}
+            // onChange={(e: any) => setName(e.target.value)}
+            onChange={(val: string) =>  setName(val)}
           />
 
           <FormInput
@@ -101,7 +102,8 @@ const CreateDiscountForm = () => {
             placeholder="Enter user limit"
             paddingY={"0.7rem"}
             value={redemptionCount}
-            onChange={(e: any) => setRedemptionCount(e.target.value)}
+            // onChange={(e: any) => setRedemptionCount(e.target.value)}
+            onChange={(val: string) =>  setRedemptionCount(val)}
           />
 
           <FormInput
@@ -110,7 +112,8 @@ const CreateDiscountForm = () => {
             paddingY={"0.7rem"}
             placeholder="Select start date"
             value={from}
-            onChange={(e: any) => setFrom(e.target.value)}
+            // onChange={(e: any) => setFrom(e.target.value)}
+            onChange={(val: string) =>  setFrom(val)}
           />
 
           <FormInput
@@ -119,7 +122,8 @@ const CreateDiscountForm = () => {
             paddingY={"0.7rem"}
             placeholder="Select end date"
             value={to}
-            onChange={(e: any) => setTo(e.target.value)}
+            // onChange={(e: any) => setTo(e.target.value)}
+            onChange={(val: string) =>  setTo(val)}
           />
 
           {/* <Dropdown
@@ -155,7 +159,8 @@ const CreateDiscountForm = () => {
               paddingY={"0.7rem"}
               leftPrefix="%"
               value={percentage}
-              onChange={(e: any) => setPercentage(e.target.value)}
+              // onChange={(e: any) => setPercentage(e.target.value)}
+              onChange={(val: string) =>  setPercentage(val)}
             />
           ) : (
             <FormInput
@@ -165,7 +170,8 @@ const CreateDiscountForm = () => {
               placeholder="Enter value"
               leftPrefix="₦"
               value={discountValue}
-              onChange={(e: any) => setDiscountValue(e.target.value)}
+              // onChange={(e: any) => setDiscountValue(e.target.value)}
+              onChange={(val: string) =>  setDiscountValue(val)}
             />
           )}
         </div>

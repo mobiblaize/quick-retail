@@ -206,7 +206,7 @@ const AddProductForm = () => {
         message: priceError,
         color: "red",
       });
-      return; 
+      return;
     }
 
     if (quantityError || reorder > quantity) {
@@ -215,7 +215,7 @@ const AddProductForm = () => {
         message: "Product quantity should be higher than order level",
         color: "red",
       });
-      return; 
+      return;
     }
 
     if (
@@ -277,8 +277,8 @@ const AddProductForm = () => {
               placeholder="Enter product name"
               paddingY={"0.7rem"}
               value={formData.product_name}
-              onChange={(e: any) =>
-                setFormData({ ...formData, product_name: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, product_name: val })
               }
             />
           </div>
@@ -293,8 +293,8 @@ const AddProductForm = () => {
               placeholder="Enter SKU"
               paddingY={"0.7rem"}
               value={formData.sku}
-              onChange={(e: any) =>
-                setFormData({ ...formData, sku: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, sku: val })
               }
             />
           </div>
@@ -343,20 +343,20 @@ const AddProductForm = () => {
               type="number"
               placeholder="₦"
               paddingY={"0.7rem"}
-              value={formData.cost_price}
-              onChange={(e: any) => {
-                const cost = Number(e.target.value);
-                setFormData({ ...formData, cost_price: e.target.value });
+              value={formData.cost_price} // keep as string
+              onChange={(val: string) => {
+                setFormData({ ...formData, cost_price: val });
 
-                if (formData.selling_price && cost > Number(formData.selling_price)) {
+                if (formData.selling_price && Number(val) > Number(formData.selling_price)) {
                   setPriceError("Selling price must be greater than cost price");
                 } else {
                   setPriceError(null);
                 }
               }}
             />
-           
+
           </div>
+
 
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
@@ -366,25 +366,28 @@ const AddProductForm = () => {
               type="number"
               placeholder="₦"
               paddingY={"0.7rem"}
-              value={formData.selling_price}
-              onChange={(e: any) => {
-                const selling = Number(e.target.value);
-                setFormData({ ...formData, selling_price: e.target.value });
+              value={formData.selling_price} // keep as string
+              onChange={(val: string) => {
+                setFormData({ ...formData, selling_price: val });
+                // setFormData({ ...formData, selling_price: selling });
 
-                if (formData.cost_price && Number(formData.cost_price) > selling) {
+                if (
+                  formData.cost_price &&
+                  Number(formData.cost_price) > Number(val)
+                ) {
                   setPriceError("Selling price must be greater than cost price");
                 } else {
                   setPriceError(null);
                 }
               }}
             />
-             {priceError && (
+
+            {priceError && (
               <Text size="sm" c="red" mt={5} fw="600">
                 {priceError}
               </Text>
             )}
           </div>
-
         </div>
       </div>
 
@@ -405,9 +408,9 @@ const AddProductForm = () => {
               placeholder="Enter Quantity"
               paddingY={"0.7rem"}
               value={formData.quantity}
-              onChange={(e: any) => {
-                const quantity = Number(e.target.value);
-                setFormData({ ...formData, quantity: e.target.value });
+              onChange={(val: string) => {
+                const quantity = Number(val);
+                setFormData({ ...formData, quantity: val });
 
                 if (formData.reorder_level && quantity < Number(formData.reorder_level)) {
                   setQuantityError("Product quantity should be higher than order level");
@@ -432,9 +435,9 @@ const AddProductForm = () => {
               placeholder="Enter Re-order Level"
               paddingY={"0.7rem"}
               value={formData.reorder_level}
-              onChange={(e: any) => {
-                const reorder = Number(e.target.value);
-                setFormData({ ...formData, reorder_level: e.target.value });
+              onChange={(val: string) => {
+                const reorder = Number(val);
+                setFormData({ ...formData, reorder_level: val });
 
                 if (formData.quantity && reorder > Number(formData.quantity)) {
                   setQuantityError("Product quantity should be higher than order level");
@@ -486,8 +489,8 @@ const AddProductForm = () => {
               placeholder="Enter short product description"
               paddingY={"0.7rem"}
               value={formData.short_description}
-              onChange={(e: any) =>
-                setFormData({ ...formData, short_description: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, short_description: val })
               }
             />
           </div>
@@ -505,9 +508,17 @@ const AddProductForm = () => {
               onChange={(e: any) =>
                 setFormData({ ...formData, long_description: e.target.value })
               }
+              autosize={false}
+              minRows={3}
+              styles={{
+                input: {
+                  display: "flex",
+                  alignItems: "center", // vertical center
+                },
+              }}
             />
           </div>
-        
+
           <div>
             <Text size="sm" fw={600} mb={8} mt={6}>
               Tags
@@ -577,8 +588,8 @@ const AddProductForm = () => {
               paddingY={"0.7rem"}
               optional
               value={formData.notes}
-              onChange={(e: any) =>
-                setFormData({ ...formData, notes: e.target.value })
+              onChange={(val: string) =>
+                setFormData({ ...formData, notes: val })
               }
             />
           </div>
