@@ -7,9 +7,8 @@ on:
 
 jobs:
   deploy:
-    # runs-on: ubuntu-latest
     runs-on: self-hosted
-
+    
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
@@ -35,7 +34,8 @@ jobs:
       - name: Create deployment package
         run: |
           # Create .htaccess for SPA routing
-          echo "RewriteEngine On
+          cat > ./dist/.htaccess << 'EOF'
+          RewriteEngine On
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^(.*)$ /index.html [QSA,L]
@@ -46,28 +46,49 @@ jobs:
           Header always set Referrer-Policy strict-origin-when-cross-origin
 
           # Cache static assets
-          <filesMatch \".(css|jpg|jpeg|png|gif|js|ico|svg|woff|woff2|ttf|eot)$\">
+          <filesMatch ".(css|jpg|jpeg|png|gif|js|ico|svg|woff|woff2|ttf|eot)$">
             ExpiresActive On
-            ExpiresDefault \"access plus 1 month\"
-            Header append Cache-Control \"public\"
-          </filesMatch>" > ./dist/.htaccess
+            ExpiresDefault "access plus 1 month"
+            Header append Cache-Control "public"
+          </filesMatch>
+          EOF
 
-      - name: Clean frontend files only (preserve API)
-        uses: appleboy/ssh-action@v1.0.3
-        with:
-          host: ${{ secrets.PLESK_SFTP_HOST }}
-          username: ${{ secrets.PLESK_SFTP_USER }}
-          password: ${{ secrets.PLESK_SFTP_PASSWORD }}
-          port: 22
-          script: |
-            cd httpdocs
-
-            # Remove only frontend files, preserve api folder
-            find . -maxdepth 1 -type f \( -name "*.html" -o -name "*.js" -o -name "*.css" -o -name "*.json" -o -name "*.ico" -o -name "*.png" -o -name "*.jpg" -o -name "*.svg" \) -delete 2>/dev/null || true
-            find . -maxdepth 1 -type d -name "assets" -exec rm -rf {} + 2>/dev/null || true
-            find . -maxdepth 1 -type d -name "static" -exec rm -rf {} + 2>/dev/null || true
-
-            echo "Frontend cleanup completed, API folder preserved"
+      - name: Backup and clean frontend files (preserve API)
+        run: |
+          lftp -u ${{ secrets.PLESK_SFTP_USER }},${{ secrets.PLESK_SFTP_PASSWORD }} sftp://${{ secrets.PLESK_SFTP_HOST }}:22 << 'EOF'
+          set sftp:auto-confirm yes
+          
+          # Create backup directory with timestamp
+          !mkdir -p ../backups 2>/dev/null || true
+          
+          # Backup current frontend (exclude api folder)
+          cd httpdocs
+          mirror --verbose --exclude api/ --exclude .well-known/ . ../backups/frontend-backup-$(date +%Y%m%d_%H%M%S)
+          
+          echo "Backup completed successfully"
+          
+          # Now clean frontend files only
+          echo "Starting frontend cleanup..."
+          
+          # Remove HTML files
+          mrm -f *.html 2>/dev/null || true
+          # Remove JS files
+          mrm -f *.js 2>/dev/null || true
+          # Remove CSS files
+          mrm -f *.css 2>/dev/null || true
+          # Remove JSON files (except those in api folder)
+          mrm -f *.json 2>/dev/null || true
+          # Remove image files
+          mrm -f *.ico *.png *.jpg *.svg 2>/dev/null || true
+          # Remove assets directory
+          rm -rf assets 2>/dev/null || true
+          # Remove static directory
+          rm -rf static 2>/dev/null || true
+          
+          echo "Frontend cleanup completed, API folder preserved"
+          
+          bye
+          EOF
 
       - name: Deploy to production
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
@@ -95,14 +116,15 @@ jobs:
         run: |
           echo "Waiting for deployment to be ready..."
           sleep 30
-
+          
           # Check if site is responding
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quick-retail.com)
-
+          
           if [ $HTTP_STATUS -eq 200 ]; then
-            echo "Deployment successful - Site is responding with HTTP $HTTP_STATUS"
-            echo "React app is now live alongside the API at https://quick-retail.com"
+            echo "✅ Deployment successful - Site is responding with HTTP $HTTP_STATUS"
+            echo "🚀 React app is now live alongside the API at https://quick-retail.com"
           else
-            echo "Deployment may have issues - Site responding with HTTP $HTTP_STATUS"
+            echo "⚠️ Deployment may have issues - Site responding with HTTP $HTTP_STATUS"
+            echo "💡 Check backup at ../backups/frontend-backup-* if rollback needed"
             exit 1
           fi
