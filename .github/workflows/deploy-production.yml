@@ -21,20 +21,15 @@ jobs:
           node-version: "20"
           cache: "npm"
 
-      - name: Install and build
+      - name: Install dependencies and build
         run: |
           npm ci --no-audit --no-fund
           NODE_ENV=production npm run build
           ls -la dist/
 
-      - name: Create deployment success file
+      - name: Create .htaccess file
         run: |
-          echo '{"status":"deployed","timestamp":"'$(date -u +%Y-%m-%dT%H:%M:%SZ)'","environment":"production","method":"sftp","commit":"'$GITHUB_SHA'"}' > deploy-success.json
-
-      - name: Create deployment package
-        run: |
-          # Create .htaccess for SPA routing
-          cat > ./dist/.htaccess << 'EOF'
+          cat > ./dist/.htaccess << 'HTACCESS'
           RewriteEngine On
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
@@ -51,46 +46,55 @@ jobs:
             ExpiresDefault "access plus 1 month"
             Header append Cache-Control "public"
           </filesMatch>
-          EOF
+          HTACCESS
 
-      - name: Backup and clean frontend files (preserve API)
+      - name: Create deployment metadata
         run: |
-          lftp -u ${{ secrets.PLESK_SFTP_USER }},${{ secrets.PLESK_SFTP_PASSWORD }} sftp://${{ secrets.PLESK_SFTP_HOST }}:22 << 'EOF'
+          echo "{\"status\":\"deployed\",\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"environment\":\"production\",\"method\":\"sftp\",\"commit\":\"$GITHUB_SHA\"}" > ./dist/deploy-success.json
+
+      - name: Backup current frontend
+        env:
+          SFTP_USER: ${{ secrets.PLESK_SFTP_USER }}
+          SFTP_PASSWORD: ${{ secrets.PLESK_SFTP_PASSWORD }}
+          SFTP_HOST: ${{ secrets.PLESK_SFTP_HOST }}
+        run: |
+          TIMESTAMP=$(date +%Y%m%d_%H%M%S)
+          
+          lftp -c "
           set sftp:auto-confirm yes
+          open sftp://$SFTP_USER:$SFTP_PASSWORD@$SFTP_HOST:22
           
-          # Create backup directory with timestamp
-          !mkdir -p ../backups 2>/dev/null || true
-          
-          # Backup current frontend (exclude api folder)
+          mkdir -p ../backups 2>/dev/null || true
           cd httpdocs
-          mirror --verbose --exclude api/ --exclude .well-known/ . ../backups/frontend-backup-$(date +%Y%m%d_%H%M%S)
+          mirror --verbose --exclude api/ --exclude .well-known/ . ../backups/frontend-backup-$TIMESTAMP
           
-          echo "Backup completed successfully"
+          echo 'Backup completed: frontend-backup-$TIMESTAMP'
+          bye
+          "
+
+      - name: Clean old frontend files
+        env:
+          SFTP_USER: ${{ secrets.PLESK_SFTP_USER }}
+          SFTP_PASSWORD: ${{ secrets.PLESK_SFTP_PASSWORD }}
+          SFTP_HOST: ${{ secrets.PLESK_SFTP_HOST }}
+        run: |
+          lftp -c "
+          set sftp:auto-confirm yes
+          open sftp://$SFTP_USER:$SFTP_PASSWORD@$SFTP_HOST:22
           
-          # Now clean frontend files only
-          echo "Starting frontend cleanup..."
+          cd httpdocs
           
-          # Remove HTML files
-          mrm -f *.html 2>/dev/null || true
-          # Remove JS files
-          mrm -f *.js 2>/dev/null || true
-          # Remove CSS files
-          mrm -f *.css 2>/dev/null || true
-          # Remove JSON files (except those in api folder)
-          mrm -f *.json 2>/dev/null || true
-          # Remove image files
-          mrm -f *.ico *.png *.jpg *.svg 2>/dev/null || true
-          # Remove assets directory
+          echo 'Cleaning frontend files (preserving api folder)...'
+          
+          cls -1 | grep -E '\.(html|js|css|json|ico|png|jpg|svg)$' | xargs -I {} rm -f {} 2>/dev/null || true
           rm -rf assets 2>/dev/null || true
-          # Remove static directory
           rm -rf static 2>/dev/null || true
           
-          echo "Frontend cleanup completed, API folder preserved"
-          
+          echo 'Frontend cleanup completed'
           bye
-          EOF
+          "
 
-      - name: Deploy to production
+      - name: Deploy new frontend
         uses: wlixcc/SFTP-Deploy-Action@v1.2.4
         with:
           username: ${{ secrets.PLESK_SFTP_USER }}
@@ -99,32 +103,32 @@ jobs:
           port: 22
           local_path: "./dist/*"
           remote_path: "./httpdocs/"
-          sftpArgs: "-o ConnectTimeout=5"
+          sftpArgs: "-o ConnectTimeout=10"
           sftp_only: true
 
-      - name: Upload deployment success file
-        uses: wlixcc/SFTP-Deploy-Action@v1.2.4
-        with:
-          username: ${{ secrets.PLESK_SFTP_USER }}
-          server: ${{ secrets.PLESK_SFTP_HOST }}
-          password: ${{ secrets.PLESK_SFTP_PASSWORD }}
-          local_path: "./deploy-success.json"
-          remote_path: "./httpdocs/deploy-success.json"
-          sftp_only: true
-
-      - name: Health Check
+      - name: Verify deployment
         run: |
-          echo "Waiting for deployment to be ready..."
+          echo "⏳ Waiting for deployment to stabilize..."
           sleep 30
           
-          # Check if site is responding
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quick-retail.com)
           
           if [ $HTTP_STATUS -eq 200 ]; then
-            echo "✅ Deployment successful - Site is responding with HTTP $HTTP_STATUS"
-            echo "🚀 React app is now live alongside the API at https://quick-retail.com"
+            echo "✅ Deployment successful!"
+            echo "🚀 Site is live at https://quick-retail.com"
+            echo "📊 HTTP Status: $HTTP_STATUS"
           else
-            echo "⚠️ Deployment may have issues - Site responding with HTTP $HTTP_STATUS"
-            echo "💡 Check backup at ../backups/frontend-backup-* if rollback needed"
+            echo "❌ Deployment verification failed"
+            echo "📊 HTTP Status: $HTTP_STATUS"
+            echo "💡 Rollback backup available at: backups/frontend-backup-*"
             exit 1
+          fi
+
+      - name: Notify deployment status
+        if: always()
+        run: |
+          if [ $? -eq 0 ]; then
+            echo "✨ Deployment completed successfully at $(date)"
+          else
+            echo "⚠️ Deployment encountered issues at $(date)"
           fi
