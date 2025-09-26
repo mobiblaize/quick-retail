@@ -28,7 +28,6 @@ const errorResetTimeout = 10000; // 10 seconds
 
 const handleError = (error: any) => {
   if (!error.response) {
-    console.log("Network error or server is unreachable.");
     return Promise.reject(new Error("Network error or server is unreachable."));
   }
 
@@ -72,4 +71,4 @@ const handleError = (error: any) => {
 axiosInstance.interceptors.request.use(attachToken, Promise.reject);
 axiosInstance.interceptors.response.use((res: any) => res, handleError);
 
-export { axiosInstance};
+export { axiosInstance };
