@@ -16,20 +16,8 @@ const SubscriptionHistoryPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
-  };
 
-  const handleSortChange = (value: string) => {
-    setActiveSort(value);
-    setCurrentPage(1);
-  };
-
-  const handleFilterChange = (newFilters: FilterValues) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-  };
+  const handleFilterChange = (filters: FilterValues) => setFilters(filters);
 
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
@@ -113,9 +101,17 @@ const SubscriptionHistoryPage = () => {
         paginationData={paginationData}
         filters={filters}
         searchTerm={searchTerm}
-        setSearchTerm={handleSearchChange}
+        setSearchTerm={(val: string) => {
+            setSearchTerm((prev) => {
+              if (prev !== val) setCurrentPage(1);
+              return val;
+            });
+          }}
         activeSort={activeSort}
-        setSort={handleSortChange}
+        setSort={(sortBy) => {
+            setActiveSort(sortBy);
+            setCurrentPage(1);
+          }}
       />
     </PageContainer>
   );

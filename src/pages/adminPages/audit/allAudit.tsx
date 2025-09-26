@@ -1,92 +1,141 @@
-import { Button, Menu, Text } from "@mantine/core";
+import { Button, Menu, Skeleton, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import TrailTable from "../../../components/dashboard/adminPage/auditTrail/trailTable";
 import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
-import { useState } from "react";
-// import { useSearchParams } from "react-router";
+import { useState, useEffect } from "react";
+import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
-// import * as Papa from "papaparse";
 import jsPDF from "jspdf";
 import autoTable from "jspdf-autotable";
 
+const DiscountTableSkeleton = () => (
+  <section className="bg-white rounded-lg shadow-sm p-4">
+    {/* top controls */}
+    <div className="flex flex-wrap gap-3 mb-4">
+      <Skeleton height={36} width={220} />
+      <Skeleton height={36} width={160} />
+      <Skeleton height={36} width={140} />
+      <Skeleton height={36} width={120} />
+      <Skeleton height={36} width={220} />
+    </div>
+    {/* table head */}
+    <div className="grid grid-cols-6 gap-4 border-b py-3">
+      {Array.from({ length: 6 }).map((_, i) => (
+        <Skeleton key={i} height={14} width="60%" />
+      ))}
+    </div>
+    {/* rows */}
+    {Array.from({ length: 8 }).map((_, r) => (
+      <div key={r} className="grid grid-cols-6 gap-4 py-3 border-b">
+        {Array.from({ length: 6 }).map((_, c) => (
+          <Skeleton key={c} height={16} width={c === 1 ? "80%" : "60%"} />
+        ))}
+      </div>
+    ))}
+    {/* pagination */}
+    <div className="flex items-center justify-between mt-4">
+      <Skeleton height={28} width={180} />
+      <div className="flex gap-2">
+        <Skeleton height={28} width={32} />
+        <Skeleton height={28} width={32} />
+        <Skeleton height={28} width={32} />
+      </div>
+    </div>
+  </section>
+);
+
 const AuditTrailPage = () => {
+
+  const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
   const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [perPage] = useState(10);
-  // const [searchParams, setSearchParams] = useSearchParams();
+  const [dateRange] = useState<{ startDate: string; endDate: string }>({ startDate: "", endDate: "" });
 
-  const handleSearchChange = (value: string) => {
-    setSearchTerm(value);
-    setCurrentPage(1);
-  };
+  useEffect(() => {
+    setSearchParams(prev => {
+      prev.set("page", currentPage.toString());
+      return prev;
+    });
+  }, [currentPage, setSearchParams]);
 
- const handleSortChange = (value: string) => {
-  // Remove literal 'a-z' or 'z-a' (case-insensitive)
-  const cleanedValue = value.replace(/a-z|z-a/gi, '');
-  setActiveSort(cleanedValue.trim());
-  setCurrentPage(1);
-};
+  useEffect(() => {
+    const page = searchParams.get("page");
+    if (page) {
+      setCurrentPage(parseInt(page));
+    }
+  }, [searchParams]);
 
 
-  const handleFilterChange = (newFilters: FilterValues) => {
-    setFilters(newFilters);
-    setCurrentPage(1);
-
-    const queryObj: Record<string, string> = {
-      ...(newFilters.startDate && { start_date: newFilters.startDate }),
-      ...(newFilters.endDate && { end_date: newFilters.endDate }),
-      ...(newFilters.role && { role: newFilters.role }),
-      ...(newFilters.module && { module: newFilters.module }),
-      paginate: "true",
-    };
-
-    setSearchTerm(queryObj.role || queryObj.status || queryObj.location || "");
+  const mapOrderStatus = (status: string | undefined) => {
+    if (!status || status.toLowerCase() === "all") return "";
+    if (status.toLowerCase() === "active") return "active";
+    if (status.toLowerCase() === "inactive") return "inactive";
+    if (status.toLowerCase() === "expired") return "expired";
+    return status.toLowerCase();
   };
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
-      search: filters.search ?? "",
-      sort_by: filters.sortBy ?? "",
-      per_page: perPage.toString(),
-      paginate: true,
-      location_name: filters.location ?? "",
-      category_name: filters.category ?? "", 
-      start_date: filters.startDate ?? "",
-      end_date: filters.endDate ?? "",
-      status: filters.status ?? "",
-      page: currentPage.toString(),
-      role: filters.role ?? "",
-      module: filters.module ?? ""
-    });
+    search: filters.search ?? "",
+    sort_by: filters.sortBy ?? "",
+    per_page :"",
+    paginate: true,
+    location_name: filters.location ?? "",
+    category_name: filters.category ?? "",
+    start_date: filters.startDate ?? "",
+    end_date: filters.endDate ?? "",
+    status: mapOrderStatus(filters.discountStatus),
+    page: currentPage.toString(),
+    role: filters.role ?? "",
+    module: filters.module ?? ""
+  });
 
-    const payload = {
+  const startDate = dateRange.startDate || filters?.startDate || "";
+  const endDate = dateRange.endDate || filters?.endDate || "";
+
+  const payload = {
     ...(filters ? mapFiltersToPayload(filters) : {}),
+    ...(startDate ? { start_date: startDate } : {}),
+    ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
     sort_by: activeSort,
   };
-  
-  // const queryParams = useMemo(() => {
-  //   const entries = Object.fromEntries(searchParams.entries());
-  //   return {
-  //     ...entries,
-  //     search: searchTerm,
-  //     sort_by: activeSort,
-  //     page: currentPage,
-  //     per_page: perPage,
-  //     paginate: "true",
-  //   };
-  // }, [searchParams, searchTerm, activeSort, currentPage, perPage]);
+    // @ts-ignore
 
-  const { data, isLoading, error } = useFetchAuditTrails(payload);
+  const { data = {}, isLoading = false, error} = useFetchAuditTrails(payload) || {};
+
+  const handleFilterChange = (filters: FilterValues) => setFilters(filters);
+  const paginationData = data?.data
+    ? {
+        current_page: data.data.current_page,
+        last_page: data.data.last_page,
+        per_page: data.data.per_page,
+        total: data.data.total,
+        from: data.data.from,
+        to: data.data.to,
+        next_page_url: data.data.next_page_url,
+        prev_page_url: data.data.prev_page_url,
+      }
+    : undefined;
+    console.log(data)
+
+  const handlePageChange = (page: number) => setCurrentPage(page);
+
+  // const { data, isLoading = false, error } = useFetchAuditTrails(payload);
 
   const handleExport = (format: string) => {
+    // @ts-ignore
     const logs = data?.data?.data || [];
     if (!logs.length) return;
 
+    
+
+    // @ts-ignore
     const tableData = logs.map((log: any) => ({
       timestamp: new Date(log.created_at).toLocaleString(),
       name: `${log.causer?.firstname || ""} ${log.causer?.lastname || ""}`,
@@ -98,8 +147,6 @@ const AuditTrailPage = () => {
     }));
 
     if (format === "csv") {
-      // const csv = Papa.unparse(tableData);
-      // const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const csv = tableData.map((row: any) => Object.values(row).join(",")).join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
@@ -182,20 +229,31 @@ const AuditTrailPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
+      {isLoading ? (
+        <DiscountTableSkeleton />
+      ) : (
       <TrailTable
         isLoading={isLoading}
-    
         error={error}
         logs={data?.data?.data || []}
         onFilterChange={handleFilterChange}
-        onPageChange={setCurrentPage}
+        onPageChange={handlePageChange}
         searchTerm={searchTerm}
-        setSearchTerm={handleSearchChange}
+        setSearchTerm={(val: string) => {
+            setSearchTerm((prev) => {
+              if (prev !== val) setCurrentPage(1);
+              return val;
+            });
+          }}
         activeSort={activeSort}
-        setSort={handleSortChange}
+        setSort={(sortBy) => {
+            setActiveSort(sortBy);
+            setCurrentPage(1);
+          }}
         filters={filters}
-        paginationData={data?.data || null}
+        paginationData={paginationData}
       />
+      )}
     </PageContainer>
   );
 };
