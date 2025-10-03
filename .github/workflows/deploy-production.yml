@@ -7,7 +7,7 @@ on:
 
 jobs:
   deploy:
-    runs-on: self-hosted
+    runs-on: ubuntu-latest
     
     steps:
       - name: Checkout code
@@ -34,12 +34,10 @@ jobs:
           RewriteCond %{REQUEST_FILENAME} !-f
           RewriteCond %{REQUEST_FILENAME} !-d
           RewriteRule ^(.*)$ /index.html [QSA,L]
-
           # Security headers
           Header always set X-Frame-Options DENY
           Header always set X-Content-Type-Options nosniff
           Header always set Referrer-Policy strict-origin-when-cross-origin
-
           # Cache static assets
           <filesMatch ".(css|jpg|jpeg|png|gif|js|ico|svg|woff|woff2|ttf|eot)$">
             ExpiresActive On
@@ -51,6 +49,9 @@ jobs:
       - name: Create deployment metadata
         run: |
           echo "{\"status\":\"deployed\",\"timestamp\":\"$(date -u +%Y-%m-%dT%H:%M:%SZ)\",\"environment\":\"production\",\"method\":\"sftp\",\"commit\":\"$GITHUB_SHA\"}" > ./dist/deploy-success.json
+
+      - name: Install lftp
+        run: sudo apt-get update && sudo apt-get install -y lftp
 
       - name: Backup current frontend
         env:
@@ -116,19 +117,19 @@ jobs:
 
       - name: Verify deployment
         run: |
-          echo "⏳ Waiting for deployment to stabilize..."
+          echo "Waiting for deployment to stabilize..."
           sleep 30
           
           HTTP_STATUS=$(curl -s -o /dev/null -w "%{http_code}" https://quick-retail.com)
           
           if [ $HTTP_STATUS -eq 200 ]; then
-            echo "✅ Deployment successful!"
-            echo "🚀 Site is live at https://quick-retail.com"
-            echo "📊 HTTP Status: $HTTP_STATUS"
+            echo "Deployment successful!"
+            echo "Site is live at https://quick-retail.com"
+            echo "HTTP Status: $HTTP_STATUS"
           else
-            echo "❌ Deployment verification failed"
-            echo "📊 HTTP Status: $HTTP_STATUS"
-            echo "💡 Rollback backup available at: backups/frontend-backup-*"
+            echo "Deployment verification failed"
+            echo "HTTP Status: $HTTP_STATUS"
+            echo "Rollback backup available at: backups/frontend-backup-*"
             exit 1
           fi
 
@@ -136,7 +137,7 @@ jobs:
         if: always()
         run: |
           if [ $? -eq 0 ]; then
-            echo "✨ Deployment completed successfully at $(date)"
+            echo "Deployment completed successfully at $(date)"
           else
-            echo "⚠️ Deployment encountered issues at $(date)"
+            echo "Deployment encountered issues at $(date)"
           fi
