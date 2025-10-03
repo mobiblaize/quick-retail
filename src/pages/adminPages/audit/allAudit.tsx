@@ -87,23 +87,20 @@ const AuditTrailPage = () => {
     category_name: filters.category ?? "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
-    status: mapOrderStatus(filters.discountStatus),
+    status: mapOrderStatus(filters.auditStatus),
     page: currentPage.toString(),
     role: filters.role ?? "",
     module: filters.module ?? ""
   });
 
-  const startDate = dateRange.startDate || filters?.startDate || "";
-  const endDate = dateRange.endDate || filters?.endDate || "";
 
-  const payload = {
-    ...(filters ? mapFiltersToPayload(filters) : {}),
-    ...(startDate ? { start_date: startDate } : {}),
-    ...(endDate ? { end_date: endDate } : {}),
+
+ const payload = {
+    ...mapFiltersToPayload(filters),
     page: currentPage,
     per_page: perPage,
-    search: searchTerm,
     sort_by: activeSort,
+    search: searchTerm,
   };
     // @ts-ignore
 
