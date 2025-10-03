@@ -4,10 +4,8 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchCurrentSub } from "../../../../hooks/backendApis/admin/profile";
 import { List, Text, ThemeIcon } from "@mantine/core";
 
-
-
 const defaultFeatures = [
-  "Point of sales management system",
+  "Point of sales management system", 
   "Finance management system",
   "2 admin seats",
   "Asset management system",
@@ -25,12 +23,12 @@ export default function SubscriptionComponent() {
   const amount = subscription.amount ?? 0;
   const status = subscription.status ?? "Inactive";
   const expires = subscription.expires ?? new Date().toISOString();
-  const features = subscription.features ?? defaultFeatures;
+  const features = status === "Active" ? (subscription.features ?? defaultFeatures) : [];
 
   const formattedAmount = `₦${Number(amount).toLocaleString()}`;
   const formattedExpiry = new Date(expires).toLocaleDateString("en-GB", {
     year: "numeric",
-    month: "long",
+    month: "long", 
     day: "numeric",
   });
 

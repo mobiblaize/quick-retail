@@ -26,6 +26,7 @@ export interface FilterValues {
   priceFrom?: string;
   priceTo?: string;
   paymentStatus?: string;
+  auditStatus?: string;
   productStatus?: string;
   reason?: Reason;
   type?: DiscountType;
@@ -110,6 +111,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     priceFrom: '',
     priceTo: '',
     paymentStatus: 'All',
+    auditStatus: "All",
     productStatus: 'All',
     type: '',
     discountStatus: 'All',
