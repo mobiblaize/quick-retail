@@ -17,7 +17,6 @@ import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
 import Select, { MultiValue } from "react-select";
 
-
 const AddProductForm = () => {
   const navigate = useNavigate();
   const { updateForm } = useStore();
@@ -29,7 +28,6 @@ const AddProductForm = () => {
   );
   const [priceError, setPriceError] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
-
 
   const tagOptions = [
     { value: "electronics", label: "Electronics" },
@@ -43,11 +41,12 @@ const AddProductForm = () => {
   ];
 
   // Handler to update tags in state
-  const handleTagChange = (selected: MultiValue<{ value: string; label: string }>) => {
+  const handleTagChange = (
+    selected: MultiValue<{ value: string; label: string }>
+  ) => {
     const values = selected.map((item: any) => item.value);
     setFormData({ ...formData, tags: values });
   };
-
 
   const { data: locationData } = useFetchAllLocations();
   const locations = Array.isArray(locationData?.data?.stores)
@@ -104,13 +103,12 @@ const AddProductForm = () => {
 
     setImages((prev) => [...prev, ...files]);
 
-    Promise.all(files.map(fileToBase64))
-      .then((base64Images) => {
-        setFormData((prev) => ({
-          ...prev,
-          image_path: [...prev.image_path, ...base64Images],
-        }));
-      })
+    Promise.all(files.map(fileToBase64)).then((base64Images) => {
+      setFormData((prev) => ({
+        ...prev,
+        image_path: [...prev.image_path, ...base64Images],
+      }));
+    });
   };
 
   const fileToBase64 = (file: File): Promise<string> => {
@@ -168,7 +166,6 @@ const AddProductForm = () => {
       window.scrollTo({ top: 0, behavior: "smooth" });
       return;
     }
-
 
     const payload = {
       product_name: formData.product_name,
@@ -256,13 +253,12 @@ const AddProductForm = () => {
         // });
       },
     });
-
   };
 
   return (
     <div>
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
+        <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
           BASIC INFORMATION
         </Title>
         <Divider mb="md" />
@@ -293,9 +289,7 @@ const AddProductForm = () => {
               placeholder="Enter SKU"
               paddingY={"0.7rem"}
               value={formData.sku}
-              onChange={(val: string) =>
-                setFormData({ ...formData, sku: val })
-              }
+              onChange={(val: string) => setFormData({ ...formData, sku: val })}
             />
           </div>
 
@@ -316,7 +310,6 @@ const AddProductForm = () => {
               required
             />
           </Box>
-
 
           {/* Sub-category */}
           <div>
@@ -347,16 +340,19 @@ const AddProductForm = () => {
               onChange={(val: string) => {
                 setFormData({ ...formData, cost_price: val });
 
-                if (formData.selling_price && Number(val) > Number(formData.selling_price)) {
-                  setPriceError("Selling price must be greater than cost price");
+                if (
+                  formData.selling_price &&
+                  Number(val) > Number(formData.selling_price)
+                ) {
+                  setPriceError(
+                    "Selling price must be greater than cost price"
+                  );
                 } else {
                   setPriceError(null);
                 }
               }}
             />
-
           </div>
-
 
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
@@ -375,7 +371,9 @@ const AddProductForm = () => {
                   formData.cost_price &&
                   Number(formData.cost_price) > Number(val)
                 ) {
-                  setPriceError("Selling price must be greater than cost price");
+                  setPriceError(
+                    "Selling price must be greater than cost price"
+                  );
                 } else {
                   setPriceError(null);
                 }
@@ -392,13 +390,12 @@ const AddProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
+        <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
           INVENTORY DETAILS
         </Title>
         <Divider mb="md" />
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-
           <div>
             <Text size="sm" style={{ fontWeight: 600, marginBottom: 16 }}>
               Quantity
@@ -412,8 +409,13 @@ const AddProductForm = () => {
                 const quantity = Number(val);
                 setFormData({ ...formData, quantity: val });
 
-                if (formData.reorder_level && quantity < Number(formData.reorder_level)) {
-                  setQuantityError("Product quantity should be higher than order level");
+                if (
+                  formData.reorder_level &&
+                  quantity < Number(formData.reorder_level)
+                ) {
+                  setQuantityError(
+                    "Product quantity should be higher than order level"
+                  );
                 } else {
                   setQuantityError(null);
                 }
@@ -440,7 +442,9 @@ const AddProductForm = () => {
                 setFormData({ ...formData, reorder_level: val });
 
                 if (formData.quantity && reorder > Number(formData.quantity)) {
-                  setQuantityError("Product quantity should be higher than order level");
+                  setQuantityError(
+                    "Product quantity should be higher than order level"
+                  );
                 } else {
                   setQuantityError(null);
                 }
@@ -474,7 +478,7 @@ const AddProductForm = () => {
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
+        <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
           ADDITIONAL INFORMATION
         </Title>
         <Divider mb="md" />
@@ -527,10 +531,12 @@ const AddProductForm = () => {
               options={tagOptions}
               isMulti
               placeholder="Enter tags"
-              value={tagOptions.filter((tag) => formData.tags.includes(tag.value))}
+              value={tagOptions.filter((tag) =>
+                formData.tags.includes(tag.value)
+              )}
               onChange={handleTagChange}
               styles={{
-                control: (provided) => ({
+                control: (provided: any) => ({
                   ...provided,
                   minHeight: "2.5rem",
                   borderWidth: "1px",
@@ -544,7 +550,7 @@ const AddProductForm = () => {
                   outline: "none",
                   fontFamily: "DM Sans, sans-serif",
                 }),
-                multiValue: (provided) => ({
+                multiValue: (provided: any) => ({
                   ...provided,
                   // backgroundColor: "#E7F5FF", // light blue
                   // color: "#1C7ED6",
@@ -552,23 +558,23 @@ const AddProductForm = () => {
                   padding: "2px 6px",
                   fontFamily: "DM Sans, sans-serif",
                 }),
-                multiValueLabel: (provided) => ({
+                multiValueLabel: (provided: any) => ({
                   ...provided,
                   // color: "#1C7ED6",
-                  fontFamily: "DM Sans, sans-serif"
+                  fontFamily: "DM Sans, sans-serif",
                 }),
-                multiValueRemove: (provided) => ({
+                multiValueRemove: (provided: any) => ({
                   ...provided,
                   // color: "#1C7ED6",
                   ":hover": { backgroundColor: "transparent", color: "red" },
                 }),
-                placeholder: (provided) => ({
+                placeholder: (provided: any) => ({
                   ...provided,
                   color: "#868E96",
                   fontFamily: "DM Sans, sans-serif",
                   marginTop: "0.7rem",
                 }),
-                menu: (provided) => ({
+                menu: (provided: any) => ({
                   ...provided,
                   borderRadius: 8,
                   zIndex: 9999,
@@ -624,7 +630,6 @@ const AddProductForm = () => {
                 ))}
               </div>
             )}
-
 
             {/* Upload Box */}
             <div
@@ -694,7 +699,6 @@ const AddProductForm = () => {
           Submit
         </Button>
       </div>
-
     </div>
   );
 };

@@ -2,14 +2,22 @@ import { Plus, Trash2, Upload, X } from "lucide-react";
 import { useState } from "react";
 import FormInput from "../../../General/formInput";
 // import FormSelect from "../../../General/select";
-import { TextInput, FileInput, ActionIcon, Group } from "@mantine/core"
+import { TextInput, FileInput, ActionIcon, Group } from "@mantine/core";
 import useStore, { initialFormState } from "./addProductStore";
 import {
   useFetchAllCategories,
   useFetchSubCatOfCat,
 } from "../../../../hooks/backendApis/pos/categories";
 import { useFetchAllLocations } from "../../../../hooks/backendApis/pos/products";
-import { Box, Button, Input, Table, Text, Textarea, Title } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Input,
+  Table,
+  Text,
+  Textarea,
+  Title,
+} from "@mantine/core";
 import Dropdown from "../../../General/dropdown";
 import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
@@ -51,7 +59,9 @@ const AddVariableForm = () => {
 
   const [loading, setLoading] = useState(false);
 
-  const [variantErrors, setVariantErrors] = useState<Record<number, { price?: string; quantity?: string }>>({});
+  const [variantErrors, setVariantErrors] = useState<
+    Record<number, { price?: string; quantity?: string }>
+  >({});
 
   const [formData, setFormData] = useState({
     ...initialFormState,
@@ -70,7 +80,9 @@ const AddVariableForm = () => {
   ];
 
   // Handler to update tags in state
-  const handleTagChange = (selected: MultiValue<{ value: string; label: string }>) => {
+  const handleTagChange = (
+    selected: MultiValue<{ value: string; label: string }>
+  ) => {
     const values = selected.map((item: any) => item.value);
     setFormData({ ...formData, tags: values });
   };
@@ -96,7 +108,8 @@ const AddVariableForm = () => {
     if (invalidVariation) {
       notifications.show({
         title: "Validation error",
-        message: "Selling price must be greater than cost price in all variations.",
+        message:
+          "Selling price must be greater than cost price in all variations.",
         color: "red",
       });
       return;
@@ -158,7 +171,11 @@ const AddVariableForm = () => {
 
     // check required fields
     if (!form_data.product_name) {
-      notifications.show({ title: "Validation error", message: "Please fill all required fields", color: "red" });
+      notifications.show({
+        title: "Validation error",
+        message: "Please fill all required fields",
+        color: "red",
+      });
       return;
     }
 
@@ -198,8 +215,6 @@ const AddVariableForm = () => {
     });
   };
 
-
-
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>(
     ""
   );
@@ -230,17 +245,17 @@ const AddVariableForm = () => {
   const categoryOptions =
     Array.isArray(categories) && categories.length > 0
       ? categories.map((cat: { name: string; id: number }) => ({
-        label: cat.name,
-        value: cat.id,
-      }))
+          label: cat.name,
+          value: cat.id,
+        }))
       : [];
 
   const subCategoryOptions =
     Array.isArray(subCategories) && subCategories.length > 0
       ? subCategories.map((cat: { name: string; id: number }) => ({
-        label: cat.name,
-        value: cat.id,
-      }))
+          label: cat.name,
+          value: cat.id,
+        }))
       : [];
 
   const { form_data, updateForm } = useStore();
@@ -255,8 +270,6 @@ const AddVariableForm = () => {
     });
     return;
   }
-
-
 
   const handleImageChange = (id: number, file: File | null) => {
     if (!file) return;
@@ -281,8 +294,6 @@ const AddVariableForm = () => {
 
     reader.readAsDataURL(file);
   };
-
-
 
   const handleAddVariant = () => {
     const newId = variants.length + 1;
@@ -310,7 +321,11 @@ const AddVariableForm = () => {
   //   );
   // };
 
-  const handleVariantChange = (id: number, field: keyof Variant, value: string) => {
+  const handleVariantChange = (
+    id: number,
+    field: keyof Variant,
+    value: string
+  ) => {
     setVariants((prev) =>
       prev.map((variant) =>
         variant.id === id ? { ...variant, [field]: value } : variant
@@ -319,7 +334,7 @@ const AddVariableForm = () => {
 
     setVariantErrors((prev) => {
       const current = prev[id] || {};
-      const variant = variants.find(v => v.id === id);
+      const variant = variants.find((v) => v.id === id);
 
       if (!variant) return prev;
 
@@ -327,8 +342,12 @@ const AddVariableForm = () => {
       let quantityError = current.quantity;
 
       if (field === "cost_price" || field === "selling_price") {
-        const cost = field === "cost_price" ? Number(value) : Number(variant.cost_price);
-        const selling = field === "selling_price" ? Number(value) : Number(variant.selling_price);
+        const cost =
+          field === "cost_price" ? Number(value) : Number(variant.cost_price);
+        const selling =
+          field === "selling_price"
+            ? Number(value)
+            : Number(variant.selling_price);
 
         if (!isNaN(cost) && !isNaN(selling) && selling <= cost) {
           priceError = "Selling price must be greater than cost price";
@@ -338,8 +357,12 @@ const AddVariableForm = () => {
       }
 
       if (field === "quantity" || field === "reorder_level") {
-        const qty = field === "quantity" ? Number(value) : Number(variant.quantity);
-        const reorder = field === "reorder_level" ? Number(value) : Number(variant.reorder_level);
+        const qty =
+          field === "quantity" ? Number(value) : Number(variant.quantity);
+        const reorder =
+          field === "reorder_level"
+            ? Number(value)
+            : Number(variant.reorder_level);
 
         if (!isNaN(qty) && !isNaN(reorder) && reorder > qty) {
           quantityError = "Reorder level cannot exceed quantity";
@@ -352,11 +375,10 @@ const AddVariableForm = () => {
     });
   };
 
-
   return (
     <div>
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200">
-        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
+        <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
           BASIC INFORMATION
         </Title>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -377,9 +399,7 @@ const AddVariableForm = () => {
             placeholder="Enter SKU"
             paddingY={"0.7rem"}
             value={form_data.sku}
-            onChange={(val: string) =>
-              updateForm({ ...form_data, sku: val })
-            }
+            onChange={(val: string) => updateForm({ ...form_data, sku: val })}
           />
 
           {/* <FormSelect
@@ -407,8 +427,6 @@ const AddVariableForm = () => {
             }
           /> */}
 
-
-
           {/* Category */}
           <Box>
             <Text size="sm" c="grey" fw={300} mb={3}>
@@ -433,10 +451,14 @@ const AddVariableForm = () => {
               onChange={(val) => {
                 const id = String(val);
                 setSelectedCategoryId(id);
-                updateForm({ ...form_data, category_id: id, sub_category_id: '' });
+                updateForm({
+                  ...form_data,
+                  category_id: id,
+                  sub_category_id: "",
+                });
               }}
-              />
-            </Box>
+            />
+          </Box>
 
           {/* Sub-category */}
           <div>
@@ -467,7 +489,7 @@ const AddVariableForm = () => {
       </div>
 
       <div className="p-6 bg-white rounded-lg shadow-md mt-[3em]">
-        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
+        <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
           INVENTORY DETAILS
         </Title>
 
@@ -501,8 +523,6 @@ const AddVariableForm = () => {
             />
           </div>
         </div>
-
-
 
         <Table.ScrollContainer minWidth="100%">
           <Table striped highlightOnHover withTableBorder>
@@ -554,15 +574,26 @@ const AddVariableForm = () => {
                     <Group gap="xs" style={{ minWidth: 120 }}>
                       {variant.image ? (
                         <Group gap="xs" style={{ flex: 1 }}>
-                          <Text size="xs" truncate style={{ maxWidth: 80 }} title={variant.image}>
-                            {variant.image.length > 10 ? `${variant.image.slice(0, 10)}...` : variant.image}
+                          <Text
+                            size="xs"
+                            truncate
+                            style={{ maxWidth: 80 }}
+                            title={variant.image}
+                          >
+                            {variant.image.length > 10
+                              ? `${variant.image.slice(0, 10)}...`
+                              : variant.image}
                           </Text>
                           <ActionIcon
                             size="sm"
                             color="red"
                             variant="subtle"
                             onClick={() =>
-                              setVariants((prev) => prev.map((v) => (v.id === variant.id ? { ...v, image: "" } : v)))
+                              setVariants((prev) =>
+                                prev.map((v) =>
+                                  v.id === variant.id ? { ...v, image: "" } : v
+                                )
+                              )
                             }
                           >
                             <X size={14} />
@@ -581,16 +612,23 @@ const AddVariableForm = () => {
                         //   }
                         // />
                         <>
-
                           <FileInput
                             accept="image/*"
-                            onChange={(file) => handleImageChange(variant.id, file)}
+                            onChange={(file) =>
+                              handleImageChange(variant.id, file)
+                            }
                             size="xl"
                             // placeholder="Click to upload"
                             rightSection={
                               <label
                                 htmlFor={`file-input-${variant.id}`} // link to hidden input
-                                style={{ display: "flex", alignItems: "center", height: "100%", cursor: "pointer", paddingRight: 20 }}
+                                style={{
+                                  display: "flex",
+                                  alignItems: "center",
+                                  height: "100%",
+                                  cursor: "pointer",
+                                  paddingRight: 20,
+                                }}
                               >
                                 <Upload size={34} color="orange" />
                               </label>
@@ -601,9 +639,13 @@ const AddVariableForm = () => {
                             id={`file-input-${variant.id}`} // hidden input
                             style={{ display: "none" }}
                             accept="image/*"
-                            onChange={(e) => handleImageChange(variant.id, e.target.files?.[0] || null)}
+                            onChange={(e) =>
+                              handleImageChange(
+                                variant.id,
+                                e.target.files?.[0] || null
+                              )
+                            }
                           />
-
                         </>
                       )}
                     </Group>
@@ -613,7 +655,9 @@ const AddVariableForm = () => {
                     <TextInput
                       placeholder="Enter size"
                       value={variant.size || ""}
-                      onChange={(e) => handleVariantChange(variant.id, "size", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(variant.id, "size", e.target.value)
+                      }
                       size="md"
                     />
                   </Table.Td>
@@ -622,7 +666,9 @@ const AddVariableForm = () => {
                     <TextInput
                       placeholder="Enter colour"
                       value={variant.color || ""}
-                      onChange={(e) => handleVariantChange(variant.id, "color", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(variant.id, "color", e.target.value)
+                      }
                       size="md"
                     />
                   </Table.Td>
@@ -631,9 +677,15 @@ const AddVariableForm = () => {
                     <TextInput
                       placeholder="Enter quantity"
                       value={variant.quantity || ""}
-                      onChange={(e) => handleVariantChange(variant.id, "quantity", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.id,
+                          "quantity",
+                          e.target.value
+                        )
+                      }
                       size="md"
-                    // error={variantErrors[variant.id]?.quantity}
+                      // error={variantErrors[variant.id]?.quantity}
                     />
                   </Table.Td>
 
@@ -641,7 +693,13 @@ const AddVariableForm = () => {
                     <TextInput
                       placeholder="Enter level"
                       value={variant.reorder_level || ""}
-                      onChange={(e) => handleVariantChange(variant.id, "reorder_level", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.id,
+                          "reorder_level",
+                          e.target.value
+                        )
+                      }
                       size="md"
                       error={variantErrors[variant.id]?.quantity}
                     />
@@ -651,7 +709,13 @@ const AddVariableForm = () => {
                     <TextInput
                       placeholder="₦"
                       value={variant.cost_price}
-                      onChange={(e) => handleVariantChange(variant.id, "cost_price", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.id,
+                          "cost_price",
+                          e.target.value
+                        )
+                      }
                       size="md"
                       error={variantErrors[variant.id]?.price}
                     />
@@ -661,7 +725,13 @@ const AddVariableForm = () => {
                     <TextInput
                       placeholder="₦"
                       value={variant.selling_price}
-                      onChange={(e) => handleVariantChange(variant.id, "selling_price", e.target.value)}
+                      onChange={(e) =>
+                        handleVariantChange(
+                          variant.id,
+                          "selling_price",
+                          e.target.value
+                        )
+                      }
                       size="md"
                       error={variantErrors[variant.id]?.price}
                     />
@@ -671,7 +741,11 @@ const AddVariableForm = () => {
                     <ActionIcon
                       color="red"
                       variant="subtle"
-                      onClick={() => setVariants((prev) => prev.filter((v) => v.id !== variant.id))}
+                      onClick={() =>
+                        setVariants((prev) =>
+                          prev.filter((v) => v.id !== variant.id)
+                        )
+                      }
                     >
                       <Trash2 size={16} />
                     </ActionIcon>
@@ -682,16 +756,20 @@ const AddVariableForm = () => {
           </Table>
 
           <Group justify="flex-start" mt="md">
-            <Button leftSection={<Plus size={16} />} variant="subtle" color="orange" onClick={handleAddVariant}>
+            <Button
+              leftSection={<Plus size={16} />}
+              variant="subtle"
+              color="orange"
+              onClick={handleAddVariant}
+            >
               Add Variant
             </Button>
           </Group>
         </Table.ScrollContainer>
-
       </div>
 
       <div className="bg-white p-6 rounded-lg shadow-md border border-gray-200 mt-[3em]">
-        <Title order={3} mb="sm" style={{ color: '#1F2937', fontWeight: 600 }}>
+        <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
           ADDITIONAL INFORMATION
         </Title>
 
@@ -753,10 +831,12 @@ const AddVariableForm = () => {
               options={tagOptions}
               isMulti
               placeholder="Enter tags"
-              value={tagOptions.filter((tag) => formData.tags.includes(tag.value))}
+              value={tagOptions.filter((tag) =>
+                formData.tags.includes(tag.value)
+              )}
               onChange={handleTagChange}
               styles={{
-                control: (provided) => ({
+                control: (provided: any) => ({
                   ...provided,
                   minHeight: "2.5rem",
                   borderWidth: "1px",
@@ -770,7 +850,7 @@ const AddVariableForm = () => {
                   outline: "none",
                   fontFamily: "DM Sans, sans-serif",
                 }),
-                multiValue: (provided) => ({
+                multiValue: (provided: any) => ({
                   ...provided,
                   // backgroundColor: "#E7F5FF", // light blue
                   // color: "#1C7ED6",
@@ -778,23 +858,23 @@ const AddVariableForm = () => {
                   padding: "2px 6px",
                   fontFamily: "DM Sans, sans-serif",
                 }),
-                multiValueLabel: (provided) => ({
+                multiValueLabel: (provided: any) => ({
                   ...provided,
                   // color: "#1C7ED6",
-                  fontFamily: "DM Sans, sans-serif"
+                  fontFamily: "DM Sans, sans-serif",
                 }),
-                multiValueRemove: (provided) => ({
+                multiValueRemove: (provided: any) => ({
                   ...provided,
                   // color: "#1C7ED6",
                   ":hover": { backgroundColor: "transparent", color: "red" },
                 }),
-                placeholder: (provided) => ({
+                placeholder: (provided: any) => ({
                   ...provided,
                   color: "#868E96",
                   fontFamily: "DM Sans, sans-serif",
                   marginTop: "0.7rem",
                 }),
-                menu: (provided) => ({
+                menu: (provided: any) => ({
                   ...provided,
                   borderRadius: 8,
                   zIndex: 9999,
@@ -803,7 +883,6 @@ const AddVariableForm = () => {
               }}
             />
           </div>
-
         </div>
       </div>
 
@@ -812,11 +891,20 @@ const AddVariableForm = () => {
         key="search-product-buttons"
         className="flex gap-4 justify-end mt-[4em] bg-[#fff] p-4"
       >
-        <Button variant="outline-primary" onClick={() => navigate(-1)} style={{ width: 150 }}>
+        <Button
+          variant="outline-primary"
+          onClick={() => navigate(-1)}
+          style={{ width: 150 }}
+        >
           Cancel
         </Button>
 
-        <Button variant="filled-primary" onClick={handleSave} loading={loading} style={{ width: 150 }}>
+        <Button
+          variant="filled-primary"
+          onClick={handleSave}
+          loading={loading}
+          style={{ width: 150 }}
+        >
           Submit
         </Button>
       </div>
