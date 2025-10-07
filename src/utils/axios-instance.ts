@@ -8,7 +8,7 @@ import { clearUser } from "../hooks/useCustomSession";
 
 export const baseUrl =
   import.meta.env.VITE_BACKEND_BASE_ENDPOINT ||
-  "https://api.quick-retail.com/public/api/v1/";
+  "https://api-quick-retail.sbscuk.co.uk/public/api/v1/";
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
