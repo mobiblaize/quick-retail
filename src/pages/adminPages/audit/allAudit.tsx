@@ -53,7 +53,7 @@ const AuditTrailPage = () => {
   const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
   const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
   const [perPage] = useState(10);
-  const [dateRange] = useState<{ startDate: string; endDate: string }>({ startDate: "", endDate: "" });
+  // const [dateRange] = useState<{ startDate: string; endDate: string }>({ startDate: "", endDate: "" });
 
   useEffect(() => {
     setSearchParams(prev => {

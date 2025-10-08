@@ -107,19 +107,6 @@ export default function GenericTable<T>({
     return null;  // 👈 no spinner, no skeleton here
   }
 
-  // if (!data || data.length === 0) {
-  //   return <EmptyState2 />;
-  // }
-  const handleResetFilters = () => {
-    onFilterChange?.(initialFilters);
-    setShowFilterPanel(false);
-  };
-
-  if (!data || data.length === 0) {
-    return <EmptyState2 onReset={handleResetFilters} />;
-  }
-
-
   const initialFilters: FilterValues = {
     startDate: "",
     endDate: "",
@@ -131,18 +118,25 @@ export default function GenericTable<T>({
     module: "",
   };
 
+  const handleResetFilters = () => {
+    onFilterChange?.(initialFilters);
+    setSearchTerm?.("");
+    onSortChange?.("");
+    onPageChange?.(1);
+    setShowFilterPanel(false);
+  };
 
   const [showFilterPanel, setShowFilterPanel] = React.useState(false);
   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
-  const isValueSet = (v: any) => {
+  const isValueSet = (v: unknown) => {
     if (Array.isArray(v)) return v.length > 0;
     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
     return (
       v !== undefined &&
       v !== null &&
       v !== "" &&
-      !DEFAULT_FILTER_VALUES.includes(v)
+      !DEFAULT_FILTER_VALUES.includes(v as string)
     );
   };
 
@@ -155,6 +149,10 @@ export default function GenericTable<T>({
     onFilterChange?.(newFilters);
     setShowFilterPanel(false);
   };
+
+  if (!data || data.length === 0) {
+    return <EmptyState2 onReset={handleResetFilters} />;
+  }
 
 
 
