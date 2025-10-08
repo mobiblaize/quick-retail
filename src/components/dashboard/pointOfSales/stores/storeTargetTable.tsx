@@ -36,17 +36,23 @@ const StoreTargetTable = ({ stores = [], loading = false }) => {
           </Text>
         </div>
       ),
+      enableSorting: true,
+      enableColumnFilter: true
     },
     {
-      header: "Date Created",
+      header: "Date Created", 
       accessorKey: "date",
       //@ts-ignore
       cell: (props) => <Text>{formatDate(props.row.original.created_at)}</Text>,
+      enableSorting: true,
+      enableColumnFilter: true
     },
     {
       header: "Conversion Rate",
       accessorKey: "conversionRate",
       cell: (props) => <Text>{props.row.original.conversion_rate}</Text>,
+      enableSorting: true,
+      enableColumnFilter: true
     },
     {
       header: "ATV",
@@ -56,6 +62,8 @@ const StoreTargetTable = ({ stores = [], loading = false }) => {
           {row.original.avg_transaction_value}
         </Text>
       ),
+      enableSorting: true,
+      enableColumnFilter: true
     },
     {
       header: "",
@@ -67,6 +75,8 @@ const StoreTargetTable = ({ stores = [], loading = false }) => {
           </Text>
         </button>
       ),
+      enableSorting: false,
+      enableColumnFilter: false
     },
   ];
   return (

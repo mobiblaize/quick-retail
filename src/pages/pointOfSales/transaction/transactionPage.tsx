@@ -61,12 +61,12 @@ const TransactionPage = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
-  const [perPage] = useState(10);
+  const [perPage] = useState("10");
 
   // Track first load so later refetches don't swap in skeletons
   const firstLoad = useRef(true);
 
-  const mapFiltersToPayload = (filters: FilterValues) => ({
+  const mapFiltersToPayload = (filters: Partial<FilterValues>) => ({
     sort_by: filters.sortBy || "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
@@ -74,6 +74,8 @@ const TransactionPage = () => {
     per_page: perPage.toString(),
     search: filters.search ?? "",
   });
+
+  const statsPayload = mapFiltersToPayload({}); // No filters for stats
 
   const payload = {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
@@ -83,15 +85,15 @@ const TransactionPage = () => {
     sort_by: activeSort,
   };
 
-  // @ts-ignore
+  const { data: statsData, isLoading: isLoadingStats, isFetching: isFetchingStats } = useFetchAllTransactions(statsPayload) || {};
   const { data, isLoading, isFetching } = useFetchAllTransactions(payload) || {};
   const transactionsArray = data?.data?.transactions?.data ?? [];
 
   useEffect(() => {
-    if (!isLoading) firstLoad.current = false;
-  }, [isLoading]);
+    if (!isLoadingStats && !isLoading) firstLoad.current = false;
+  }, [isLoadingStats, isLoading]);
 
-  const showOverviewSkeleton = firstLoad.current && isLoading;
+  const showOverviewSkeleton = firstLoad.current && isLoadingStats;
   const showTableSkeleton = (firstLoad.current && isLoading) || (!transactionsArray.length && isLoading);
 
   const paginationData = data?.data?.transactions
@@ -126,8 +128,8 @@ const TransactionPage = () => {
         <OverviewSkeleton />
       ) : (
         <TransactionOverview
-          data={data?.data}
-          isLoading={Boolean(isLoading || isFetching)}
+          data={statsData?.data}
+          isLoading={Boolean(isLoadingStats || isFetchingStats)}
           onDateRangeChange={({ startDate, endDate }) => {
             const updatedRange = {
               startDate: startDate || tempDateRange.startDate,

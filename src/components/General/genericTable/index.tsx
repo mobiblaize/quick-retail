@@ -58,6 +58,8 @@ interface GenericTableProps<T> {
   | "transaction";
   locations?: string[];
   categories?: string[];
+  roles?: string[];
+  modules?: string[];
 }
 
 export default function GenericTable<T>({
@@ -81,6 +83,8 @@ export default function GenericTable<T>({
   tableType,
   locations,
   categories,
+  roles,
+  modules,
   onFilterChange,
   filters = {
     startDate: "",
@@ -302,17 +306,18 @@ export default function GenericTable<T>({
                       // showLocation={true}
                       />
                     )}
-                    {/* 
-                      {tableType === "audit" && (
-                        <ReusableFilterComponent
+                    
+
+                    {tableType === "audit" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          roles={roles}
-                          modules={modules}
-                          showRole={true}
-                          showModule={true}
-                          filterType="audit"
-                        />
-                      )} */}
+                        roles={roles}
+                        modules={modules}
+                        showRole={true}
+                        showModule={true}
+                        filterType="audit"
+                      />
+                    )}
                   </div>
                 )}
               </div>

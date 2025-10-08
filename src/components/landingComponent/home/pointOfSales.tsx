@@ -82,7 +82,7 @@ const PointOfSales = () => {
 
   return (
     <main className="border-[#F8E2D8] border-t">
-      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+      <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
           {/* Left Column */}
           <div className="flex flex-col h-full">
@@ -115,7 +115,7 @@ const PointOfSales = () => {
 
 
       {/* <section className="border-t border-b border-[#F8E2D8]"> */}
-      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+      <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="h-full flex justify-center lg:justify-end">
             <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
@@ -146,7 +146,7 @@ const PointOfSales = () => {
       </section>
       {/* </section> */}
 
-      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+      <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           <div className="flex flex-col">
             <div>
@@ -176,7 +176,7 @@ const PointOfSales = () => {
       </section>
 
       {/* <section className="border-t border-b border-[#F8E2D8]"> */}
-        <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+        <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
             <div className="h-full flex justify-center lg:justify-end">
               <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
