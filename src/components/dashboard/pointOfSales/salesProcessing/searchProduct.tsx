@@ -342,8 +342,7 @@ const SearchProduct = ({
                         min={1}
                         /* @ts-ignore */
                         value={item.quantity?.toString() ?? ""}
-                        onChange={(e: { target: { value: any } }) => {
-                          const val = e.target.value;
+                        onChange={(val: string) => {
 
                           if (val === "") {
                             // @ts-ignore
