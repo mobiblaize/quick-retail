@@ -95,8 +95,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
     if (!/^\d+$/.test(text)) e.preventDefault();
   };
 
-  const handlePhoneChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    const digits = clamp11(e.target.value);
+  const handlePhoneChange = (digits: string) => {
     setNewCustomer(prev => ({ ...prev, customer_phone: digits }));
     setPhoneError(digits.length === 11 ? null : "Phone must be 11 digits");
   };
