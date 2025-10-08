@@ -86,9 +86,9 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
       );
   };
 
-  const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handlePhoneNumberChange = (val: string) => {
     // Remove any non-numeric characters
-    let value = e.target.value.replace(/[^0-9]/g, "");
+    let value = val.replace(/[^0-9]/g, "");
 
     // Restrict the length to 11 digits
     if (value.length > 11) {
