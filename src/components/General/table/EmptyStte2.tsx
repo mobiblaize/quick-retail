@@ -40,45 +40,53 @@ interface EmptyState2Props {
   onReset?: () => void;
 }
 
-const EmptyState2 = ({ onReset }: EmptyState2Props) => (
-  <Box
-    style={{
-      padding: "4rem 1rem",
-      textAlign: "center",
-      display: "flex",
-      flexDirection: "column",
-      alignItems: "center",
-      gap: "0.75rem",
-    }}
-  >
-    <img
-      src={EmptyStateImage}
-      alt="No data"
-      style={{ width: "160px", height: "auto", opacity: 0.8 }}
-    />
-    <Text fw={600} size="lg" c="#1D2739">
-      Not found
-    </Text>
-    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-      Sorry, we couldn’t find what you are looking for.
-    </Text>
-    <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-      Try entering a correct keyword or reset filters.
-    </Text>
+const EmptyState2 = ({ onReset }: EmptyState2Props) => {
+  const handleReset = () => {
+    if (onReset) {
+      onReset();
+    }
+  };
 
-    {onReset && (
-      <Button
-        onClick={onReset}
-        style={{
-          marginTop: "1rem",
-          backgroundColor: "#f97316",
-        }}
-      >
-        <Text c="#fff" fw={500}>Reset Table</Text>
-      </Button>
-    )}
-  </Box>
-);
+  return (
+    <Box
+      style={{
+        padding: "4rem 1rem",
+        textAlign: "center",
+        display: "flex",
+        flexDirection: "column",
+        alignItems: "center",
+        gap: "0.75rem",
+      }}
+    >
+      <img
+        src={EmptyStateImage}
+        alt="No data"
+        style={{ width: "160px", height: "auto", opacity: 0.8 }}
+      />
+      <Text fw={600} size="lg" c="#1D2739">
+        Not found
+      </Text>
+      <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+        Sorry, we couldn't find what you are looking for.
+      </Text>
+      <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
+        Try entering a correct keyword or reset filters.
+      </Text>
+
+      {onReset && (
+        <Button
+          onClick={handleReset}
+          style={{
+            marginTop: "1rem",
+            backgroundColor: "#f97316",
+          }}
+        >
+          <Text c="#fff" fw={500}>Reset Table</Text>
+        </Button>
+      )}
+    </Box>
+  );
+};
 
 export default EmptyState2;
 

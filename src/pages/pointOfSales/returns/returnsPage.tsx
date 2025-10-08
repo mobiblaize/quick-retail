@@ -75,7 +75,7 @@ const ReturnsPage = () => {
     const allowedStatuses = ["pending", "resolved", "declined"];
     const lowerStatus = status.toLowerCase();
     return allowedStatuses.includes(lowerStatus) ? lowerStatus : "";
-    };
+  };
 
   const mapFiltersToPayload = (filters: FilterValues) => {
     const payload: any = {
@@ -99,13 +99,17 @@ const ReturnsPage = () => {
 
   const navigate = useNavigate();
 
-  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
-  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+  // Analytics payload
+  const analyticsPayload = {
+    page: currentPage,
+    per_page: perPage,
+  };
 
-  const payload = {
+  // Table payload with filters
+  const tablePayload = {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-    ...(startDate ? { start_date: startDate } : {}),
-    ...(endDate ? { end_date: endDate } : {}),
+    ...(dateRange.startDate ? { start_date: dateRange.startDate } : {}),
+    ...(dateRange.endDate ? { end_date: dateRange.endDate } : {}),
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
@@ -113,24 +117,26 @@ const ReturnsPage = () => {
   };
 
   // @ts-ignore
-  const { data = {}, isLoading = false } = useFetchAllreturns(payload) || {};
+  const { data: analyticsData = {}, isLoading: isAnalyticsLoading = false } = useFetchAllreturns(analyticsPayload) || {};
+  // @ts-ignore
+  const { data: tableData = {}, isLoading: isTableLoading = false } = useFetchAllreturns(tablePayload) || {};
 
-  const returns = Array.isArray(data?.data?.returns?.data) ? data.data.returns.data : [];
+  const returns = Array.isArray(tableData?.data?.returns?.data) ? tableData.data.returns.data : [];
 
   const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
   const handleLogPage = () => navigate(ROUTES.logReturns);
   const handlePageChange = (page: number) => setCurrentPage(page);
 
-  const paginationData = data?.data?.returns
+  const paginationData = tableData?.data?.returns
     ? {
-        current_page: data.data.returns.current_page,
-        last_page: data.data.returns.last_page,
-        per_page: data.data.returns.per_page,
-        total: data.data.returns.total,
-        from: data.data.returns.from,
-        to: data.data.returns.to,
-        next_page_url: data.data.returns.next_page_url,
-        prev_page_url: data.data.returns.prev_page_url,
+        current_page: tableData.data.returns.current_page,
+        last_page: tableData.data.returns.last_page,
+        per_page: tableData.data.returns.per_page,
+        total: tableData.data.returns.total,
+        from: tableData.data.returns.from,
+        to: tableData.data.returns.to,
+        next_page_url: tableData.data.returns.next_page_url,
+        prev_page_url: tableData.data.returns.prev_page_url,
       }
     : undefined;
 
@@ -151,27 +157,27 @@ const ReturnsPage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       {/* Analytics */}
-      {isLoading ? (
+      {isAnalyticsLoading ? (
         <AnalyticsSkeleton />
       ) : (
         <ReturnsAnalytics
           data={{
-            totalReturns: data?.data?.totalReturns ?? 0,
-            pending_complaints: data?.data?.pending_complaints ?? 0,
-            resolved_complaints: data?.data?.resolved_complaints ?? 0,
-            declined_complaints: data?.data?.declined_complaints ?? 0,
+            totalReturns: analyticsData?.data?.totalReturns ?? 0,
+            pending_complaints: analyticsData?.data?.pending_complaints ?? 0,
+            resolved_complaints: analyticsData?.data?.resolved_complaints ?? 0,
+            declined_complaints: analyticsData?.data?.declined_complaints ?? 0,
           }}
           setDateRange={setDateRange}
         />
       )}
 
       {/* Returns table */}
-      {isLoading ? (
+      {isTableLoading ? (
         <ReturnsTableSkeleton />
       ) : (
         <ReturnsTable
           returns={returns}
-          isLoading={isLoading}
+          isLoading={isTableLoading}
           onFilterChange={handleFilterChange}
           // @ts-ignore
           paginationData={paginationData}

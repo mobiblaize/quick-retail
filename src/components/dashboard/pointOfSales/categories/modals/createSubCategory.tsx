@@ -1,6 +1,6 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
-import { SetStateAction, useState } from "react";
+import { useState } from "react";
 import { useCreateSubCategory } from "../../../../../hooks/backendApis/pos/categories";
 import Dropdown from "../../../../General/dropdown";
 import FormInput from "../../../../General/formInput";
@@ -91,6 +91,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
             options={categories}
             placeholder="Select a category"
             value={selectedCategoryId}
+            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
             //@ts-ignore
             onChange={(val) => setSelectedCategoryId(val)}
             required
@@ -102,9 +103,7 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
             placeholder="Enter Sub-Category Name"
             paddingY={6}
             value={subCategoryName}
-            onChange={(e: { target: { value: SetStateAction<string> } }) =>
-              setSubCategoryName(e.target.value)
-            }
+            onChange={(val: string) => setSubCategoryName(val)}
           />
         </div>
         <div className="flex mt-7 gap-5">

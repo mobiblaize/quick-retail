@@ -29,38 +29,50 @@ const InventoryTable = () => {
       : {}),
       ...(filters.orderStatus ? { order_status: filters.orderStatus } : {}),
       ...(filters.location ? { location_name: filters.location } : {}),
-      // keep only the required keys, ignore duplicates
+      stock_status: "low stock"
     };
   };
   
-  const payload = {
-    page: currentPage.toString(),
-    per_page: perPage.toString(),
-    search: searchTerm,
-    ...normalizeFilters(appliedFilters),
-    sort_by: activeSort,
-  };
-  
+  // Fetch all pages (disable pagination on backend by passing a large per_page)
+const payload = {
+  page: "1",
+  per_page: "10000", // fetch everything
+  search: searchTerm,
+  sort_by: activeSort,
+  ...normalizeFilters(appliedFilters),
+};
 
-  const { data, isLoading } = useFetchAllProducts(payload);
+const { data, isLoading } = useFetchAllProducts(payload);
 
-  const products = Array.isArray(data?.data?.products?.data)
-    ? data.data.products.data
-    : [];
+const products = Array.isArray(data?.data?.products?.data)
+  ? data.data.products.data
+  : [];
 
-  const mappedProducts = products.map((product: any) => ({
-    name: product.name,
-    sku: product.sku,
-    location: product.product?.location?.name ?? "N/A",
-    stockLevel: product.quantity_available ?? 0,
-    quantitySupplied: product.quantity_supplied ?? 0,
-    date: product.created_at,
-    status: product.stock_status,
-    image: product.image_path,
-    variationID: product.variationID,
-    price: product.selling_price,
-    original: product, // Keep original object for navigation if needed
-  }));
+// Apply global filtering on all fetched data
+let filteredProducts = products;
+
+if (appliedFilters.orderStatus) {
+  const statusFilter = appliedFilters.orderStatus.toLowerCase();
+  filteredProducts = filteredProducts.filter(
+    (p: any) => p.stock_status?.toLowerCase() === statusFilter
+  );
+}
+
+
+  const mappedProducts = filteredProducts.map((product: any) => ({
+  name: product.name,
+  sku: product.sku,
+  location: product.product?.location?.name ?? "N/A",
+  stockLevel: product.quantity_available ?? 0,
+  quantitySupplied: product.quantity_supplied ?? 0,
+  date: product.created_at,
+  status: product.stock_status,
+  image: product.image_path,
+  variationID: product.variationID,
+  price: product.selling_price,
+  original: product,
+}));
+
 
   const paginationData = data?.data?.products
     ? {
@@ -69,6 +81,7 @@ const InventoryTable = () => {
         total: data.data.products.total,
       }
     : undefined;
+       
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);

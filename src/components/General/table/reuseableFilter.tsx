@@ -373,8 +373,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
               {[
                 { value: "All", label: "All" },
                 { value: "available", label: "Available" },
-                { value: "low_stock", label: "Low Stock" },
-                { value: "sold_out", label: "Sold Out" },
+                { value: "low stock", label: "Low Stock" },
+                { value: "sold out", label: "Sold Out" },
               ].map((status) => (
                 <Radio
                   key={status.value}
