@@ -11,10 +11,11 @@ import GenericTable from "../../../General/genericTable";
 type StatusKey = "available" | "low stock" | "sold out";
 
 const InventoryTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10);
-  //@ts-ignore
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [, setCurrentPage] = useState(1);
+
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
   const normalizeFilters = (filters: FilterValues) => {
@@ -22,57 +23,55 @@ const InventoryTable = () => {
       ...(filters.startDate ? { start_date: filters.startDate } : {}),
       ...(filters.endDate ? { end_date: filters.endDate } : {}),
       ...(filters.stockFrom !== undefined && filters.stockFrom !== ""
-      ? { stock_from: String(filters.stockFrom) }
-      : {}),
-    ...(filters.stockTo !== undefined && filters.stockTo !== ""
-      ? { stock_to: String(filters.stockTo) }
-      : {}),
+        ? { stock_from: String(filters.stockFrom) }
+        : {}),
+      ...(filters.stockTo !== undefined && filters.stockTo !== ""
+        ? { stock_to: String(filters.stockTo) }
+        : {}),
       ...(filters.orderStatus ? { order_status: filters.orderStatus } : {}),
       ...(filters.location ? { location_name: filters.location } : {}),
-      stock_status: "low stock"
+      stock_status: "low stock",
     };
   };
-  
+
   // Fetch all pages (disable pagination on backend by passing a large per_page)
-const payload = {
-  page: "1",
-  per_page: "10000", // fetch everything
-  search: searchTerm,
-  sort_by: activeSort,
-  ...normalizeFilters(appliedFilters),
-};
+  const payload = {
+    page: "1",
+    per_page: "10000", // fetch everything
+    search: searchTerm,
+    sort_by: activeSort,
+    ...normalizeFilters(appliedFilters),
+  };
 
-const { data, isLoading } = useFetchAllProducts(payload);
+  const { data, isLoading } = useFetchAllProducts(payload);
 
-const products = Array.isArray(data?.data?.products?.data)
-  ? data.data.products.data
-  : [];
+  const products = Array.isArray(data?.data?.products?.data)
+    ? data.data.products.data
+    : [];
 
-// Apply global filtering on all fetched data
-let filteredProducts = products;
+  // Apply global filtering on all fetched data
+  let filteredProducts = products;
 
-if (appliedFilters.orderStatus) {
-  const statusFilter = appliedFilters.orderStatus.toLowerCase();
-  filteredProducts = filteredProducts.filter(
-    (p: any) => p.stock_status?.toLowerCase() === statusFilter
-  );
-}
-
+  if (appliedFilters.orderStatus) {
+    const statusFilter = appliedFilters.orderStatus.toLowerCase();
+    filteredProducts = filteredProducts.filter(
+      (p: any) => p.stock_status?.toLowerCase() === statusFilter
+    );
+  }
 
   const mappedProducts = filteredProducts.map((product: any) => ({
-  name: product.name,
-  sku: product.sku,
-  location: product.product?.location?.name ?? "N/A",
-  stockLevel: product.quantity_available ?? 0,
-  quantitySupplied: product.quantity_supplied ?? 0,
-  date: product.created_at,
-  status: product.stock_status,
-  image: product.image_path,
-  variationID: product.variationID,
-  price: product.selling_price,
-  original: product,
-}));
-
+    name: product.name,
+    sku: product.sku,
+    location: product.product?.location?.name ?? "N/A",
+    stockLevel: product.quantity_available ?? 0,
+    quantitySupplied: product.quantity_supplied ?? 0,
+    date: product.created_at,
+    status: product.stock_status,
+    image: product.image_path,
+    variationID: product.variationID,
+    price: product.selling_price,
+    original: product,
+  }));
 
   const paginationData = data?.data?.products
     ? {
@@ -81,7 +80,6 @@ if (appliedFilters.orderStatus) {
         total: data.data.products.total,
       }
     : undefined;
-       
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
@@ -94,12 +92,11 @@ if (appliedFilters.orderStatus) {
     new Set(
       products
         ?.map((p: any) => p.product?.location?.name) // ✅ nested under product
-        .filter((name: string | undefined): name is string => typeof name === "string")
+        .filter(
+          (name: string | undefined): name is string => typeof name === "string"
+        )
     )
   );
-  
-
-
 
   const columns = [
     {
@@ -107,12 +104,7 @@ if (appliedFilters.orderStatus) {
       header: "Product",
       render: (row: any) => (
         <Group gap="sm" align="center">
-          <Avatar
-            src={row.image || ""}
-            alt={row.name}
-            radius="md"
-            size={40}
-          />
+          <Avatar src={row.image || ""} alt={row.name} radius="md" size={40} />
           <Text fw={500} c="black">
             {row.name}
           </Text>
@@ -216,8 +208,6 @@ if (appliedFilters.orderStatus) {
 
   return (
     <main className="relative w-full h-auto">
-     
-
       {/* Add a search input to use setSearchTerm */}
       {/* <div className="mb-4">
         <input
@@ -240,23 +230,24 @@ if (appliedFilters.orderStatus) {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         onSortChange={setActiveSort}
-        filters={appliedFilters}  
+        filters={appliedFilters}
         enableSearch={true}
         enableSort={true}
         showFilter={true}
         tableType="inventory"
         searchPlaceholder="search Inventory"
-               //@ts-ignore
+        //@ts-ignore
         locations={locations}
         titleSection={
           <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">Inventory</Text>
+            <Text fw={500} size="xl" c="textSecondary.9">
+              Inventory
+            </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10"> {paginationData?.total}</Text>
             </div>
           </div>
         }
-       
       />
     </main>
   );

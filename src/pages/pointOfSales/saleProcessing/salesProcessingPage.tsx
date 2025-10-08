@@ -58,8 +58,13 @@ const OrdersTableSkeleton = () => (
 );
 
 const SalesProcessingPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
     startDate: "",
     endDate: "",
   });
@@ -100,23 +105,25 @@ const SalesProcessingPage = () => {
 
   // Separate payloads for overview and table data
   const overviewPayload = {
-    page: currentPage,
-    per_page: perPage
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
   };
 
   const tablePayload = {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     ...(dateRange.startDate ? { start_date: dateRange.startDate } : {}),
     ...(dateRange.endDate ? { end_date: dateRange.endDate } : {}),
-    page: currentPage,
-    per_page: perPage,
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
     search: searchTerm,
     sort_by: activeSort,
   };
 
   // Separate API calls for overview and table
-  const { data: overviewData = {}, isLoading: isOverviewLoading } = useFetchAllSales(overviewPayload) || {};
-  const { data: tableData = {}, isLoading: isTableLoading } = useFetchAllSales(tablePayload) || {};
+  const { data: overviewData = {}, isLoading: isOverviewLoading } =
+    useFetchAllSales(overviewPayload) || {};
+  const { data: tableData = {}, isLoading: isTableLoading } =
+    useFetchAllSales(tablePayload) || {};
 
   const salesData = tableData?.data?.sales?.data ?? [];
 
@@ -134,7 +141,8 @@ const SalesProcessingPage = () => {
     : undefined;
 
   const handlePageChange = (page: number) => setCurrentPage(page);
-  const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
+  const handleFilterChange = (filters: FilterValues) =>
+    setAppliedFilters(filters);
 
   const subHeaders = [
     <div key="1">
@@ -155,7 +163,11 @@ const SalesProcessingPage = () => {
       {isOverviewLoading ? (
         <SalesOverviewSkeleton />
       ) : (
-        <SalesOverview data={overviewData?.data} isLoading={isOverviewLoading} setDateRange={setDateRange} />
+        <SalesOverview
+          data={overviewData?.data}
+          isLoading={isOverviewLoading}
+          setDateRange={setDateRange}
+        />
       )}
 
       {/* Orders table: skeleton while loading */}
@@ -189,5 +201,3 @@ const SalesProcessingPage = () => {
 };
 
 export default SalesProcessingPage;
-
-
