@@ -1,5 +1,5 @@
 
-import { SetStateAction, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import FormInput from "../../../General/formInput";

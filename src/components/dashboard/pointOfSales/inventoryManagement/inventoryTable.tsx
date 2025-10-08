@@ -11,8 +11,8 @@ import GenericTable from "../../../General/genericTable";
 type StatusKey = "available" | "low stock" | "sold out";
 
 const InventoryTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10);
+  // const [currentPage, setCurrentPage] = useState(1);
+  // const [perPage] = useState(10);
   //@ts-ignore
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [searchTerm, setSearchTerm] = useState("");
