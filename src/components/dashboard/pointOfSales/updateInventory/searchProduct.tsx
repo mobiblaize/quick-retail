@@ -244,8 +244,7 @@ const SearchProduct = ({ onSelect, onItemsChange }: SearchProductProps) => {
                         min={1}
                              /* @ts-ignore */
                         value={item.quantity?.toString() ?? ""}
-                        onChange={(e: { target: { value: any; }; }) => {
-                          const val = e.target.value;
+                        onChange={(val: string) => {
 
                           // Allow empty value while typing
                           if (val === "") {
