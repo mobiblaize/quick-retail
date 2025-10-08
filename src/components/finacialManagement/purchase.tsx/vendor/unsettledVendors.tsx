@@ -86,8 +86,7 @@ const UnsettledVendorTable = () => {
               paddingY={6}
               bgColor="#D0D5DD"
               className="w-[128px] rounded-lg"
-              onChange={(e: React.ChangeEvent<HTMLInputElement>) =>  {
-                const value = e.target.value;
+              onChange={(value: string)  => {
 
                 if (value.trim()) {
                   navigate(ROUTES.filledUnsettledVendor);
