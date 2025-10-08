@@ -31,8 +31,8 @@ const LogOrder = () => {
     //@ts-ignore
   });
 
-  const handleOrderIdChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-    setOrderId(e.target.value);
+  const handleOrderIdChange = (val: string) => {
+    setOrderId(val);
   };
 
   const handleBlur = () => {

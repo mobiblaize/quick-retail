@@ -64,7 +64,7 @@ export default function RemmittanceCreate() {
                           ]}
                           placeholder="select type"
                           value={selectedType}
-                          onChange={(e: { target: { value: SetStateAction<string>; }; }) => setSelectedType(e.target.value)}
+                          onChange={(val: string) => setSelectedType(val)}
                         />
                         <FormInput
                           type="text"

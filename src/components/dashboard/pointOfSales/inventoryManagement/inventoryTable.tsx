@@ -199,7 +199,7 @@ const InventoryTable = () => {
       render: (row: any) => (
         <Link to={ROUTES.updateInventory} state={{ inventories: row.original }}>
           <Text fw={700} c="customPrimary.10" className="cursor-pointer">
-            Reorder
+            Update
           </Text>
         </Link>
       ),
