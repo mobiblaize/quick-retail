@@ -72,7 +72,8 @@ const CategoriesPage = () => {
     sort_by: activeSort,
   };
 
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const { data, isLoading, refetch } = useFetchAllCategories(payload) || {};
 
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];

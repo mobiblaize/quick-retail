@@ -46,17 +46,17 @@ const DiscountTableSkeleton = () => (
 );
 
 const AuditTrailPage = () => {
-
   const [searchParams, setSearchParams] = useSearchParams();
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
   const [filters, setFilters] = useState<FilterValues>({} as FilterValues);
-  const [currentPage, setCurrentPage] = useState(parseInt(searchParams.get("page") || "1"));
+  const [currentPage, setCurrentPage] = useState(
+    parseInt(searchParams.get("page") || "1")
+  );
   const [perPage] = useState(10);
-  // const [dateRange] = useState<{ startDate: string; endDate: string }>({ startDate: "", endDate: "" });
 
   useEffect(() => {
-    setSearchParams(prev => {
+    setSearchParams((prev) => {
       prev.set("page", currentPage.toString());
       return prev;
     });
@@ -69,7 +69,6 @@ const AuditTrailPage = () => {
     }
   }, [searchParams]);
 
-
   const mapOrderStatus = (status: string | undefined) => {
     if (!status || status.toLowerCase() === "all") return "";
     if (status.toLowerCase() === "active") return "active";
@@ -81,7 +80,7 @@ const AuditTrailPage = () => {
   const mapFiltersToPayload = (filters: FilterValues) => ({
     search: filters.search ?? "",
     sort_by: filters.sortBy ?? "",
-    per_page :"",
+    per_page: "",
     paginate: true,
     location_name: filters.location ?? "",
     category_name: filters.category ?? "",
@@ -90,21 +89,22 @@ const AuditTrailPage = () => {
     status: mapOrderStatus(filters.auditStatus),
     page: currentPage.toString(),
     role: filters.role ?? "",
-    module: filters.module ?? ""
+    module: filters.module ?? "",
   });
 
-
-
- const payload = {
+  const payload = {
     ...mapFiltersToPayload(filters),
     page: currentPage,
-    per_page: perPage,
+    per_page: perPage.toString(),
     sort_by: activeSort,
     search: searchTerm,
   };
-    // @ts-ignore
 
-  const { data = {}, isLoading = false, error} = useFetchAuditTrails(payload) || {};
+  const {
+    data = {},
+    isLoading = false,
+    error,
+  } = useFetchAuditTrails(payload) || {};
 
   const handleFilterChange = (filters: FilterValues) => setFilters(filters);
   const paginationData = data?.data
@@ -119,20 +119,16 @@ const AuditTrailPage = () => {
         prev_page_url: data.data.prev_page_url,
       }
     : undefined;
-    console.log(data)
+  console.log(data);
 
   const handlePageChange = (page: number) => setCurrentPage(page);
 
   // const { data, isLoading = false, error } = useFetchAuditTrails(payload);
 
   const handleExport = (format: string) => {
-    // @ts-ignore
     const logs = data?.data?.data || [];
     if (!logs.length) return;
 
-    
-
-    // @ts-ignore
     const tableData = logs.map((log: any) => ({
       timestamp: new Date(log.created_at).toLocaleString(),
       name: `${log.causer?.firstname || ""} ${log.causer?.lastname || ""}`,
@@ -144,7 +140,9 @@ const AuditTrailPage = () => {
     }));
 
     if (format === "csv") {
-      const csv = tableData.map((row: any) => Object.values(row).join(",")).join("\n");
+      const csv = tableData
+        .map((row: any) => Object.values(row).join(","))
+        .join("\n");
       const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
@@ -158,16 +156,36 @@ const AuditTrailPage = () => {
     if (format === "pdf") {
       const doc = new jsPDF();
       autoTable(doc, {
-        head: [["Timestamp", "Name", "Email", "Role", "Activity", "Module", "IP Address"]],
-        body: tableData.map((row: { timestamp: any; name: any; email: any; role: any; activity: any; module: any; ipAddress: any; }) => [
-          row.timestamp,
-          row.name,
-          row.email,
-          row.role,
-          row.activity,
-          row.module,
-          row.ipAddress,
-        ]),
+        head: [
+          [
+            "Timestamp",
+            "Name",
+            "Email",
+            "Role",
+            "Activity",
+            "Module",
+            "IP Address",
+          ],
+        ],
+        body: tableData.map(
+          (row: {
+            timestamp: any;
+            name: any;
+            email: any;
+            role: any;
+            activity: any;
+            module: any;
+            ipAddress: any;
+          }) => [
+            row.timestamp,
+            row.name,
+            row.email,
+            row.role,
+            row.activity,
+            row.module,
+            row.ipAddress,
+          ]
+        ),
         styles: { fontSize: 8, cellPadding: 3 },
         headStyles: {
           fillColor: [241, 103, 34],
@@ -221,7 +239,7 @@ const AuditTrailPage = () => {
           </Menu.Dropdown>
         </Menu>
       </div>
-    </div>
+    </div>,
   ];
 
   return (
@@ -229,27 +247,27 @@ const AuditTrailPage = () => {
       {isLoading ? (
         <DiscountTableSkeleton />
       ) : (
-      <TrailTable
-        isLoading={isLoading}
-        error={error}
-        logs={data?.data?.data || []}
-        onFilterChange={handleFilterChange}
-        onPageChange={handlePageChange}
-        searchTerm={searchTerm}
-        setSearchTerm={(val: string) => {
+        <TrailTable
+          isLoading={isLoading}
+          error={error}
+          logs={data?.data?.data || []}
+          onFilterChange={handleFilterChange}
+          onPageChange={handlePageChange}
+          searchTerm={searchTerm}
+          setSearchTerm={(val: string) => {
             setSearchTerm((prev) => {
               if (prev !== val) setCurrentPage(1);
               return val;
             });
           }}
-        activeSort={activeSort}
-        setSort={(sortBy) => {
+          activeSort={activeSort}
+          setSort={(sortBy) => {
             setActiveSort(sortBy);
             setCurrentPage(1);
           }}
-        filters={filters}
-        paginationData={paginationData}
-      />
+          filters={filters}
+          paginationData={paginationData}
+        />
       )}
     </PageContainer>
   );
