@@ -115,7 +115,7 @@ const Login = () => {
           <p className="text-gray-400 text-sm font-normal mb-1">
               Welcome Back,
             </p>
-          <h1 className="text-[#1D2739] text-[32px] font-semibold ">Logi  n to QuickRetail</h1></div>
+          <h1 className="text-[#1D2739] text-[32px] font-semibold ">Login to QuickRetail</h1></div>
         {/* Form */}
         <form
           onSubmit={form.onSubmit(handleLogin)}
