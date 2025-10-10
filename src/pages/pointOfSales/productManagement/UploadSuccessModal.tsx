@@ -1,6 +1,5 @@
 import { Modal, Text, Button } from "@mantine/core";
 import { motion } from "framer-motion";
-import { Check } from "lucide-react";
 import content from "../../../assets/images/Content.png"
 
 interface UploadSuccessModalProps {
