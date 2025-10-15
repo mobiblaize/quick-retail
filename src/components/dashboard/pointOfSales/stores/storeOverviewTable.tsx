@@ -494,7 +494,7 @@ const StoreOverviewTable: FC<StoreOverviewTableProps> = ({
             <div className="flex gap-2.5">
               <Text fw={500} size="xl" c="textSecondary.9">
                 Stores Overview
-              </Text>
+              </Text> 
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
                 <Text c="customPrimary.10">{paginationData?.total ?? stores.length}</Text>
               </div>

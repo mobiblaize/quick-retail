@@ -580,33 +580,46 @@ const TanTable = <T extends Record<string, any>>({
       </Box>
 
       <Box
-        style={{
-          backgroundColor: "var(--mantine-color-gray-0)",
-          fontSize: "0.875rem",
-          color: "var(--mantine-color-gray-7)",
-        }}
-      >
-        {loadingState ? (
+  style={{
+    backgroundColor: "var(--mantine-color-gray-0)",
+    fontSize: "0.875rem",
+    color: "var(--mantine-color-gray-7)",
+    minHeight: "250px", // ensures space remains even if empty
+    position: "relative",
+  }}
+>
+  {loadingState ? (
+    <Box
+      style={{
+        display: "flex",
+        alignItems: "center",
+        justifyContent: "center",
+        padding: "2.5rem 0",
+      }}
+    >
+      Loading...
+    </Box>
+  ) : (
+    <>
+      <TanBody
+        table={table}
+        loadingState={loadingState}
+        onClick={onClick}
+      />
+      {table.getFilteredRowModel().rows.length === 0 &&
+        (searchTerm || data.length === 0) && (
           <Box
             style={{
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: "2.5rem 0",
-            }}
-          >
-            Loading...
-          </Box>
-        ) : table.getFilteredRowModel().rows.length === 0 &&
-          (searchTerm || data.length === 0) ? (
-          <Box
-            style={{
-              padding: "3rem 1rem",
+              position: "absolute",
+              top: "50%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
               textAlign: "center",
               display: "flex",
               flexDirection: "column",
               alignItems: "center",
               gap: "0.25rem",
+              pointerEvents: "none", // ensures search/sort/filter stay clickable
             }}
           >
             <img
@@ -617,24 +630,15 @@ const TanTable = <T extends Record<string, any>>({
             <Text fw={600} size="lg" c="#1D2739">
               Not found
             </Text>
-            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              Sorry, we couldn’t find what you
-            </Text>
-            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              are looking for. Try entering a
-            </Text>
-            <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-              correct keyword.
+            <Text fw={400} size="sm" c="#475367" ta="center" lh="sm">
+              Sorry, we couldn’t find what you’re looking for.
             </Text>
           </Box>
-        ) : (
-          <TanBody
-            table={table}
-            loadingState={loadingState}
-            onClick={onClick}
-          />
         )}
-      </Box>
+    </>
+  )}
+</Box>
+
 
       {showSeeAllToggle && !showAll && data.length > length && (
         <Box

@@ -1,56 +1,42 @@
-import { useRef, useState } from "react";
-import { useFetchPhoto } from "../../../../hooks/backendApis/admin/profile";
+import { useState } from "react";
+import { useDisclosure } from "@mantine/hooks";
 import { Button, Text } from "@mantine/core";
+import User from "../../../../assets/images/user.png"
+import EditProfileModal from "./EditProfileModal";
 
 
 interface ProfileHeaderProps {
   profile: {
-    profile_pic: string;
-    company_name: string;
+    name: string;
     email: string;
+    phone_number: string;
+    company_name: string;
+    company_size: string;
+    app_selected: number;
+    profile_pic: string;
   };
+  onSave: (data: { firstName: string; lastName: string }) => void;
 }
 
-export default function ProfileHeader({ profile }: ProfileHeaderProps) {
-  const { profile_pic, company_name, email } = profile;
-  // @ts-ignore
-  const { mutate: updatePhoto, isLoading } = useFetchPhoto();
-
-  const fileInputRef = useRef<HTMLInputElement | null>(null);
+export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
+  const { profile_pic, company_name, email, name } = profile;
+  const [opened, { open, close }] = useDisclosure(false);
   const [localImage, setLocalImage] = useState(profile_pic);
+  const emptyImage = User;
 
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const file = event.target.files?.[0];
-    if (!file) return;
+  const nameParts = name ? name.split(' ') : ['', ''];
+  const firstName = nameParts[0] || '';
+  const lastName = nameParts.slice(1).join(' ') || '';
 
-    const reader = new FileReader();
 
-    reader.onloadend = () => {
-      const base64String = reader.result as string;
 
-      updatePhoto(
-        { profile_image: base64String },
-        {
-          onSuccess: (res) => {
-            console.log("Upload successful:", res);
-            setLocalImage(base64String);
-          },
-          onError: (err) => {
-            console.log("Upload error:", err);
-          },
-        }
-      );
-    };
-
-    reader.readAsDataURL(file);
-  };
 
   return (
     <div className="bg-white rounded-lg shadow p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div className="grid grid-cols-1 sm:flex sm:items-center gap-4">
         <div className="w-32 h-32 border-4 border-orange-500 rounded-full overflow-hidden mx-auto sm:mx-0">
           <img
-            src={localImage || "/avatar-placeholder.jpg"}
+            src={localImage || emptyImage}
             className="w-full h-full object-cover"
           />
         </div>
@@ -73,8 +59,7 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
             radius="md"
             size="sm"
             fw={500}
-            onClick={() => fileInputRef.current?.click()}
-            disabled={isLoading}
+            onClick={open}
             styles={(theme) => ({
               root: {
                 cursor: "pointer",
@@ -85,19 +70,22 @@ export default function ProfileHeader({ profile }: ProfileHeaderProps) {
               },
             })}
           >
-            <Text>{isLoading ? "Uploading..." : "Change profile picture"}</Text>
+            <Text>edit Profile</Text>
           </Button>
 
-          <input
-            type="file"
-            accept="image/*"
-            ref={fileInputRef}
-            className="hidden"
-            onChange={handleFileChange}
-          />
         </div>
       </div>
 
+      <EditProfileModal
+        opened={opened}
+        onClose={close}
+        initialData={{
+          firstName,
+          lastName,
+          email,
+        }}
+        onSave={onSave}
+      />
     </div>
   );
 }

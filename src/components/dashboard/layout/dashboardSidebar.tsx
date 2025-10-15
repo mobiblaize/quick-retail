@@ -127,6 +127,7 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
 
                 inactiveIcon={InActiveNotification}
                 activeIcon={InActiveNotification}
+                unreadCount={10}
               />
               <NavItem
                 href={ROUTES.adminSettings}

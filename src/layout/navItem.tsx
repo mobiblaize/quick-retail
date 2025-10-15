@@ -1,7 +1,10 @@
 import { useState } from "react";
-import { List, Anchor } from "@mantine/core";
+import { List, Anchor, Text } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
 import { ChevronDown, ChevronUp } from "lucide-react";
+import { useUnread } from "../hooks/backendApis/admin/settings";
+
+
 
 interface NavItemProps {
   inactiveIcon?: React.ElementType;
@@ -25,6 +28,8 @@ const NavItem = ({
 }: NavItemProps) => {
   const location = useLocation();
   const [opened, setOpened] = useState(false);
+
+  const { data: unreadCount } = useUnread();
 
   const isActive = (() => {
     if (href === "/dashboard" && location.pathname === "/dashboard") {
@@ -56,13 +61,17 @@ const NavItem = ({
     }
   };
 
+  // -------------------------------
+  // 📂 NAV ITEM WITH CHILDREN
+  // -------------------------------
   if (hasChildren) {
     return (
       <>
         <div onClick={toggleOpened} className="cursor-pointer">
           <div
-            className={`${isActive || isChildActive() ? "bg-[#FCE7DD] rounded-lg" : ""
-              } rounded-none px-6 p-4`}
+            className={`${
+              isActive || isChildActive() ? "bg-[#FCE7DD] rounded-lg" : ""
+            } rounded-none px-6 p-4`}
           >
             <div className="flex justify-between items-center w-full">
               <div className="flex gap-2 items-center">
@@ -74,12 +83,13 @@ const NavItem = ({
                   ) : null}
                 </div>
                 <p
-                  className={`${isActive || isChildActive()
-                    ? "font-semibold text-[#F16722]"
-                    : isLogOut
+                  className={`${
+                    isActive || isChildActive()
+                      ? "font-semibold text-[#F16722]"
+                      : isLogOut
                       ? "text-red-500"
                       : "text-[#787486] font-[400]"
-                    }`}
+                  }`}
                 >
                   {label}
                 </p>
@@ -92,7 +102,7 @@ const NavItem = ({
         </div>
 
         {opened && (
-          <div className="pl-8 ">
+          <div className="pl-8">
             {children.map((child, index) => {
               const isChildItemActive = location.pathname === child.href;
               return (
@@ -104,8 +114,9 @@ const NavItem = ({
                   onClick={onNavigate}
                 >
                   <List.Item
-                    className={`py-3 px-4 text-md ${isChildItemActive ? "text-[#F16722]" : "text-[#787486]"
-                      }`}
+                    className={`py-3 px-4 text-md ${
+                      isChildItemActive ? "text-[#F16722]" : "text-[#787486]"
+                    }`}
                   >
                     {child.label}
                   </List.Item>
@@ -118,14 +129,18 @@ const NavItem = ({
     );
   }
 
+  // -------------------------------
+  // 📄 NORMAL NAV ITEM
+  // -------------------------------
   return (
     <Anchor component={Link} to={href} underline="never" onClick={onNavigate}>
       <div
         className={`cursor-pointer 
-    ${isActive ? "bg-[#FCE7DD] rounded-lg" : "hover:bg-[#F0F2F5]"} 
-    rounded-none px-6 p-4`}
+          ${isActive ? "bg-[#FCE7DD] rounded-lg" : "hover:bg-[#F0F2F5]"} 
+          rounded-none px-6 p-4`}
       >
-        <div className="flex gap-2 items-center">
+        <div className="flex gap-2 items-center relative">
+          {/* Icon */}
           <div className="min-w-6 min-h-6 w-6 h-6 flex items-center justify-center">
             {isActive && ActiveIcon ? (
               <ActiveIcon size={20} />
@@ -133,19 +148,31 @@ const NavItem = ({
               <InactiveIcon size={20} />
             ) : null}
           </div>
-          <p
-            className={`${isActive
-                ? "font-semibold text-[#F16722]"
-                : isLogOut
+
+          {/* ✅ Label with unread count in front */}
+          <div className="flex items-center justify-between  w-full gap-2">
+            
+            <p
+              className={`${
+                isActive
+                  ? "font-semibold text-[#F16722]"
+                  : isLogOut
                   ? "text-red-500"
                   : "text-[#787486] font-[400] hover:text-black"
               }`}
-          >
-            {label}
-          </p>
+            >
+              {label}
+            </p>
+            {label === "Notifications" && unreadCount > 0 && (
+              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-2">
+                <Text c="customPrimary.10" fw={600} size="xs">
+                  {unreadCount}
+                </Text>
+              </div>
+            )}
+          </div>
         </div>
       </div>
-
     </Anchor>
   );
 };
