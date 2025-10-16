@@ -9,7 +9,7 @@ import { useUnread } from "../hooks/backendApis/admin/settings";
 interface NavItemProps {
   inactiveIcon?: React.ElementType;
   activeIcon?: React.ElementType;
-  label: string;
+  label: any;
   href: string;
   hasChildren?: boolean;
   children?: { label: string; href: string }[];

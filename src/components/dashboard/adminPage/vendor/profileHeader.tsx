@@ -1,9 +1,8 @@
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { Button, Text } from "@mantine/core";
-import User from "../../../../assets/images/user.png"
+import User from "../../../../assets/images/user.png";
 import EditProfileModal from "./EditProfileModal";
-
 
 interface ProfileHeaderProps {
   profile: {
@@ -15,32 +14,33 @@ interface ProfileHeaderProps {
     app_selected: number;
     profile_pic: string;
   };
-  onSave: (data: { firstName: string; lastName: string }) => void;
+  onSave: (data: { firstName: string; lastName: string; avatar?: string }) => void;
 }
 
 export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
-  const { profile_pic, company_name, email, name } = profile;
+  const { profile_pic, company_name, email, name, phone_number } = profile;
   const [opened, { open, close }] = useDisclosure(false);
-  const [localImage, setLocalImage] = useState(profile_pic);
+  const [localImage, setLocalImage] = useState(profile_pic || "");
   const emptyImage = User;
 
-  const nameParts = name ? name.split(' ') : ['', ''];
-  const firstName = nameParts[0] || '';
-  const lastName = nameParts.slice(1).join(' ') || '';
-
-
-
+  // Split name into first/last parts
+  const nameParts = name ? name.split(" ") : ["", ""];
+  const firstName = nameParts[0] || "";
+  const lastName = nameParts.slice(1).join(" ") || "";
 
   return (
     <div className="bg-white rounded-lg shadow p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div className="grid grid-cols-1 sm:flex sm:items-center gap-4">
+        {/* Avatar */}
         <div className="w-32 h-32 border-4 border-orange-500 rounded-full overflow-hidden mx-auto sm:mx-0">
           <img
             src={localImage || emptyImage}
+            alt="Profile"
             className="w-full h-full object-cover"
           />
         </div>
 
+        {/* Info */}
         <div className="text-center sm:text-left">
           <div className="mb-4">
             <Text size="lg" fw={600} c="textSecondary.9">
@@ -53,6 +53,7 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
             </Text>
           </div>
 
+          {/* Edit Button */}
           <Button
             variant="outline"
             color="gray"
@@ -70,12 +71,12 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
               },
             })}
           >
-            <Text>edit Profile</Text>
+            <Text>Edit Profile</Text>
           </Button>
-
         </div>
       </div>
 
+      {/* Modal */}
       <EditProfileModal
         opened={opened}
         onClose={close}
@@ -83,8 +84,14 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
           firstName,
           lastName,
           email,
+          companyName: company_name,
+          phoneNumber: phone_number,
+          avatar: profile_pic,
         }}
-        onSave={onSave}
+        onSave={(updatedData) => {
+          setLocalImage(updatedData.avatar || profile_pic);
+          onSave(updatedData);
+        }}
       />
     </div>
   );

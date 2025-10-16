@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import {
   Modal,
   TextInput,
@@ -16,11 +16,11 @@ interface EditVendorProfileModalProps {
   opened: boolean;
   onClose: () => void;
   initialData?: {
-    firstName: string;
-    lastName: string;
-    email: string;
-    companyName: string;
-    phoneNumber: string;
+    firstName?: string;
+    lastName?: string;
+    email?: string;
+    companyName?: string;
+    phoneNumber?: string;
     avatar?: string;
   };
   onSave: (data: {
@@ -39,16 +39,24 @@ export default function EditVendorProfileModal({
   initialData,
   onSave,
 }: EditVendorProfileModalProps) {
-  const [firstName, setFirstName] = useState(initialData?.firstName || "");
-  const [lastName, setLastName] = useState(initialData?.lastName || "");
-  const [email] = useState(initialData?.email || "");
-  const [companyName] = useState(
-    initialData?.companyName || ""
-  );
-  const [phoneNumber] = useState(
-    initialData?.phoneNumber || ""
-  );
-  const [avatar, setAvatar] = useState(initialData?.avatar || "");
+  const [firstName, setFirstName] = useState("");
+  const [lastName, setLastName] = useState("");
+  const [email, setEmail] = useState("");
+  const [companyName, setCompanyName] = useState("");
+  const [phoneNumber, setPhoneNumber] = useState("");
+  const [avatar, setAvatar] = useState("");
+
+  // ✅ Load initial data when modal opens
+  useEffect(() => {
+    if (initialData) {
+      setFirstName(initialData.firstName || "");
+      setLastName(initialData.lastName || "");
+      setEmail(initialData.email || "");
+      setCompanyName(initialData.companyName || "");
+      setPhoneNumber(initialData.phoneNumber || "");
+      setAvatar(initialData.avatar || "");
+    }
+  }, [initialData]);
 
   const handleFileChange = (file: File | null) => {
     if (!file) return;
@@ -58,7 +66,14 @@ export default function EditVendorProfileModal({
   };
 
   const handleSubmit = () => {
-    onSave({ firstName, lastName, email, companyName, phoneNumber, avatar });
+    onSave({
+      firstName,
+      lastName,
+      email,
+      companyName,
+      phoneNumber,
+      avatar,
+    });
     onClose();
   };
 
@@ -92,7 +107,7 @@ export default function EditVendorProfileModal({
         transition={{ duration: 0.25 }}
       >
         <Stack gap="md" mt="md">
-          {/* Avatar */}
+          {/* Avatar Upload */}
           <div className="relative flex justify-start mb-2">
             <Avatar
               src={avatar}
@@ -118,7 +133,7 @@ export default function EditVendorProfileModal({
             </FileButton>
           </div>
 
-          {/* Name Fields */}
+          {/* Editable Name Fields */}
           <Group grow>
             <TextInput
               label="First Name"
@@ -138,43 +153,16 @@ export default function EditVendorProfileModal({
             />
           </Group>
 
-          <TextInput
-            label="Email"
-            value={email}
-            radius="md"
-            disabled
-          />
-
-          <TextInput
-            label="Company Name"
-            value={companyName}
-            radius="md"
-            disabled
-          />
-
-          <TextInput
-            label="Phone Number"
-            value={phoneNumber}
-            radius="md"
-            disabled
-          />
+          {/* Read-only Fields */}
+          <TextInput label="Email" value={email} radius="md" disabled />
+          <TextInput label="Company Name" value={companyName} radius="md" disabled />
+          <TextInput label="Phone Number" value={phoneNumber} radius="md" disabled />
 
           <Group justify="space-between" mt="sm">
-            <Button
-              variant="outline"
-              color="orange"
-              radius="md"
-              w="48%"
-              onClick={onClose}
-            >
+            <Button variant="outline" color="orange" radius="md" w="48%" onClick={onClose}>
               Cancel
             </Button>
-            <Button
-              color="orange"
-              radius="md"
-              w="48%"
-              onClick={handleSubmit}
-            >
+            <Button color="orange" radius="md" w="48%" onClick={handleSubmit}>
               Update
             </Button>
           </Group>
