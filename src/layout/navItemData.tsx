@@ -1,3 +1,4 @@
+import { Text } from "@mantine/core";
 import {
   InActiveDashboardIcon,
   ActiveDashboardIcon,
@@ -77,7 +78,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveCategory,
     activeIcon: ActiveCategory,
   },
-  
+
   {
     label: "Returns and Refunds",
     href: ROUTES.returns,
@@ -96,7 +97,7 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveCustomer,
     activeIcon: ActiveCustomer,
   },
-  
+
   {
     label: "Transaction",
     href: ROUTES.transaction,
@@ -115,7 +116,6 @@ export const PointOfSale: NavItem[] = [
     inactiveIcon: InActiveReport,
     activeIcon: ActiveReport,
   },
-  
 ];
 
 export const FinancialManagement: NavItem[] = [
@@ -175,7 +175,6 @@ export const FinancialManagement: NavItem[] = [
       { label: "Transactions", href: `${ROUTES.allPurchaseOrder}` },
       { label: "Transfer", href: `${ROUTES.allPurchaseInvoice}` },
       { label: "Account Reconciliation", href: `${ROUTES.createRemittance}` },
-      
     ],
   },
   {
@@ -327,16 +326,30 @@ export const Admin: NavItem[] = [
     inactiveIcon: InActiveHelp,
     activeIcon: ActiveHelp,
   },
-
 ];
 
-
 export const otherMenu = [
-  
   { label: "Log Out", href: ROUTES.test, icon: Logout },
 ];
 
+
 export const mobileOtherMenu = [
-  { label: "Norification", href: ROUTES.notificationPage, icon: NotificationIcon },
+  
+  {
+    label: (
+      <div className="flex items-center gap-2">
+        <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+          <Text c="customPrimary.10" fw={600}>
+            
+          </Text>
+        </div>
+        <span>Notification</span>
+      </div>
+    ),
+    href: ROUTES.notificationPage,
+    icon: NotificationIcon,
+  },
   { label: "Settings", icon: Settings, href: ROUTES.adminSettings },
 ];
+
+

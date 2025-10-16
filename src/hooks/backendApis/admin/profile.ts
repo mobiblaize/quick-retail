@@ -28,7 +28,7 @@ export const useFetchCurrentSub = () => {
 };
 
 export const useFetchAllSub = (payload: Record<string, any>) => {
-  const queryString = new URLSearchParams(payload).toString();
+  const queryString = new URLSearchParams(payload as Record<string, string>).toString();
   return useGetData(`profile/subscriptions?${queryString}`);
 };
 
@@ -38,6 +38,10 @@ export const useFetchCancelSub = () => {
 
 export const useSubmitSubscription = () => {
   return usePostData("profile/renew-subscription");
+};
+
+export const useUpdateProfile = () => {
+  return usePutData(`profile/update-profile`);
 };
 
 export const useFetchVerifyPayment = () => {

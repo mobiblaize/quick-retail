@@ -16,6 +16,7 @@ import { Button, Divider, Text, Textarea, Title, Box } from "@mantine/core";
 import { useNavigate } from "react-router";
 import { notifications } from "@mantine/notifications";
 import Select, { MultiValue } from "react-select";
+import { ROUTES } from "../../../../constants/routes";
 
 const AddProductForm = () => {
   const navigate = useNavigate();
@@ -28,6 +29,7 @@ const AddProductForm = () => {
   );
   const [priceError, setPriceError] = useState<string | null>(null);
   const [quantityError, setQuantityError] = useState<string | null>(null);
+  const [checkedCategories, setCheckedCategories] = useState(false);
 
   const tagOptions = [
     { value: "electronics", label: "Electronics" },
@@ -67,6 +69,21 @@ const AddProductForm = () => {
 
   const { data } = useFetchAllCategories();
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
+  const categoriesLength = data?.data?.data?.length;
+  useEffect(() => {
+    if (categoriesLength === 0 && !checkedCategories) {
+      setCheckedCategories(true);
+      notifications.show({
+        title: "No Categories Created",
+        message: "Please create a category and subcategory to proceed",
+        color: "red",
+      });
+      navigate({
+        pathname: ROUTES.category,
+        search: "?create=true",
+      });
+    }
+  }, [categoriesLength, navigate, checkedCategories]);
   const categoryOptions = categories.map(
     (cat: { name: string; id: number }) => ({
       label: cat.name,
