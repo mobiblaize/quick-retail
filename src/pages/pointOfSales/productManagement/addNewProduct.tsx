@@ -2,7 +2,8 @@ import { Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
-import AddProductForm from "../../../components/dashboard/pointOfSales/productManagement/addProductForm";
+// import AddProductForm from "../../../components/dashboard/pointOfSales/productManagement/addProductForm";
+import AddProductFormNew from "../../../components/dashboard/pointOfSales/productManagement/AddProductFormNew";
 
 const AddNewProduct: React.FC = () => {
   const navigate = useNavigate();
@@ -70,7 +71,7 @@ const AddNewProduct: React.FC = () => {
       subHeaders={getSubHeaders()}
       // subHeaderButtom={getBottomButtons()}
     >
-      <AddProductForm />
+      <AddProductFormNew/>
     </PageContainer>
   );
 };
