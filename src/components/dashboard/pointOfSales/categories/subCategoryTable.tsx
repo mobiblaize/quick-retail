@@ -1,7 +1,7 @@
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
 import { TableRowData } from "../../../../types";
-import {  Loader, Text } from "@mantine/core";
+import {  Button, Loader, Text } from "@mantine/core";
 import { useEffect, useState } from "react";
 import DeleteSubCategory from "./modals/deleteSubCategory";
 import { Link } from "react-router";
@@ -143,11 +143,11 @@ useEffect(() => {
       accessorKey: "action",
       cell: ({ row }) => (
         //@ts-ignore
-        <button onClick={() => handleOpenDelete(row.original.id)}>
-          <Text fw={600} c="#1D2939" className="cursor-pointer">
+        <Button bg="#FFEADF" onClick={() => handleOpenDelete(row.original.id)}>
+          <Text fw={500} c="red" className="cursor-pointer">
             Delete
           </Text>
-        </button>
+        </Button>
       ),
     },
  

@@ -458,7 +458,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
         >
           <Text size="sm" c="#6C6975" mb={2}>
             Additional User Seat{" "}
-            <Tooltip label="These are extra user slots beyond the free seats provided. You can purchase these for a fee to allow more users access.">
+            <Tooltip label="These are extra user slots beyond the free seats provided.">
               <HelpCircle
                 size={16}
                 style={{

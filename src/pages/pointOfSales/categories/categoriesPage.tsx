@@ -1,6 +1,5 @@
 
-import { useState } from "react";
-import CreateNewCategory from "../../../components/dashboard/pointOfSales/categories/modals/createNewCategory";
+import { useEffect, useState } from "react";
 import CreateSubCategory from "../../../components/dashboard/pointOfSales/categories/modals/createSubCategory";
 import { useFetchAllCategories } from "../../../hooks/backendApis/pos/categories";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
@@ -8,6 +7,8 @@ import PageContainer from "../../../layout/pageContainer";
 import CategoriesTable from "../../../components/dashboard/pointOfSales/categories/categoriesTable";
 import { Text, Button, Menu, Skeleton } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
+import { useSearchParams } from "react-router";
+import CreateNewCategory from "../../../components/dashboard/pointOfSales/categories/modals/createNewCategory";
 
 /* --- Lightweight table skeleton --- */
 const CategoriesTableSkeleton = () => (
@@ -57,6 +58,8 @@ const CategoriesPage = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [activeSort, setActiveSort] = useState("");
+  const [searchParams] = useSearchParams();
+  const create = searchParams.get("create");
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
     sort_by: filters.sortBy || "",
@@ -72,7 +75,8 @@ const CategoriesPage = () => {
     sort_by: activeSort,
   };
 
-  // @ts-ignore
+  // eslint-disable-next-line @typescript-eslint/ban-ts-comment
+  // @ts-expect-error
   const { data, isLoading, refetch } = useFetchAllCategories(payload) || {};
 
   const categories = Array.isArray(data?.data?.data) ? data.data.data : [];
@@ -98,6 +102,10 @@ const CategoriesPage = () => {
           value: cat.id,
         }))
       : [];
+
+      useEffect(() => {
+    if (create==='true') setIsCreateCategoryOpen(true);
+  }, [create]);
 
   const subHeaders = [
     <div key="1">

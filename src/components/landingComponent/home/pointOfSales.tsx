@@ -1,5 +1,9 @@
 import { Barchat } from "../../../assets/svg";
-import frame from "../../../assets/images/frame1.png";
+import frame from "../../../assets/images/frame01.png";
+import frame2 from "../../../assets/images/frame02.png";
+import frame3 from "../../../assets/images/frame03.png";
+import frame4 from "../../../assets/images/frame04.png";
+import { Divider, Pill } from "@mantine/core";
 
 const PointOfSales = () => {
   const sales = [
@@ -44,7 +48,7 @@ const PointOfSales = () => {
       icon: Barchat,
       label: "Supplier Management",
     },
-  ]
+  ];
 
   const finance = [
     {
@@ -63,7 +67,7 @@ const PointOfSales = () => {
       icon: Barchat,
       label: "Transaction Management",
     },
-  ]
+  ];
 
   const asset = [
     {
@@ -78,66 +82,107 @@ const PointOfSales = () => {
       icon: Barchat,
       label: "Reports",
     },
-  ]
+  ];
 
   return (
-    <main className="border-[#F8E2D8] border-t">
-      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-stretch">
+    <main className="">
+      <Divider
+        label={<Pill size="xl" c="#F16722" bg="#F1672226" py="10" px={24} h={"auto"} w={"auto"}>Point of Sales</Pill>}
+        labelPosition="center"
+         py="10" 
+        color="#F8E2D8"
+        size="sm"
+        styles={{
+          root: { borderColor: "#F8E2D8" },
+          label: { backgroundColor: "transparent" },
+        }}
+      />
+      <section className="py-8 sm:py-10 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
           {/* Left Column */}
-          <div className="flex flex-col h-full">
+          <div className="flex flex-col h-full bg-[#F0F2F5] rounded-[16px] p-[40px] ">
             <div>
               <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
                 Point of Sales System
               </h2>
               <p className="mt-4 text-[#667085] font-sans">
-                This covers sales, inventory, products, discounts, customer management and
-                so many other in-store functionalities needed for businesses to make and manage sales
+                This covers sales, inventory, products, discounts, customer
+                management and so many other in-store functionalities needed for
+                businesses to make and manage sales
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mt-6">
-              <div className="text-[#667085] font-sans">Some features include:</div>
+              <div className="text-[#667085] font-sans">
+                Some features include:
+              </div>
               {sales.map((item, i) => (
-                <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                <div
+                  key={i}
+                  className="grid grid-cols-[auto_1fr] items-center gap-2"
+                >
                   <item.icon height="20" width="20" />
-                  <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
+                  <p className="text-sm font-clash-medium text-gray-800">
+                    {item.label}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
 
           {/* Right Column */}
-          <div className="h-full flex justify-center lg:justify-end">
-            <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
+          <div className=" flex justify-center lg:justify-end">
+            <img src={frame} alt="frame" className="w-full  object-contain" loading="lazy" />
           </div>
         </div>
       </section>
 
+      <Divider
+        label={<Pill size="xl" c="#F16722" bg="#F1672226" py="10" px={24} h={"auto"} w={"auto"}>Procurement System</Pill>}
+        labelPosition="center"
+        color="#F8E2D8"
+        size="sm"
+        styles={{
+          root: { borderColor: "#F8E2D8" },
+          label: { backgroundColor: "transparent" },
+        }}
+      />
 
       {/* <section className="border-t border-b border-[#F8E2D8]"> */}
-      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+      <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div className="h-full flex justify-center lg:justify-end">
-            <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
+          <div className="h-full flex justify-center lg:justify-end ">
+            <img
+              src={frame2}
+              alt="frame"
+              className="w-full h-[500px] object-contain"
+              loading="lazy"
+            />
           </div>
-          <div className="flex flex-col">
+          <div className="flex flex-col bg-[#F0F2F5] rounded-[16px] p-[40px]">
             <div>
               <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
-                Procurement  System Functionalities.
+                Procurement System Functionalities.
               </h2>
               <p className="mt-4 text-[#667085] font-sans">
-                The procurement app in the ERP streamlines the purchasing process
-                by integrating with various modules, including inventory management,
-                supplier management, and order tracking, ensuring efficient procurement
-                operations.
+                The procurement app in the ERP streamlines the purchasing
+                process by integrating with various modules, including inventory
+                management, supplier management, and order tracking, ensuring
+                efficient procurement operations.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-1 gap-4 mt-6">
-              <div className="text-[#667085] font-sans">Some features include:</div>
+              <div className="text-[#667085] font-sans">
+                Some features include:
+              </div>
               {purchase.map((item, i) => (
-                <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                <div
+                  key={i}
+                  className="grid grid-cols-[auto_1fr] items-center gap-2"
+                >
                   <item.icon height="20" width="20" />
-                  <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
+                  <p className="text-sm font-clash-medium text-gray-800">
+                    {item.label}
+                  </p>
                 </div>
               ))}
             </div>
@@ -146,64 +191,107 @@ const PointOfSales = () => {
       </section>
       {/* </section> */}
 
-      <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+<Divider
+        label={<Pill size="xl" c="#F16722" bg="#F1672226" py="10" px={24} h={"auto"} w={"auto"}>Finance System</Pill>}
+        labelPosition="center"
+        color="#F8E2D8"
+        size="sm"
+        styles={{
+          root: { borderColor: "#F8E2D8" },
+          label: { backgroundColor: "transparent" },
+        }}
+      />
+
+      <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-          <div className="flex flex-col">
+          <div className="flex flex-col bg-[#F0F2F5] rounded-[16px] p-[40px]">
             <div>
               <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
                 Finance System Functionalities.
               </h2>
               <p className="mt-4 text-[#667085] font-sans">
-                The covers core accounting functions, enabling efficient tracking of sales,
-                expenses, and profits. It simplifies financial reporting, inventory management,
-                and customer transactions, ensuring that retailers can focus on growth while
+                The covers core accounting functions, enabling efficient
+                tracking of sales, expenses, and profits. It simplifies
+                financial reporting, inventory management, and customer
+                transactions, ensuring that retailers can focus on growth while
                 maintaining accurate financial oversight.
               </p>
             </div>
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
               {finance.map((item, i) => (
-                <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
+                <div
+                  key={i}
+                  className="grid grid-cols-[auto_1fr] items-center gap-2"
+                >
                   <item.icon height="20" width="20" />
-                  <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
+                  <p className="text-sm font-clash-medium text-gray-800">
+                    {item.label}
+                  </p>
                 </div>
               ))}
             </div>
           </div>
           <div className="h-full flex justify-center lg:justify-end">
-            <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
+            <img
+              src={frame3}
+              alt="frame"
+              className="w-full h-[500px] object-contain"
+              loading="lazy"
+            />
           </div>
         </div>
       </section>
 
+      <Divider
+        label={<Pill size="xl" c="#F16722" bg="#F1672226" py="10" px={24} h={"auto"} w={"auto"}>Asset System</Pill>}
+        labelPosition="center"
+        color="#F8E2D8"
+        size="sm"
+        styles={{
+          root: { borderColor: "#F8E2D8" },
+          label: { backgroundColor: "transparent" },
+        }}
+      />
+
       {/* <section className="border-t border-b border-[#F8E2D8]"> */}
-        <section className="py-8 sm:py-12 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
-          <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
-            <div className="h-full flex justify-center lg:justify-end">
-              <img src={frame} alt="frame" className="w-full h-[500px] object-contain" />
+      <section className="py-2 sm:py-2 max-w-7xl mx-auto container px-4 sm:px-6 lg:px-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 lg:gap-16 items-center">
+          <div className="h-full flex justify-center lg:justify-end">
+            <img
+              src={frame4}
+              alt="frame"
+              className="w-full h-[500px] object-contain"
+              loading="lazy"
+            />
+          </div>
+          <div className="flex flex-col bg-[#F0F2F5] rounded-[16px] p-[40px]">
+            <div>
+              <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
+                Asset Management System Features.
+              </h2>
+              <p className="mt-4 text-[#667085] font-sans">
+                This simplifies asset management for retail businesses. With
+                real-time updates and user-friendly dashboards, it boosts
+                efficiency and keeps your assets in check. Say goodbye to manual
+                tracking and embrace smarter retail management!
+              </p>
             </div>
-            <div className="flex flex-col">
-              <div>
-                <h2 className="text-[#101828] text-2xl sm:text-3xl font-clash-medium">
-                  Asset Management System Features.
-                </h2>
-                <p className="mt-4 text-[#667085] font-sans">
-                  This simplifies asset management for retail businesses. With real-time
-                  updates and user-friendly dashboards, it boosts efficiency and keeps your
-                  assets in check. Say goodbye to manual tracking and embrace smarter retail
-                  management!
-                </p>
-              </div>
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
-                {asset.map((item, i) => (
-                  <div key={i} className="grid grid-cols-[auto_1fr] items-center gap-2">
-                    <item.icon height="20" width="20" />
-                    <p className="text-sm font-clash-medium text-gray-800">{item.label}</p>
-                  </div>
-                ))}
-              </div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6 mt-6 sm:mt-8">
+              {asset.map((item, i) => (
+                <div
+                  key={i}
+                  className="grid grid-cols-[auto_1fr] items-center gap-2"
+                >
+                  <item.icon height="20" width="20" />
+                  <p className="text-sm font-clash-medium text-gray-800">
+                    {item.label}
+                  </p>
+                </div>
+              ))}
             </div>
           </div>
-        </section>
+        </div>
+      </section>
       {/* </section> */}
     </main>
   );

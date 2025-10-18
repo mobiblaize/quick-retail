@@ -63,9 +63,8 @@ const DiscountTableSkeleton = () => (
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
-  const [dateRange] = useState<{ startDate: string; endDate: string }>({ startDate: "", endDate: "" });
   const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10);
+  const [perPage] = useState("10");
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
 
@@ -77,10 +76,8 @@ const HappyTimePage = () => {
     return status.toLowerCase();
   };
 
-  const mapFiltersToPayload = (filters: FilterValues) => ({
-    // @ts-ignore
+  const mapFiltersToPayload = (filters: Partial<FilterValues>) => ({
     search: filters.search ?? "",
-    // @ts-ignore
     sort_by: filters.sortBy ?? "",
     per_page: "",
     paginate: true,
@@ -91,26 +88,26 @@ const HappyTimePage = () => {
     page: currentPage.toString(),
   });
 
-  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
-  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+  const statsPayload = mapFiltersToPayload({}); // No filters for stats
 
   const payload = {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-    ...(startDate ? { start_date: startDate } : {}),
-    ...(endDate ? { end_date: endDate } : {}),
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
     sort_by: activeSort,
   };
 
-  // @ts-ignore
+  const { data: statsData = {}, isLoading: isLoadingStats = false } = useFetchAllDiscount(statsPayload) || {};
   const { data = {}, isLoading = false } = useFetchAllDiscount(payload) || {};
 
   const rawDiscounts = data?.data?.discounts?.data || [];
-  const stats = data?.data?.stats || {};
+  const stats = statsData?.data?.stats || {};
 
-  const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
+  const handleFilterChange = (filters: FilterValues) => {
+    setAppliedFilters(filters);
+    setCurrentPage(1);
+  };
 
   const paginationData = data?.data?.discounts
     ? {
@@ -154,7 +151,7 @@ const HappyTimePage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       {/* Overview / stats */}
-      {isLoading ? <OverviewSkeleton /> : <AnalysisOverview1 stats={stats} />}
+      {isLoadingStats ? <OverviewSkeleton /> : <AnalysisOverview1 stats={stats} />}
 
       {/* Discounts table */}
       {isLoading ? (

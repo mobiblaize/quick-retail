@@ -15,7 +15,6 @@ export interface PaginationData {
   total?: number;
 }
 
-
 interface GenericTableProps<T> {
   enableSearch?: boolean;
   enableSort?: boolean;
@@ -49,15 +48,17 @@ interface GenericTableProps<T> {
   filters?: FilterValues;
   showFilter?: boolean;
   tableType?:
-  | "inventory"
-  | "sales"
-  | "product"
-  | "returns"
-  | "discount"
-  | "audit"
-  | "transaction";
+    | "inventory"
+    | "sales"
+    | "product"
+    | "returns"
+    | "discount"
+    | "audit"
+    | "transaction";
   locations?: string[];
   categories?: string[];
+  roles?: string[];
+  modules?: string[];
 }
 
 export default function GenericTable<T>({
@@ -81,6 +82,8 @@ export default function GenericTable<T>({
   tableType,
   locations,
   categories,
+  roles,
+  modules,
   onFilterChange,
   filters = {
     startDate: "",
@@ -90,59 +93,21 @@ export default function GenericTable<T>({
     stockTo: "",
     orderStatus: "",
     role: "",
-    module: ""
+    module: "",
   },
 }: GenericTableProps<T>) {
-  // if (isLoading) {
-  //   return (
-  //     <Box
-  //       style={{ display: "flex", justifyContent: "center", padding: "2rem" }}
-  //     >
-  //       <Loader size="lg" />
-  //     </Box>
-  //   );
-  // }
-
-  if (isLoading) {
-    return null;  // 👈 no spinner, no skeleton here
-  }
-
-  // if (!data || data.length === 0) {
-  //   return <EmptyState2 />;
-  // }
-  const handleResetFilters = () => {
-    onFilterChange?.(initialFilters);
-    setShowFilterPanel(false);
-  };
-
-  if (!data || data.length === 0) {
-    return <EmptyState2 onReset={handleResetFilters} />;
-  }
-
-
-  const initialFilters: FilterValues = {
-    startDate: "",
-    endDate: "",
-    location: "",
-    stockFrom: "",
-    stockTo: "",
-    orderStatus: "",
-    role: "",
-    module: "",
-  };
-
-
   const [showFilterPanel, setShowFilterPanel] = React.useState(false);
+
   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
-  const isValueSet = (v: any) => {
+  const isValueSet = (v: unknown) => {
     if (Array.isArray(v)) return v.length > 0;
     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
     return (
       v !== undefined &&
       v !== null &&
       v !== "" &&
-      !DEFAULT_FILTER_VALUES.includes(v)
+      !DEFAULT_FILTER_VALUES.includes(v as string)
     );
   };
 
@@ -151,12 +116,27 @@ export default function GenericTable<T>({
     [filters]
   );
 
+  const handleResetFilters = () => {
+    onFilterChange?.({
+      startDate: "",
+      endDate: "",
+      location: "",
+      stockFrom: "",
+      stockTo: "",
+      orderStatus: "",
+      role: "",
+      module: "",
+    });
+    setSearchTerm?.("");
+    onSortChange?.("");
+    onPageChange?.(1);
+    setShowFilterPanel(false);
+  };
+
   const handleFilterChange = (newFilters: FilterValues) => {
     onFilterChange?.(newFilters);
     setShowFilterPanel(false);
   };
-
-
 
   return (
     <div
@@ -165,9 +145,10 @@ export default function GenericTable<T>({
         borderRadius: "8px",
         boxShadow: "0 1px 3px 0 rgb(0 0 0 / 0.1)",
         marginTop: "2em",
+        position: "relative",
       }}
     >
-      {/* Title Section + Search */}
+      {/* Header Section: Title + Search + Sort + Filter */}
       {(titleSection || setSearchTerm || onSortChange || showFilter) && (
         <div
           style={{
@@ -260,19 +241,19 @@ export default function GenericTable<T>({
                         onFilterChange={handleFilterChange}
                         locations={locations}
                         categories={categories}
-                        showCategory={true}
-                        showLocation={true}
-                        showPrice={true}
-                        showProductStatus={true}
+                        showCategory
+                        showLocation
+                        showPrice
+                        showProductStatus
                         filterType="product"
                       />
                     )}
                     {tableType === "inventory" && (
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                        showLocation={true}
-                        showStockLevel={true}
-                        showOrderStatus={true}
+                        showLocation
+                        showStockLevel
+                        showOrderStatus
                         locations={locations}
                         filterType="inventory"
                       />
@@ -280,41 +261,38 @@ export default function GenericTable<T>({
                     {tableType === "sales" && (
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                        showPrice={true}
-                        showPaymentStatus={true}
-                        filterType={"sales"}
-
+                        showPrice
+                        showPaymentStatus
+                        filterType="sales"
                       />
                     )}
                     {tableType === "discount" && (
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                        showDiscountType={true}
-                        showDiscountStatus={true}
-                        filterType={"discount"}
+                        showDiscountType
+                        showDiscountStatus
+                        filterType="discount"
                       />
                     )}
                     {tableType === "returns" && (
                       <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
                         locations={locations}
-                        showReason={true}
-                        showReturnStatus={true}
-                        filterType={"returns"}
-                      // showLocation={true}
+                        showReason
+                        showReturnStatus
+                        filterType="returns"
                       />
                     )}
-                    {/* 
-                      {tableType === "audit" && (
-                        <ReusableFilterComponent
+                    {tableType === "audit" && (
+                      <ReusableFilterComponent
                         onFilterChange={handleFilterChange}
-                          roles={roles}
-                          modules={modules}
-                          showRole={true}
-                          showModule={true}
-                          filterType="audit"
-                        />
-                      )} */}
+                        roles={roles}
+                        modules={modules}
+                        showRole
+                        showModule
+                        filterType="audit"
+                      />
+                    )}
                   </div>
                 )}
               </div>
@@ -323,62 +301,8 @@ export default function GenericTable<T>({
         </div>
       )}
 
-      <Box>
-        {/* <Table.ScrollContainer minWidth={800}>
-          <Table striped={false} highlightOnHover withTableBorder={false}>
-            <Table.Thead>
-              <Table.Tr style={{ backgroundColor: "#f8fafc" }}>
-                {columns.map((col) => (
-                  <Table.Th
-                    key={col.key}
-                    style={{
-                      fontWeight: 500,
-                      color: "#64748b",
-                      padding: "12px 16px",
-                      fontSize: "13px",
-                      width: col.width,
-                    }}
-                  >
-                    {col.header}
-                  </Table.Th>
-                ))}
-                {actions && (
-                  <Table.Th
-                    style={{
-                      fontWeight: 500,
-                      color: "#64748b",
-                      fontSize: "13px",
-                    }}
-                  >
-                    Action
-                  </Table.Th>
-                )}
-              </Table.Tr>
-            </Table.Thead>
-
-            <Table.Tbody>
-              {data.map((row, idx) => (
-                <Table.Tr
-                  key={idx}
-                  styles={{
-                    tr: {
-                      "&:hover": { backgroundColor: "#f8fafc" },
-                      borderBottom: "1px solid #f1f5f9",
-                    },
-                  }}
-                >
-                  {columns.map((col) => (
-                    <Table.Td key={col.key} style={{ padding: "12px 16px" }}>
-                      {col.render(row)}
-                    </Table.Td>
-                  ))}
-                  {actions && <Table.Td>{actions(row)}</Table.Td>}
-                </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer> */}
-
+      {/* Table Section */}
+      <Box style={{ position: "relative", minHeight: "300px" }}>
         <Table.ScrollContainer minWidth={800}>
           <Table
             striped={false}
@@ -395,18 +319,17 @@ export default function GenericTable<T>({
                 color: theme.colors.gray[7],
                 padding: `${theme.spacing.sm} ${theme.spacing.md}`,
                 textAlign: "left",
-                fontFamily: 'DM Sans, sans-serif',
+                fontFamily: "DM Sans, sans-serif",
               },
               td: {
                 padding: `${theme.spacing.sm} ${theme.spacing.md}`,
                 fontSize: theme.fontSizes.sm,
                 borderBottom: `1px solid ${theme.colors.gray[2]}`,
-                fontFamily: 'DM Sans, sans-serif',
+                fontFamily: "DM Sans, sans-serif",
               },
               tr: {
                 "&:hover": {
                   backgroundColor: theme.colors.gray[0],
-                  fontFamily: 'DM Sans, sans-serif',
                 },
               },
             })}
@@ -435,66 +358,72 @@ export default function GenericTable<T>({
           </Table>
         </Table.ScrollContainer>
 
-
-        {paginationData && paginationData.last_page > 1 && onPageChange && (
+        {/* Empty State Overlay (doesn't remove filters/search/sort) */}
+        {!isLoading && (!data || data.length === 0) && (
           <Box
             style={{
-              display: "flex",
-              justifyContent: "flex-end",
-              padding: "16px 24px",
-              borderTop: "1px solid #f1f5f9",
-              fontFamily: 'DM Sans, sans-serif',
+              position: "absolute",
+              top: "75%",
+              left: "50%",
+              transform: "translate(-50%, -50%)",
+              width: "100%",
+              hight: "auto",
+              textAlign: "center",
+              background: "rgba(255,255,255,0.8)",
+              padding: "1rem",
+              borderRadius: "8px",
             }}
           >
-            {/* <Pagination
-              total={paginationData.last_page}
-              value={paginationData.current_page}
-              onChange={onPageChange}
-              size="sm"
-              styles={{
-                root: { border: "none" },
-                control: {
-                  border: "none",
-                  "&[data-active]": {
-                    backgroundColor: "#f97316",
-                    borderColor: "#f97316",
-                    color: "white",
-                  },
-                  "&:hover:not([data-active])": { backgroundColor: "#f8fafc" },
-                },
-              }}
-            /> */}
-
-
-            <Pagination
-              total={paginationData.last_page}
-              value={paginationData.current_page}
-              onChange={onPageChange}
-              size="sm"
-              getControlProps={(control) => ({
-                children:
-                  typeof control === "number" ? (
-                    <Text fz="sm" fw={500} c="gray.7">
-                      {control}
-                    </Text>
-                  ) : undefined,
-              })}
-              styles={(theme) => ({
-                control: {
-                  border: "none",
-                  "&[data-active]": {
-                    backgroundColor: "transparent", // no fill
-                    border: `1px solid ${theme.colors.orange[6]}`, // orange border
-                    color: theme.colors.orange[6], // orange text
-                    fontFamily: 'DM Sans, sans-serif',
-                  },
-                  "&:hover:not([data-active])": { backgroundColor: theme.colors.gray[0] },
-                },
-              })}
+            <EmptyState2
+              onReset={handleResetFilters}
+              setSearchTerm={setSearchTerm}
+              onFilterChange={onFilterChange}
+              onSortChange={onSortChange}
+              onPageChange={onPageChange}
             />
           </Box>
         )}
       </Box>
+
+      {/* Pagination */}
+      {paginationData && paginationData.last_page > 1 && onPageChange && (
+        <Box
+          style={{
+            display: "flex",
+            justifyContent: "flex-end",
+            padding: "16px 24px",
+            borderTop: "1px solid #f1f5f9",
+          }}
+        >
+          <Pagination
+            total={paginationData.last_page}
+            value={paginationData.current_page}
+            onChange={onPageChange}
+            size="sm"
+            getControlProps={(control) => ({
+              children:
+                typeof control === "number" ? (
+                  <Text fz="sm" fw={500} c="gray.7">
+                    {control}
+                  </Text>
+                ) : undefined,
+            })}
+            styles={(theme) => ({
+              control: {
+                border: "none",
+                "&[data-active]": {
+                  backgroundColor: "transparent",
+                  border: `1px solid ${theme.colors.orange[6]}`,
+                  color: theme.colors.orange[6],
+                },
+                "&:hover:not([data-active])": {
+                  backgroundColor: theme.colors.gray[0],
+                },
+              },
+            })}
+          />
+        </Box>
+      )}
     </div>
   );
 }

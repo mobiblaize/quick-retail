@@ -14,13 +14,13 @@ const Footer = () => {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 sm:mt-1 gap-4 sm:gap-0">
           <div className="flex flex-wrap font-sans text-[#98A2B3] gap-3 sm:gap-3.5 text-sm sm:text-base">
-            <span className="hover:text-white transition-colors cursor-pointer">
+            <span className="hover:text-[#F16722] transition-colors cursor-pointer">
               Company
             </span>
-            <span className="hover:text-white transition-colors cursor-pointer">
+            <span className="hover:text-[#F16722] transition-colors cursor-pointer">
               Pricing
             </span>
-            <span className="hover:text-white transition-colors cursor-pointer">
+            <span className="hover:text-[#F16722] transition-colors cursor-pointer">
               Policy
             </span>
           </div>

@@ -1,18 +1,21 @@
-import { Button } from "@mantine/core";
-import { showNotification } from "@mantine/notifications";
+import { Button, Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import AddBulkUploadDoc from "../../../components/dashboard/pointOfSales/productManagement/addBulkUploadDoc";
 import { useCreateBulkProduct } from "../../../hooks/backendApis/pos/products";
 import { useState } from "react";
-import { IconCheck, IconX } from "@tabler/icons-react";
-import { Text } from "@mantine/core";
+import { IconX } from "@tabler/icons-react";
+import { showNotification } from "@mantine/notifications";
 import { ChevronLeft } from "lucide-react";
+import UploadSuccessModal from "./UploadSuccessModal";
 
 const AddBulkProduct: React.FC = () => {
   const [file, setFile] = useState<File | null>(null);
+  const [successModalOpen, setSuccessModalOpen] = useState(false);
+  const [uploadedCount, setUploadedCount] = useState<number>(0);
 
   const { mutate: createBulkProduct, isPending } = useCreateBulkProduct();
+  const navigate = useNavigate();
 
   const handleSubmit = () => {
     if (!file) {
@@ -30,14 +33,11 @@ const AddBulkProduct: React.FC = () => {
     formData.append("type", "variant");
 
     createBulkProduct(formData, {
-      onSuccess: () => {
-        showNotification({
-          title: "Success",
-          message: "Upload successful!",
-          color: "green",
-          icon: <IconCheck />,
-        });
-        navigate(-1);
+      onSuccess: (res: any) => {
+        // Extract uploaded product count from response (if available)
+        const count = res?.data?.uploaded_count || 50; // fallback for demo
+        setUploadedCount(count);
+        setSuccessModalOpen(true);
       },
       onError: (err: any) => {
         console.error("Upload failed", err);
@@ -56,9 +56,6 @@ const AddBulkProduct: React.FC = () => {
     });
   };
 
-
-  const navigate = useNavigate();
-
   const handleBack = () => {
     navigate(-1);
   };
@@ -76,21 +73,9 @@ const AddBulkProduct: React.FC = () => {
       </button>
     );
 
-    const subHeaders = [
+    return [
       <div key="1" className="py-2.5">
-        <div className="hidden sm:flex gap-8 items-center">
-          {backButton}
-          {/* <div className="flex items-center">
-            <Text>Product management</Text>
-            <>
-              <span className="mx-2">/</span>
-              <Text c="black" fw={500}>
-                Add Bulk Product
-              </Text>
-            </>
-          </div> */}
-        </div>
-
+        <div className="hidden sm:flex gap-8 items-center">{backButton}</div>
         <div className="flex sm:hidden gap-2 items-center">{backButton}</div>
       </div>,
       <div key="2">
@@ -99,14 +84,16 @@ const AddBulkProduct: React.FC = () => {
         </Text>
       </div>,
     ];
-
-    return subHeaders;
   };
 
   const getBottomButtons = () => {
     return [
       <div key="bulk-upload-buttons" className="flex gap-4 justify-end">
-        <Button variant="outline-primary" onClick={() => navigate(-1)} style={{ width: 150 }}>
+        <Button
+          variant="outline-primary"
+          onClick={() => navigate(-1)}
+          style={{ width: 150 }}
+        >
           Cancel
         </Button>
         <Button
@@ -127,6 +114,16 @@ const AddBulkProduct: React.FC = () => {
       subHeaderButtom={getBottomButtons()}
     >
       <AddBulkUploadDoc file={file} setFile={setFile} />
+
+      {/* ✅ Success Modal */}
+      <UploadSuccessModal
+        opened={successModalOpen}
+        onClose={() => {
+          setSuccessModalOpen(false);
+          navigate(-1);
+        }}
+        count={uploadedCount}
+      />
     </PageContainer>
   );
 };

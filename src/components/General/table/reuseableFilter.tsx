@@ -26,6 +26,7 @@ export interface FilterValues {
   priceFrom?: string;
   priceTo?: string;
   paymentStatus?: string;
+  auditStatus?: string;
   productStatus?: string;
   reason?: Reason;
   type?: DiscountType;
@@ -110,6 +111,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     priceFrom: '',
     priceTo: '',
     paymentStatus: 'All',
+    auditStatus: "All",
     productStatus: 'All',
     type: '',
     discountStatus: 'All',
@@ -371,8 +373,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
               {[
                 { value: "All", label: "All" },
                 { value: "available", label: "Available" },
-                { value: "low_stock", label: "Low Stock" },
-                { value: "sold_out", label: "Sold Out" },
+                { value: "low stock", label: "Low Stock" },
+                { value: "sold out", label: "Sold Out" },
               ].map((status) => (
                 <Radio
                   key={status.value}

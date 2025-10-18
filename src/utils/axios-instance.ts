@@ -3,10 +3,9 @@ import axios from "axios";
 import { notifications } from "@mantine/notifications";
 import { clearUser } from "../hooks/useCustomSession";
 
-// export const baseUrl = "https://api-quick-retail.sbscuk.co.uk/public/api/v1/";
-// export const baseUrl = "https://api.quick-retail.com/public";
-
-export const baseUrl = import.meta.env.VITE_BACKEND_BASE_ENDPOINT;
+export const baseUrl =
+  import.meta.env.VITE_BACKEND_BASE_ENDPOINT ||
+  "https://api-quick-retail.sbscuk.co.uk/public/api/v1/";
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
@@ -28,7 +27,6 @@ const errorResetTimeout = 10000; // 10 seconds
 
 const handleError = (error: any) => {
   if (!error.response) {
-    console.log("Network error or server is unreachable.");
     return Promise.reject(new Error("Network error or server is unreachable."));
   }
 
@@ -72,4 +70,4 @@ const handleError = (error: any) => {
 axiosInstance.interceptors.request.use(attachToken, Promise.reject);
 axiosInstance.interceptors.response.use((res: any) => res, handleError);
 
-export { axiosInstance};
+export { axiosInstance };

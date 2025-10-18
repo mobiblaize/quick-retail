@@ -58,8 +58,13 @@ const OrdersTableSkeleton = () => (
 );
 
 const SalesProcessingPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
     startDate: "",
     endDate: "",
   });
@@ -73,7 +78,7 @@ const SalesProcessingPage = () => {
   useEffect(() => {
     if (location.state?.reload) {
       setCurrentPage(1);
-      setAppliedFilters({} as FilterValues); // avoid setting null to typed state
+      setAppliedFilters({} as FilterValues);
       window.history.replaceState({}, document.title);
     }
   }, [location.state?.reload]);
@@ -86,10 +91,7 @@ const SalesProcessingPage = () => {
   };
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
-    // @ts-ignore
     search: filters.search ?? "",
-    // search: searchTerm,
-    // @ts-ignore
     sort_by: filters.sortBy ?? "",
     per_page: perPage.toString(),
     paginate: true,
@@ -101,38 +103,46 @@ const SalesProcessingPage = () => {
     page: currentPage.toString(),
   });
 
-  const startDate = dateRange.startDate || appliedFilters?.startDate || "";
-  const endDate = dateRange.endDate || appliedFilters?.endDate || "";
+  // Separate payloads for overview and table data
+  const overviewPayload = {
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
+  };
 
-  const payload = {
+  const tablePayload = {
     ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
-    ...(startDate ? { start_date: startDate } : {}),
-    ...(endDate ? { end_date: endDate } : {}),
-    page: currentPage,
-    per_page: perPage,
+    ...(dateRange.startDate ? { start_date: dateRange.startDate } : {}),
+    ...(dateRange.endDate ? { end_date: dateRange.endDate } : {}),
+    page: currentPage.toString(),
+    per_page: perPage.toString(),
     search: searchTerm,
     sort_by: activeSort,
   };
 
-  // @ts-ignore
-  const { data = {}, isLoading = false } = useFetchAllSales(payload) || {};
-  const salesData = data?.data?.sales?.data ?? [];
+  // Separate API calls for overview and table
+  const { data: overviewData = {}, isLoading: isOverviewLoading } =
+    useFetchAllSales(overviewPayload) || {};
+  const { data: tableData = {}, isLoading: isTableLoading } =
+    useFetchAllSales(tablePayload) || {};
 
-  const paginationData = data?.data?.sales
+  const salesData = tableData?.data?.sales?.data ?? [];
+
+  const paginationData = tableData?.data?.sales
     ? {
-        current_page: data.data.sales.current_page,
-        last_page: data.data.sales.last_page,
-        per_page: data.data.sales.per_page,
-        total: data.data.sales.total,
-        from: data.data.sales.from,
-        to: data.data.sales.to,
-        next_page_url: data.data.sales.next_page_url,
-        prev_page_url: data.data.sales.prev_page_url,
+        current_page: tableData.data.sales.current_page,
+        last_page: tableData.data.sales.last_page,
+        per_page: tableData.data.sales.per_page,
+        total: tableData.data.sales.total,
+        from: tableData.data.sales.from,
+        to: tableData.data.sales.to,
+        next_page_url: tableData.data.sales.next_page_url,
+        prev_page_url: tableData.data.sales.prev_page_url,
       }
     : undefined;
 
   const handlePageChange = (page: number) => setCurrentPage(page);
-  const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
+  const handleFilterChange = (filters: FilterValues) =>
+    setAppliedFilters(filters);
 
   const subHeaders = [
     <div key="1">
@@ -150,20 +160,24 @@ const SalesProcessingPage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       {/* Overview: skeleton while loading */}
-      {isLoading ? (
+      {isOverviewLoading ? (
         <SalesOverviewSkeleton />
       ) : (
-        <SalesOverview data={data?.data} isLoading={isLoading} setDateRange={setDateRange} />
+        <SalesOverview
+          data={overviewData?.data}
+          isLoading={isOverviewLoading}
+          setDateRange={setDateRange}
+        />
       )}
 
       {/* Orders table: skeleton while loading */}
-      {isLoading ? (
+      {isTableLoading ? (
         <OrdersTableSkeleton />
       ) : (
         <CustomerOrdersTable
           salesData={salesData}
           onFilterChange={handleFilterChange}
-          isLoading={isLoading}
+          isLoading={isTableLoading}
           paginationData={paginationData}
           onPageChange={handlePageChange}
           onSearchChange={setSearchTerm}
@@ -187,5 +201,3 @@ const SalesProcessingPage = () => {
 };
 
 export default SalesProcessingPage;
-
-
