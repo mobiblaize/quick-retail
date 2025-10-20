@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 // import { Checkbox, Card, Group, Text, Box, Button, Tooltip } from "@mantine/core";
 // import { useAtom, useAtomValue, useSetAtom } from "jotai";
 // import { HelpCircle } from 'lucide-react';
@@ -302,11 +303,12 @@ import {
   billingTypeStore,
   totalPrice,
   selectedSubs,
+  seatCount
 } from "../../../store/subscriptionStore";
 import { notifications } from "@mantine/notifications";
 
 const SubscriptionPlanCard = ({ data }: any) => {
-  const [adminSeat, setAdminSeat] = useState(0);
+  const [adminSeat, setAdminSeat] = useAtom(seatCount);
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
   const setTotalPrice = useSetAtom(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
@@ -326,25 +328,34 @@ const SubscriptionPlanCard = ({ data }: any) => {
       (sum, item) =>
         sum +
         (Number(item.amount || 0) +
-          Number(item.additional_user_seat_number || 0) *
+          Number(adminSeat || 0) *
             Number(item.price_per_seat || 0)),
       0
     );
     setTotalPrice(total);
   };
 
+  useEffect(()=> {
+    validateSeatChange();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [adminSeat]);
+
   const handleSeatChange = (newSeat: number) => {
     setAdminSeat(newSeat);
+  };
+
+  
+  const validateSeatChange = () => {
     if (isChecked) {
       const updated = selectedSub.map((item: any) =>
         item.id === data.id
-          ? { ...item, additional_user_seat_number: newSeat }
+          ? { ...item, additional_user_seat_number: adminSeat }
           : item
       );
       setSelectedSub(updated);
       recalcTotal(updated);
     }
-  };
+  }
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let updated;
