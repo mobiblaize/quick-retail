@@ -1,6 +1,7 @@
 import { Modal, Button, Title } from "@mantine/core";
-import { useNavigate } from "react-router";
+import { createSearchParams, useNavigate } from "react-router";
 import { useState } from "react";
+import { ROUTES } from "../../../../../constants/routes";
 
 type Props = {
   opened: boolean;
@@ -13,9 +14,12 @@ export default function AddProduct({ opened, onClose }: Props) {
 
   const handleContinue = () => {
     if (selected === "simple") {
-      navigate("/dashboard/product-management/add-new-product");
+      navigate(ROUTES.addNewProduct);
     } else if (selected === "variable") {
-      navigate("/dashboard/product-management/add-variable-product");
+      navigate({
+        pathname: ROUTES.addNewProduct,
+        search: createSearchParams({ variable: "true" }).toString(),
+      });
     }
   };
 
@@ -100,7 +104,11 @@ export default function AddProduct({ opened, onClose }: Props) {
           key="search-product-buttons"
           className="flex gap-4 mt-[2em] justify-center"
         >
-          <Button variant="outline-primary" onClick={onClose}   style={{ width: 150 }}>
+          <Button
+            variant="outline-primary"
+            onClick={onClose}
+            style={{ width: 150 }}
+          >
             Cancel
           </Button>
 
