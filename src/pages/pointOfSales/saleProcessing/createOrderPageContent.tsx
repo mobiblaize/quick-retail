@@ -176,7 +176,7 @@ const CreateOrderPageContent: React.FC = () => {
 
   const effective = {
     originalAmount: usingApi ? breakdown.originalAmount : localSubtotal,
-    subtotal: usingApi ? breakdown.subtotal : localSubtotal,
+    subtotal: localSubtotal,
     discount: usingApi ? breakdown.discount : 0,
     tax: usingApi ? breakdown.tax : localTax,
     total: usingApi ? breakdown.total : localTotal,

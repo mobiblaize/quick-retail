@@ -68,7 +68,7 @@ const SalesOverviewReport = ({ reportInfo }: SalesOverviewReportProps) => {
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Sales overview
+            Sales overvie
           </Text>
           <Text size="sm" className="text-gray-600 font-normal mb-4">This is an overview summarizing sales</Text>
         </div>

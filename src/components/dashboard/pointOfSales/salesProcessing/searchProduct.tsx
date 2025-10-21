@@ -217,10 +217,6 @@ const SearchProduct = ({
                       <Text size="sm" c="dimmed">
                         {item.sku}
                       </Text>
-
-                      <Text size="sm" c="dimmed">
-                        {item.sku}
-                      </Text>
                       <Text size="sm" c="dimmed">
                         {item.variation_attributes
                           ?.map(

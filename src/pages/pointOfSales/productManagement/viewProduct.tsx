@@ -66,10 +66,10 @@ const ViewProduct = () => {
                 safety_instructions: data?.data?.product?.safety_instructions,
                 reorder_level: data?.data?.reorder_level,
                 quantity: data?.data?.quantity_available,
-                variation_attributes: [
-                  { id: 11, option_type: "size", option_value: "L" },
-                  { id: 12, option_type: "colour", option_value: "Blue" },
-                ],
+                // variation_attributes: [
+                //   { id: 11, option_type: "size", option_value: "L" },
+                //   { id: 12, option_type: "colour", option_value: "Blue" },
+                // ],
               }}
             />
           </div>

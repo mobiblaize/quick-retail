@@ -7,6 +7,9 @@ import FormInput from "../../../General/formInput";
 // Strict validation for Nigerian phone numbers
 const phoneNumberRegex = /^(?:\+234|234|0)(7[0-9]|8[0-9]|9[0-9])[0-9]{8}$/;
 
+// Email validation regex
+const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
@@ -25,6 +28,16 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
   const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
 
   const handleSave = () => {
+    // Validate email format
+    if (!emailRegex.test(email.trim())) {
+      notifications.show({
+        title: 'Validation error',
+        message: 'Please enter a valid email address.',
+        color: 'red',
+      });
+      return;
+    }
+
     // Remove any non-numeric characters from the phone number
     const sanitizedPhoneNumber = phoneNumber.replace(/[^0-9]/g, "");
 
@@ -75,10 +88,11 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
               onClose();
             }
           },
-          onError: (error: any) => {
+          onError: (error: unknown) => {
+            const message = (error as any)?.response?.data?.message || 'Failed to create customer';
             notifications.show({
               title: 'Error',
-              message: error?.response?.data?.message || 'Failed to create customer',
+              message,
               color: 'red',
             });
           },

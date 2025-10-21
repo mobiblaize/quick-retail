@@ -1,37 +1,3 @@
-
-// import { Box, Text } from "@mantine/core";
-// import EmptyStateImage from "../../../assets/images/Empty.png";
-
-// const EmptyState2 = () => (
-//   <Box
-//     style={{
-//       padding: "4rem 1rem",
-//       textAlign: "center",
-//       display: "flex",
-//       flexDirection: "column",
-//       alignItems: "center",
-//       gap: "0.25rem",
-//     }}
-//   >
-//    <img
-//               src={EmptyStateImage}
-//               alt="No data"
-//               style={{ width: "160px", height: "auto", opacity: 0.8 }}
-//             />
-//             <Text fw={600} size="lg" c="#1D2739">
-//               Not found
-//             </Text>
-//             <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-//               Sorry, we couldn’t find what you
-//             </Text>
-//             <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-//               are looking for. Try entering a
-//             </Text>
-//             <Text fw={400} size="lg" c="#475367" ta="center" lh="sm">
-//               correct keyword.
-//             </Text>
-//   </Box>
-// );
 import { Box, Text, Button } from "@mantine/core";
 import EmptyStateImage from "../../../assets/images/Empty.png";
 import { FilterValues } from "../table/reuseableFilter";
@@ -55,25 +21,26 @@ const EmptyState2 = ({
     // Reset search term
     setSearchTerm?.("");
 
-    // Reset filters to default
+    // Reset all filters including custom date ranges
     onFilterChange?.({
-      startDate: "",
-      endDate: "",
+      startDate: "",       // Clear custom start date
+      endDate: "",         // Clear custom end date
       location: "",
       stockFrom: "",
       stockTo: "",
       orderStatus: "",
       role: "",
       module: "",
+      dateRangeType: "",   // Add this if your filter supports “Today”, “This Week”, etc.
     });
 
-    // Reset sort
+    // Reset sorting
     onSortChange?.("");
 
     // Reset pagination
     onPageChange?.(1);
 
-    // Trigger any additional reset logic (like refetching)
+    // Run any additional logic (refetch, etc.)
     onReset?.();
   };
 
@@ -128,6 +95,3 @@ const EmptyState2 = ({
 };
 
 export default EmptyState2;
-
-
-// export default EmptyState2;

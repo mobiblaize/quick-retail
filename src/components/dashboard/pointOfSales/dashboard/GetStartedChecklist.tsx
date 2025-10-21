@@ -1,6 +1,16 @@
-import { useState } from "react";
-import { Checkbox, Button, Progress, Collapse, Text, Group, Card } from "@mantine/core";
+import { useState, useEffect } from "react";
+import {
+  Checkbox,
+  Button,
+  Progress,
+  Collapse,
+  Text,
+  Group,
+  Card,
+} from "@mantine/core";
 import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
+import { useGetData } from "../../../../hooks/useApis";
+import { useNavigate } from "react-router-dom"; // <-- or useRouter() if Next.js
 
 const steps = [
   {
@@ -23,7 +33,46 @@ const steps = [
 
 export default function GetStartedChecklist() {
   const [opened, setOpened] = useState(true);
-  const [checkedSteps, setCheckedSteps] = useState<boolean[]>(Array(steps.length).fill(false));
+  const [checkedSteps, setCheckedSteps] = useState<boolean[]>(
+    Array(steps.length).fill(false)
+  );
+
+  const navigate = useNavigate();
+  const { data: onboardingData, loading } = useGetData(
+    "pos/onboard/onboarding-progress"
+  );
+
+  // Map step titles to API response keys
+  const keyMap: Record<string, string> = {
+    "Create a store": "create_store",
+    "Add products": "add_products",
+    "Make a sale": "make_sale",
+    "Invite team members": "inviteTeam",
+  };
+
+  useEffect(() => {
+    if (onboardingData && onboardingData.data) {
+      const progress = onboardingData.data;
+
+      const updatedCheckedSteps = steps.map(
+        (step) => progress[keyMap[step.title]] || false
+      );
+
+      setCheckedSteps(updatedCheckedSteps);
+
+      const allCompleted = updatedCheckedSteps.every(Boolean);
+
+      // ✅ Collapse automatically if completed
+      if (allCompleted) {
+        setOpened(false);
+      } else {
+        setOpened(true);
+        // 🚀 Redirect user to onboarding screen to complete setup
+        // (only once, not repeatedly)
+        navigate("/onboarding", { replace: true });
+      }
+    }
+  }, [onboardingData]);
 
   const completedCount = checkedSteps.filter(Boolean).length;
   const progress = (completedCount / steps.length) * 100;
