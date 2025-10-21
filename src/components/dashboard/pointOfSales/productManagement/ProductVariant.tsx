@@ -30,7 +30,7 @@ interface ProductVariantProps {
   ) => void;
 }
 
-function ProductVariant({
+export default function ProductVariant({
   form,
   handleImagesAddForVariation,
   handleRemoveImageForVariation,
