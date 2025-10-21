@@ -1,132 +1,208 @@
-import { Box, Card, Divider, Flex, Text, Menu } from "@mantine/core";
-import { useState, useEffect } from "react";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+// ProductAttributes.tsx
+import { Box, Card, Divider, Flex, Text } from "@mantine/core";
+import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
 import { IconChevronDown } from "@tabler/icons-react";
 import TagInputGroup from "./ProductAttributeTags";
-import AttributeSelectionModal from "./AttributeSelectionModal";
-import AddAttributeModal from "./AddAttributeModal";
+import ProductAttributesModal from "./ProductAttributesModal";
+import SelectAttributeValueModal from "./SelectAttributeValueModal";
+import CreateAttributeModal from "./CreateAttributeModal";
+import AddAttributeOptionsModal from "./AddAttributeOptionsModal";
 
-interface ProductAttributesProps {
-  onAttributesChange: (attributes: { name: string; values: string[] }[]) => void;
+interface Props {
+  form: any;
+  index: number;
 }
 
-export default function ProductAttributes({ onAttributesChange }: ProductAttributesProps) {
-  const [isVisible, setIsVisible] = useState(true);
-  const [size, setSize] = useState<string[]>(["Small", "Medium", "Large"]);
-  const [colour, setColour] = useState<string[]>(["White", "Black", "Pink"]);
+export interface ProductAttributes {
+  id: number;
+  name: string;
+}
 
-  const [selectionModal, setSelectionModal] = useState<null | "size" | "colour">(null);
-  const [addModal, setAddModal] = useState<null | "size" | "colour">(null);
+export interface FormAttribute {
+  attribute_id: number;
+  attribute_value_ids: number[];
+}
 
-  // Keep parent updated
-  useEffect(() => {
-    onAttributesChange([
-      { name: "size", values: size },
-      { name: "colour", values: colour },
-    ]);
-  }, [size, colour, onAttributesChange]);
+export interface ProductAttributeValue {
+  attribute_id: string;
+  attribute_value_id: string;
+}
+
+export default function ProductAttributes({ form, index }: Props) {
+  const [opened, setOpened] = useState({
+    select: false,
+    selectValue: false,
+    create: false,
+    addOptions: false,
+  });
+
+  const [selectedAttribute, setSelectedAttribute] =
+    useState<FormAttribute | null>(null);
+
+  // Read attributes array for this variation safely
+  const attrs: FormAttribute[] =
+    (form.values?.variations?.[index]?.attributes as any[]) || [];
+
+  // Add attribute placeholders (no values yet) if needed — but we generally add values via modal
+  const updateAttributes = (attributeIds: number[]) => {
+    const newAttrs = attributeIds.map((id) => {
+      return {
+        attribute_id: id,
+        attribute_value_ids:
+          attrs.find((x) => id === x.attribute_id)?.attribute_value_ids ?? [],
+      };
+    });
+    form.setFieldValue(`variations.${index}.attributes`, newAttrs);
+  };
+
+  const removeAllForAttribute = (attributeId: number) => {
+    console.log(attributeId);
+
+    const remaining = attrs.filter((a) => a.attribute_id !== attributeId);
+    form.setFieldValue(`variations.${index}.attributes`, remaining);
+  };
+
+  const removeAttributeOption = (attributeId: number, optionId: number) => {
+    const selAttr = { ...attrs.find((x) => x.attribute_id === attributeId) };
+    selAttr.attribute_value_ids = selAttr?.attribute_value_ids?.filter(
+      (a) => a !== optionId
+    );
+    const updated = attrs.map((a) =>
+      a.attribute_id === attributeId ? selAttr : a
+    );
+    form.setFieldValue(`variations.${index}.attributes`, updated);
+  };
+
+  // Append values for an attribute (used by SelectAttributeValueModal onSave)
+  const UpdateAttributeOption = (attributeId: number, values: number[]) => {
+    const selAttr = { ...attrs.find((x) => x.attribute_id === attributeId) };
+    selAttr.attribute_value_ids = values;
+    const updated = attrs.map((a) =>
+      a.attribute_id === attributeId ? selAttr : a
+    );
+    form.setFieldValue(`variations.${index}.attributes`, updated);
+  };
+
+  // When user selects an attribute from the Select Attribute modal:
+  const handleSelectAttribute = (attributeIds: number[]) => {
+    console.log(attributeIds);
+    
+    updateAttributes(attributeIds);
+    setOpened((prev) => ({ ...prev, select: false }));
+  };
+
+  // When SelectAttributeValueModal returns selected values
+  const handleValuesSelected = (values: number[]) => {
+    if (!selectedAttribute) return;
+    UpdateAttributeOption(selectedAttribute.attribute_id, values);
+    setSelectedAttribute(null);
+    setOpened((prev) => ({ ...prev, selectValue: false }));
+  };
 
   return (
-    <Card withBorder radius="md" shadow="sm" mt="xl">
-      {/* Header */}
-      <Flex justify="space-between" align="center" mb="md">
-        <Text fw={600}>Product Attributes</Text>
+    <Card withBorder radius="sm" shadow="sm" p="sm">
+      <Flex justify="space-between" align="center">
+        <Text fw={600}>Attributes</Text>
 
-        <Menu shadow="md" width={180}>
-          <Menu.Target>
-            <Flex align="center" gap={6} className="cursor-pointer select-none">
-              <IoMdAdd size={18} className="text-[#FF6600]" />
-              <Text fz="sm" fw={600} c="#FF6600">
-                Select Attribute
-              </Text>
-              
-            </Flex>
-          </Menu.Target>
-
-          <Menu.Dropdown>
-            <Menu.Item onClick={() => setSelectionModal("size")}>Size</Menu.Item>
-            <Menu.Item onClick={() => setSelectionModal("colour")}>Colour</Menu.Item>
-          </Menu.Dropdown>
-        </Menu>
+        <Flex
+          gap="xs"
+          className="!text-text-orange font-bold text-md cursor-pointer"
+          align="center"
+          onClick={() => setOpened((prev) => ({ ...prev, select: true }))}
+        >
+          <IoMdAdd />
+          <Text fz="sm" fw={600} className="!text-text-orange">
+            select attribute
+          </Text>
+        </Flex>
       </Flex>
 
-      <Divider mb="md" />
+      <Divider mt="sm" />
 
-      {/* Attribute List */}
-      {isVisible && (
-        <Box>
-          <TagInputGroup
-            label="Size"
-            value={size}
-            setValue={setSize}
-            onEdit={() => setSelectionModal("size")}
-          />
-          <Divider my="lg" />
-          <TagInputGroup
-            label="Colour"
-            value={colour}
-            setValue={setColour}
-            onEdit={() => setSelectionModal("colour")}
-          />
-          
-        </Box>
-      )}
+      <Box mt="sm">
+        {/* Render TagInputGroup for each attribute group */}
+        {attrs.length === 0 ? (
+          <Text c="dimmed" size="sm">
+            No attributes added for this variant yet.
+          </Text>
+        ) : (
+          attrs.map((attribute, i) => {
+            return (
+              <Box key={`${index}-${attribute.attribute_id}-${i}`} mb="md">
+                <TagInputGroup
+                  attribute={attribute}
+                  onDelete={() => removeAllForAttribute(attribute.attribute_id)}
+                  onRemove={(optionId) =>
+                    removeAttributeOption(attribute.attribute_id, optionId)
+                  }
+                  onEdit={() => {
+                    setSelectedAttribute(attribute);
+                    setOpened((prev) => ({ ...prev, selectValue: true }));
+                  }}
+                />
+              </Box>
+            );
+          })
+        )}
+      </Box>
 
-      {/* ===================== Modals ===================== */}
+      {/* Modals */}
+      <ProductAttributesModal
+        opened={opened.select}
+        selection={attrs.map((x) => x.attribute_id)}
+        onClose={() => setOpened((prev) => ({ ...prev, select: false }))}
+        onContinue={handleSelectAttribute} // returns attribute id/name
+        onCreateNew={() =>
+          setOpened((prev) => ({ ...prev, select: false, create: true }))
+        }
+      />
 
-      {/* Size Selection Modal */}
-      <AttributeSelectionModal
-        opened={selectionModal === "size"}
-        onClose={() => setSelectionModal(null)}
-        title="Sizes"
-        options={[
-          "Extra Small (XS)",
-          "Small (S)",
-          "Medium (M)",
-          "Large (L)",
-          "Extra Large (XL)",
-          "Extra Extra Large (XXL)",
-        ]}
-        selected={size}
-        onSave={setSize}
-        onAddNew={() => {
-          setSelectionModal(null);
-          setAddModal("size");
+      <SelectAttributeValueModal
+        opened={opened.selectValue}
+        attribute={selectedAttribute}
+        onClose={() => {
+          setOpened((prev) => ({ ...prev, selectValue: false }));
+          setSelectedAttribute(null);
         }}
-        id={1}
+        onSave={(values: number[]) => handleValuesSelected(values)}
+        onAddNew={() =>
+          setOpened((prev) => ({
+            ...prev,
+            selectValue: false,
+            addOptions: true,
+          }))
+        }
       />
 
-      {/* Colour Selection Modal */}
-      <AttributeSelectionModal
-        opened={selectionModal === "colour"}
-        onClose={() => setSelectionModal(null)}
-        title="Colours"
-        options={["Black", "White", "Red", "Yellow", "Brown", "Nude", "Pink"]}
-        selected={colour}
-        onSave={setColour}
-        onAddNew={() => {
-          setSelectionModal(null);
-          setAddModal("colour");
-        }}
-        id={2}
+      <CreateAttributeModal
+        opened={opened.create}
+        onClose={() =>
+          setOpened((prev) => ({ ...prev, create: false, select: true }))
+        }
+        onSave={() =>
+          setOpened((prev) => ({ ...prev, create: false, select: true }))
+        }
       />
 
-      {/* Add Size Modal */}
-      <AddAttributeModal
-        opened={addModal === "size"}
-        onClose={() => setAddModal(null)}
-        attributeType="Size"
-        onSave={(newValues) => setSize((prev) => [...prev, ...newValues])}
-        id={1}
-      />
-
-      {/* Add Colour Modal */}
-      <AddAttributeModal
-        opened={addModal === "colour"}
-        onClose={() => setAddModal(null)}
-        attributeType="Colour"
-        onSave={(newValues) => setColour((prev) => [...prev, ...newValues])}
-        id={2}
+      <AddAttributeOptionsModal
+        opened={opened.addOptions}
+        attribute={selectedAttribute}
+        onClose={() =>
+          setOpened((prev) => ({
+            ...prev,
+            addOptions: false,
+            selectValue: true,
+          }))
+        }
+        onSave={() =>
+          setOpened((prev) => ({
+            ...prev,
+            addOptions: false,
+            selectValue: true,
+          }))
+        }
       />
     </Card>
   );

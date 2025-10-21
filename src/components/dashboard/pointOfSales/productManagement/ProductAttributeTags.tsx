@@ -1,108 +1,88 @@
-import { Textarea, Group, Pill, Text, Box, Flex } from "@mantine/core";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Group, Pill, Text, Box, Flex, Grid } from "@mantine/core";
 import { useState } from "react";
+import { FormAttribute } from "./ProductAttributes";
+import {
+  useAttributesStore,
+  useAttributeValues,
+} from "../../../../hooks/backendApis/pos/attributesStore";
 
 interface TagInputGroupProps {
-	value: any[];
-	setValue: React.Dispatch<React.SetStateAction<string[]>>;
-	required?: boolean;
-	errorMessage?: string;
-	label: string;
+  attribute: FormAttribute;
+  onEdit: () => void;
+  onDelete: () => void;
+  onRemove: (id: number) => void;
 }
 
 export default function TagInputGroup({
-	value,
-	setValue,
-	required = false,
-
-	label,
+  attribute,
+  onEdit,
+  onDelete,
+  onRemove,
 }: TagInputGroupProps) {
-	const [inputValue, setInputValue] = useState("");
-	const [touched, setTouched] = useState(false);
-	const [disabled, setDisabled] = useState(true);
+  const [disabled] = useState(false);
+  const { attributes } = useAttributesStore(true);
+  const { attributeValues } = useAttributeValues(attribute.attribute_id, true);
 
-	const handleKeyDown = (
-		e: React.KeyboardEvent<HTMLInputElement | HTMLTextAreaElement>
-	) => {
-		if (disabled) return;
-		if ((e.key === "Enter" || e.key === ",") && inputValue.trim()) {
-			e.preventDefault();
-			const newTag = inputValue.trim();
-			if (!value.some((t) => t === newTag)) {
-				const newValue = [...value, newTag];
-				setValue(newValue);
-				setInputValue("");
-			}
-		}
-	};
+  const attributeName = (() =>
+    attributes?.find((x) => x.id === attribute?.attribute_id)?.name)();
 
-	const removeTag = (tag: any) => {
-		if (disabled) return;
-		const newValue = value.filter((t) => t !== tag);
-		setValue(newValue);
-	};
+  const attributeValueName = (id: any) =>
+    attributeValues?.find((x) => x.id === id)?.value;
 
-	return (
-		<Flex justify={"space-between"}>
-			<Text fw={600} fz={"sm"}>
-				{label}
-			</Text>
-			<Flex justify={""}>
-				<Box
-					style={{
-						border: "1px solid #ced4da",
-						backgroundColor: disabled ? "#f8f9fa" : "#f1f3f5",
-						borderRadius: "8px",
-						padding: "2px",
-						opacity: disabled ? 0.6 : 1,
-						cursor: disabled ? "not-allowed" : "text",
-					}}
-				>
-					<Group gap="xs" wrap="wrap" align="flex-start">
-						{value?.map((tag: any) => (
-							<Pill
-								key={tag}
-								size="sm"
-								withRemoveButton={!disabled}
-								onRemove={() => removeTag(tag)}
-								variant="outline"
-								className="!capitalize !bg-white !border !border-neutral-400 !text-sm"
-							>
-								<Text size="sm">{tag}</Text>
-							</Pill>
-						))}
+  return (
+    <Grid gutter={"md"}>
+      <Grid.Col span={{ base: 12, md: 3 }}>
+        <Text fw={600} fz="sm">
+          {attributeName}
+        </Text>
+      </Grid.Col>
+      <Grid.Col span={{ base: 12, md: 8 }}>
+        <Flex justify="space-between">
+          <Box
+            className="!grow"
+            style={{
+              border: "1px solid #ced4da",
+              width: "100%",
+              backgroundColor: disabled ? "#f8f9fa" : "#f1f3f5",
+              borderRadius: "8px",
+              padding: "2px",
+              opacity: disabled ? 0.6 : 1,
+              cursor: disabled ? "not-allowed" : "text",
+            }}
+          >
+            <Group gap="xs" wrap="wrap" align="flex-start">
+              {attribute.attribute_value_ids?.map((option) => (
+                <Pill
+                  key={option}
+                  size="sm"
+                  withRemoveButton={!disabled}
+                  onRemove={() => onRemove(option)}
+                  variant="outline"
+                  className="!capitalize !bg-white !border !border-neutral-400 !text-sm"
+                >
+                  <Text size="sm">{attributeValueName(option)}</Text>
+                </Pill>
+              ))}
+            </Group>
+          </Box>
 
-						<Textarea
-							value={inputValue}
-							onChange={(e) => !disabled && setInputValue(e.target.value)}
-							onKeyDown={handleKeyDown}
-							onBlur={() => setTouched(true)}
-							disabled={disabled}
-							placeholder=""
-							minRows={2}
-							maxRows={3}
-							autosize
-							variant="unstyled"
-							style={{
-								flex: 1,
-								minWidth: 120,
-								backgroundColor: "transparent",
-								fontSize: "14px",
-							}}
-						/>
-					</Group>
-				</Box>
-				<Group ml={"md"}>
-					<Text className="!text-red-600 text-sm font-medium cursor-pointer hover:bg-neutral-100 !px-2 !rounded-sm">
-						Delete
-					</Text>
-					<Text
-						className="!text-blue-700 text-sm font-medium cursor-pointer hover:bg-neutral-100 !px-2 !rounded-sm"
-						onClick={() => setDisabled(false)}
-					>
-						Edit
-					</Text>
-				</Group>
-			</Flex>
-		</Flex>
-	);
+          <Group ml="md">
+            <Text
+              onClick={onDelete}
+              className="!text-red-600 text-sm font-medium cursor-pointer hover:bg-neutral-100 !px-2 !rounded-sm"
+            >
+              Delete
+            </Text>
+            <Text
+              className="!text-blue-700 text-sm font-medium cursor-pointer hover:bg-neutral-100 !px-2 !rounded-sm"
+              onClick={onEdit}
+            >
+              {attribute.attribute_value_ids?.length ? "Edit" : "Add"}
+            </Text>
+          </Group>
+        </Flex>
+      </Grid.Col>
+    </Grid>
+  );
 }

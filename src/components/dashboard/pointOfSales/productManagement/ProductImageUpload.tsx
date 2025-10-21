@@ -1,46 +1,35 @@
-import { useState } from "react";
-import { Box, Text, Image, Flex, ActionIcon } from "@mantine/core";
+import { Box, Text, Image, ActionIcon, SimpleGrid } from "@mantine/core";
 import { Dropzone, DropzoneProps, IMAGE_MIME_TYPE } from "@mantine/dropzone";
 import { FiUploadCloud } from "react-icons/fi";
 import { RiDeleteBinLine } from "react-icons/ri";
 
 interface ProductImageUploadProps extends Partial<DropzoneProps> {
-  onImagesChange?: (images: string[]) => void;
+  /** Base64 preview strings owned by parent form */
+  images: string[];
+  /** Called with the File[] user dropped/selected (multiple allowed) */
+  onFilesAdd?: (files: File[]) => void;
+  /** Called when the user wants to remove an image at index */
+  onRemove?: (index: number) => void;
+  maxSizeMB?: number;
 }
 
-function ProductImageUpload({ onImagesChange, ...props }: ProductImageUploadProps) {
-  const [images, setImages] = useState<string[]>([]);
-
+export default function ProductImageUpload({
+  images = [],
+  onFilesAdd,
+  onRemove,
+  maxSizeMB = 5,
+  ...props
+}: ProductImageUploadProps) {
   const handleDrop = (files: File[]) => {
-    const promises = files.map(
-      (file) =>
-        new Promise<string>((resolve, reject) => {
-          const reader = new FileReader();
-          reader.onload = () => resolve(reader.result as string);
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        })
-    );
-
-    Promise.all(promises).then((base64Images) => {
-      const updated = [...images, ...base64Images];
-      setImages(updated);
-      onImagesChange?.(updated);
-    });
-  };
-
-  const handleRemove = (index: number) => {
-    const updated = images.filter((_, i) => i !== index);
-    setImages(updated);
-    onImagesChange?.(updated);
+    if (onFilesAdd) onFilesAdd(files);
   };
 
   return (
     <Box>
       <Dropzone
         onDrop={handleDrop}
-        onReject={(files) => console.warn("Rejected files:", files)}
-        maxSize={5 * 1024 ** 2}
+        onReject={(files) => console.log("Rejected files", files)}
+        maxSize={maxSizeMB * 1024 ** 2}
         accept={IMAGE_MIME_TYPE}
         multiple
         {...props}
@@ -52,44 +41,47 @@ function ProductImageUpload({ onImagesChange, ...props }: ProductImageUploadProp
               <FiUploadCloud size={24} />
             </span>
             <Text>
-              <Text span c="#F16722">
+              <Text span c="#F16722" fw={600}>
                 Click to upload
               </Text>{" "}
               or drag and drop
-              <Text fz="sm">PNG, JPEG (max 5 MB)</Text>
+              <Text fz="sm" c="dimmed">
+                PNG, JPEG (max {maxSizeMB} MB)
+              </Text>
             </Text>
           </div>
         </Box>
       </Dropzone>
 
       {images.length > 0 && (
-        <Flex wrap="wrap" gap="md" mt="md">
-          {images.map((img, index) => (
-            <Box key={index} className="relative">
+        <SimpleGrid cols={{ base: 2, sm: 3, md: 4 }} mt="md" spacing="md">
+          {images.map((src, index) => (
+            <Box
+              key={index}
+              className="!relative border rounded-md overflow-hidden shadow-sm aspect-square bg-gray-100"
+            >
               <Image
-                src={img}
-                alt={`product-${index}`}
-                radius="md"
-                w={120}
-                h={120}
+                src={src}
+                alt={`Uploaded image ${index + 1}`}
                 fit="cover"
-                className="border border-gray-200"
+                height="100%"
+                width="100%"
+                className="object-cover w-full h-full"
               />
               <ActionIcon
+                variant="filled"
                 color="red"
                 radius="xl"
                 size="sm"
-                className="absolute -top-2 -right-2 bg-white shadow"
-                onClick={() => handleRemove(index)}
+                className="!absolute !top-2 !right-2"
+                onClick={() => onRemove && onRemove(index)}
               >
                 <RiDeleteBinLine size={16} />
               </ActionIcon>
             </Box>
           ))}
-        </Flex>
+        </SimpleGrid>
       )}
     </Box>
   );
 }
-
-export default ProductImageUpload;
