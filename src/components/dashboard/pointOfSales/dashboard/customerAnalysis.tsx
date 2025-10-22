@@ -1,4 +1,4 @@
-import { Divider, Group, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
@@ -7,6 +7,13 @@ import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dash
 import { useFetchDashboardCustomers } from "../../../../hooks/backendApis/pos/dashboard";
 import { useState } from "react";
 import UniversalEmptyState from "./UniversalEmptyState";
+
+
+interface Customer {
+  customer_name: string;
+  customer_email: string;
+  sales_orders_count: number;
+}
 
 
 const CustomerAnalysis = () => {
@@ -81,7 +88,7 @@ const CustomerAnalysis = () => {
           {customers.length > 0 ? (
             customers
               .slice(0, 3)
-              .map((data, index) => (
+              .map((data: Customer, index: number) => (
                 <div key={index}>
                   <div className="flex px-2 justify-between items-center">
                     <div className="flex items-center gap-2.5">

@@ -315,7 +315,7 @@ const PaymentSummary = () => {
                     <span>
                       Additional User Seats (
                       {selectedSub.reduce(
-                        (sum: number, sub: SubscriptionData) =>
+                        (sum: number) =>
                           sum + (adminSeat || 0),
                         0
                       )}

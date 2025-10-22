@@ -586,7 +586,7 @@ function AddProductFormNew() {
               />
             </Box>
 
-            <Flex justify={"end"} mt="xl" gap={15}>
+            <Flex justify={"end"} mt="xl" gap={15} className="">
               <Button radius={"md"} variant="outline">
                 Cancel
               </Button>

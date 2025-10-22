@@ -12,6 +12,15 @@ import { IconChevronDown, IconChevronUp } from "@tabler/icons-react";
 import { useGetData } from "../../../../hooks/useApis";
 import { useNavigate } from "react-router-dom";
 
+
+interface OnboardingStep {
+  key: string;
+  label?: string;
+  description?: string;
+  completed?: boolean;
+}
+
+
 export default function GetStartedChecklist() {
   const [opened, setOpened] = useState(true);
   const [checkedSteps, setCheckedSteps] = useState<boolean[]>([]);
@@ -21,7 +30,6 @@ export default function GetStartedChecklist() {
   const { data: onboardingData} = useGetData(
     "pos/onboard/onboarding-progress"
   );
-  console.log(onboardingData?.steps);
 const isAllCompleted = onboardingData?.steps?.every((step: any) => step.completed);
   // Define the logical order of steps
   const steps = [
@@ -131,7 +139,7 @@ const isAllCompleted = onboardingData?.steps?.every((step: any) => step.complete
       {/* Checklist */}
       <Collapse in={opened}>
         <div className="flex flex-col gap-4">
-          {onboardingData?.steps?.map((step, index) => (
+          {onboardingData?.steps?.map((step: OnboardingStep, index: number) => (
             <div
               key={step.key}
               className={`flex items-center justify-between border rounded-lg p-4 transition ${

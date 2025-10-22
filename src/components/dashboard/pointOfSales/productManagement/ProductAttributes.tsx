@@ -3,7 +3,6 @@
 import { Box, Card, Divider, Flex, Text } from "@mantine/core";
 import { useState } from "react";
 import { IoMdAdd } from "react-icons/io";
-import { IconChevronDown } from "@tabler/icons-react";
 import TagInputGroup from "./ProductAttributeTags";
 import ProductAttributesModal from "./ProductAttributesModal";
 import SelectAttributeValueModal from "./SelectAttributeValueModal";

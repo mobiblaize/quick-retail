@@ -1,17 +1,11 @@
 import {
 	Box,
 	Button,
-	Flex,
 	Modal,
 	Title,
 	Text,
-	Stack,
-	TextInput,
-	Checkbox,
 } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-import { FaSearch } from "react-icons/fa";
-import { IoMdAdd } from "react-icons/io";
 interface Props {
 	children: React.ReactNode;
 	title: string;

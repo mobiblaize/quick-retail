@@ -97,7 +97,7 @@ export default function ProductVariant({
             </Flex>
           )}
 
-          {variants.map((variant: any, vIndex: number) => (
+          {variants.map((_: any, vIndex: number) => (
             <Card key={vIndex} withBorder radius="sm" mt="sm">
               <Text fw={600} mb="md">
                 Variant {vIndex + 1}

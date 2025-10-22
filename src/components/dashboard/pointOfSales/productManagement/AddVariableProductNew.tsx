@@ -34,7 +34,7 @@ import { ROUTES } from "../../../../constants/routes";
 import { useNavigate } from "react-router";
 import ProductImageUpload from "./ProductImageUpload";
 
-function AddVariableProductNew() {
+export default function AddVariableProductNew() {
   const createProduct = useCreateProduct();
   const navigate = useNavigate();
   const { data: catData } =
