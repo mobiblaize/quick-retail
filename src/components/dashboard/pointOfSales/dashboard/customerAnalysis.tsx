@@ -6,6 +6,8 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 import { useFetchDashboardCustomers } from "../../../../hooks/backendApis/pos/dashboard";
 import { useState } from "react";
+import UniversalEmptyState from "./UniversalEmptyState";
+
 
 const CustomerAnalysis = () => {
   const [dateRange, setDateRange] = useState<{
@@ -24,6 +26,8 @@ const CustomerAnalysis = () => {
         b.sales_orders_count - a.sales_orders_count
     ) ?? [];
   const stats = data?.data;
+
+
   return (
     <main className="flex flex-col lg:flex-row gap-6">
       <div className="w-full lg:w-[65%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
@@ -50,14 +54,18 @@ const CustomerAnalysis = () => {
           </div>
         </div>
 
-        <DivisionSaleChart
-          newCustomers={stats?.new_customers ?? 0}
-          existingCustomers={stats?.existing_customers ?? 0}
-          new_customers_percentage={stats?.new_customers_percentage ?? 0}
-          existing_customers_percentage={
-            stats?.existing_customers_percentage ?? 0
-          }
-        />
+        {stats ? (
+          <DivisionSaleChart
+            newCustomers={stats.new_customers ?? 0}
+            existingCustomers={stats.existing_customers ?? 0}
+            new_customers_percentage={stats.new_customers_percentage ?? 0}
+            existing_customers_percentage={
+              stats.existing_customers_percentage ?? 0
+            }
+          />
+        ) : (
+          <UniversalEmptyState />
+        )}
       </div>
 
       <div className="w-full lg:w-[35%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
@@ -70,31 +78,35 @@ const CustomerAnalysis = () => {
           </Text>
         </div>
         <div className="flex mt-4 flex-col gap-2">
-          {customers.slice(0, 3).map((data: any, index: number) => (
-            <div key={index}>
-              <div className="flex px-2 justify-between items-center">
-                <div className="flex items-center gap-2.5">
-                  {/* <span className="flex-shrink-0">{<data.usericon />}</span> */}
-                  <div className="flex flex-col">
-                    <Text
-                      size="lg"
-                      fw={600}
-                      c="textSecondary.9"
-                      className="break-all sm:break-normal"
-                    >
-                      {data.customer_name}
-                    </Text>
-                    <Text className="secondary font-normal text-sm sm:text-base break-all sm:break-normal">
-                      {data.customer_email}
-                    </Text>
+          {customers.length > 0 ? (
+            customers
+              .slice(0, 3)
+              .map((data, index) => (
+                <div key={index}>
+                  <div className="flex px-2 justify-between items-center">
+                    <div className="flex items-center gap-2.5">
+                      {/* <span className="flex-shrink-0">{<data.usericon />}</span> */}
+                      <div className="flex flex-col">
+                        <Text
+                          size="lg"
+                          fw={600}
+                          c="textSecondary.9"
+                          className="break-all sm:break-normal"
+                        >
+                          {data.customer_name}
+                        </Text>
+                        <Text className="secondary font-normal text-sm sm:text-base break-all sm:break-normal">
+                          {data.customer_email}
+                        </Text>
+                      </div>
+                    </div>
+                    {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
                   </div>
                 </div>
-                {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
-              </div>
-
-              <Divider size="sm" className="mt-3" color="#E4E7EC" />
-            </div>
-          ))}
+              ))
+          ) : (
+            <UniversalEmptyState />
+          )}
         </div>
         <Link to={ROUTES.customer}>
           <Text

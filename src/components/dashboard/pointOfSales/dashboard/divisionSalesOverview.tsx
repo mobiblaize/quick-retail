@@ -5,6 +5,7 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchCategorySales, useFetchPopularProducts, } from "../../../../hooks/backendApis/pos/dashboard";
 import DivisionSalePie from "../../../General/DivisionPie";
 import { JSXElementConstructor, Key, ReactElement, ReactNode, ReactPortal, useState } from "react";
+import UniversalEmptyState from "./UniversalEmptyState";
 
 
 const DivisionSalesOverview = () => {
@@ -22,6 +23,8 @@ const DivisionSalesOverview = () => {
 
   const products = productData?.data?.data || [];
   const topProducts = products.slice(0, 3);
+
+
 
 
   return (
@@ -58,7 +61,11 @@ const DivisionSalesOverview = () => {
         </div>
 
 
-        <DivisionSalePie data={stats ?? []} />
+        {stats && stats.length > 0 ? (
+          <DivisionSalePie data={stats} />
+        ) : (
+          <UniversalEmptyState />
+        )}
 
       </section>
 
@@ -80,7 +87,7 @@ const DivisionSalesOverview = () => {
           <Text c="red" className="mt-4">
             Failed to load products
           </Text>
-        ) : (
+        ) : topProducts.length > 0 ? (
           <div className="mt-6 flex flex-col gap-4">
             {topProducts.map((product: { id: Key | null | undefined; image_path: string | undefined; name: string | number | bigint | boolean | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | Promise<string | number | bigint | boolean | ReactPortal | ReactElement<unknown, string | JSXElementConstructor<any>> | Iterable<ReactNode> | null | undefined> | null | undefined; selling_price: any; }) => (
               <div
@@ -109,6 +116,8 @@ const DivisionSalesOverview = () => {
               </div>
             ))}
           </div>
+        ) : (
+          <UniversalEmptyState />
         )}
 
         <Link to={ROUTES.productManagement}>

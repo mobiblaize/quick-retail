@@ -1,15 +1,24 @@
+import { useEffect, useState } from "react";
 import { Text } from "@mantine/core";
 import { ChevronLeft } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
-import AddProductForm from "../../../components/dashboard/pointOfSales/productManagement/addProductForm";
+import AddProductFormNew from "../../../components/dashboard/pointOfSales/productManagement/AddProductFormNew";
 
 const AddNewProduct: React.FC = () => {
   const navigate = useNavigate();
+  const [searchParams] = useSearchParams();
 
-  const handleBack = () => {
-    navigate(-1);
-  };
+  const [isVariable, setIsVariable] = useState(
+    searchParams.get("variable") === "true"
+  );
+
+  // 🔄 Watch for query param changes
+  useEffect(() => {
+    setIsVariable(searchParams.get("variable") === "true");
+  }, [searchParams]);
+
+  const handleBack = () => navigate(-1);
 
   const getSubHeaders = () => {
     const backButton = (
@@ -24,53 +33,24 @@ const AddNewProduct: React.FC = () => {
       </button>
     );
 
-    const subHeaders = [
-      <div key="1" className="py-2.5">
-        <div className="hidden sm:flex gap-8 items-center">
-          {backButton}
-          {/* <div className="flex items-center">
-            <Text>Product management</Text>
-            <>
-              <span className="mx-2">/</span>
-              <Text c="black" fw={500}>
-                Add Simple Product
-              </Text>
-            </>
-          </div> */}
-        </div>
+    const title = isVariable ? "Add Variable Product" : "Add Simple Product";
 
+    return [
+      <div key="1" className="py-2.5">
+        <div className="hidden sm:flex gap-8 items-center">{backButton}</div>
         <div className="flex sm:hidden gap-2 items-center">{backButton}</div>
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-          Add Simple Product
+          {title}
         </Text>
       </div>,
     ];
-
-    return subHeaders;
   };
 
-  // const getBottomButtons = () => {
-  //   return [
-  //     <div key="search-product-buttons" className="flex gap-4 justify-end">
-  //       <Button variant="outline-primary" onClick={() => navigate(-1)}>
-  //         Cancel
-  //       </Button>
-
-  //       <Link to={ROUTES.inventoryDetails}>
-  //         <Button variant="filled-primary">Submit</Button>
-  //       </Link>
-  //     </div>,
-  //   ];
-  // };
-
   return (
-    <PageContainer
-      subHeaders={getSubHeaders()}
-      // subHeaderButtom={getBottomButtons()}
-    >
-      <AddProductForm />
+    <PageContainer subHeaders={getSubHeaders()}>
+      <AddProductFormNew />
     </PageContainer>
   );
 };

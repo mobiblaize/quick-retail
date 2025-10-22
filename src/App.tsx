@@ -215,7 +215,7 @@ import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
 import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage"
-import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
+// import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
 import UserManagement from "./pages/adminPages/userManagement/userManagement";
 import ViewUser from "./pages/adminPages/userManagement/viewUser";
 import AddNewRole from "./pages/adminPages/userManagement/addNewRole";
@@ -231,6 +231,7 @@ import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 import SettingsPage from "./pages/adminPages/settings/settingsPage";
 import ScrollToTop from "./components/General/scrollTop";
 import NotificationPage from "./pages/adminPages/notifications/notificationPage";
+// import AddVariableProductNew from "./components/dashboard/pointOfSales/productManagement/AddVariableProductNew";
 
 
 export default function App() {
@@ -283,7 +284,7 @@ export default function App() {
             element={<InventoryDetailsPage />}
           />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
-          <Route path={ROUTES.addVariableProduct} element={<AddVariableProduct />} />
+          {/* <Route path={ROUTES.addVariableProduct} element={<AddVariableProductNew />} /> */}
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
           <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />

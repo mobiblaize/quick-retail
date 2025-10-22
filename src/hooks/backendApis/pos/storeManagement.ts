@@ -21,6 +21,14 @@ export const useFetchStore = (customPayload?: Partial<typeof defaultPayload>) =>
   return useFetchPostData("pos/location/all", payload);
 };
 
+export const useFetchAllStore = () => {
+  return useGetData("pos/location/stores");
+};
+
+export const useFetchAllSellingUnits = () => {
+  return useGetData("pos/selling-unit/all");
+};
+
 export const useFetchStat = () => {
   return useGetData(`pos/location/stats`);
 }

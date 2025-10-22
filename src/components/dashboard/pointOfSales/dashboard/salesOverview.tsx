@@ -3,6 +3,7 @@ import { Text, Select, Box, Group, Badge, Loader, Stack } from "@mantine/core";
 import LineChart from "../../../General/lineChart";
 import { ChartDataPoint } from "../../../../types";
 import { useFetchSalesAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
+import UniversalEmptyState from "./UniversalEmptyState";
 
 const monthOrder = [
   "January", "February", "March", "April", "May", "June",
@@ -45,6 +46,8 @@ const SalesAnalytics = () => {
       }
       : undefined;
   }, [chartData]);
+
+
 
   return (
     <Box
@@ -97,7 +100,7 @@ const SalesAnalytics = () => {
           </Group>
 
           {!chartData.length ? (
-            <Text>No sales data available for this year.</Text>
+            <UniversalEmptyState />
           ) : (
             <LineChart
               data={chartData}

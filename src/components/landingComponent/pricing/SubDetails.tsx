@@ -27,6 +27,7 @@ const SubDetails = () => {
   const setTotalPriceValue = useSetAtom(totalPrice);
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
 
+
   const { data: subscriptionPlans, isPending: subscriptionPlansLoading } =
     useFetchData(`applications/allSubscription?billing_type=${activePlan}`);
 
