@@ -5,16 +5,7 @@ import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 import { useFetchDashboardCustomers } from "../../../../hooks/backendApis/pos/dashboard";
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  Key,
-  useState,
-} from "react";
-import { JSX } from "react/jsx-runtime";
-
+import { useState } from "react";
 
 const CustomerAnalysis = () => {
   const [dateRange, setDateRange] = useState<{
@@ -79,88 +70,31 @@ const CustomerAnalysis = () => {
           </Text>
         </div>
         <div className="flex mt-4 flex-col gap-2">
-          {customers
-            .slice(0, 3)
-            .map(
-              (
-                data: {
-                  usericon: JSX.IntrinsicAttributes;
-                  customer_name:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | ReactElement<unknown, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | ReactPortal
-                  | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<
-                      unknown,
-                      string | JSXElementConstructor<any>
+          {customers.slice(0, 3).map((data: any, index: number) => (
+            <div key={index}>
+              <div className="flex px-2 justify-between items-center">
+                <div className="flex items-center gap-2.5">
+                  {/* <span className="flex-shrink-0">{<data.usericon />}</span> */}
+                  <div className="flex flex-col">
+                    <Text
+                      size="lg"
+                      fw={600}
+                      c="textSecondary.9"
+                      className="break-all sm:break-normal"
                     >
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                  | null
-                  | undefined;
-                  customer_email:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | ReactElement<unknown, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | ReactPortal
-                  | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<
-                      unknown,
-                      string | JSXElementConstructor<any>
-                    >
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                  | null
-                  | undefined;
-                },
-                index: Key | null | undefined
-              ) => (
-                <div key={index}>
-                  <div className="flex px-2 justify-between items-center">
-                    <div className="flex items-center gap-2.5">
-                      {/* <span className="flex-shrink-0">{<data.usericon />}</span> */}
-                      <div className="flex flex-col">
-                        <Text
-                          size="lg"
-                          fw={600}
-                          c="textSecondary.9"
-                          className="break-all sm:break-normal"
-                        >
-                          {data.customer_name}
-                        </Text>
-                        <Text className="secondary font-normal text-sm sm:text-base break-all sm:break-normal">
-                          {data.customer_email}
-                        </Text>
-                      </div>
-                    </div>
-                    {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
+                      {data.customer_name}
+                    </Text>
+                    <Text className="secondary font-normal text-sm sm:text-base break-all sm:break-normal">
+                      {data.customer_email}
+                    </Text>
                   </div>
-
-                  <Divider size="sm" className="mt-3" color="#E4E7EC" />
                 </div>
-              )
-            )}
+                {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
+              </div>
+
+              <Divider size="sm" className="mt-3" color="#E4E7EC" />
+            </div>
+          ))}
         </div>
         <Link to={ROUTES.customer}>
           <Text
