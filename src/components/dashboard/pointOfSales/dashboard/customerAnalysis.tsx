@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
@@ -20,7 +21,7 @@ const CustomerAnalysis = () => {
   const { data } = useFetchCustomerAnalysis(dateRange);
   const { data: allCustomersData } = useFetchDashboardCustomers();
 
-  const customers =
+  const customers: any[] =
     allCustomersData?.data?.customers?.data?.sort(
       (a: { sales_orders_count: number }, b: { sales_orders_count: number }) =>
         b.sales_orders_count - a.sales_orders_count
@@ -43,10 +44,8 @@ const CustomerAnalysis = () => {
               <DateFilterMenu
                 onDateFilterChange={({ startDate, endDate }) =>
                   setDateRange({
-                    // @ts-ignore
-                    start_date: startDate.toISOString().split("T")[0],
-                    // @ts-ignore
-                    end_date: endDate.toISOString().split("T")[0],
+                    start_date: (startDate as Date).toISOString().split("T")[0],
+                    end_date: (endDate as Date).toISOString().split("T")[0],
                   })
                 }
               />
