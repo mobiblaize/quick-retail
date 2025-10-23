@@ -148,6 +148,15 @@ function ProductVariant({
               {/* Attributes */}
               <Box mt="md">
                 <ProductAttributes form={form} index={vIndex} />
+                {form.getInputProps(`variations.${vIndex}.attributes`)
+                  ?.error && (
+                  <Text size="sm" c="red" mt={6}>
+                    {
+                      form.getInputProps(`variations.${vIndex}.attributes`)
+                        ?.error
+                    }
+                  </Text>
+                )}
               </Box>
 
               {/* Image Upload */}
@@ -164,6 +173,15 @@ function ProductVariant({
                     handleRemoveImageForVariation(vIndex, imgIndex)
                   }
                 />
+                {form.getInputProps(`variations.${vIndex}.image`)
+                  ?.error && (
+                  <Text size="sm" c="red" mt={6}>
+                    {
+                      form.getInputProps(`variations.${vIndex}.image`)
+                        ?.error
+                    }
+                  </Text>
+                )}
               </Box>
 
               <Flex justify="end" mt="xl" gap={15}>
