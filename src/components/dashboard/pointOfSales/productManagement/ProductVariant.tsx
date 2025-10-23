@@ -97,7 +97,7 @@ export default function ProductVariant({
             </Flex>
           )}
 
-          {variants.map((variant: any, vIndex: number) => (
+          {variants.map((_: any, vIndex: number) => (
             <Card key={vIndex} withBorder radius="sm" mt="sm">
               <Text fw={600} mb="md">
                 Variant {vIndex + 1}
@@ -148,6 +148,15 @@ export default function ProductVariant({
               {/* Attributes */}
               <Box mt="md">
                 <ProductAttributes form={form} index={vIndex} />
+                {form.getInputProps(`variations.${vIndex}.attributes`)
+                  ?.error && (
+                  <Text size="sm" c="red" mt={6}>
+                    {
+                      form.getInputProps(`variations.${vIndex}.attributes`)
+                        ?.error
+                    }
+                  </Text>
+                )}
               </Box>
 
               {/* Image Upload */}
@@ -164,6 +173,15 @@ export default function ProductVariant({
                     handleRemoveImageForVariation(vIndex, imgIndex)
                   }
                 />
+                {form.getInputProps(`variations.${vIndex}.image`)
+                  ?.error && (
+                  <Text size="sm" c="red" mt={6}>
+                    {
+                      form.getInputProps(`variations.${vIndex}.image`)
+                        ?.error
+                    }
+                  </Text>
+                )}
               </Box>
 
               <Flex justify="end" mt="xl" gap={15}>

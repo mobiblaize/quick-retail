@@ -166,6 +166,16 @@ function AddProductFormNew() {
               : null
             : null,
 
+        attributes: (value, values) =>
+          values.has_variations && (!Array.isArray(value) || value.length === 0)
+            ? "At least one attribute is required for each variation"
+            : null,
+
+        image: (value, values) =>
+          values.has_variations && (!Array.isArray(value) || value.length === 0)
+            ? "At least one image is required for each variation"
+            : null,
+
         quantity: (value, values) =>
           values.has_variations
             ? value < 0
@@ -280,6 +290,14 @@ function AddProductFormNew() {
       let payload: any;
 
       if (values.has_variations) {
+        if (!Array.isArray(values.variations) || values.variations.length < 2) {
+          notifications.show({
+            title: "Product Variations Error",
+            message: "At least 2 variations are required for variable products",
+            color: "red",
+          });
+          return; // stop submission
+        }
         const transformedVariations = values.variations.map((variation) => ({
           ...variation,
           attributes: expandFormAttributesToValues(variation.attributes),
@@ -586,7 +604,7 @@ function AddProductFormNew() {
               />
             </Box>
 
-            <Flex justify={"end"} mt="xl" gap={15}>
+            <Flex justify={"end"} mt="xl" gap={15} className="">
               <Button radius={"md"} variant="outline">
                 Cancel
               </Button>

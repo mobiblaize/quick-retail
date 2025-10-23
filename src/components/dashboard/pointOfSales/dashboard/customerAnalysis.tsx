@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Divider, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
@@ -7,6 +8,13 @@ import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dash
 import { useFetchDashboardCustomers } from "../../../../hooks/backendApis/pos/dashboard";
 import { useState } from "react";
 import UniversalEmptyState from "./UniversalEmptyState";
+
+
+interface Customer {
+  customer_name: string;
+  customer_email: string;
+  sales_orders_count: number;
+}
 
 
 const CustomerAnalysis = () => {
@@ -20,7 +28,7 @@ const CustomerAnalysis = () => {
   const { data } = useFetchCustomerAnalysis(dateRange);
   const { data: allCustomersData } = useFetchDashboardCustomers();
 
-  const customers =
+  const customers: any[] =
     allCustomersData?.data?.customers?.data?.sort(
       (a: { sales_orders_count: number }, b: { sales_orders_count: number }) =>
         b.sales_orders_count - a.sales_orders_count
@@ -43,10 +51,8 @@ const CustomerAnalysis = () => {
               <DateFilterMenu
                 onDateFilterChange={({ startDate, endDate }) =>
                   setDateRange({
-                    // @ts-ignore
-                    start_date: startDate.toISOString().split("T")[0],
-                    // @ts-ignore
-                    end_date: endDate.toISOString().split("T")[0],
+                    start_date: (startDate as Date).toISOString().split("T")[0],
+                    end_date: (endDate as Date).toISOString().split("T")[0],
                   })
                 }
               />
@@ -81,7 +87,7 @@ const CustomerAnalysis = () => {
           {customers.length > 0 ? (
             customers
               .slice(0, 3)
-              .map((data, index) => (
+              .map((data: Customer, index: number) => (
                 <div key={index}>
                   <div className="flex px-2 justify-between items-center">
                     <div className="flex items-center gap-2.5">
