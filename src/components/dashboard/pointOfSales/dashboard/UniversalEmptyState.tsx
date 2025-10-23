@@ -1,4 +1,3 @@
-// import React from "react";
 import Univers from "../../../../assets/images/univers.png"
 
 export default function EmptyState() {
