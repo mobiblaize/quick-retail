@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { Divider, Group, Text } from "@mantine/core";
+import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
