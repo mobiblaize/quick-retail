@@ -60,8 +60,13 @@ const ReturnsTableSkeleton = () => (
 /* ---------- /Skeletons ---------- */
 
 const ReturnsPage = () => {
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
     startDate: "",
     endDate: "",
   });
@@ -86,7 +91,7 @@ const ReturnsPage = () => {
       per_page: "",
       paginate: true,
       location_name: filters.location,
-      return_reason: filters.reason,
+      return_reason: filters.reason === "all" ? "" : filters.reason,
       status: mapOrderStatus(filters.returnStatus),
       price_from: filters.priceFrom ?? 100,
       price_to: filters.priceTo ?? "",
@@ -117,13 +122,18 @@ const ReturnsPage = () => {
   };
 
   // @ts-ignore
-  const { data: analyticsData = {}, isLoading: isAnalyticsLoading = false } = useFetchAllreturns(analyticsPayload) || {};
+  const { data: analyticsData = {}, isLoading: isAnalyticsLoading = false } =
+    useFetchAllreturns(analyticsPayload) || {};
   // @ts-ignore
-  const { data: tableData = {}, isLoading: isTableLoading = false } = useFetchAllreturns(tablePayload) || {};
+  const { data: tableData = {}, isLoading: isTableLoading = false } =
+    useFetchAllreturns(tablePayload) || {};
 
-  const returns = Array.isArray(tableData?.data?.returns?.data) ? tableData.data.returns.data : [];
+  const returns = Array.isArray(tableData?.data?.returns?.data)
+    ? tableData.data.returns.data
+    : [];
 
-  const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
+  const handleFilterChange = (filters: FilterValues) =>
+    setAppliedFilters(filters);
   const handleLogPage = () => navigate(ROUTES.logReturns);
   const handlePageChange = (page: number) => setCurrentPage(page);
 
@@ -146,7 +156,11 @@ const ReturnsPage = () => {
         <Text fw={500} size="xl" c="black">
           Returns and Refunds
         </Text>
-        <Button onClick={handleLogPage} variant="filled-primary" className="flex gap-1.5">
+        <Button
+          onClick={handleLogPage}
+          variant="filled-primary"
+          className="flex gap-1.5"
+        >
           New Return Log
           <Plus size={24} />
         </Button>

@@ -68,7 +68,6 @@
 //     })
 //   );
 
-
 //   // Categories & Locations
 //   const { data: categoryData } = useFetchAllCategories();
 //   const categories = Array.isArray(categoryData?.data?.data)
@@ -298,7 +297,6 @@
 //             />
 //           </Grid.Col> */}
 
-
 //           <Grid.Col span={{ base: 12, md: 6 }}>
 //             <Dropdown
 //               label="Category"
@@ -521,8 +519,6 @@
 //               />
 //             ) : null}
 
-
-
 //             <Paper
 //               w={200}
 //               h={200}
@@ -549,10 +545,6 @@
 //               </Text>
 //             </Paper>
 
-
-
-
-
 //             {/* <Button
 //               variant="subtle"
 //               color="orange"
@@ -571,7 +563,6 @@
 //               style={{ display: "none" }}
 //             />
 //           </Group>
-
 
 //         </Box>
 //       </Paper>
@@ -655,9 +646,6 @@
 
 // export default EditProductForm;
 
-
-
-
 import { UploadCloud, X } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import { notifications } from "@mantine/notifications";
@@ -723,9 +711,9 @@ const EditProductForm = () => {
   );
 
   // ✅ new state for selected category
-  const [selectedCategoryId, setSelectedCategoryId] = useState<
-    number | string
-  >(formData?.product?.category?.id || "");
+  const [selectedCategoryId, setSelectedCategoryId] = useState<number | string>(
+    formData?.product?.category?.id || ""
+  );
 
   // ✅ fetch categories & subcategories
   const { data: subCatData } = useFetchSubCatOfCat(
@@ -793,15 +781,15 @@ const EditProductForm = () => {
   const [variants, setVariants] = useState<VariantPayload[]>(
     Array.isArray(form_data?.variations)
       ? form_data.variations.map((v: any) => ({
-        variationID: v.variationID ?? null,
-        sku: v.sku ?? null,
-        cost_price: v.cost_price ?? 0,
-        selling_price: v.selling_price ?? 0,
-        reorder_level: v.reorder_level ?? 0,
-        size: v.attributes?.size ?? null,
-        color: v.attributes?.color ?? null,
-        productID: form_data.product?.productID ?? null,
-      }))
+          variationID: v.variationID ?? null,
+          sku: v.sku ?? null,
+          cost_price: v.cost_price ?? 0,
+          selling_price: v.selling_price ?? 0,
+          reorder_level: v.reorder_level ?? 0,
+          size: v.attributes?.size ?? null,
+          color: v.attributes?.color ?? null,
+          productID: form_data.product?.productID ?? null,
+        }))
       : []
   );
 
@@ -825,23 +813,23 @@ const EditProductForm = () => {
       variants.length > 0
         ? variants
         : [
-          {
-            variationID: null,
-            productID: formData.product?.productID ?? null,
-            sku: `SKU-${Date.now()}`,
-            cost_price: parseInt(formData.cost_price?.toString() || "0", 10),
-            selling_price: parseInt(
-              formData.selling_price?.toString() || "0",
-              10
-            ),
-            reorder_level: parseInt(
-              formData.reorder_level?.toString() || "0",
-              10
-            ),
-            size: formData.size ?? null,
-            color: formData.color ?? null,
-          },
-        ];
+            {
+              variationID: null,
+              productID: formData.product?.productID ?? null,
+              sku: `SKU-${Date.now()}`,
+              cost_price: parseInt(formData.cost_price?.toString() || "0", 10),
+              selling_price: parseInt(
+                formData.selling_price?.toString() || "0",
+                10
+              ),
+              reorder_level: parseInt(
+                formData.reorder_level?.toString() || "0",
+                10
+              ),
+              size: formData.size ?? null,
+              color: formData.color ?? null,
+            },
+          ];
 
     const variationsPayload = preparedVariants.map((v) => {
       const baseSku = v.sku?.replace(/\s/g, "") || `SKU-${Date.now()}`;
@@ -874,8 +862,8 @@ const EditProductForm = () => {
       image_path: Array.isArray(formData.image_path)
         ? formData.image_path
         : formData.image_path
-          ? [formData.image_path as string]
-          : [],
+        ? [formData.image_path as string]
+        : [],
       variations: variationsPayload,
     };
 
@@ -933,15 +921,14 @@ const EditProductForm = () => {
               placeholder="Enter SKU"
               paddingY="0.7rem"
               value={formData.sku || ""}
-              onChange={(val: string) =>
-                setFormData({ ...formData, sku: val })
-              }
+              onChange={(val: string) => setFormData({ ...formData, sku: val })}
             />
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Dropdown
               label="Category"
+              disabled={true}
               placeholder={
                 formData.product?.category?.name || "Select product category"
               }
@@ -956,12 +943,13 @@ const EditProductForm = () => {
                   sub_category_id: "",
                 });
               }}
-            />
+            />{" "}
           </Grid.Col>
 
           <Grid.Col span={{ base: 12, md: 6 }}>
             <Dropdown
               label="Sub-category"
+              disabled={true}
               placeholder={
                 formData.product?.sub_category?.name ||
                 "Select product sub category"
@@ -1062,7 +1050,10 @@ const EditProductForm = () => {
               onChange={(e) =>
                 setFormData({
                   ...formData,
-                  product: { ...formData.product, long_description: e.target.value },
+                  product: {
+                    ...formData.product,
+                    long_description: e.target.value,
+                  },
                 })
               }
             />
@@ -1220,7 +1211,9 @@ const EditProductForm = () => {
                   ...formData,
                   product: {
                     ...formData.product,
-                    location: locationOptions.find((c: any) => c.value === value),
+                    location: locationOptions.find(
+                      (c: any) => c.value === value
+                    ),
                   },
                 })
               }

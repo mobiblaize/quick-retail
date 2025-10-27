@@ -100,6 +100,17 @@ export default function GenericTable<T>({
 
   const DEFAULT_FILTER_VALUES = ["All", "", "all"];
 
+  const defaultSortOptions = [
+    { label: "All", key: "" },
+    { label: "Recent", key: "recent" },
+    { label: "Oldest", key: "oldest" },
+    { label: "A-Z", key: "a-z" },
+    { label: "Z-A", key: "z-a" },
+];
+
+const sortOptionsToUse = sortOptions ?? defaultSortOptions;
+
+
   const isValueSet = (v: unknown) => {
     if (Array.isArray(v)) return v.length > 0;
     if (typeof v === "object" && v !== null) return Object.keys(v).length > 0;
@@ -151,17 +162,18 @@ export default function GenericTable<T>({
       {/* Header Section: Title + Search + Sort + Filter */}
       {(titleSection || setSearchTerm || onSortChange || showFilter) && (
         <div
-          style={{
-            padding: "16px 24px",
-            borderBottom: "1px solid #f1f5f9",
-            display: "flex",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: "1rem",
-          }}
+        className="py-[16px] px-[24px] border-b border-[#f1f5f9] flex lg:flex-row flex-col items-base lg:items-start justify-between gap-4 "
+          // style={{
+          //   padding: "16px 24px",
+          //   borderBottom: "1px solid #f1f5f9",
+          //   display: "flex",
+          //   justifyContent: "space-between",
+          //   alignItems: "center",
+          //   gap: "1rem",
+          // }}
         >
           {titleSection}
-          <div style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+          <div className="flex items-center gap-4" >
             {enableSearch && setSearchTerm && (
               <SearchComp
                 searchTerm={searchTerm || ""}
@@ -175,7 +187,7 @@ export default function GenericTable<T>({
               <SortFilter
                 onSortChange={onSortChange}
                 activeSort={activeSort || ""}
-                sortOptions={sortOptions}
+                sortOptions={sortOptionsToUse}
               />
             )}
             {showFilter && onFilterChange && (

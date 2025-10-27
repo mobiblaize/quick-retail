@@ -71,7 +71,7 @@ const UserManagement = () => {
     // Determine if the "Add New Users" button should be disabled
     // It's disabled if the plan is still loading, if there's an error fetching the plan,
     // or if the subscription is not active.
-    const isAddNewUserButtonDisabled = isLoadingPlan || isErrorPlan || !isSubscriptionActive; 
+    // const isAddNewUserButtonDisabled = isLoadingPlan || isErrorPlan || !isSubscriptionActive; 
 
     const subHeaders = [
        <div
@@ -87,7 +87,7 @@ const UserManagement = () => {
       <Button
         variant="filled-primary"
         onClick={() => setModalOpen(true)}
-        disabled={isAddNewUserButtonDisabled}
+        // disabled={isAddNewUserButtonDisabled}
       >
         Add New Users
       </Button>

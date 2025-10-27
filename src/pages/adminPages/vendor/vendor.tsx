@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Text, Loader } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import ProfileHeader from "../../../components/dashboard/adminPage/vendor/profileHeader";
 import ProfileDetails from "../../../components/dashboard/adminPage/vendor/vendorDetails";
 import PageContainer from "../../../layout/pageContainer";
@@ -21,7 +22,11 @@ const VendorPage = () => {
       },
       {
         onSuccess: () => {
-          console.log("Profile updated successfully");
+          showNotification({
+            title: "Profile Updated",
+            message: "Your profile has been updated successfully.",
+            color: "green",
+          });
           refetch(); // Refetch profile data after save
         },
         onError: (err) => {
