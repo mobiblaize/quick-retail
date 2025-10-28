@@ -63,7 +63,7 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
         <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Sales overviewzz
+            Sales overview
           </Text>
           <Text size="sm">This is an overview summarizing sales</Text>
         </div>
