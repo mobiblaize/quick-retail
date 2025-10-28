@@ -16,11 +16,15 @@ interface TransactionOverviewProps {
   data: TransactionData;
   isLoading: boolean;
   setDateRange: (range: { startDate: string; endDate: string }) => void;
+  startDate?: string
+  endDate?: string
 }
 
 const ProductOverview: React.FC<TransactionOverviewProps> = ({
   data,
   setDateRange,
+  startDate,
+  endDate
 }) => {
   const currencySymbol = "₦";
 
@@ -76,6 +80,8 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
                 endDate: endDate?.toISOString().split("T")[0] || "",
               })
             }
+            startDate={startDate}
+            endDate={endDate}
           />
         </Group>
       </header>

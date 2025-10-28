@@ -206,7 +206,7 @@ const ProductManagementPage = () => {
           </>
         ) : (
           <>
-            <ProductOverview data={data?.data} isLoading={isLoading} setDateRange={setDateRange} />
+            <ProductOverview data={data?.data} isLoading={isLoading} setDateRange={setDateRange} startDate={dateRange.startDate} endDate={dateRange.endDate} />
             <ProductTable
               products={products}
               isLoading={isLoading}
