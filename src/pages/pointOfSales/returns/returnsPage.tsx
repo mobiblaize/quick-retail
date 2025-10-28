@@ -107,7 +107,7 @@ const ReturnsPage = () => {
   // Analytics payload
   const analyticsPayload = {
     page: currentPage,
-    per_page: perPage,
+    per_page: perPage.toString(),
   };
 
   // Table payload with filters
@@ -116,7 +116,7 @@ const ReturnsPage = () => {
     ...(dateRange.startDate ? { start_date: dateRange.startDate } : {}),
     ...(dateRange.endDate ? { end_date: dateRange.endDate } : {}),
     page: currentPage,
-    per_page: perPage,
+    per_page: perPage.toString(),
     search: searchTerm,
     sort_by: activeSort,
   };

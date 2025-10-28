@@ -58,20 +58,13 @@ import AddUserModal from "../../../components/dashboard/adminPage/userManagement
 import { useState } from "react";
 import { Link } from "react-router";
 import { ROUTES } from "../../../constants/routes";
-import { useFetchCurrentSub } from "../../../hooks/backendApis/admin/profile";
+
 
 const UserManagement = () => {
     const [modalOpen, setModalOpen] = useState(false);
     const [activeTab, setActiveTab] = useState<"userManage" | "roleGrid">("userManage");
 
-    const { data: subscriptionData, isLoading: isLoadingPlan, isError: isErrorPlan } = useFetchCurrentSub();
-
-    const isSubscriptionActive = subscriptionData?.data?.status === "Active";
-
-    // Determine if the "Add New Users" button should be disabled
-    // It's disabled if the plan is still loading, if there's an error fetching the plan,
-    // or if the subscription is not active.
-    // const isAddNewUserButtonDisabled = isLoadingPlan || isErrorPlan || !isSubscriptionActive; 
+    // const { data: subscriptionData } = useFetchCurrentSub();
 
     const subHeaders = [
        <div

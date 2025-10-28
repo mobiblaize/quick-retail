@@ -109,11 +109,10 @@ export default function AddUserModal({ opened, onClose }: Props) {
         onClose();
       },
       onError: (err: unknown) => {
+        const errorMessage = (err as { response?: { data?: { message?: string } } })?.response?.data?.message;
         showNotification({
           title: "Error",
-          message:
-            err?.response?.data?.message ||
-            "Failed to create user. Please try again.",
+          message: errorMessage || "Failed to create user. Please try again.",
           color: "red",
         });
       },
