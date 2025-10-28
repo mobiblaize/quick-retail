@@ -1,7 +1,13 @@
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
+import Dropdown from "../../../../General/dropdown";
 import { useState } from "react";
-import { useCreateStore } from "../../../../../hooks/backendApis/pos/storeManagement";
+import {
+  useCreateStore,
+  useFetchCountries,
+  useFetchStates,
+  useFetchCities,
+} from "../../../../../hooks/backendApis/pos/storeManagement";
 import { notifications } from "@mantine/notifications";
 
 interface AddNewStoreModalProps {
@@ -21,13 +27,19 @@ const AddNewStore = ({
   const [name, setName] = useState("");
   // const [gla, setGla] = useState("");
   // const [gsa, setGsa] = useState("");
-  const [staff_no,] = useState();
+  const [staff_no] = useState();
   const [country, setCountry] = useState("");
   const [stateVal, setStateVal] = useState("");
   const [lga, setLga] = useState(""); // optional
   const [address, setAddress] = useState("");
 
   const { mutate: createStore, isPending } = useCreateStore();
+  const { data: countriesData, isLoading: countriesLoading } =
+    useFetchCountries();
+  const { data: statesData, isLoading: statesLoading } =
+    useFetchStates(country);
+  const { data: citiesData, isLoading: citiesLoading } =
+    useFetchCities(stateVal);
 
   const handleSubmit = () => {
     const payload = {
@@ -91,14 +103,9 @@ const AddNewStore = ({
         padding="xl"
       >
         <div className="flex flex-col space-y-6">
-
-
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
             <div className="">
-              <label className=" items-center gap-2 mb-1.5">
-                Store Name
-              </label>
+              <label className=" items-center gap-2 mb-1.5">Store Name</label>
               <FormInput
                 type="text"
                 paddingY="6px"
@@ -107,44 +114,57 @@ const AddNewStore = ({
               />
             </div>
             <div className="">
-              <label className=" items-center gap-2 mb-1.5">
-                Country
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
+              <Dropdown
+                label="Country"
+                placeholder="Select Country"
                 value={country}
-                onChange={(val: string) => setCountry(val)}
+                onChange={(val: string | number) => setCountry(val.toString())}
+                options={
+                  countriesData?.data?.map((country: any) => ({
+                    label: country.name,
+                    value: country.id,
+                  })) || []
+                }
+                disabled={countriesLoading}
+                searchable
               />
             </div>
 
             <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                State
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
+              <Dropdown
+                label="State"
+                placeholder="Select State"
                 value={stateVal}
-                onChange={(val: string) => setStateVal(val)}
+                onChange={(val: string | number) => setStateVal(val.toString())}
+                options={
+                  statesData?.data?.map((state: any) => ({
+                    label: state.name,
+                    value: state.id,
+                  })) || []
+                }
+                disabled={statesLoading || !country}
+                searchable
               />
             </div>
             <div>
-              <label className="flex items-center gap-2 mb-1.5">
-                Region/LGA
-              </label>
-              <FormInput
-                type="text"
-                paddingY="6px"
+              <Dropdown
+                label="Region/LGA"
+                placeholder="Select City"
                 value={lga}
-                onChange={(val: string) => setLga(val)}
+                onChange={(val: string | number) => setLga(val.toString())}
+                options={
+                  citiesData?.data?.map((city: any) => ({
+                    label: city.name,
+                    value: city.id,
+                  })) || []
+                }
+                disabled={citiesLoading || !stateVal}
+                searchable
               />
             </div>
 
             <div className="col-span-1 sm:col-span-2">
-              <label className="flex items-center gap-2 mb-1.5">
-                Address
-              </label>
+              <label className="flex items-center gap-2 mb-1.5">Address</label>
               <FormInput
                 type="text"
                 paddingY="6px"

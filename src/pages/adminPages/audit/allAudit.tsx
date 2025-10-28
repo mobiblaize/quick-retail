@@ -129,15 +129,24 @@ const AuditTrailPage = () => {
     const logs = data?.data?.data || [];
     if (!logs.length) return;
 
-    const tableData = logs.map((log: any) => ({
-      timestamp: new Date(log.created_at).toLocaleString(),
-      name: `${log.causer?.firstname || ""} ${log.causer?.lastname || ""}`,
-      email: log.causer?.email || "N/A",
-      role: log.causer?.roles || "N/A",
-      activity: log.log_name || "",
-      module: log.action_module || "",
-      ipAddress: log.ip_address || "",
-    }));
+    const tableData = logs.map((log: any) => {
+      let roleDisplay = "N/A";
+      const roles = log.causer?.roles;
+      if (Array.isArray(roles))
+        roleDisplay = roles.map((r: any) => r.name || r).join(", ");
+      else if (typeof roles === "object") roleDisplay = roles.name || "N/A";
+      else if (typeof roles === "string") roleDisplay = roles;
+
+      return {
+        timestamp: new Date(log.created_at).toLocaleString(),
+        name: `${log.causer?.firstname || ""} ${log.causer?.lastname || ""}`,
+        email: log.causer?.email || "N/A",
+        role: roleDisplay,
+        activity: log.log_name || "",
+        module: log.action_type?.split("\\").pop() || "",
+        ipAddress: log.ip_address || "",
+      };
+    });
 
     if (format === "csv") {
       const csv = tableData
