@@ -12,6 +12,7 @@ interface FlexibleInputField
   leftPrefix?: string;
   onBlur?: () => void;
   onWheel?: (e: React.WheelEvent<HTMLInputElement>) => void;
+  labelProps?: Record<string, any>;
 }
 
 const FormInput = ({
@@ -64,8 +65,16 @@ const FormInput = ({
       <Text size="sm" fw={500} c="gray.7">
         {label}
       </Text>
-      {required && <Text size="sm" c={requiredColor}>*</Text>}
-      {optional && <Text size="sm" c="gray.5">(Optional)</Text>}
+      {required && (
+        <Text size="sm" c={requiredColor}>
+          *
+        </Text>
+      )}
+      {optional && (
+        <Text size="sm" c="gray.5">
+          (Optional)
+        </Text>
+      )}
     </Group>
   );
 
@@ -141,21 +150,28 @@ const FormInput = ({
       id={id}
       ref={inputRef}
       onWheel={handleWheel}
-
       label={
         label && (
           <Group gap="xs" align="center">
-            <Text size="sm" c="gray.5">
+            <Text size="sm" c="gray.5" {...(rest.labelProps || {})}>
               {label}
             </Text>
-            {required && <Text size="sm" c={requiredColor}>*</Text>}
-            {optional && <Text size="sm" c="gray.5" fw={500}>(Optional)</Text>}
+            {required && (
+              <Text size="sm" c={requiredColor}>
+                *
+              </Text>
+            )}
+            {optional && (
+              <Text size="sm" c="gray.5" fw={500}>
+                (Optional)
+              </Text>
+            )}
           </Group>
         )
       }
       value={value}
       // onChange={onChange}
-      // onChange={(event) => onChange?.(event.currentTarget.value)} 
+      // onChange={(event) => onChange?.(event.currentTarget.value)}
       onChange={(event) => onChange?.(event.currentTarget.value)}
       placeholder={placeholder}
       required={required}
@@ -168,16 +184,18 @@ const FormInput = ({
             {leftIcon}
           </div>
         ) : leftPrefix ? (
-          <div style={{
-            color: "#374151",
-            fontSize: "14px",
-            padding: "0 12px",
-            display: "flex",
-            alignItems: "center",
-            height: "100%",
-            borderRight: "1px solid #D1D5DB",
-            borderRadius: "0.375rem 0 0 0.375rem"
-          }}>
+          <div
+            style={{
+              color: "#374151",
+              fontSize: "14px",
+              padding: "0 12px",
+              display: "flex",
+              alignItems: "center",
+              height: "100%",
+              borderRight: "1px solid #D1D5DB",
+              borderRadius: "0.375rem 0 0 0.375rem",
+            }}
+          >
             {leftPrefix}
           </div>
         ) : undefined
