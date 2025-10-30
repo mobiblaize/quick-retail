@@ -89,7 +89,7 @@ const AuditTrailPage = () => {
     status: mapOrderStatus(filters.auditStatus),
     page: currentPage.toString(),
     role: filters.role ?? "",
-    module: filters.module ?? "",
+    model: filters.module ?? "",
   });
 
   const payload = {

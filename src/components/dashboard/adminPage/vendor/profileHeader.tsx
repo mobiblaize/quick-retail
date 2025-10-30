@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDisclosure } from "@mantine/hooks";
 import { Button, Text } from "@mantine/core";
-import User from "../../../../assets/images/user.png";
+
 import EditProfileModal from "./EditProfileModal";
 
 interface ProfileHeaderProps {
@@ -14,14 +14,17 @@ interface ProfileHeaderProps {
     app_selected: number;
     profile_pic: string;
   };
-  onSave: (data: { firstName: string; lastName: string; avatar?: string }) => void;
+  onSave: (data: {
+    firstName: string;
+    lastName: string;
+    avatar?: string;
+  }) => void;
 }
 
 export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
   const { profile_pic, company_name, email, name, phone_number } = profile;
   const [opened, { open, close }] = useDisclosure(false);
   const [localImage, setLocalImage] = useState(profile_pic || "");
-  const emptyImage = User;
 
   // Split name into first/last parts
   const nameParts = name ? name.split(" ") : ["", ""];
@@ -32,12 +35,19 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
     <div className="bg-white rounded-lg shadow p-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
       <div className="grid grid-cols-1 sm:flex sm:items-center gap-4">
         {/* Avatar */}
-        <div className="w-32 h-32 border-4 border-orange-500 rounded-full overflow-hidden mx-auto sm:mx-0">
-          <img
-            src={localImage || emptyImage}
-            alt="Profile"
-            className="w-full h-full object-cover"
-          />
+        <div className="w-32 h-32 border-4 border-orange-500 rounded-full overflow-hidden mx-auto sm:mx-0 flex items-center justify-center bg-gray-100">
+          {localImage ? (
+            <img
+              src={localImage}
+              alt="Profile"
+              className="w-full h-full object-cover"
+            />
+          ) : (
+            <Text size="xl" fw={600} c="gray">
+              {firstName.charAt(0).toUpperCase()}
+              {lastName.charAt(0).toUpperCase()}
+            </Text>
+          )}
         </div>
 
         {/* Info */}

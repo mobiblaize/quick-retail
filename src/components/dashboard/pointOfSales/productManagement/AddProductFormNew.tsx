@@ -110,97 +110,112 @@ function AddProductFormNew() {
 
     // conditional validators: second param is all values
     validate: {
-      product_name: (value) =>
-        !value?.trim() ? "Product name is required" : null,
+  product_name: (value) =>
+    !value?.trim() ? "Product name is required" : null,
 
-      sku: (value) => (!value?.trim() ? "SKU is required" : null),
+  sku: (value) => (!value?.trim() ? "SKU is required" : null),
 
-      category_id: (value) => (!value ? "Category is required" : null),
+  category_id: (value) => (!value ? "Category is required" : null),
 
-      sub_category_id: (value) => (!value ? "Sub-category is required" : null),
+  sub_category_id: (value) => (!value ? "Sub-category is required" : null),
 
-      short_description: (value) =>
-        !value?.trim() ? "Short description is required" : null,
+  short_description: (value) =>
+    !value?.trim() ? "Short description is required" : null,
 
-      location_id: (value) => (!value ? "Location is required" : null),
+  location_id: (value) => (!value ? "Location is required" : null),
 
-      /* Simple product validators (only when has_variations === false) */
-      selling_unit: (value, values) =>
-        !values.has_variations && !value?.toString().trim()
-          ? "Selling unit is required"
-          : null,
+  selling_unit: (value, values) =>
+    !values.has_variations && !value?.toString().trim()
+      ? "Selling unit is required"
+      : null,
 
-      cost_price: (value, values) =>
-        !values.has_variations && Number(value) <= 0
+  cost_price: (value, values) =>
+    !values.has_variations && Number(value) <= 0
+      ? "Cost price must be greater than 0"
+      : null,
+
+  selling_price: (value, values) =>
+    !values.has_variations && Number(value) <= 0
+      ? "Selling price must be greater than 0"
+      : null,
+
+  total_quantity: (value, values) => {
+    if (!values.has_variations && Number(value) < 0)
+      return "Quantity cannot be negative";
+
+    if (
+      !values.has_variations &&
+      Number(values.reorder_level) > Number(value)
+    )
+      return "Quantity cannot be less than reorder level";
+
+    return null;
+  },
+
+  reorder_level: (value, values) => {
+    if (!values.has_variations && Number(value) < 0)
+      return "Reorder level cannot be negative";
+
+    if (
+      !values.has_variations &&
+      Number(value) > Number(values.total_quantity)
+    )
+      return "Reorder level cannot be greater than quantity";
+
+    return null;
+  },
+
+  /* Nested validation for variations */
+  variations: {
+    cost_price: (value, values) =>
+      values.has_variations
+        ? value <= 0
           ? "Cost price must be greater than 0"
-          : null,
+          : null
+        : null,
 
-      selling_price: (value, values) =>
-        !values.has_variations && Number(value) <= 0
+    selling_price: (value, values) =>
+      values.has_variations
+        ? value <= 0
           ? "Selling price must be greater than 0"
-          : null,
+          : null
+        : null,
 
-      total_quantity: (value, values) =>
-        !values.has_variations && Number(value) < 0
+    attributes: (value, values) =>
+      values.has_variations && (!Array.isArray(value) || value.length === 0)
+        ? "At least one attribute is required for each variation"
+        : null,
+
+    image: (value, values) =>
+      values.has_variations && (!Array.isArray(value) || value.length === 0)
+        ? "At least one image is required for each variation"
+        : null,
+
+    quantity: (value, values) =>
+      values.has_variations
+        ? value < 0
           ? "Quantity cannot be negative"
-          : null,
+          : null
+        : null,
 
-      reorder_level: (value, values) =>
-        !values.has_variations && Number(value) < 0
+    reorder_level: (value, values) =>
+      values.has_variations
+        ? value < 0
           ? "Reorder level cannot be negative"
-          : null,
+          : null
+        : null,
 
-      /* Nested validation for variations (only when has_variations === true) */
-      variations: {
-        cost_price: (value, values) =>
-          values.has_variations
-            ? value <= 0
-              ? "Cost price must be greater than 0"
-              : null
-            : null,
+    sku: (value, values) =>
+      values.has_variations && !value?.trim()
+        ? "Variation SKU is required"
+        : null,
 
-        selling_price: (value, values) =>
-          values.has_variations
-            ? value <= 0
-              ? "Selling price must be greater than 0"
-              : null
-            : null,
-
-        attributes: (value, values) =>
-          values.has_variations && (!Array.isArray(value) || value.length === 0)
-            ? "At least one attribute is required for each variation"
-            : null,
-
-        image: (value, values) =>
-          values.has_variations && (!Array.isArray(value) || value.length === 0)
-            ? "At least one image is required for each variation"
-            : null,
-
-        quantity: (value, values) =>
-          values.has_variations
-            ? value < 0
-              ? "Quantity cannot be negative"
-              : null
-            : null,
-
-        reorder_level: (value, values) =>
-          values.has_variations
-            ? value < 0
-              ? "Reorder level cannot be negative"
-              : null
-            : null,
-
-        sku: (value, values) =>
-          values.has_variations && !value?.trim()
-            ? "Variation SKU is required"
-            : null,
-
-        selling_unit: (value, values) =>
-          values.has_variations && !value?.trim()
-            ? "Selling unit is required"
-            : null,
-      },
-    },
+    selling_unit: (value, values) =>
+      values.has_variations && !value?.trim()
+        ? "Selling unit is required"
+        : null,
+  },
+},
   });
 
   useEffect(() => {
@@ -348,6 +363,8 @@ function AddProductFormNew() {
 
       navigate(ROUTES.productManagement);
     } catch (error: any) {
+      notifications.clean();
+
       notifications.show({
         title: "Error",
         message: error?.message || "Failed to create product",
@@ -455,6 +472,7 @@ function AddProductFormNew() {
               <>
                 <TextInput
                   label="cost price"
+                  leftSection={<TbCurrencyNaira />}
                   placeholder="Enter cost price"
                   {...form.getInputProps("cost_price")}
                   error={form.errors.cost_price}
@@ -462,6 +480,7 @@ function AddProductFormNew() {
 
                 <TextInput
                   label="selling price"
+                  leftSection={<TbCurrencyNaira />}
                   placeholder="Enter selling price"
                   {...form.getInputProps("selling_price")}
                   error={form.errors.selling_price}
@@ -558,7 +577,6 @@ function AddProductFormNew() {
               <TextInput
                 label="quantity"
                 placeholder="Enter quantity"
-                leftSection={<TbCurrencyNaira />}
                 classNames={{
                   label: "capitalize font-semibold py-1",
                   input: "!py-5 placeholder:text-#6B7280 ",
