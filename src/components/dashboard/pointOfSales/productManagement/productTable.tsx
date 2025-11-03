@@ -1,6 +1,6 @@
 import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core";
 import { MoreVertical } from "lucide-react";
-import { Link, useNavigate } from "react-router";
+import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import DeleteProduct from "../categories/modals/deleteProduct";
 import { useState } from "react";
