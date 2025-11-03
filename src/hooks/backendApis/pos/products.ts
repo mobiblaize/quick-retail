@@ -118,9 +118,11 @@ export const useSearchAllCustomers = (
 };
 
 export const useSingleProduct = (productId?: string) => {
-  if (!productId) return { data: null, isLoading: false };
+  return useGetData(`pos/product/show-product/${productId}`, {}, !!productId);
+};
 
-  return useGetData(`pos/product/show-product/${productId}`);
+export const useEditProduct = (productId?: string) => {
+  return useGetData(`pos/product/edit-product/${productId}`, {}, !!productId);
 };
 
 export const useUpdateProduct = (productId?: string) => {

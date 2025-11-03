@@ -1,4 +1,13 @@
-import { Box, Button, Card, Flex, Group, Stack, Text, Title } from "@mantine/core";
+import {
+  Box,
+  Button,
+  Card,
+  Flex,
+  Group,
+  Stack,
+  Text,
+  Title,
+} from "@mantine/core";
 
 interface SubscriptionSummaryProps {
   items: {
@@ -6,6 +15,7 @@ interface SubscriptionSummaryProps {
     price: number;
     seats: number;
     additionalSeats: number;
+    price_per_seat: number;
   }[];
   billingType: string;
   billingStart: string;
@@ -29,7 +39,8 @@ export default function SubscriptionSummary1({
           Subscription Summary
         </Title>
         <Text fz="sm" c="gray.5">
-          Manage sales transactions, inventory tracking, customer engagement, and reporting analytics with instant updates.
+          Manage sales transactions, inventory tracking, customer engagement,
+          and reporting analytics with instant updates.
         </Text>
       </Stack>
 
@@ -47,12 +58,17 @@ export default function SubscriptionSummary1({
                   {item.title}
                 </Title>
                 <Text fz="sm" c="gray.5">
-                  {item.seats} Admin Seat (Free) | {item.additionalSeats} Additional Seat
+                  {item.seats} Admin Seat (Free) | {item.additionalSeats}{" "}
+                  Additional Seat
                 </Text>
               </Stack>
 
               <Text c="#F16722" fw={600}>
-                ₦{item.price.toLocaleString()}
+                ₦
+                {(
+                  item.price +
+                  item.additionalSeats * item.price_per_seat
+                ).toLocaleString()}
               </Text>
             </div>
           ))}
@@ -60,7 +76,11 @@ export default function SubscriptionSummary1({
 
         {/* Other Details */}
         <Box
-          style={{ borderLeft: "1px solid var(--mantine-color-gray-3)", paddingLeft: "3em" }} w="100%"
+          style={{
+            borderLeft: "1px solid var(--mantine-color-gray-3)",
+            paddingLeft: "3em",
+          }}
+          w="100%"
         >
           <Title order={4} fw={500} c="gray.8" mb="sm">
             Other Details
@@ -69,7 +89,17 @@ export default function SubscriptionSummary1({
           <Stack gap="md" fz="sm" maw="100%">
             <Group justify="space-between" align="center">
               <Text c="gray.5">Billing Type</Text>
-              <Text c="gray.8">{billingType}</Text>
+              <Text c="gray.8">
+                <span className="capitalize">
+                  {billingType} (
+                  {billingType === "monthly"
+                    ? "1 Month"
+                    : billingType === "yearly"
+                    ? "12 Months"
+                    : "60 Days"}
+                  )
+                </span>
+              </Text>
             </Group>
 
             <Group justify="space-between" align="center">
@@ -103,13 +133,7 @@ export default function SubscriptionSummary1({
         </Group>
       </Card>
       <Flex justify="flex-end">
-        <Button
-          onClick={onContinue}
-          color="orange"
-          radius="md"
-          px="lg"
-          py="sm"
-        >
+        <Button onClick={onContinue} color="orange" radius="md" px="lg" py="sm">
           Continue
         </Button>
       </Flex>

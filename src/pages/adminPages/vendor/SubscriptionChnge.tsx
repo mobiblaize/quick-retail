@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { useLocation, useNavigate } from "react-router";
@@ -12,6 +13,8 @@ import {
   useFetchVerifyPayment,
 } from "../../../hooks/backendApis/admin/profile";
 import { ROUTES } from "../../../constants/routes";
+import { useAtomValue } from "jotai";
+import { billingTypeStore2, seatCount, selectedSubs, SubscriptionData, totalPrice as totalPriceAtom } from "../../../store/subscriptionStore";
 
 const SubscriptionChangePage = () => {
   const location = useLocation();
@@ -21,12 +24,17 @@ const SubscriptionChangePage = () => {
   let storedData: any = {};
   try {
     storedData = JSON.parse(sessionStorage.getItem("subscriptionData") || "{}");
-  } catch (e) {
+  } catch {
     storedData = {};
   }
 
-  const { items, billingType, totalPrice, billingStart, billingEnd, amount } =
-    location.state || storedData;
+  // const { items, billingStart, billingEnd, amount } =
+  //   location.state || storedData;
+    
+  const selectedSub = useAtomValue(selectedSubs);
+  const totalPrice = useAtomValue(totalPriceAtom);
+  const billingType = useAtomValue(billingTypeStore2);
+  const adminSeat = useAtomValue(seatCount);
 
   const [modalOpen, setModalOpen] = useState(false);
   const [successOpen, setSuccessOpen] = useState(false);
@@ -38,31 +46,32 @@ const SubscriptionChangePage = () => {
   const [hasVerified, setHasVerified] = useState(false);
 
   const handleBack = () => navigate(-1);
+  console.log(selectedSub, "selectedSub");
   console.log(location.state || storedData, "location state or stored data");
 
   const handleContinue = () => {
     const payload = {
       billing_type: billingType?.toLowerCase(),
-      applications: items.map((item: any) => ({
-        subscription_id: item.subscription_id,
+      applications: selectedSub.map((item: SubscriptionData) => ({
+        subscription_id: item.id,
         application_id: item.application_id,
-        amount: String(item.price || 0),
-        additional_seat: String(item.additionalSeats || 0),
+        amount: String(item.amount || 0),
+        additional_seat: adminSeat,
       })),
     };
 
     // ✅ Save data to sessionStorage before redirection
-    sessionStorage.setItem(
-      "subscriptionData",
-      JSON.stringify({
-        items,
-        billingType,
-        totalPrice,
-        billingStart,
-        billingEnd,
-        amount,
-      })
-    );
+    // sessionStorage.setItem(
+    //   "subscriptionData",
+    //   JSON.stringify({
+    //     items,
+    //     billingType,
+    //     totalPrice,
+    //     billingStart,
+    //     billingEnd,
+    //     amount,
+    //   })
+    // );
 
     fetchPaymentSummary(payload, {
       onSuccess: (res: any) => {
@@ -80,11 +89,11 @@ const SubscriptionChangePage = () => {
       // paystack_complete_callback: "http://localhost:5173/dashboard/change-plan",
       paystack_complete_callback: "https://quickretail-application.vercel.app/dashboard/admin/change-plan",
       paystack_reference: ref,
-      applications: items.map((item: any) => ({
-        subscription_id: item.subscription_id,
+      applications: selectedSub.map((item: SubscriptionData) => ({
+        subscription_id: item.id,
         application_id: item.application_id,
-        amount: String(item.price || 0),
-        additional_seat: String(item.additionalSeats || 0),
+        amount: String(item.amount || 0),
+        additional_seat: adminSeat,
       })),
     };
 
@@ -122,11 +131,11 @@ const SubscriptionChangePage = () => {
           setSuccessOpen(true);
           const payload = {
             billing_type: billingType?.toLowerCase(),
-            applications: items.map((item: any) => ({
-              subscription_id: item.subscription_id,
+            applications: selectedSub.map((item: SubscriptionData) => ({
+              subscription_id: item.id,
               application_id: item.application_id,
-              amount: String(item.price || 0),
-              additional_seat: String(item.additionalSeats || 0),
+              amount: String(item.amount || 0),
+              additional_seat: adminSeat,
             })),
           };
 
@@ -156,7 +165,7 @@ const SubscriptionChangePage = () => {
     };
 
     verify();
-  }, [paymentRef]);
+  }, [adminSeat, billingType, fetchPaymentSummary, hasVerified, paymentRef, selectedSub, verifyPayment]);
 
 
   const subHeaders = [
@@ -176,12 +185,37 @@ const SubscriptionChangePage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      {items ? (
+      {selectedSub.length > 0 ? (
         <SubscriptionSummary1
-          items={items}
+          items={selectedSub.map((item: any) => ({
+            title: item.application?.name || "",
+            price: item.amount || 0,
+            seats: item.application?.free_access_users || 0,
+            additionalSeats: adminSeat,
+            price_per_seat: item.price_per_seat || 0,
+          }))}
           billingType={billingType}
-          billingStart={billingStart}
-          billingEnd={billingEnd}
+          billingStart={new Date().toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
+          billingEnd={new Date(
+            new Date().getTime() +
+              (billingType === "monthly"
+                ? 30
+                : billingType === "yearly"
+                ? 365
+                : 60) * 
+                24 *
+                60 *
+                60 *
+                1000
+          ).toLocaleDateString("en-US", {
+            month: "long",
+            day: "numeric",
+            year: "numeric",
+          })}
           totalPrice={totalPrice}
           onContinue={handleContinue}
         />

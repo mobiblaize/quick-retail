@@ -1,12 +1,11 @@
 import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core";
 import { MoreVertical } from "lucide-react";
-import { Link } from "react-router";
+import { Link, useNavigate } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import DeleteProduct from "../categories/modals/deleteProduct";
 import { useState } from "react";
 import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
-import useStore from "./addProductStore";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 
 interface ApiProduct {
@@ -62,6 +61,7 @@ export default function ProductTable({
   setSort,
   filters,
 }: ProductTableProps) {
+  // const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
@@ -75,11 +75,12 @@ export default function ProductTable({
   const formatPrice = (price: string) =>
     `₦ ${Number.parseFloat(price).toLocaleString()}`;
 
-  const { updateForm } = useStore();
 
-  const handleProductEdit = (product: any) => {
-    updateForm(product);
-  };
+
+  // const handleProductEdit = (product: ApiProduct) => {
+  //   console.log(product);
+  //   navigate(`/dashboard/product-managewwwment/edit-prouct/2`);
+  // };
 
  
 
@@ -128,7 +129,7 @@ export default function ProductTable({
 
           <div>
             <Text c="black" fw={500}>
-              {p.product.product_name}
+              {p.product?.product_name}
             </Text>
             <Text size="xs" c="dimmed">
               {p.name}
@@ -151,7 +152,7 @@ export default function ProductTable({
       header: "Location",
       render: (p: ApiProduct) => (
         <Text size="sm" style={{ color: "#475569" }}>
-          {p.product.location.name}
+          {p.product?.location?.name}
         </Text>
       ),
     },
@@ -160,7 +161,7 @@ export default function ProductTable({
       header: "Category",
       render: (p: ApiProduct) => (
         <Text size="sm" style={{ color: "#475569" }}>
-          {p.product.category.name}
+          {p.product?.category?.name}
         </Text>
       ),
     },
@@ -232,9 +233,7 @@ export default function ProductTable({
         </Menu.Item>
         <Menu.Item
           component={Link}
-          to={ROUTES.editProduct}
-          state={{ variationID: p.variationID }}
-          onClick={() => handleProductEdit(p)}
+          to={`${ROUTES.editProduct}/${p.product?.productID}`}
         >
           Edit
         </Menu.Item>
