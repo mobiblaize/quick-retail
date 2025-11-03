@@ -22,7 +22,7 @@ const UpdateInventory = () => {
         setNewReorderLevel(updatedData.reorder_level || new_reorder_level);
         setReasonForUpdate(updatedData.reason || reason_for_update);
         // Update the inventories state if needed, but since it's from location state, perhaps not necessary
-        setLocationID(updatedData.location_id || locationID);
+        setLocationID(updatedData?.locationID || locationID);
       }
       notifications.show({
         title: "Success",
@@ -38,7 +38,7 @@ const UpdateInventory = () => {
       });
     },
   });
-
+console.log()
   // Form States
   const [current_level, setCurrentLevel] = useState(
     inventories?.quantity_available || 0
@@ -52,21 +52,22 @@ const UpdateInventory = () => {
   const [reason_for_update, setReasonForUpdate] = useState(
     inventories?.reason_for_update || ""
   );
-  const [locationID, setLocationID] = useState(inventories?.location_id || "");
+  const [locationID, setLocationID] = useState(inventories?.product?.location?.locationID || "");
 
   const { data: locationsData } = useFetchAllLocations();
 
-  const locations = Array.isArray(locationsData?.data?.stores?.data)
-    ? locationsData.data.stores.data
+  const locations = Array.isArray(locationsData?.data?.stores)
+    ? locationsData?.data?.stores
     : [];
-
-  const locationOptions = locations.map(
+    
+// console.log(locationOptions);
+  const locationOptions = locations?.map(
     (loc: { name: string; locationID: string }) => ({
       label: loc?.name || "Unnamed",
       value: loc?.locationID || "",
     })
   );
-
+// console.log(locationOptions);
   const navigate = useNavigate();
   const subHeaders = () => {
     const backButton = (
