@@ -181,7 +181,7 @@ const ReturnsPage = () => {
             resolved_complaints: analyticsData?.data?.resolved_complaints ?? 0,
             declined_complaints: analyticsData?.data?.declined_complaints ?? 0,
           }}
-          setDateRange={setDateRange}
+          onDateRangeChange={setDateRange}
         />
       )}
 

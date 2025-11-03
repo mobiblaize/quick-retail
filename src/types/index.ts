@@ -110,6 +110,11 @@ export const defaultDashboardAnalysis = {
 
 }
 
+export const defaultSalesAnalysis = {
+  start_date: "",
+  end_date: "",
+}
+
 
 export type SalesPayload = {
   per_page: string;

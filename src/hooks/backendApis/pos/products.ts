@@ -1,6 +1,7 @@
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
 import { useDeleteData, useFetchPostData, useGetData, useGetExportData, usePostData, usePutData, useUploadData,  } from "../../useApis";
+import { defaultSalesAnalysis } from "../../../types";
 
   const defaultPayload = {
     search: "",
@@ -29,6 +30,8 @@ import { useDeleteData, useFetchPostData, useGetData, useGetExportData, usePostD
     search: string;
     [key: string]: any;
   }
+
+
 export const useFetchProductVariations = (productId?: string, enabled = true) => {
   return useGetData(`pos/product/edit-product/${productId}`, {}, enabled);
 };
@@ -49,6 +52,19 @@ export const useFetchAllProducts = (
 
   return useFetchPostData("pos/product/all", payload);
 };
+
+export const useFetchProductOverview = (customPayload?: Partial<typeof defaultSalesAnalysis>) => {
+    const defaultProductAnalysis = {
+        start_date: "",
+        end_date:"",
+    };
+  
+    const payload = { ...defaultProductAnalysis, ...customPayload };
+  
+    return useFetchPostData("pos/product/all", payload);
+  };
+
+
 
 export const getAllLocation = () => {
   return usePostData("");

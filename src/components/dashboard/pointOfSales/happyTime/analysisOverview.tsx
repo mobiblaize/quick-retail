@@ -48,7 +48,7 @@ const AnalysisOverview = () => {
       <header className="flex justify-between items-center">
         <div className="flex flex-col">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Analysis overview
+            Analytics overview
           </Text>
           <Text size="sm">An overview sales made</Text>
         </div>

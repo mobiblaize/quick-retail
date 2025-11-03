@@ -21,7 +21,7 @@ interface PaymentSummaryModalProps {
   };
 }
 
-export default function PaymentSummaryModal({
+export default function PaymentSummaryModal({ 
   opened,
   onClose,
   onPaymentSuccess,

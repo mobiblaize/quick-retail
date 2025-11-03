@@ -166,7 +166,7 @@ const SalesProcessingPage = () => {
         <SalesOverview
           data={overviewData?.data}
           isLoading={isOverviewLoading}
-          setDateRange={setDateRange}
+          onDateRangeChange={setDateRange}
         />
       )}
 

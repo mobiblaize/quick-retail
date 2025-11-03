@@ -54,7 +54,8 @@ interface GenericTableProps<T> {
     | "returns"
     | "discount"
     | "audit"
-    | "transaction";
+    | "transaction"
+    | "userManagement";
   locations?: string[];
   categories?: string[];
   roles?: string[];
@@ -303,6 +304,15 @@ const sortOptionsToUse = sortOptions ?? defaultSortOptions;
                         showRole
                         showModule
                         filterType="audit"
+                      />
+                    )}
+                    {tableType === "userManagement" && (
+                      <ReusableFilterComponent
+                        onFilterChange={handleFilterChange}
+                        roles={roles}
+                        showRole
+                        showUserStatus
+                        filterType="userManagement"
                       />
                     )}
                   </div>

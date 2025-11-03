@@ -1,10 +1,11 @@
-import { Group, Text } from "@mantine/core";
+import { Button, Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import AnalyticsCard from "../../../General/card";
 import orangeBox from "../../../../assets/images/orangeBox.png";
 import goldBox from "../../../../assets/images/goldBox.png";
 import greenBox from "../../../../assets/images/greenBox.png";
 import redBox from "../../../../assets/images/redBox.png";
+import { useState } from "react";
 
 interface ReturnsAnalyticsData {
   totalReturns: number;
@@ -15,10 +16,38 @@ interface ReturnsAnalyticsData {
 
 interface ReturnsAnalyticsProps {
   data: ReturnsAnalyticsData;
-  setDateRange: (range: { startDate: string; endDate: string }) => void;
+  onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
 }
 
-const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, setDateRange, }) => {
+const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeChange, }) => {
+  const initialDateRange = {
+    start_date: "",
+    end_date: "",
+  };
+
+  const [dateRange, setDateRange] = useState(initialDateRange);
+
+  // 🔹 Reset filter
+  const handleReset = () => {
+    setDateRange(initialDateRange);
+    onDateRangeChange({ startDate: "", endDate: "" });
+  };
+
+  // 🔹 Handle date change
+  const handleDateFilterChange = (dates: {
+    startDate: Date | null;
+    endDate: Date | null;
+  }) => {
+    const start_date = dates.startDate
+      ? dates.startDate.toISOString().split("T")[0]
+      : "";
+    const end_date = dates.endDate
+      ? dates.endDate.toISOString().split("T")[0]
+      : "";
+
+    setDateRange({ start_date, end_date });
+    onDateRangeChange({ startDate: start_date, endDate: end_date });
+  };
   const cards = [
     {
       title: "Total Returned Product",
@@ -72,16 +101,21 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, setDateRange,
           <Text size="sm">An overview of returns and refunds</Text>
         </div>
 
-        <Group>
-          <DateFilterMenu
-            onDateFilterChange={({ startDate, endDate }) =>
-              setDateRange({
-                startDate: startDate?.toISOString().split("T")[0] || "",
-                endDate: endDate?.toISOString().split("T")[0] || "",
-              })
-            }
-          />
-        </Group>
+        <div className="flex items-center gap-3">
+          <Group>
+            <DateFilterMenu
+              onDateFilterChange={handleDateFilterChange}
+              startDate={dateRange.start_date}
+              endDate={dateRange.end_date}
+            />
+          </Group>
+
+          {dateRange.start_date && dateRange.end_date && (
+            <Button onClick={handleReset} variant="outline">
+              Reset
+            </Button>
+          )}
+        </div>
       </header>
 
       <section className="flex flex-col sm:flex-row overflow-auto gap-6 md:gap-2 mt-5">

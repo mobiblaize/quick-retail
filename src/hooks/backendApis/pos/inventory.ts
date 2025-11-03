@@ -28,6 +28,7 @@ export const useFetchAllProducts = (
 
 export const useActivateInventory = (
     inventoryId: number | string,
+    options?: any
 ) => {
-  return usePutData(`pos/product/update-inventory/${inventoryId}`);
+  return usePutData(`pos/product/update-inventory/${inventoryId}`, options);
 };
