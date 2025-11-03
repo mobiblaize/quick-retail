@@ -1,4 +1,4 @@
-import { useGetData } from "../../useApis";
+import { useFetchData, useGetData, useGetExportData } from "../../useApis";
 import { defaultPayload2 } from "../../../types";
 
 
@@ -6,15 +6,15 @@ import { defaultPayload2 } from "../../../types";
 //     return useGetData(`admin/audittrail/all`);
 //   };  
 export const useFetchAuditTrails = (customPayload?: Partial<typeof defaultPayload2>) => {
-    const defaultPayload2 = {
+    const payload = {
       search: "",
       sort_by: "",
       per_page: "500",
       paginate: true,
     };
-    const payload = { ...defaultPayload2, ...customPayload };
+    const updatedPayload = { ...payload, ...customPayload };
 
-    return useGetData(`admin/audittrail/all`, payload);
+    return useFetchData(`admin/audittrail/all`, updatedPayload);
   };
 export const useExportAuditTrail = (queryParams: Record<string, any>) => {
     const queryString = new URLSearchParams(queryParams).toString();
@@ -24,3 +24,7 @@ export const useExportAuditTrail = (queryParams: Record<string, any>) => {
   export const useFetchSingleAudit = (Id: number | string) => {
     return useGetData(`admin/audittrail/show/${Id}`);
   }
+
+  export const useExportAuditTrail = (format: "pdf" | "excel") => {
+    return useGetExportData(`admin/audittrail/export?format=${format}`);
+  };
