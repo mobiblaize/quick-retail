@@ -1,4 +1,4 @@
-import { useFetchPostData, usePutData } from "../../useApis";
+import { useFetchPostData, usePutData, useGetData } from "../../useApis";
 
 const defaultPayload = {
   search: "",
@@ -20,6 +20,14 @@ export const useFetchAllProducts = (
   const payload = { ...defaultPayload, ...productPayload };
 
   return useFetchPostData("pos/product/all", payload);
+};
+
+export const useFetchProductById = (productId: string | undefined) => {
+  return useGetData(
+    `pos/product/show-product/${productId}`,
+    undefined,
+    !!productId
+  );
 };
 
 // export const useActivateInventory   = (inventoryId: number | string) => {
