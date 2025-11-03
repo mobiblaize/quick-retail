@@ -184,7 +184,7 @@ export const useFetchData = (url: string, options?: any) => {
 
   return {
     ...query,
-    isLoading: query.isLoading && !query.isFetching,
+    isLoading: query.isFetching || query.isLoading
   };
 };
 
