@@ -13,32 +13,7 @@ const UpdateInventory = () => {
   const { state } = useLocation();
   const inventories = state?.inventories || {};
 
-  const activateInventory = useActivateInventory(inventories.variationID, {
-    onSuccess: (data: any) => {
-      if (data?.data) {
-        const updatedData = data.data;
-        setCurrentLevel(updatedData.quantity_available || current_level);
-        setNewStockLevel(updatedData.quantity_supplied || new_stock_level);
-        setNewReorderLevel(updatedData.reorder_level || new_reorder_level);
-        setReasonForUpdate(updatedData.reason || reason_for_update);
-        // Update the inventories state if needed, but since it's from location state, perhaps not necessary
-        setLocationID(updatedData?.locationID || locationID);
-      }
-      notifications.show({
-        title: "Success",
-        message: data?.message || "Inventory updated successfully",
-        color: "green",
-      });
-    },
-    onError: (error: any) => {
-      notifications.show({
-        title: "Error",
-        message: error?.message || "Failed to update inventory",
-        color: "red",
-      });
-    },
-  });
-console.log()
+  const activateInventory = useActivateInventory(inventories.variationID);
   // Form States
   const [current_level, setCurrentLevel] = useState(
     inventories?.quantity_available || 0
@@ -111,17 +86,46 @@ console.log()
         <Button variant="outline-primary" onClick={() => navigate(-1)}>
           Cancel
         </Button>
-        <Button
+                <Button
           variant="filled-primary"
-          style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600
+          style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600   
+          loading={activateInventory.isPending}                                                                         
+          disabled={activateInventory.isPending}                                                                         
           onClick={() =>
-            activateInventory.mutate({
-              current_level,
-              new_stock_level,
-              new_reorder_level,
-              reason_for_update,
-              locationID,
-            })
+            activateInventory.mutate(
+              {
+                current_level,
+                new_stock_level,
+                new_reorder_level,
+                reason_for_update,
+                locationID,
+              },
+              {
+                onSuccess: (data: unknown) => {
+                  const response = data as { data?: Record<string, unknown>; message?: string };
+                  if (response?.data) {
+                    const updatedData = response.data;
+                    setCurrentLevel((updatedData.quantity_available as number) || current_level);
+                    setNewStockLevel((updatedData.quantity_supplied as number) || new_stock_level);
+                    setNewReorderLevel((updatedData.reorder_level as number) || new_reorder_level);
+                    setReasonForUpdate((updatedData.reason as string) || reason_for_update);
+                    setLocationID((updatedData.locationID as string) || locationID);
+                  }
+                  notifications.show({
+                    title: "Success",
+                    message: response?.message || "Inventory updated successfully",
+                    color: "green",
+                  });
+                },
+                onError: (error: Error) => {
+                  notifications.show({
+                    title: "Error",
+                    message: error?.message || "Failed to update inventory",
+                    color: "red",
+                  });
+                },
+              }
+            )
           }
         >
           Trigger reorder

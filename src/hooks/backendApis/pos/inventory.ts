@@ -30,13 +30,6 @@ export const useFetchProductById = (productId: string | undefined) => {
   );
 };
 
-// export const useActivateInventory   = (inventoryId: number | string) => {
-//   return usePutData(`pos/product/update-inventory/${inventoryId}`);
-// };
-
-export const useActivateInventory = (
-    inventoryId: number | string,
-    options?: any
-) => {
-  return usePutData(`pos/product/update-inventory/${inventoryId}`, options);
+export const useActivateInventory = (inventoryId: number | string) => {
+  return usePutData(`pos/product/update-inventory/${inventoryId}`);
 };

@@ -16,10 +16,6 @@ export const useFetchAuditTrails = (customPayload?: Partial<typeof defaultPayloa
 
     return useFetchData(`admin/audittrail/all`, updatedPayload);
   };
-export const useExportAuditTrail = (queryParams: Record<string, any>) => {
-    const queryString = new URLSearchParams(queryParams).toString();
-    return useGetData(`admin/audittrail/all?${queryString}`);
-  };
 
   export const useFetchSingleAudit = (Id: number | string) => {
     return useGetData(`admin/audittrail/show/${Id}`);

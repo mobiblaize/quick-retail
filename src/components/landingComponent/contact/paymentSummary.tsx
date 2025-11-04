@@ -174,7 +174,7 @@ const PaymentSummary = () => {
                     placeholder="Select your company size"
                     disabled={isCompanySizesPending}
                     data={
-                      companySizes?.data?.map((size) => ({
+                      companySizes?.data?.map((size: any) => ({
                         value: size?.label,
                         label: size?.label,
                       })) || []
