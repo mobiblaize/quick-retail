@@ -1,8 +1,7 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
-
+import Exit from "../assets/images/exit.png"
 import { useLoggedOut } from "../hooks/useCustomSession";
-import { LogOut } from "lucide-react";
 import { useEffect, useState } from "react";
 
 const LogoutModal = () => {
@@ -59,12 +58,15 @@ const LogoutModal = () => {
       </Modal>
 
       <Button unstyled onClick={open} className="w-full ">
-        <div className="flex items-center justify-between gap-[14px]  text-sm bg-[#F0F2F5] rounded-[10em] px-6 py-5 cursor-pointer">
+        <div className="flex items-center justify-between gap-[1px]  text-sm bg-[#F0F2F5] rounded-[10em] px-6 py-2 cursor-pointer">
           <div className="text-left">
-           <Text size="lg" fw={600} c="textSecondary.9">{customerName}</Text>
-           <Text fw={400} size="md" c="secondary">{customerEmail}</Text>
+           <Text size="sm" fw={600} c="textSecondary.9">{customerName}</Text>
+           <Text fw={400} size="sm" c="secondary">{customerEmail}</Text>
           </div>
-          <LogOut className="w-4 h-4" />
+          <div>
+            <img src={Exit} alt="logout icon" />
+          </div>
+          
         </div>
       </Button>
     </>

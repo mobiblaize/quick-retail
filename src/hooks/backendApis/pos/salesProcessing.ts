@@ -1,4 +1,4 @@
-import { defaultPayload2, SalesPayload } from "../../../types";
+import { defaultSalesAnalysis, defaultPayload2, SalesPayload } from "../../../types";
 import { useFetchPostData, useGetData, usePostData, usePutData } from "../../useApis";
 
 export const useCreateSales = () => {
@@ -24,6 +24,20 @@ export const useFetchAllSales = (customPayload?: SalesPayload) => {
 
   return useFetchPostData("pos/sales/all-sales", payload);
 };
+
+
+export const useFetchSalesOverview = (customPayload?: Partial<typeof defaultSalesAnalysis>) => {
+    const defaultSalesAnalysis = {
+        start_date: "",
+        end_date:"",
+    };
+  
+    const payload = { ...defaultSalesAnalysis, ...customPayload };
+  
+    return useFetchPostData("pos/sales/all-sales", payload);
+  };
+
+
 
 export const useFetchSingleSale = (orderId: number | string) => {
   return useGetData(`pos/sales/show-sale-order/${orderId}`);

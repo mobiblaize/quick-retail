@@ -75,6 +75,15 @@ const AllTransactionTable = ({
     paymentStatus: tx?.sales_order?.payment_status || "",
   }));
 
+  // Filter table data based on search term
+  const filteredData = searchTerm 
+    ? tableData.filter(row => 
+        Object.values(row).some(value => 
+          value.toString().toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      )
+    : tableData;
+
   const columns = [
     {
       key: "transactionIDShort",
@@ -97,7 +106,7 @@ const AllTransactionTable = ({
       render: (row: any) => <Text fw={500} size="sm" c="black">{row.customerName}</Text>,
     },
     {
-      key: "amountDisplay",
+      key: "amountDisplay", 
       header: "Amount",
       render: (row: any) => <Text fw={500} c="black">{row.amountDisplay}</Text>,
     },
@@ -149,7 +158,7 @@ const AllTransactionTable = ({
     <main className="w-full h-auto ">
       <GenericTable
         columns={columns}
-        data={tableData} // pass the flattened rows
+        data={filteredData} // Use filtered data instead of tableData
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={onPageChange}
@@ -158,14 +167,14 @@ const AllTransactionTable = ({
         activeSort={activeSort}
         onSortChange={setSort}
         searchPlaceholder="search orders"
-        enableSearch ={true}
+        enableSearch={true}
         enableSort={true}
         titleSection={
           <div className="flex gap-2.5 items-center">
             <Text fw={500} size="xl" c="textSecondary.9">All Transactions</Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10">
-                {paginationData?.total ?? tableData.length}
+                {paginationData?.total ?? filteredData.length}
               </Text>
             </div>
           </div>

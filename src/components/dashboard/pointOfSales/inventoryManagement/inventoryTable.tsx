@@ -11,10 +11,11 @@ import GenericTable from "../../../General/genericTable";
 type StatusKey = "available" | "low stock" | "sold out";
 
 const InventoryTable = () => {
-  const [currentPage, setCurrentPage] = useState(1);
-  const [perPage] = useState(10);
-  //@ts-ignore
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [, setCurrentPage] = useState(1);
+
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
   const normalizeFilters = (filters: FilterValues) => {
@@ -22,25 +23,25 @@ const InventoryTable = () => {
       ...(filters.startDate ? { start_date: filters.startDate } : {}),
       ...(filters.endDate ? { end_date: filters.endDate } : {}),
       ...(filters.stockFrom !== undefined && filters.stockFrom !== ""
-      ? { stock_from: String(filters.stockFrom) }
-      : {}),
-    ...(filters.stockTo !== undefined && filters.stockTo !== ""
-      ? { stock_to: String(filters.stockTo) }
-      : {}),
+        ? { stock_from: String(filters.stockFrom) }
+        : {}),
+      ...(filters.stockTo !== undefined && filters.stockTo !== ""
+        ? { stock_to: String(filters.stockTo) }
+        : {}),
       ...(filters.orderStatus ? { order_status: filters.orderStatus } : {}),
       ...(filters.location ? { location_name: filters.location } : {}),
-      // keep only the required keys, ignore duplicates
+      stock_status: "low stock",
     };
   };
-  
+
+  // Fetch all pages (disable pagination on backend by passing a large per_page)
   const payload = {
-    page: currentPage.toString(),
-    per_page: perPage.toString(),
+    page: "1",
+    per_page: "10000", // fetch everything
     search: searchTerm,
-    ...normalizeFilters(appliedFilters),
     sort_by: activeSort,
+    ...normalizeFilters(appliedFilters),
   };
-  
 
   const { data, isLoading } = useFetchAllProducts(payload);
 
@@ -48,7 +49,17 @@ const InventoryTable = () => {
     ? data.data.products.data
     : [];
 
-  const mappedProducts = products.map((product: any) => ({
+  // Apply global filtering on all fetched data
+  let filteredProducts = products;
+
+  if (appliedFilters.orderStatus) {
+    const statusFilter = appliedFilters.orderStatus.toLowerCase();
+    filteredProducts = filteredProducts.filter(
+      (p: any) => p.stock_status?.toLowerCase() === statusFilter
+    );
+  }
+
+  const mappedProducts = filteredProducts.map((product: any) => ({
     name: product.name,
     sku: product.sku,
     location: product.product?.location?.name ?? "N/A",
@@ -59,7 +70,7 @@ const InventoryTable = () => {
     image: product.image_path,
     variationID: product.variationID,
     price: product.selling_price,
-    original: product, // Keep original object for navigation if needed
+    original: product,
   }));
 
   const paginationData = data?.data?.products
@@ -81,12 +92,11 @@ const InventoryTable = () => {
     new Set(
       products
         ?.map((p: any) => p.product?.location?.name) // ✅ nested under product
-        .filter((name: string | undefined): name is string => typeof name === "string")
+        .filter(
+          (name: string | undefined): name is string => typeof name === "string"
+        )
     )
   );
-  
-
-
 
   const columns = [
     {
@@ -94,12 +104,7 @@ const InventoryTable = () => {
       header: "Product",
       render: (row: any) => (
         <Group gap="sm" align="center">
-          <Avatar
-            src={row.image || ""}
-            alt={row.name}
-            radius="md"
-            size={40}
-          />
+          <Avatar src={row.image || ""} alt={row.name} radius="md" size={40} />
           <Text fw={500} c="black">
             {row.name}
           </Text>
@@ -194,7 +199,7 @@ const InventoryTable = () => {
       render: (row: any) => (
         <Link to={ROUTES.updateInventory} state={{ inventories: row.original }}>
           <Text fw={700} c="customPrimary.10" className="cursor-pointer">
-            Reorder
+            Update
           </Text>
         </Link>
       ),
@@ -203,8 +208,6 @@ const InventoryTable = () => {
 
   return (
     <main className="relative w-full h-auto">
-     
-
       {/* Add a search input to use setSearchTerm */}
       {/* <div className="mb-4">
         <input
@@ -227,23 +230,24 @@ const InventoryTable = () => {
         searchTerm={searchTerm}
         setSearchTerm={setSearchTerm}
         onSortChange={setActiveSort}
-        filters={appliedFilters}  
+        filters={appliedFilters}
         enableSearch={true}
         enableSort={true}
         showFilter={true}
         tableType="inventory"
         searchPlaceholder="search Inventory"
-               //@ts-ignore
+        //@ts-ignore
         locations={locations}
         titleSection={
           <div className="flex gap-2.5">
-            <Text fw={500} size="xl" c="textSecondary.9">Inventory</Text>
+            <Text fw={500} size="xl" c="textSecondary.9">
+              Inventory
+            </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
               <Text c="customPrimary.10"> {paginationData?.total}</Text>
             </div>
           </div>
         }
-       
       />
     </main>
   );

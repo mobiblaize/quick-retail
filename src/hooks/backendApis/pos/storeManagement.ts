@@ -1,12 +1,17 @@
-
-import { useFetchPostData, useGetData, usePostData, usePutData, } from "../../useApis";
-
+import {
+  useFetchPostData,
+  useGetData,
+  usePostData,
+  usePutData,
+} from "../../useApis";
 
 export const useCreateStore = () => {
   return usePostData("pos/location/add-location");
 };
 
-export const useFetchStore = (customPayload?: Partial<typeof defaultPayload>) => {
+export const useFetchStore = (
+  customPayload?: Partial<typeof defaultPayload>
+) => {
   const defaultPayload = {
     search: "",
     sort_by: "",
@@ -21,9 +26,17 @@ export const useFetchStore = (customPayload?: Partial<typeof defaultPayload>) =>
   return useFetchPostData("pos/location/all", payload);
 };
 
+export const useFetchAllStore = () => {
+  return useGetData("pos/location/stores");
+};
+
+export const useFetchAllSellingUnits = () => {
+  return useGetData("pos/selling-unit/all");
+};
+
 export const useFetchStat = () => {
   return useGetData(`pos/location/stats`);
-}
+};
 
 const defaultPayload = {
   search: "",
@@ -35,12 +48,17 @@ const defaultPayload = {
   paginate: true,
 };
 
-export const useSinglestoreOverview = (locationId: string, customPayload?: Partial<typeof defaultPayload>) => {
+export const useSinglestoreOverview = (
+  locationId: string,
+  customPayload?: Partial<typeof defaultPayload>
+) => {
   const payload = { ...defaultPayload, ...customPayload };
 
-  return useFetchPostData(`pos/location/single-location-overview/${locationId}`, payload);
+  return useFetchPostData(
+    `pos/location/single-location-overview/${locationId}`,
+    payload
+  );
 };
-
 
 export const useToggleStore = (locationId: string) => {
   return usePutData(`pos/location/toggle-status/${locationId}`);
@@ -53,7 +71,10 @@ export const useSingleStoreStat = (
   if (!locationId) return { data: null, isLoading: false };
 
   const payload = { ...defaultPayload, ...customPayload };
-  return useFetchPostData(`pos/location/single-location-stat/${locationId}`, payload);
+  return useFetchPostData(
+    `pos/location/single-location-stat/${locationId}`,
+    payload
+  );
 };
 
 export const useStoreOrders = (
@@ -63,7 +84,10 @@ export const useStoreOrders = (
   if (!locationId) return { data: null, isLoading: false };
 
   const payload = { ...defaultPayload, ...customPayload };
-  return useFetchPostData(`pos/location/single-location-overview/${locationId}`, payload);
+  return useFetchPostData(
+    `pos/location/single-location-overview/${locationId}`,
+    payload
+  );
 };
 
 export const useEditStore = (locationId: string) => {
@@ -72,4 +96,16 @@ export const useEditStore = (locationId: string) => {
 
 export const uselocationTarget = () => {
   return usePostData("pos/location/create-location-target");
+};
+
+export const useFetchCountries = () => {
+  return useGetData("demography/countries");
+};
+
+export const useFetchStates = (countryId: string) => {
+  return useGetData(`demography/states/${countryId}`, {}, !!countryId);
+};
+
+export const useFetchCities = (stateId: string) => {
+  return useGetData(`demography/cities/${stateId}`, {}, !!stateId);
 };

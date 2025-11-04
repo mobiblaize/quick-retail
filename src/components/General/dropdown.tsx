@@ -23,6 +23,7 @@ interface CustomDropdownProps {
   borderWidth?: number | string;
   leftPrefix?: string;
   disabled?: boolean;
+  searchable?: boolean;
 }
 
 const Dropdown = ({
@@ -31,7 +32,7 @@ const Dropdown = ({
   placeholder = "Select...",
   value,
   onChange,
-  // disabled,
+  disabled,
   required,
   optional,
   error,
@@ -42,6 +43,7 @@ const Dropdown = ({
   paddingY = "5px",
   borderWidth = "1px",
   leftPrefix,
+  searchable = false,
 }: CustomDropdownProps) => {
   const data = useMemo(
     () =>
@@ -64,16 +66,23 @@ const Dropdown = ({
 
   const inputRef = useRef<HTMLInputElement>(null);
 
-  const sharedLabel =
-    label && (
-      <Group gap="xs" align="center">
-        <Text size="sm" fw={500} c="gray.7">
-          {label}
+  const sharedLabel = label && (
+    <Group gap="xs" align="center">
+      <Text size="sm" fw={500} c="gray.7">
+        {label}
+      </Text>
+      {required && (
+        <Text size="sm" c={requiredColor}>
+          *
         </Text>
-        {required && <Text size="sm" c={requiredColor}>*</Text>}
-        {optional && <Text size="sm" c="gray.5">(Optional)</Text>}
-      </Group>
-    );
+      )}
+      {optional && (
+        <Text size="sm" c="gray.5">
+          (Optional)
+        </Text>
+      )}
+    </Group>
+  );
 
   return (
     <Select
@@ -81,6 +90,7 @@ const Dropdown = ({
       label={sharedLabel}
       placeholder={placeholder}
       data={data}
+      disabled={disabled}
       value={value !== null ? String(value) : null}
       onChange={(val) => {
         if (val !== null) {
@@ -91,6 +101,7 @@ const Dropdown = ({
       }}
       error={error}
       rightSection={IconComponent}
+      searchable={searchable}
       styles={{
         wrapper: { width: "100%" },
         input: {

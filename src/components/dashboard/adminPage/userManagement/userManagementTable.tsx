@@ -116,7 +116,7 @@ export default function UserManagementTable({
       enableSearch ={true}
       enableSort ={true}
       showFilter={true}
-      tableType="inventory"
+      tableType="userManagement"
       data={users}
       isLoading={isLoading}
       paginationData={paginationData}

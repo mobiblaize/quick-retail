@@ -1,13 +1,12 @@
 import { Button, Menu, Skeleton, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import TrailTable from "../../../components/dashboard/adminPage/auditTrail/trailTable";
-import { useFetchAuditTrails } from "../../../hooks/backendApis/admin/auditTrail";
+import { useFetchAuditTrails, useExportAuditTrail } from "../../../hooks/backendApis/admin/auditTrail";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 import { useState, useEffect } from "react";
 import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
-import jsPDF from "jspdf";
-import autoTable from "jspdf-autotable";
+import { notifications } from "@mantine/notifications";
 
 const DiscountTableSkeleton = () => (
   <section className="bg-white rounded-lg shadow-sm p-4">
@@ -89,7 +88,7 @@ const AuditTrailPage = () => {
     status: mapOrderStatus(filters.auditStatus),
     page: currentPage.toString(),
     role: filters.role ?? "",
-    module: filters.module ?? "",
+    model: filters.module ?? "",
   });
 
   const payload = {
@@ -101,10 +100,11 @@ const AuditTrailPage = () => {
   };
 
   const {
-    data = {},
-    isLoading = false,
+    data,
+    isLoading,
     error,
-  } = useFetchAuditTrails(payload) || {};
+  } = useFetchAuditTrails(payload);
+  console.log(isLoading);
 
   const handleFilterChange = (filters: FilterValues) => setFilters(filters);
   const paginationData = data?.data
@@ -123,78 +123,54 @@ const AuditTrailPage = () => {
 
   const handlePageChange = (page: number) => setCurrentPage(page);
 
-  // const { data, isLoading = false, error } = useFetchAuditTrails(payload);
+  const exportPdf = useExportAuditTrail("pdf");
+  const exportExcel = useExportAuditTrail("excel");
 
-  const handleExport = (format: string) => {
-    const logs = data?.data?.data || [];
-    if (!logs.length) return;
+  const handleExport = async (format: "pdf" | "excel") => {
+    try {
+      const exportMutation = format === "pdf" ? exportPdf : exportExcel;
+      
+      notifications.show({
+        title: "Exporting...",
+        message: `Generating ${format.toUpperCase()} file. Please wait...`,
+        color: "blue",
+        loading: true,
+        autoClose: false,
+        id: "export-notification",
+      });
 
-    const tableData = logs.map((log: any) => ({
-      timestamp: new Date(log.created_at).toLocaleString(),
-      name: `${log.causer?.firstname || ""} ${log.causer?.lastname || ""}`,
-      email: log.causer?.email || "N/A",
-      role: log.causer?.roles || "N/A",
-      activity: log.log_name || "",
-      module: log.action_module || "",
-      ipAddress: log.ip_address || "",
-    }));
+      const blob = await exportMutation.mutateAsync();
 
-    if (format === "csv") {
-      const csv = tableData
-        .map((row: any) => Object.values(row).join(","))
-        .join("\n");
-      const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+      // Create download link
       const url = URL.createObjectURL(blob);
       const link = document.createElement("a");
       link.href = url;
-      link.setAttribute("download", "audit_trail.csv");
+      link.setAttribute(
+        "download",
+        `audit_trail_${new Date().toISOString().split("T")[0]}.${format === "excel" ? "xlsx" : "pdf"}`
+      );
       document.body.appendChild(link);
       link.click();
       document.body.removeChild(link);
-    }
+      URL.revokeObjectURL(url);
 
-    if (format === "pdf") {
-      const doc = new jsPDF();
-      autoTable(doc, {
-        head: [
-          [
-            "Timestamp",
-            "Name",
-            "Email",
-            "Role",
-            "Activity",
-            "Module",
-            "IP Address",
-          ],
-        ],
-        body: tableData.map(
-          (row: {
-            timestamp: any;
-            name: any;
-            email: any;
-            role: any;
-            activity: any;
-            module: any;
-            ipAddress: any;
-          }) => [
-            row.timestamp,
-            row.name,
-            row.email,
-            row.role,
-            row.activity,
-            row.module,
-            row.ipAddress,
-          ]
-        ),
-        styles: { fontSize: 8, cellPadding: 3 },
-        headStyles: {
-          fillColor: [241, 103, 34],
-          textColor: 255,
-          fontStyle: "bold",
-        },
-        margin: { top: 20 },
+      notifications.update({
+        id: "export-notification",
+        title: "Export Successful",
+        message: `${format.toUpperCase()} file downloaded successfully`,
+        color: "green",
+        loading: false,
+        autoClose: 3000,
       });
-      doc.save("audit_trail.pdf");
+    } catch (error) {
+      notifications.update({
+        id: "export-notification",
+        title: "Export Failed",
+        message: (error as Error)?.message || `Failed to export ${format.toUpperCase()}`,
+        color: "red",
+        loading: false,
+        autoClose: 5000,
+      });
     }
   };
 
@@ -226,13 +202,15 @@ const AuditTrailPage = () => {
           >
             <Menu.Item
               style={{ fontSize: 14, color: "#333" }}
-              onClick={() => handleExport("csv")}
+              onClick={() => handleExport("excel")}
+              disabled={exportExcel.isPending || exportPdf.isPending}
             >
-              Export CSV
+              Export Excel
             </Menu.Item>
             <Menu.Item
               style={{ fontSize: 14, color: "#333" }}
               onClick={() => handleExport("pdf")}
+              disabled={exportExcel.isPending || exportPdf.isPending}
             >
               Export PDF
             </Menu.Item>
@@ -242,10 +220,30 @@ const AuditTrailPage = () => {
     </div>,
   ];
 
+  const hasData = data?.data?.data && Array.isArray(data.data.data) && data.data.data.length > 0;
+
   return (
     <PageContainer subHeaders={subHeaders}>
       {isLoading ? (
         <DiscountTableSkeleton />
+      ) : error ? (
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+          <Text size="lg" c="red" fw={500} mb="sm">
+            Failed to load audit trail
+          </Text>
+          <Text size="sm" c="dimmed">
+            {error?.message || "An error occurred while fetching the audit trail data"}
+          </Text>
+        </div>
+      ) : !hasData ? (
+        <div className="bg-white rounded-lg shadow-sm p-8 text-center">
+          <Text size="lg" c="dimmed" fw={500} mb="sm">
+            No audit trail records found
+          </Text>
+          <Text size="sm" c="dimmed">
+            There are no audit trail entries to display at this time
+          </Text>
+        </div>
       ) : (
         <TrailTable
           isLoading={isLoading}

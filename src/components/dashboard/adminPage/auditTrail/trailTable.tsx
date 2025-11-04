@@ -1,8 +1,9 @@
-import { Loader, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
 import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import TableSkeleton from "../../../../pages/TableSkeleton";
 
 interface TrailTableProps {
   logs: any[];
@@ -17,7 +18,6 @@ interface TrailTableProps {
   onFilterChange?: (filters: FilterValues) => void;
   filters?: FilterValues;
 }
-
 
 export default function TrailTable({
   logs,
@@ -43,23 +43,22 @@ TrailTableProps) {
 
   const columns = [
     {
-  key: "timestamp",
-  header: "Timestamp",
-  render: (row: any) => (
-    <Text size="sm" style={{ color: "#475569" }}>
-      {new Date(row.created_at).toLocaleString("en-US", {
-        year: "numeric",
-        month: "short",
-        day: "2-digit",
-        hour: "2-digit",
-        minute: "2-digit",
-        second: "2-digit",
-        hour12: true,   // or false for 24-hour
-      })}
-    </Text>
-  ),
-}
-,
+      key: "timestamp",
+      header: "Timestamp",
+      render: (row: any) => (
+        <Text size="sm" style={{ color: "#475569" }}>
+          {new Date(row.created_at).toLocaleString("en-US", {
+            year: "numeric",
+            month: "short",
+            day: "2-digit",
+            hour: "2-digit",
+            minute: "2-digit",
+            second: "2-digit",
+            hour12: true, // or false for 24-hour
+          })}
+        </Text>
+      ),
+    },
     {
       key: "user",
       header: "User Details",
@@ -126,6 +125,27 @@ TrailTableProps) {
   ];
   console.log(paginationData);
 
+  // Compute unique roles and modules for filters
+  const roles = Array.from(
+    new Set(
+      logs.flatMap((log) => {
+        const r = log.causer?.roles;
+        if (Array.isArray(r)) return r.map((rr: any) => rr.name || rr);
+        else if (typeof r === "object" && r) return [r.name || "N/A"];
+        else if (typeof r === "string") return [r];
+        return [];
+      })
+    )
+  );
+
+  const modules = Array.from(
+    new Set(
+      logs
+        .map((log) => log.action_type?.split("\\").pop() || "")
+        .filter(Boolean)
+    )
+  );
+
   const actions = (row: any) => (
     <button
       onClick={() => navigate(ROUTES.viewTrail, { state: { uuid: row.uuid } })}
@@ -139,19 +159,14 @@ TrailTableProps) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center p-10">
-        <Loader size="lg" variant="dots" />
-        <Text ml={10} size="md" c="dimmed">
-          Loading Discount Table
-        </Text>
-      </div>
+      <TableSkeleton />
     );
   }
 
   return (
     <GenericTable
-      enableSearch = {true}
-      enableSort = {true}
+      enableSearch={true}
+      enableSort={true}
       data={logs}
       isLoading={isLoading}
       paginationData={paginationData}
@@ -164,8 +179,10 @@ TrailTableProps) {
       activeSort={activeSort}
       onSortChange={setSort}
       onFilterChange={onFilterChange}
-      showFilter = {true}
+      showFilter={true}
       tableType="audit"
+      roles={roles}
+      modules={modules}
       searchPlaceholder="Search trails"
       filters={filters}
       titleSection={

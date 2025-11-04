@@ -1,11 +1,11 @@
-import { Text } from "@mantine/core";
+import { Button, Text } from "@mantine/core";
 import PageContainer from "../../../layout/pageContainer";
 import { ChevronLeft } from "lucide-react";
 import { useLocation, useNavigate } from "react-router";
-// import { useActivateInventory } from "../../../hooks/backendApis/pos/inventory";
+import { useActivateInventory } from "../../../hooks/backendApis/pos/inventory";
 import { useFetchAllLocations } from "../../../hooks/backendApis/pos/products";
 import { useState } from "react";
-// import { notifications } from "@mantine/notifications";
+import { notifications } from "@mantine/notifications";
 import NewInventoryDetails from "./newInventoryDetails";
 import Product from "./product";
 
@@ -13,8 +13,32 @@ const UpdateInventory = () => {
   const { state } = useLocation();
   const inventories = state?.inventories || {};
 
-  // const activateInventory = useActivateInventory(inventories.variationID);
-
+  const activateInventory = useActivateInventory(inventories.variationID, {
+    onSuccess: (data: any) => {
+      if (data?.data) {
+        const updatedData = data.data;
+        setCurrentLevel(updatedData.quantity_available || current_level);
+        setNewStockLevel(updatedData.quantity_supplied || new_stock_level);
+        setNewReorderLevel(updatedData.reorder_level || new_reorder_level);
+        setReasonForUpdate(updatedData.reason || reason_for_update);
+        // Update the inventories state if needed, but since it's from location state, perhaps not necessary
+        setLocationID(updatedData?.locationID || locationID);
+      }
+      notifications.show({
+        title: "Success",
+        message: data?.message || "Inventory updated successfully",
+        color: "green",
+      });
+    },
+    onError: (error: any) => {
+      notifications.show({
+        title: "Error",
+        message: error?.message || "Failed to update inventory",
+        color: "red",
+      });
+    },
+  });
+console.log()
   // Form States
   const [current_level, setCurrentLevel] = useState(
     inventories?.quantity_available || 0
@@ -28,23 +52,22 @@ const UpdateInventory = () => {
   const [reason_for_update, setReasonForUpdate] = useState(
     inventories?.reason_for_update || ""
   );
-  const [locationID, setLocationID] = useState(inventories?.location_id || "");
+  const [locationID, setLocationID] = useState(inventories?.product?.location?.locationID || "");
 
   const { data: locationsData } = useFetchAllLocations();
 
-  const locations = Array.isArray(locationsData?.data?.stores?.data)
-    ? locationsData.data.stores.data
+  const locations = Array.isArray(locationsData?.data?.stores)
+    ? locationsData?.data?.stores
     : [];
-
-  const locationOptions = locations.map(
+    
+// console.log(locationOptions);
+  const locationOptions = locations?.map(
     (loc: { name: string; locationID: string }) => ({
       label: loc?.name || "Unnamed",
       value: loc?.locationID || "",
     })
   );
-
-
-
+// console.log(locationOptions);
   const navigate = useNavigate();
   const subHeaders = () => {
     const backButton = (
@@ -84,19 +107,26 @@ const UpdateInventory = () => {
 
   const subHeaderButtom = () => {
     return [
-      //       <div key="search-product-buttons" className="flex gap-4 justify-end">
-      //         <Button variant="outline-primary" onClick={() => navigate(-1)}>
-      //           Cancel
-      //         </Button>
-      //         <Button
-      //   variant="filled-primary"
-      //   style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600
-      //   onClick={handleActivateInventory}
-      // >
-      //   Trigger reorder
-      // </Button>
-
-      //       </div>,
+      <div key="search-product-buttons" className="flex gap-4 justify-end">
+        <Button variant="outline-primary" onClick={() => navigate(-1)}>
+          Cancel
+        </Button>
+        <Button
+          variant="filled-primary"
+          style={{ width: "10rem", backgroundColor: "#DC2626" }} // Tailwind red-600
+          onClick={() =>
+            activateInventory.mutate({
+              current_level,
+              new_stock_level,
+              new_reorder_level,
+              reason_for_update,
+              locationID,
+            })
+          }
+        >
+          Trigger reorder
+        </Button>
+      </div>,
     ];
   };
   return (
@@ -105,8 +135,6 @@ const UpdateInventory = () => {
       subHeaderButtom={subHeaderButtom()}
     >
       <Product product={inventories} />
-
-
 
       <NewInventoryDetails
         current_level={current_level}

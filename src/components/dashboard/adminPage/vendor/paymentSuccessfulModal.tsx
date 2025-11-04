@@ -1,5 +1,6 @@
 import { Modal, Button } from "@mantine/core";
 import { CheckCircle } from "lucide-react";
+import { useQueryClient } from "@tanstack/react-query";
 
 interface PaymentSuccessModalProps {
   opened: boolean;
@@ -14,6 +15,13 @@ export default function PaymentSuccessModal({
   onClose,
   reference,
 }: PaymentSuccessModalProps) {
+  const queryClient = useQueryClient();
+
+  const handleClose = () => {
+    // Invalidate the current subscription query to refetch the latest data
+    queryClient.invalidateQueries({ queryKey: ["profile/current-subscription"] });
+    onClose();
+  };
   
   return (
     <Modal
@@ -43,7 +51,7 @@ export default function PaymentSuccessModal({
           fullWidth
           className="bg-orange-500 hover:bg-orange-600 text-white font-semibold h-12 text-base"
           radius="md"
-          onClick={onClose}
+          onClick={handleClose}
         >
           Okay
         </Button>

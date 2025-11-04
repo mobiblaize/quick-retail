@@ -1,19 +1,20 @@
-import { Divider, Group, Text } from "@mantine/core";
+/* eslint-disable @typescript-eslint/no-explicit-any */
+import { Group, Text } from "@mantine/core";
 import DateFilterMenu from "../../../General/filterMenu";
 import DivisionSaleChart from "../../../General/divisionSalesChart";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import { useFetchCustomerAnalysis } from "../../../../hooks/backendApis/pos/dashboard";
 import { useFetchDashboardCustomers } from "../../../../hooks/backendApis/pos/dashboard";
-import {
-  ReactElement,
-  JSXElementConstructor,
-  ReactNode,
-  ReactPortal,
-  Key,
-  useState,
-} from "react";
-import { JSX } from "react/jsx-runtime";
+import { useState } from "react";
+import UniversalEmptyState from "./UniversalEmptyState";
+
+
+interface Customer {
+  customer_name: string;
+  customer_email: string;
+  sales_orders_count: number;
+}
 
 
 const CustomerAnalysis = () => {
@@ -27,12 +28,14 @@ const CustomerAnalysis = () => {
   const { data } = useFetchCustomerAnalysis(dateRange);
   const { data: allCustomersData } = useFetchDashboardCustomers();
 
-  const customers =
+  const customers: any[] =
     allCustomersData?.data?.customers?.data?.sort(
       (a: { sales_orders_count: number }, b: { sales_orders_count: number }) =>
         b.sales_orders_count - a.sales_orders_count
     ) ?? [];
   const stats = data?.data;
+
+
   return (
     <main className="flex flex-col lg:flex-row gap-6">
       <div className="w-full lg:w-[65%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
@@ -48,10 +51,8 @@ const CustomerAnalysis = () => {
               <DateFilterMenu
                 onDateFilterChange={({ startDate, endDate }) =>
                   setDateRange({
-                    // @ts-ignore
-                    start_date: startDate.toISOString().split("T")[0],
-                    // @ts-ignore
-                    end_date: endDate.toISOString().split("T")[0],
+                    start_date: (startDate as Date).toISOString().split("T")[0],
+                    end_date: (endDate as Date).toISOString().split("T")[0],
                   })
                 }
               />
@@ -59,14 +60,18 @@ const CustomerAnalysis = () => {
           </div>
         </div>
 
-        <DivisionSaleChart
-          newCustomers={stats?.new_customers ?? 0}
-          existingCustomers={stats?.existing_customers ?? 0}
-          new_customers_percentage={stats?.new_customers_percentage ?? 0}
-          existing_customers_percentage={
-            stats?.existing_customers_percentage ?? 0
-          }
-        />
+        {stats ? (
+          <DivisionSaleChart
+            newCustomers={stats.new_customers ?? 0}
+            existingCustomers={stats.existing_customers ?? 0}
+            new_customers_percentage={stats.new_customers_percentage ?? 0}
+            existing_customers_percentage={
+              stats.existing_customers_percentage ?? 0
+            }
+          />
+        ) : (
+          <UniversalEmptyState />
+        )}
       </div>
 
       <div className="w-full lg:w-[35%] h-auto px-3 sm:px-4 py-6 sm:py-8 rounded-lg bg-white">
@@ -79,63 +84,10 @@ const CustomerAnalysis = () => {
           </Text>
         </div>
         <div className="flex mt-4 flex-col gap-2">
-          {customers
-            .slice(0, 3)
-            .map(
-              (
-                data: {
-                  usericon: JSX.IntrinsicAttributes;
-                  customer_name:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | ReactElement<unknown, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | ReactPortal
-                  | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<
-                      unknown,
-                      string | JSXElementConstructor<any>
-                    >
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                  | null
-                  | undefined;
-                  customer_email:
-                  | string
-                  | number
-                  | bigint
-                  | boolean
-                  | ReactElement<unknown, string | JSXElementConstructor<any>>
-                  | Iterable<ReactNode>
-                  | ReactPortal
-                  | Promise<
-                    | string
-                    | number
-                    | bigint
-                    | boolean
-                    | ReactPortal
-                    | ReactElement<
-                      unknown,
-                      string | JSXElementConstructor<any>
-                    >
-                    | Iterable<ReactNode>
-                    | null
-                    | undefined
-                  >
-                  | null
-                  | undefined;
-                },
-                index: Key | null | undefined
-              ) => (
+          {customers.length > 0 ? (
+            customers
+              .slice(0, 3)
+              .map((data: Customer, index: number) => (
                 <div key={index}>
                   <div className="flex px-2 justify-between items-center">
                     <div className="flex items-center gap-2.5">
@@ -156,11 +108,11 @@ const CustomerAnalysis = () => {
                     </div>
                     {/* <ArrowUpRight color="#003399" className="flex-shrink-0" /> */}
                   </div>
-
-                  <Divider size="sm" className="mt-3" color="#E4E7EC" />
                 </div>
-              )
-            )}
+              ))
+          ) : (
+            <UniversalEmptyState />
+          )}
         </div>
         <Link to={ROUTES.customer}>
           <Text

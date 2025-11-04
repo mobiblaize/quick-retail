@@ -2,14 +2,14 @@ import { Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
 import house from "../../../../assets/images/house.png";
 import dollar from "../../../../assets/images/naira1.png";
-// @ts-ignore
-const AnalysisOverview1 = ({ stats }) => { 
+// @ts-expect-error: stats prop type is not defined
+const AnalysisOverview1 = ({ stats }) => {
   const statsData = stats
     ? [
         {
           title: "TOTAL DISCOUNT VALUE",
-          value: `₦${Number(stats.total_discount_value).toLocaleString()}`,      
-          icon: house, 
+          value: `₦${Number(stats.total_discount_value || 0).toLocaleString()}`,
+          icon: house,
           altText: "dollar-sign",
           iconColor: "#E17036",
           textColor: "white",
@@ -19,7 +19,7 @@ const AnalysisOverview1 = ({ stats }) => {
         },
         {
           title: "TOTAL DISCOUNTS",
-          value: stats.total_discounts,
+          value: stats.total_discounts || 0,
           icon: dollar,
           altText: "Discount Icon",
           iconColor: "#E17036",
@@ -29,7 +29,7 @@ const AnalysisOverview1 = ({ stats }) => {
         },
         {
           title: "REDEMPTION (USED DISCOUNTS)",
-          value: stats.total_redemptions,
+          value: stats.total_redemptions || 0,
           icon: dollar,
           iconColor: "#E17036",
           cardBgColor: "#F4F3FF",
@@ -58,7 +58,7 @@ const AnalysisOverview1 = ({ stats }) => {
           />
         </Group> */}
       </header>
-      <section className="flex md:flex-row flex-col gap-4 overflow-auto gap-2 mt-2.5">
+      <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
       {statsData.map((card, index) => (
             <AnalyticsCard
               key={index}

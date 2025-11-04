@@ -7,6 +7,7 @@ import {
   totalPrice,
   billingTypeStore,
   SubscriptionData,
+  seatCount,
 } from "../../../store/subscriptionStore";
 import { useFetchData, usePostData } from "../../../hooks/useApis";
 import { notifications } from "@mantine/notifications";
@@ -26,7 +27,7 @@ const schema = z.object({
     .string()
     .min(1, "Phone number is required")
     .regex(/^\d{11}$/, "Phone number must be exactly 11 digits"),
-  email: z.string().email("Invalid email format").min(1, "email is required").optional().or(z.literal("")),
+  email: z.string().email("Invalid email format").optional().or(z.literal("")),
 });
 
 const PaymentSummary = () => {
@@ -34,8 +35,11 @@ const PaymentSummary = () => {
   const totalPriceValue = useAtomValue(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
   const navigate = useNavigate();
-  const reference = new URLSearchParams(window.location.search).get("reference");
+  const reference = new URLSearchParams(window.location.search).get(
+    "reference"
+  );
   const [opened, setOpened] = useState(!!reference);
+  const adminSeat = useAtomValue(seatCount);
 
   const windowUrl = window.location.origin;
 
@@ -75,7 +79,7 @@ const PaymentSummary = () => {
         subscription_id: sub.id,
         application_id: sub.application_id,
         amount: sub.amount,
-        additional_seat: sub.additional_user_seat_number,
+        additional_seat: adminSeat,
       })),
     };
 
@@ -110,10 +114,21 @@ const PaymentSummary = () => {
   return (
     <div className="flex flex-col min-h-screen mt-6">
       <main className="flex-grow">
-        <form onSubmit={paymentForm.onSubmit(handleSubmit)} className="space-y-8">
+        <form
+          onSubmit={paymentForm.onSubmit(handleSubmit)}
+          className="space-y-8"
+        >
           <div className="flex flex-col gap-8">
-            <Card shadow="sm" radius="lg" p={32} withBorder className="!bg-white">
-              <h4 className="text-xl font-bold text-[#48464E] mb-4">Your Details</h4>
+            <Card
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+              className="!bg-white"
+            >
+              <h4 className="text-xl font-bold text-[#48464E] mb-4">
+                Your Details
+              </h4>
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <TextInput
@@ -135,7 +150,9 @@ const PaymentSummary = () => {
                     maxLength={11}
                     onInput={(e) => {
                       const target = e.target as HTMLInputElement;
-                      target.value = target.value.replace(/\D/g, "").slice(0, 11);
+                      target.value = target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 11);
                     }}
                     {...paymentForm.getInputProps("phoneNumber")}
                   />
@@ -157,7 +174,7 @@ const PaymentSummary = () => {
                     placeholder="Select your company size"
                     disabled={isCompanySizesPending}
                     data={
-                      companySizes?.data?.map((size: any) => ({
+                      companySizes?.data?.map((size) => ({
                         value: size?.label,
                         label: size?.label,
                       })) || []
@@ -171,8 +188,8 @@ const PaymentSummary = () => {
             </Card>
           </div>
 
-           {/* Right: Payment Summary & Card Form */}
-         <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-8 ">
+          {/* Right: Payment Summary & Card Form */}
+          <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-8 ">
             <Card
               shadow="sm"
               radius="lg"
@@ -195,7 +212,7 @@ const PaymentSummary = () => {
                       </div>
                       <div className="text-xs text-[#6C6975]">
                         {sub?.application?.free_user_access} Admin Seat (Free) |{" "}
-                        {sub?.additional_user_seat_number} Additional Seat
+                        {adminSeat} Additional Seat
                       </div>
                     </div>
                     <div className="font-bold text-[#F16722]">
@@ -203,8 +220,7 @@ const PaymentSummary = () => {
                       {formatMoney(
                         Number(
                           sub?.amount +
-                          (sub?.additional_user_seat_number || 0) *
-                          (sub?.price_per_seat || 0)
+                            (adminSeat || 0) * (sub?.price_per_seat || 0)
                         )
                       )}
                     </div>
@@ -222,8 +238,8 @@ const PaymentSummary = () => {
                     {billingType === "monthly"
                       ? "1 Month"
                       : billingType === "yearly"
-                        ? "12 Months"
-                        : "60 Days"}
+                      ? "12 Months"
+                      : "60 Days"}
                     )
                   </span>
                 </div>
@@ -242,15 +258,15 @@ const PaymentSummary = () => {
                   <span>
                     {new Date(
                       new Date().getTime() +
-                      (billingType === "monthly"
-                        ? 30
-                        : billingType === "yearly"
+                        (billingType === "monthly"
+                          ? 30
+                          : billingType === "yearly"
                           ? 365
-                          : 180) *
-                      24 *
-                      60 *
-                      60 *
-                      1000
+                          : 60) *
+                          24 *
+                          60 *
+                          60 *
+                          1000
                     ).toLocaleDateString("en-US", {
                       month: "long",
                       day: "numeric",
@@ -276,10 +292,11 @@ const PaymentSummary = () => {
                     <div
                       key={sub.id}
                       // border should not show for the last item
-                      className={`flex justify-between text-sm py-2 border-b border-[#EAECF0] ${index === selectedSub.length - 1
-                        ? "border-b-0"
-                        : "border-b"
-                        }`}
+                      className={`flex justify-between text-sm py-2 border-b border-[#EAECF0] ${
+                        index === selectedSub.length - 1
+                          ? "border-b-0"
+                          : "border-b"
+                      }`}
                     >
                       <span>{sub?.application?.name}</span>
                       <span className=" text-[#F16722]">
@@ -292,8 +309,7 @@ const PaymentSummary = () => {
                     <span>
                       Additional User Seats (
                       {selectedSub.reduce(
-                        (sum: number, sub: SubscriptionData) =>
-                          sum + (sub.additional_user_seat_number || 0),
+                        (sum: number) => sum + (adminSeat || 0),
                         0
                       )}
                       X ₦
@@ -305,9 +321,7 @@ const PaymentSummary = () => {
                       {selectedSub
                         .reduce(
                           (sum: number, sub: SubscriptionData) =>
-                            sum +
-                            (sub.additional_user_seat_number || 0) *
-                            (sub.price_per_seat || 0),
+                            sum + (adminSeat || 0) * (sub.price_per_seat || 0),
                           0
                         )
                         .toLocaleString()}

@@ -1,16 +1,40 @@
 import { useState } from "react";
 import { Text, Loader } from "@mantine/core";
+import { showNotification } from "@mantine/notifications";
 import ProfileHeader from "../../../components/dashboard/adminPage/vendor/profileHeader";
 import ProfileDetails from "../../../components/dashboard/adminPage/vendor/vendorDetails";
 import PageContainer from "../../../layout/pageContainer";
 import SubscriptionPage from "../../../components/dashboard/adminPage/vendor/subcriptionPge";
-import { useFetchProfile } from "../../../hooks/backendApis/admin/profile";
+import { useFetchProfile, useUpdateProfile } from "../../../hooks/backendApis/admin/profile";
 
 const VendorPage = () => {
   const [activeTab, setActiveTab] = useState<"profile" | "subscription">(
     "profile"
   );
-  const { data, isLoading, error } = useFetchProfile();
+  const { data, isLoading, error, refetch } = useFetchProfile();
+  const { mutate: updateProfile } = useUpdateProfile();
+
+  const handleSave = (updatedData: { firstName: string; lastName: string }) => {
+    updateProfile(
+      {
+        firstname: updatedData.firstName,
+        lastname: updatedData.lastName,
+      },
+      {
+        onSuccess: () => {
+          showNotification({
+            title: "Profile Updated",
+            message: "Your profile has been updated successfully.",
+            color: "green",
+          });
+          refetch(); // Refetch profile data after save
+        },
+        onError: (err) => {
+          console.error("Error updating profile:", err);
+        },
+      }
+    );
+  };
 
   // ✅ Centralized loader
   if (isLoading) {
@@ -65,8 +89,8 @@ const VendorPage = () => {
     <PageContainer subHeaders={subHeaders}>
       {activeTab === "profile" && (
         <>
-          <ProfileHeader profile={data.data} />
-          <ProfileDetails profile={data.data} />
+          <ProfileHeader profile={data.data} onSave={handleSave} />
+          <ProfileDetails profile={data.data}  />
         </>
       )}
       {activeTab === "subscription" && <SubscriptionPage />}

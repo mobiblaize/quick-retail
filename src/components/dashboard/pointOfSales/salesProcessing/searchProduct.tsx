@@ -217,10 +217,6 @@ const SearchProduct = ({
                       <Text size="sm" c="dimmed">
                         {item.sku}
                       </Text>
-
-                      <Text size="sm" c="dimmed">
-                        {item.sku}
-                      </Text>
                       <Text size="sm" c="dimmed">
                         {item.variation_attributes
                           ?.map(
@@ -342,8 +338,7 @@ const SearchProduct = ({
                         min={1}
                         /* @ts-ignore */
                         value={item.quantity?.toString() ?? ""}
-                        onChange={(e: { target: { value: any } }) => {
-                          const val = e.target.value;
+                        onChange={(val: string) => {
 
                           if (val === "") {
                             // @ts-ignore
