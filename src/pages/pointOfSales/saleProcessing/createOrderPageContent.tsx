@@ -192,7 +192,7 @@ const CreateOrderPageContent: React.FC = () => {
       label: "Discount",
       amount: effective.discount > 0 ? `- ${formatCurrency(effective.discount)}` : formatCurrency(0),
     },
-    { label: `Tax (${effective.taxRate}% VAT)`, amount: formatCurrency(effective.tax) },
+    // { label: `Tax (${effective.taxRate}% VAT)`, amount: formatCurrency(effective.tax) },
   ];
 
   const total = formatCurrency(effective.total);

@@ -6,7 +6,6 @@ import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import * as dayjs from "dayjs";
 import { useFetchAllRoles } from "../../../../hooks/backendApis/admin/userManagement";
-import TableSkeleton from "../../../../pages/TableSkeleton";
 
 export interface UserRowData {
   user_uuid: string;

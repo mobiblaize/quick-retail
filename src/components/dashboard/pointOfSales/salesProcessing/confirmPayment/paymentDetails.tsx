@@ -202,7 +202,7 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
             ))}
             <div className="flex items-center justify-between">
               <Text c="black" fw={700}>
-                Total
+                Total <span className="text-sm text-gray-500">(VAT Included)</span>
               </Text>
               <Text c="black" fw={700}>
                 {total}
