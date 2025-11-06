@@ -7,6 +7,7 @@ import ReusableFilterComponent, {
 } from "../table/reuseableFilter";
 import SearchComp from "../table/searchComp";
 import SortFilter from "../table/sortFilter";
+import TableSkeleton from "../../../pages/TableSkeleton";
 
 export interface PaginationData {
   current_page: number;
@@ -324,128 +325,137 @@ const sortOptionsToUse = sortOptions ?? defaultSortOptions;
       )}
 
       {/* Table Section */}
-      <Box style={{ position: "relative", minHeight: "300px" }}>
-        <Table.ScrollContainer minWidth={800}>
-          <Table
-            striped={false}
-            highlightOnHover
-            withTableBorder={false}
-            withColumnBorders={false}
-            styles={(theme) => ({
-              thead: {
-                backgroundColor: theme.colors.gray[0],
-              },
-              th: {
-                fontWeight: 600,
-                fontSize: theme.fontSizes.sm,
-                color: theme.colors.gray[7],
-                padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-                textAlign: "left",
-                fontFamily: "DM Sans, sans-serif",
-              },
-              td: {
-                padding: `${theme.spacing.sm} ${theme.spacing.md}`,
-                fontSize: theme.fontSizes.sm,
-                borderBottom: `1px solid ${theme.colors.gray[2]}`,
-                fontFamily: "DM Sans, sans-serif",
-              },
-              tr: {
-                "&:hover": {
+      {isLoading ? (
+        <Box style={{ padding: "16px" }}>
+          <TableSkeleton columns={columns.length + (actions ? 1 : 0)} />
+        </Box>
+      ) : (
+        <Box style={{ position: "relative", minHeight: "300px" }}>
+          <Table.ScrollContainer minWidth={800}>
+            <Table
+              striped={false}
+              highlightOnHover
+              withTableBorder={false}
+              withColumnBorders={false}
+              styles={(theme) => ({
+                thead: {
                   backgroundColor: theme.colors.gray[0],
                 },
-              },
-            })}
-          >
-            <Table.Thead>
-              <Table.Tr>
-                {columns.map((col) => (
-                  <Table.Th key={col.key} style={{ width: col.width }}>
-                    {col.header}
-                  </Table.Th>
-                ))}
-                {actions && <Table.Th>Action</Table.Th>}
-              </Table.Tr>
-            </Table.Thead>
-
-            <Table.Tbody>
-              {data.map((row, idx) => (
-                <Table.Tr key={idx}>
+                th: {
+                  fontWeight: 600,
+                  fontSize: theme.fontSizes.sm,
+                  color: theme.colors.gray[7],
+                  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+                  textAlign: "left",
+                  fontFamily: "DM Sans, sans-serif",
+                },
+                td: {
+                  padding: `${theme.spacing.sm} ${theme.spacing.md}`,
+                  fontSize: theme.fontSizes.sm,
+                  borderBottom: `1px solid ${theme.colors.gray[2]}`,
+                  fontFamily: "DM Sans, sans-serif",
+                },
+                tr: {
+                  "&:hover": {
+                    backgroundColor: theme.colors.gray[0],
+                  },
+                },
+              })}
+            >
+              <Table.Thead>
+                <Table.Tr>
                   {columns.map((col) => (
-                    <Table.Td key={col.key}>{col.render(row)}</Table.Td>
+                    <Table.Th key={col.key} style={{ width: col.width }}>
+                      {col.header}
+                    </Table.Th>
                   ))}
-                  {actions && <Table.Td>{actions(row)}</Table.Td>}
+                  {actions && <Table.Th>Action</Table.Th>}
                 </Table.Tr>
-              ))}
-            </Table.Tbody>
-          </Table>
-        </Table.ScrollContainer>
+              </Table.Thead>
 
-        {/* Empty State Overlay (doesn't remove filters/search/sort) */}
-        {!isLoading && (!data || data.length === 0) && (
+              <Table.Tbody>
+                {data.map((row, idx) => (
+                  <Table.Tr key={idx}>
+                    {columns.map((col) => (
+                      <Table.Td key={col.key}>{col.render(row)}</Table.Td>
+                    ))}
+                    {actions && <Table.Td>{actions(row)}</Table.Td>}
+                  </Table.Tr>
+                ))}
+              </Table.Tbody>
+            </Table>
+          </Table.ScrollContainer>
+
+          {/* Empty State Overlay (doesn't remove filters/search/sort) */}
+          {(!data || data.length === 0) && (
+            <Box
+              style={{
+                position: "absolute",
+                top: "75%",
+                left: "50%",
+                transform: "translate(-50%, -50%)",
+                width: "100%",
+                hight: "auto",
+                textAlign: "center",
+                background: "rgba(255,255,255,0.8)",
+                padding: "1rem",
+                borderRadius: "8px",
+              }}
+            >
+              <EmptyState2
+                onReset={handleResetFilters}
+                setSearchTerm={setSearchTerm}
+                onFilterChange={onFilterChange}
+                onSortChange={onSortChange}
+                onPageChange={onPageChange}
+              />
+            </Box>
+          )}
+        </Box>
+      )}
+
+      {/* Pagination */}
+      {!isLoading &&
+        paginationData &&
+        paginationData.last_page > 1 &&
+        onPageChange && (
           <Box
             style={{
-              position: "absolute",
-              top: "75%",
-              left: "50%",
-              transform: "translate(-50%, -50%)",
-              width: "100%",
-              hight: "auto",
-              textAlign: "center",
-              background: "rgba(255,255,255,0.8)",
-              padding: "1rem",
-              borderRadius: "8px",
+              display: "flex",
+              justifyContent: "flex-end",
+              padding: "16px 24px",
+              borderTop: "1px solid #f1f5f9",
             }}
           >
-            <EmptyState2
-              onReset={handleResetFilters}
-              setSearchTerm={setSearchTerm}
-              onFilterChange={onFilterChange}
-              onSortChange={onSortChange}
-              onPageChange={onPageChange}
+            <Pagination
+              total={paginationData.last_page}
+              value={paginationData.current_page}
+              onChange={onPageChange}
+              size="sm"
+              getControlProps={(control) => ({
+                children:
+                  typeof control === "number" ? (
+                    <Text fz="sm" fw={500} c="gray.7">
+                      {control}
+                    </Text>
+                  ) : undefined,
+              })}
+              styles={(theme) => ({
+                control: {
+                  border: "none",
+                  "&[data-active]": {
+                    backgroundColor: "transparent",
+                    border: `1px solid ${theme.colors.orange[6]}`,
+                    color: theme.colors.orange[6],
+                  },
+                  "&:hover:not([data-active])": {
+                    backgroundColor: theme.colors.gray[0],
+                  },
+                },
+              })}
             />
           </Box>
         )}
-      </Box>
-
-      {/* Pagination */}
-      {paginationData && paginationData.last_page > 1 && onPageChange && (
-        <Box
-          style={{
-            display: "flex",
-            justifyContent: "flex-end",
-            padding: "16px 24px",
-            borderTop: "1px solid #f1f5f9",
-          }}
-        >
-          <Pagination
-            total={paginationData.last_page}
-            value={paginationData.current_page}
-            onChange={onPageChange}
-            size="sm"
-            getControlProps={(control) => ({
-              children:
-                typeof control === "number" ? (
-                  <Text fz="sm" fw={500} c="gray.7">
-                    {control}
-                  </Text>
-                ) : undefined,
-            })}
-            styles={(theme) => ({
-              control: {
-                border: "none",
-                "&[data-active]": {
-                  backgroundColor: "transparent",
-                  border: `1px solid ${theme.colors.orange[6]}`,
-                  color: theme.colors.orange[6],
-                },
-                "&:hover:not([data-active])": {
-                  backgroundColor: theme.colors.gray[0],
-                },
-              },
-            })}
-          />
-        </Box>
-      )}
     </div>
   );
 }

@@ -81,12 +81,6 @@ const UserManagementComp = ({ activeTab, onTabChange }: Props) => {
 
   return (
     <div className="w-full bg-white p-8">
-      {isLoading && (
-        <div className="fixed inset-0 z-50 flex items-center justify-center bg-white bg-opacity-70">
-          <Loader size="xl" color="orange" />
-        </div>
-      )}
-
       {/* Tabs */}
       <Group
         gap="sm"

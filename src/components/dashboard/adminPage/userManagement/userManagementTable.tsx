@@ -1,9 +1,12 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Text } from "@mantine/core";
 import { Link } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
 import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
 import * as dayjs from "dayjs";
+import { useFetchAllRoles } from "../../../../hooks/backendApis/admin/userManagement";
+import TableSkeleton from "../../../../pages/TableSkeleton";
 
 export interface UserRowData {
   user_uuid: string;
@@ -40,6 +43,16 @@ export default function UserManagementTable({
   filters,
   onFilterChange,
 }: UserManagementTableProps) {
+  const { data: roleData } = useFetchAllRoles();
+  
+  const roles: any[] = Array.isArray(roleData?.data)
+    ? roleData.data.map(
+        (role: { display_name: string; id: string | number }) => ({
+          label: role.display_name,
+          value: String(role.id),
+        })
+      )
+    : [];
   const dayjsInstance = (dayjs as any).default || dayjs;
 
   /** --- Table Columns --- **/
@@ -126,6 +139,7 @@ export default function UserManagementTable({
       searchTerm={searchTerm}
       setSearchTerm={setSearchTerm}
       activeSort={activeSort}
+      roles={roles}
       onSortChange={setSort}
       onFilterChange={onFilterChange}
       filters={filters}
