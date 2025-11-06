@@ -8,7 +8,7 @@ import { useSearchParams } from "react-router-dom";
 import { ChevronDown } from "lucide-react";
 import { notifications } from "@mantine/notifications";
 
-const DiscountTableSkeleton = () => (
+export const DiscountTableSkeleton = () => (
   <section className="bg-white rounded-lg shadow-sm p-4">
     {/* top controls */}
     <div className="flex flex-wrap gap-3 mb-4">

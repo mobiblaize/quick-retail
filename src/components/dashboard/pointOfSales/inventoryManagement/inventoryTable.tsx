@@ -37,7 +37,7 @@ const InventoryTable = () => {
   // Fetch all pages (disable pagination on backend by passing a large per_page)
   const payload = {
     page: "1",
-    per_page: "10000", // fetch everything
+    per_page: "10", 
     search: searchTerm,
     sort_by: activeSort,
     ...normalizeFilters(appliedFilters),
@@ -78,6 +78,7 @@ const InventoryTable = () => {
         current_page: data.data.products.current_page,
         last_page: data.data.products.last_page,
         total: data.data.products.total,
+        per_page: data.data.products.per_page
       }
     : undefined;
 
