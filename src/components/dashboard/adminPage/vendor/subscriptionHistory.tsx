@@ -102,16 +102,6 @@ const HistoryTable = ({
     },
   ];
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center items-center py-10">
-        <Text fw={500} size="md" c="dimmed">
-          Loading Subscriptions...
-        </Text>
-      </div>
-    );
-  }
-  console.log(data);
   return (
     <GenericTable
       columns={columns}

@@ -1,6 +1,13 @@
 import { Skeleton } from "@mantine/core";
 
-const TableSkeleton = () => {
+interface TableSkeletonProps {
+  columns?: number;
+}
+
+const TableSkeleton = ({ columns = 6 }: TableSkeletonProps) => {
+  // Generate grid template columns dynamically
+  const gridCols = `repeat(${columns}, minmax(0, 1fr))`;
+
   return (
     <section className="bg-white rounded-lg shadow-sm p-4 w-full">
       {/* Header (filters/search) */}
@@ -13,16 +20,23 @@ const TableSkeleton = () => {
       </div>
 
       {/* Table head */}
-      <div className="grid grid-cols-6 gap-4 border-b py-3">
-        {Array.from({ length: 6 }).map((_, i) => (
+      <div
+        className="grid gap-4 border-b py-3"
+        style={{ gridTemplateColumns: gridCols }}
+      >
+        {Array.from({ length: columns }).map((_, i) => (
           <Skeleton key={i} height={14} width="60%" />
         ))}
       </div>
 
       {/* Table rows */}
       {Array.from({ length: 8 }).map((_, r) => (
-        <div key={r} className="grid grid-cols-6 gap-4 py-3 border-b">
-          {Array.from({ length: 6 }).map((_, c) => (
+        <div
+          key={r}
+          className="grid gap-4 py-3 border-b"
+          style={{ gridTemplateColumns: gridCols }}
+        >
+          {Array.from({ length: columns }).map((_, c) => (
             <Skeleton key={c} height={16} width={c === 1 ? "80%" : "60%"} />
           ))}
         </div>
