@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Group, Text, UnstyledButton, Loader } from "@mantine/core";
+import { Group, Text, UnstyledButton } from "@mantine/core";
 // import { useSearchParams } from "react-router";
 import UserManagementTable, { UserRowData } from "./userManagementTable";
 import RoleGrid from "./roleGrid";
