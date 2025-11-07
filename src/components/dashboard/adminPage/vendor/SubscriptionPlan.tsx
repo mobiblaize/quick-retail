@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button, Card, Group, Loader, Text, Title } from "@mantine/core";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useEffect } from "react";
@@ -73,8 +74,7 @@ const SubscriptionPlan = () => {
     setSelectedApps([]);
     setSelectedSub([]);
 
-    console.log("working");
-  }, [activePlan]);
+  }, [activePlan, setSelectedApps, setSelectedSub]);
 
   const billingType: BillingType =
     activePlan === "monthly"

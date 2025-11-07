@@ -97,7 +97,7 @@ const NewInventoryDetails = ({
         {/* New Stock Level */}
         <FormInput
           type="number"
-          label={<Text size="sm" fw={500} c="gray.7">New Stock Level</Text>}
+          label={<Text size="sm" fw={500} c="gray.7">Restock Quantity</Text>}
           paddingY={"0.7rem"}
           value={new_stock_level}
           onChange={(e: any) => setNewStockLevel(Number(e.target.value))}
@@ -106,7 +106,7 @@ const NewInventoryDetails = ({
         {/* Reason for Reorder */}
         <FormInput
           type="text"
-          label={<Text size="sm" fw={500} c="gray.7">Reason for Reorder</Text>}
+          label={<Text size="sm" fw={500} c="gray.7">Reason for Restocking</Text>}
           placeholder="Enter reason for reorder"
           optional
           paddingY={"0.7rem"}

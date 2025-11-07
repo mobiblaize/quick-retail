@@ -40,6 +40,7 @@ export default function ProductVariant({
 
   const addVariant = () => {
     const newVariant = {
+      variationID: null,
       cost_price: 0,
       selling_price: 0,
       quantity: 0,

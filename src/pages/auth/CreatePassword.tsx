@@ -102,9 +102,7 @@ const CreatePassword = () => {
           <div className="text-gray-400 text-sm font-normal mb-1">
             Let's get Started
           </div>
-          <div className="flex items-center font-bold text-2xl tracking-tight">
-            {company ? company : ""}
-          </div>
+          <h1 className="text-[#1D2739] text-[30px] font-[500] ">Create Your Password</h1>
         </div>
         {/* Form */}
         <form

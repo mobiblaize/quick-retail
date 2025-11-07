@@ -46,7 +46,7 @@ const getIndicatorColor = (category: string) => {
 };
 
 export default function NotificationsPanel() {
-  const { data: notifications = [], isLoading, isError } = useNotifications();
+  const { data: notifications = [], isLoading, isError, refetch: refetchNotifications } = useNotifications();
   const markAllRead = useMarkAllNotificationsAsRead();
   const queryClient = useQueryClient();
 
@@ -76,6 +76,7 @@ export default function NotificationsPanel() {
                   message: "All notifications marked as read",
                   color: "green",
                 });
+                refetchNotifications();
               },
               onError: () => {
                 showNotification({

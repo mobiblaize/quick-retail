@@ -27,12 +27,7 @@ const schema = z.object({
     .string()
     .min(1, "Phone number is required")
     .regex(/^\d{11}$/, "Phone number must be exactly 11 digits"),
-  email: z
-    .string()
-    .email("Invalid email format")
-    .min(1, "email is required")
-    .optional()
-    .or(z.literal("")),
+  email: z.string().email("Invalid email format").optional().or(z.literal("")),
 });
 
 const PaymentSummary = () => {
@@ -225,8 +220,7 @@ const PaymentSummary = () => {
                       {formatMoney(
                         Number(
                           sub?.amount +
-                            (adminSeat || 0) *
-                              (sub?.price_per_seat || 0)
+                            (adminSeat || 0) * (sub?.price_per_seat || 0)
                         )
                       )}
                     </div>
@@ -268,7 +262,7 @@ const PaymentSummary = () => {
                           ? 30
                           : billingType === "yearly"
                           ? 365
-                          : 60) * 
+                          : 60) *
                           24 *
                           60 *
                           60 *
@@ -315,8 +309,7 @@ const PaymentSummary = () => {
                     <span>
                       Additional User Seats (
                       {selectedSub.reduce(
-                        (sum: number) =>
-                          sum + (adminSeat || 0),
+                        (sum: number) => sum + (adminSeat || 0),
                         0
                       )}
                       X ₦
@@ -328,9 +321,7 @@ const PaymentSummary = () => {
                       {selectedSub
                         .reduce(
                           (sum: number, sub: SubscriptionData) =>
-                            sum +
-                            (adminSeat || 0) *
-                              (sub.price_per_seat || 0),
+                            sum + (adminSeat || 0) * (sub.price_per_seat || 0),
                           0
                         )
                         .toLocaleString()}

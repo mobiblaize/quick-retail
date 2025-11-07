@@ -1,8 +1,9 @@
-import { Loader, Text } from "@mantine/core";
+import { Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
 import { ROUTES } from "../../../../constants/routes";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import TableSkeleton from "../../../../pages/TableSkeleton";
 
 interface TrailTableProps {
   logs: any[];
@@ -122,8 +123,7 @@ TrailTableProps) {
       ),
     },
   ];
-  console.log(paginationData);
-
+  
   // Compute unique roles and modules for filters
   const roles = Array.from(
     new Set(
@@ -158,12 +158,7 @@ TrailTableProps) {
 
   if (isLoading) {
     return (
-      <div className="flex justify-center items-center p-10">
-        <Loader size="lg" variant="dots" />
-        <Text ml={10} size="md" c="dimmed">
-          Loading Discount Table
-        </Text>
-      </div>
+      <TableSkeleton />
     );
   }
 

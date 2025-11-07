@@ -195,7 +195,7 @@ import ViewCardPage from "./pages/financialManagement/Banking/viewTransaction";
 import AddBankPage from "./pages/financialManagement/Banking/addBank";
 import InventoryDetailsPage from "./pages/pointOfSales/productManagement/inventoryDetailsPage";
 import ViewProduct from "./pages/pointOfSales/productManagement/viewProduct";
-import EditProduct from "./pages/pointOfSales/productManagement/editProduct";
+// import EditProduct from "./pages/pointOfSales/productManagement/editProduct";
 import ViewOrderDraftPage from "./pages/pointOfSales/saleProcessing/viewOrderDraftPage";
 import PreviewSalesDownloadPage from "./pages/pointOfSales/saleProcessing/previewDownload";
 import ViewTransactionPage from "./pages/pointOfSales/transaction/ViewTransaction";
@@ -214,8 +214,7 @@ import ForgotPassword from "./pages/auth/ForgotPassword";
 import VerifyOTP from "./pages/auth/VerifyOTP";
 import ResetPassword from "./pages/auth/ResetPassword";
 import CreateDiscounts from "./pages/pointOfSales/happyTime/createDiscounts";
-import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage"
-// import AddVariableProduct from "./pages/pointOfSales/productManagement/addVariableProduct";
+import DiscountReportPage from "./pages/pointOfSales/report/DiscountPage";
 import UserManagement from "./pages/adminPages/userManagement/userManagement";
 import ViewUser from "./pages/adminPages/userManagement/viewUser";
 import AddNewRole from "./pages/adminPages/userManagement/addNewRole";
@@ -231,15 +230,15 @@ import AdminDashboardPage from "./pages/adminPages/dashboard/adminDashboard";
 import SettingsPage from "./pages/adminPages/settings/settingsPage";
 import ScrollToTop from "./components/General/scrollTop";
 import NotificationPage from "./pages/adminPages/notifications/notificationPage";
+import EditNewProduct from "./pages/pointOfSales/productManagement/EditNewProduct";
 // import AddVariableProductNew from "./components/dashboard/pointOfSales/productManagement/AddVariableProductNew";
-
 
 export default function App() {
   const location = useLocation();
   return (
     <>
-          <ScrollToTop />
-          <Routes key={location.pathname}>
+      <ScrollToTop />
+      <Routes key={location.pathname}>
         <Route path={ROUTES.HOME} element={<DefaultLayout />}>
           <Route index element={<Home />} />
         </Route>
@@ -278,7 +277,10 @@ export default function App() {
             path={ROUTES.viewStoreProduct}
             element={<ViewStoreProduct />}
           />
-          <Route path={ROUTES.editProduct} element={<EditProduct />} />
+          <Route
+            path={`${ROUTES.editProduct}/:id`}
+            element={<EditNewProduct />}
+          />
           <Route
             path={ROUTES.inventoryDetails}
             element={<InventoryDetailsPage />}
@@ -448,7 +450,6 @@ export default function App() {
             path={ROUTES.approvedNoteDetails}
             element={<ApprovedNoteDetails />}
           />
-
 
           {/* ASSET MANAGEMENT ROUTES */}
 
@@ -810,21 +811,33 @@ export default function App() {
           <Route path={ROUTES.addBank} element={<AddBankPage />} />
 
           {/* ADMIN ROUTES */}
-          <Route path={ROUTES.adminDashboard} element={<AdminDashboardPage />} />
+          <Route
+            path={ROUTES.adminDashboard}
+            element={<AdminDashboardPage />}
+          />
           <Route path={ROUTES.userManagement} element={<UserManagement />} />
           {/* <Route path={ROUTES.viewUser} element={<ViewUser/>} /> */}
-          <Route path="/dashboard/admin/user-management/view-user/:userId" element={<ViewUser />} />
+          <Route
+            path="/dashboard/admin/user-management/view-user/:userId"
+            element={<ViewUser />}
+          />
           <Route path={ROUTES.addNewRole} element={<AddNewRole />} />
           <Route path={ROUTES.helpPage} element={<HelpPage />} />
           <Route path={`${ROUTES.learnMore}/:id`} element={<LearnMoreHelp />} />
           <Route path={ROUTES.vendorpage} element={<VendorPage />} />
           <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
           <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
-          <Route path={ROUTES.changeplan} element={<SubscriptionChangePage />} />
+          <Route
+            path={ROUTES.changeplan}
+            element={<SubscriptionChangePage />}
+          />
           <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
           <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
           <Route path={ROUTES.adminSettings} element={<SettingsPage />} />
-          <Route path={ROUTES.notificationPage} element={<NotificationPage />} />
+          <Route
+            path={ROUTES.notificationPage}
+            element={<NotificationPage />}
+          />
         </Route>
       </Routes>
     </>

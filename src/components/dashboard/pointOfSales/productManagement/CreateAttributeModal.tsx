@@ -49,7 +49,7 @@ export default function CreateAttributeModal({
       title="Create New Attribute"
       centered
     >
-      <Text c="dimmed" size="sm" mb="sm">
+      <Text c="" size="base" mb="sm">
         Enter new product attribute.
       </Text>
 
@@ -59,14 +59,19 @@ export default function CreateAttributeModal({
         disabled={createAttributeMutation.isPending}
         onChange={(e) => setValue(e.target.value)}
         mb="md"
+        styles={{
+          input: {
+            fontSize: "16px", color: "gray", // increases text size
+
+          },
+        }}
       />
-
-
 
       <Flex justify="space-between" mt="xl">
         <Button
           variant="outline"
           color="gray"
+          size="md"
           radius="md"
           onClick={() => {
             onClose();
@@ -78,6 +83,7 @@ export default function CreateAttributeModal({
         </Button>
         <Button
           color="orange"
+          size="md"
           radius="md"
           w="48%"
           onClick={onAdd}

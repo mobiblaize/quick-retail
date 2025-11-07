@@ -35,32 +35,28 @@ export default function SelectAttributeValueModal({
     attribute?.attribute_id || 0,
     !!attribute
   );
-  const [selected, setSelected] = useState<number[]>(
-    attribute?.attribute_value_ids || []
-  );
+
+  const [selected, setSelected] = useState<number[]>(attribute?.attribute_value_ids || []);
   const [search, setSearch] = useState("");
 
-  // Reset selections when modal reopens
+  // Reset when modal opens
   useEffect(() => {
     if (opened) {
-      setSelected([]);
       setSearch("");
+      setSelected(attribute?.attribute_value_ids || []);
     }
   }, [opened, attribute]);
 
-  const attributeName = (() =>
-    attributes?.find((x) => x.id === attribute?.attribute_id)?.name)();
+  const attributeName = useMemo(() => {
+    return attributes?.find((x) => x.id === attribute?.attribute_id)?.name;
+  }, [attributes, attribute]);
 
-  useEffect(() => {
-    setSelected(attribute?.attribute_value_ids || []);
-  }, [attribute]);
-
-  // Filter options based on search
+  // 🔍 Filter from all available attributeValues
   const filteredOptions = useMemo(() => {
-    const query = search?.trim()?.toLowerCase();
+    const query = search.trim().toLowerCase();
     if (!query) return attributeValues;
     return attributeValues.filter((opt) =>
-      opt?.name?.toLowerCase()?.includes(query)
+      opt?.value?.toLowerCase()?.includes(query)
     );
   }, [search, attributeValues]);
 
@@ -83,7 +79,7 @@ export default function SelectAttributeValueModal({
         mb="sm"
       />
 
-      {/* ✅ Scrollable Checkbox List - Single Column */}
+      {/* ✅ Scrollable Checkbox List */}
       <ScrollArea h={220}>
         <Stack p="xs">
           {filteredOptions.length > 0 ? (
@@ -133,7 +129,7 @@ export default function SelectAttributeValueModal({
           radius="md"
           w="48%"
           onClick={() => {
-            // Sort selected IDs based on their order in `attributeValues`
+            // Keep selected order consistent with attributeValues
             const ordered = attributeValues
               .filter((opt) => selected.includes(opt.id))
               .map((opt) => opt.id);

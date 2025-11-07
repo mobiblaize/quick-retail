@@ -32,6 +32,7 @@ export interface FilterValues {
   type?: DiscountType;
   discountStatus?: string;
   returnStatus?: string;
+  userStatus?: string;
   role: string;
   module: string;
   [key: string]: string | undefined;
@@ -45,7 +46,7 @@ export interface ReusableFilterComponentProps {
   roles?: string[];
   modules?: string[];
   types?: string[];
-  filterType: "inventory" | "product" | "sales" | "returns" | "discount" | "audit";
+  filterType: "inventory" | "product" | "sales" | "returns" | "discount" | "audit" | "userManagement";
   showLocation?: boolean;
   showCategory?: boolean;
   showStockLevel?: boolean;
@@ -57,6 +58,7 @@ export interface ReusableFilterComponentProps {
   showDiscountType?: boolean;
   showDiscountStatus?: boolean;
   showReturnStatus?: boolean;
+  showUserStatus?: boolean;
   showRole?: boolean;
   showModule?: boolean;
   setFiltersApplied?: (value: boolean) => void;
@@ -95,6 +97,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   showDiscountType = false,
   showDiscountStatus = false,
   showReturnStatus = false,
+  showUserStatus = false,
   showRole = false,
   showModule = false,
   setFiltersApplied,
@@ -116,6 +119,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
     type: '',
     discountStatus: 'All',
      returnStatus: 'All',
+     userStatus: 'all',
     role: '',
     module: '',
   });
@@ -137,6 +141,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
       type: '',
       discountStatus: 'All',
       returnStatus: 'All',
+      userStatus: '',
       role: '',
       module: '',
     };
@@ -462,6 +467,25 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           >
             <Group justify="space-around" gap="xs" wrap="wrap">
               {["All", "Resolved", "Pending", "Declined"].map((status) => (
+                <Radio key={status} value={status} label={status} size="sm" />
+              ))}
+            </Group>
+          </Radio.Group>
+        </Stack>
+      )}
+      {/* user status */}
+      {showUserStatus && (
+        <Stack gap={8} mb={16}>
+          <Text fz="sm" fw={500}>
+            User Status
+          </Text>
+          <Radio.Group
+            name="userStatus"
+            value={filters.status}
+            onChange={(val) => setFilters({ ...filters, userStatus: val })}
+          >
+            <Group justify="space-around" gap="xs" wrap="wrap">
+              {["All", "Pending", "Active", "Inactive"].map((status) => (
                 <Radio key={status} value={status} label={status} size="sm" />
               ))}
             </Group>

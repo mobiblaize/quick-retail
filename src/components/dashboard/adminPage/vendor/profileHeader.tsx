@@ -65,23 +65,13 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
 
           {/* Edit Button */}
           <Button
-            variant="outline"
-            color="gray"
             radius="md"
             size="sm"
             fw={500}
             onClick={open}
-            styles={(theme) => ({
-              root: {
-                cursor: "pointer",
-                borderColor: theme.colors.gray[4],
-                "&:hover": {
-                  backgroundColor: theme.colors.gray[0],
-                },
-              },
-            })}
+            
           >
-            <Text>Edit Profile</Text>
+            <Text color="white">Edit Profile</Text>
           </Button>
         </div>
       </div>

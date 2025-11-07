@@ -29,9 +29,9 @@ const Login = () => {
 
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
   const {
-    mutateAsync: getUser,
+    // mutateAsync: getUser,
     isPending: isUserPending,
-    data: userData,
+    // data: userData,
   } = usePostData("auth/signin/user-info");
   // const { updateUser } = useSessionStorage();
   const form = useForm({
@@ -78,16 +78,16 @@ const Login = () => {
     }
   };
 
-  const handleGetUser = async () => {
-    const payload = {
-      email: form.values.email,
-    };
-    try {
-      await getUser(payload);
-    } catch (error) {
-      console.error("Get user error:", error);
-    }
-  };
+  // const handleGetUser = async () => {
+  //   const payload = {
+  //     email: form.values.email,
+  //   };
+  //   try {
+  //     await getUser(payload);
+  //   } catch (error) {
+  //     console.error("Get user error:", error);
+  //   }
+  // };
 
   return (
     <AuthLayout image={placeholderImage}>
@@ -99,7 +99,7 @@ const Login = () => {
       <Box className="w-full md:w-[496px] bg-white rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10 border border-gray-200">
         {/* Logo */}
 
-        {/* Title */}
+        {/* Title
         {userData?.data && (
           <div className="mb-2">
             <div className="text-gray-400 text-sm font-normal mb-1">
@@ -110,12 +110,12 @@ const Login = () => {
               <span>{userData?.data?.lastname}</span>
             </div>
           </div>
-        )}
+        )} */}
         <div className="">
           <p className="text-gray-400 text-sm font-normal mb-1">
               Welcome Back,
             </p>
-          <h1 className="text-[#1D2739] text-[32px] font-semibold ">Login to QuickRetail</h1></div>
+          <h3 className="text-[#1D2739] text-[32px] font-[500] font-[DM Sans] ">Login to Quick Retail</h3></div>
         {/* Form */}
         <form
           onSubmit={form.onSubmit(handleLogin)}

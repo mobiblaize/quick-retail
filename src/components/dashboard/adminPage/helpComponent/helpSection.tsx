@@ -79,12 +79,12 @@ const helpArticles = [
   {
     id: 1,
     title: "How do I set up other modules of the app?",
-    description:"Full access to system functionalities, including editing but needs approval from super.",
+    description:"To configure additional modules, head over to the 'Modules' section located in your dashboard. Here, you can choose which modules to activate. Simply follow the prompts displayed on your screen to tailor each module to fit your business requirements. Should you face any challenges, please refer to the help section or contact our support team for guidance.",
   },
   {
     id: 2,
     title: "How do I add a new user?",
-    description:"Go to Users → Add New. Fill in the required details and assign a role.",
+    description:"Go to the 'User Management' section and select 'Roles'. From there, you can create new roles or edit existing ones.",
   },
   {
     id: 3,
@@ -174,11 +174,11 @@ export default function HelpSection() {
                       <Text size="sm" c="gray.6" mb={3}>
                         {article.description}
                       </Text>
-                      <Link to={`${ROUTES.learnMore}/${article.id}`}>
+                      {/* <Link to={`${ROUTES.learnMore}/${article.id}`}>
                         <Text c="#F04D4D" size="sm" fw={500}>
                           Learn More
                         </Text>
-                      </Link>
+                      </Link> */}
                     </div>
                   </motion.div>
                 )}
