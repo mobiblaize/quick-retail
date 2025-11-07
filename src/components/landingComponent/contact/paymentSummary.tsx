@@ -18,9 +18,16 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
 
+// ✅ Updated schema to reject numbers in names
 const schema = z.object({
-  firstName: z.string().min(1, "First Name is required"),
-  lastName: z.string().min(1, "Last Name is required"),
+  firstName: z
+    .string()
+    .min(1, "First Name is required")
+    .regex(/^[A-Za-z\s]+$/, "First Name can only contain letters"),
+  lastName: z
+    .string()
+    .min(1, "Last Name is required")
+    .regex(/^[A-Za-z\s]+$/, "Last Name can only contain letters"),
   companyName: z.string().min(1, "Company Name is required"),
   companySize: z.string().min(1, "Company Size is required"),
   phoneNumber: z
@@ -35,17 +42,13 @@ const PaymentSummary = () => {
   const totalPriceValue = useAtomValue(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
   const navigate = useNavigate();
-  const reference = new URLSearchParams(window.location.search).get(
-    "reference"
-  );
+  const reference = new URLSearchParams(window.location.search).get("reference");
   const [opened, setOpened] = useState(!!reference);
   const adminSeat = useAtomValue(seatCount);
-
   const windowUrl = window.location.origin;
 
-  const { data: companySizes, isPending: isCompanySizesPending } = useFetchData(
-    "applications/company-sizes"
-  );
+  const { data: companySizes, isPending: isCompanySizesPending } =
+    useFetchData("applications/company-sizes");
 
   const { mutateAsync: createPayment, isPending } = usePostData(
     "auth/signup/register"
@@ -61,6 +64,7 @@ const PaymentSummary = () => {
       email: "",
     },
     validate: zodResolver(schema),
+    validateInputOnChange: true, // ✅ live validation
   });
 
   const handleSubmit = async (values: typeof paymentForm.values) => {
@@ -114,21 +118,11 @@ const PaymentSummary = () => {
   return (
     <div className="flex flex-col min-h-screen mt-6">
       <main className="flex-grow">
-        <form
-          onSubmit={paymentForm.onSubmit(handleSubmit)}
-          className="space-y-8"
-        >
+        <form onSubmit={paymentForm.onSubmit(handleSubmit)} className="space-y-8">
+          {/* User Details */}
           <div className="flex flex-col gap-8">
-            <Card
-              shadow="sm"
-              radius="lg"
-              p={32}
-              withBorder
-              className="!bg-white"
-            >
-              <h4 className="text-xl font-bold text-[#48464E] mb-4">
-                Your Details
-              </h4>
+            <Card shadow="sm" radius="lg" p={32} withBorder className="!bg-white">
+              <h4 className="text-xl font-bold text-[#48464E] mb-4">Your Details</h4>
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <TextInput
@@ -150,9 +144,7 @@ const PaymentSummary = () => {
                     maxLength={11}
                     onInput={(e) => {
                       const target = e.target as HTMLInputElement;
-                      target.value = target.value
-                        .replace(/\D/g, "")
-                        .slice(0, 11);
+                      target.value = target.value.replace(/\D/g, "").slice(0, 11);
                     }}
                     {...paymentForm.getInputProps("phoneNumber")}
                   />
@@ -188,15 +180,10 @@ const PaymentSummary = () => {
             </Card>
           </div>
 
-          {/* Right: Payment Summary & Card Form */}
-          <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-8 ">
-            <Card
-              shadow="sm"
-              radius="lg"
-              p={32}
-              withBorder
-              className="!bg-white"
-            >
+          {/* Payment Summary Section */}
+          <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-8">
+            {/* Left: Subscription Summary */}
+            <Card shadow="sm" radius="lg" p={32} withBorder className="!bg-white">
               <h4 className="text-lg font-bold text-[#48464E] mb-4">
                 Subscription Summary
               </h4>
@@ -218,15 +205,14 @@ const PaymentSummary = () => {
                     <div className="font-bold text-[#F16722]">
                       ₦{" "}
                       {formatMoney(
-                        Number(
-                          sub?.amount +
-                            (adminSeat || 0) * (sub?.price_per_seat || 0)
-                        )
+                        Number(sub?.amount + (adminSeat || 0) * (sub?.price_per_seat || 0))
                       )}
                     </div>
                   </div>
                 ))}
               </div>
+
+              {/* Billing Info */}
               <div className="mt-6 border-t pt-4">
                 <h4 className="text-[#48464E] text-lg font-bold pb-4">
                   Other Details
@@ -276,14 +262,10 @@ const PaymentSummary = () => {
                 </div>
               </div>
             </Card>
-            <Card
-              className="flex flex-col gap-8 h-fit "
-              shadow="sm"
-              radius="lg"
-              p={32}
-              withBorder
-            >
-              <div className="">
+
+            {/* Right: Payment Summary */}
+            <Card className="flex flex-col gap-8 h-fit" shadow="sm" radius="lg" p={32} withBorder>
+              <div>
                 <h4 className="text-lg font-bold text-[#48464E] mb-4">
                   Payment Summary
                 </h4>
@@ -291,19 +273,17 @@ const PaymentSummary = () => {
                   {selectedSub.map((sub: SubscriptionData, index: number) => (
                     <div
                       key={sub.id}
-                      // border should not show for the last item
                       className={`flex justify-between text-sm py-2 border-b border-[#EAECF0] ${
-                        index === selectedSub.length - 1
-                          ? "border-b-0"
-                          : "border-b"
+                        index === selectedSub.length - 1 ? "border-b-0" : "border-b"
                       }`}
                     >
                       <span>{sub?.application?.name}</span>
-                      <span className=" text-[#F16722]">
+                      <span className="text-[#F16722]">
                         ₦ {formatMoney(Number(sub?.amount)).toLocaleString()}
                       </span>
                     </div>
                   ))}
+
                   {/* Additional User Seats */}
                   <div className="flex justify-between text-sm py-2 border-b border-[#EAECF0]">
                     <span>
@@ -311,10 +291,9 @@ const PaymentSummary = () => {
                       {selectedSub.reduce(
                         (sum: number) => sum + (adminSeat || 0),
                         0
-                      )}
+                      )}{" "}
                       X ₦
-                      {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))}
-                      )
+                      {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))})
                     </span>
                     <span className="text-[#F16722]">
                       ₦{" "}
@@ -327,77 +306,41 @@ const PaymentSummary = () => {
                         .toLocaleString()}
                     </span>
                   </div>
+
                   {/* VAT and Total */}
                   <div className="flex justify-between text-sm py-2 border-b border-[#EAECF0]">
                     <span>V.A.T (7.5%)</span>
                     <span className="text-[#F16722]">
-                      ₦{" "}
-                      {formatMoney(
-                        Math.round(totalPriceValue * 0.075)
-                      ).toLocaleString()}
+                      ₦ {formatMoney(Math.round(totalPriceValue * 0.075)).toLocaleString()}
                     </span>
                   </div>
-                  <div className="flex justify-between  text-sm   pb-2 mt-2 border-b border-[#EAECF0]">
+                  <div className="flex justify-between text-sm pb-2 mt-2 border-b border-[#EAECF0]">
                     <span>Total Cost</span>
                     <span className="text-[#F16722]">
-                      ₦{" "}
-                      {formatMoney(
-                        Math.round(totalPriceValue * 1.075)
-                      ).toLocaleString()}
+                      ₦ {formatMoney(Math.round(totalPriceValue * 1.075)).toLocaleString()}
                     </span>
                   </div>
                 </div>
               </div>
-              <div className="">
-                {/* <h4 className=" font-bold text-[#48464E] mb-4">
-                  Add Your Card
-                </h4>
-                <Text size="sm" c="#6C6975" className="mb-4">
-                  Add Your Card You will be charged when you exceed your 60 days
-                  free trial period. You can choose to cancel or upgrade your
-                  plan before the free trial expires.
-                </Text> */}
-                <div className="flex flex-col gap-4 mt-4">
-                  {/* <TextInput
-                    label="Card Name"
-                    placeholder="Name on card"
-                    {...paymentForm.getInputProps("cardName")}
-                  />
-                  <TextInput
-                    label="Card Number"
-                    placeholder="1234 5678 9012 3456"
-                    {...paymentForm.getInputProps("cardNumber")}
-                  /> */}
-                  {/* <div className="flex gap-4">
-                    <TextInput
-                      className="w-1/2"
-                      label="Expiration"
-                      placeholder="MM/YY"
-                      {...paymentForm.getInputProps("expiration")}
-                    />
-                    <TextInput
-                      className="w-1/2"
-                      label="Cvv"
-                      placeholder="123"
-                      {...paymentForm.getInputProps("cvv")}
-                    />
-                  </div> */}
-                  <Button
-                    color="#F56630"
-                    radius="xl"
-                    size="md"
-                    className="w-full mt-4"
-                    rightSection={<ArrowUpRight size={16} />}
-                    type="submit"
-                    loading={isPending}
-                  >
-                    Pay ₦{" "}
-                    {formatMoney(
-                      Math.round(totalPriceValue * 1.075)
-                    ).toLocaleString()}{" "}
-                    Now
-                  </Button>
-                </div>
+
+              {/* Pay Button */}
+              <div className=" flex flex-col mt-4">
+                <Button
+                  color="#F56630"
+                  radius="xl"
+                  size="md"
+                  className="w-full mt-4"
+                  rightSection={<ArrowUpRight size={16} />}
+                  type="submit"
+                  loading={isPending}
+                  disabled={
+                    !paymentForm.isValid() ||
+                    Object.values(paymentForm.values).some((v) => !v)
+                  }
+                >
+                  Pay ₦{" "}
+                  {formatMoney(Math.round(totalPriceValue * 1.075)).toLocaleString()} Now
+                </Button>
               </div>
             </Card>
           </div>
