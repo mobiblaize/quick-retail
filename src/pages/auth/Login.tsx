@@ -129,11 +129,6 @@ const Login = () => {
             radius="md"
             withAsterisk
             disabled={isUserPending}
-            onBlur={() => {
-              if (form.values.email) {
-                handleGetUser();
-              }
-            }}
             classNames={{ label: "text-[14px] text-[#222] font-medium" }}
             styles={{
               input: {

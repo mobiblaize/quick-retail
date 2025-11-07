@@ -70,8 +70,6 @@
 
 import { useState } from "react";
 import { Search } from "lucide-react";
-import { Link } from "react-router-dom";
-import { ROUTES } from "../../../../constants/routes";
 import { Text, Title } from "@mantine/core";
 import { motion, AnimatePresence } from "framer-motion";
 
