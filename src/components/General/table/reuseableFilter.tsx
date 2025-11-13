@@ -406,7 +406,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
             onChange={(val) => setFilters({ ...filters, paymentStatus: val })}
           >
             <Group justify="space-around" gap="xs" wrap="wrap">
-              {["All", "Paid", "Unpaid"].map((status) => (
+              {["All", "Paid", "Pending"].map((status) => (
                 <Radio key={status} value={status} label={status} size="sm" />
               ))}
             </Group>

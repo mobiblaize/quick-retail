@@ -1,4 +1,3 @@
-// components/SalesOverview.tsx
 import { Button, Group, Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
 import dollar from "../../../../assets/images/orangeNaira.png";
@@ -17,28 +16,36 @@ interface TransactionOverviewProps {
   data: TransactionData;
   isLoading: boolean;
   onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
+  startDate?: string;
+  endDate?: string;
+  onReset: () => void; 
 }
 
 const SalesOverview: React.FC<TransactionOverviewProps> = ({
   data,
   onDateRangeChange,
+  startDate,
+  endDate,
+  onReset,
 }) => {
   const currencySymbol = "₦";
-
   const initialDateRange = {
-    start_date: "",
-    end_date: "",
+    start_date: startDate || "",
+    end_date: endDate || "",
   };
 
   const [dateRange, setDateRange] = useState(initialDateRange);
 
-  // 🔹 Reset filter
+  // 🔹 Reset filter — now calls API correctly
   const handleReset = () => {
-    setDateRange(initialDateRange);
-    onDateRangeChange({ startDate: "", endDate: "" });
-  };
+    setDateRange({ start_date: "", end_date: "" });
 
-  // 🔹 Handle date change
+    // ✅ Immediately trigger default data reload
+    onDateRangeChange({ startDate: "", endDate: "" });
+
+    if (onReset) onReset();
+  };
+  // 🔹 Handle Date Change
   const handleDateFilterChange = (dates: {
     startDate: Date | null;
     endDate: Date | null;
@@ -51,16 +58,19 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
       : "";
 
     setDateRange({ start_date, end_date });
-    onDateRangeChange({ startDate: start_date, endDate: end_date });
-  };
 
+    // 🔹 If both selected, fetch filtered data
+    if (start_date && end_date) {
+      onDateRangeChange({ startDate: start_date, endDate: end_date });
+    }
+  };
   const formattedValue = data?.total_sales_value
     ? `${currencySymbol}${Number(data.total_sales_value).toLocaleString()}`
     : `${currencySymbol}0`;
 
   const cards = [
     {
-      title: "TOTAL SALES VALUE ",
+      title: "TOTAL SALES VALUE",
       value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",
@@ -93,13 +103,14 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
         <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={600} c="textSecondary.9">
-            Sales overview
+            Sales Overview
           </Text>
           <Text size="sm">This is an overview summarizing sales</Text>
         </div>
 
         <div className="flex items-center gap-3">
           <Group>
+            {/* ✅ Pass Date objects to DateFilterMenu */}
             <DateFilterMenu
               onDateFilterChange={handleDateFilterChange}
               startDate={dateRange.start_date}
@@ -108,13 +119,12 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
           </Group>
 
           {dateRange.start_date && dateRange.end_date && (
-            <Button onClick={handleReset} variant="outline">
+            <Button onClick={handleReset} variant="outline" color="orange">
               Reset
             </Button>
           )}
         </div>
       </header>
-
 
       <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
         {cards.map((card, index) => (
@@ -126,7 +136,6 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-          // borderColor={card.borderColor}
           />
         ))}
       </section>
@@ -135,4 +144,3 @@ const SalesOverview: React.FC<TransactionOverviewProps> = ({
 };
 
 export default SalesOverview;
-

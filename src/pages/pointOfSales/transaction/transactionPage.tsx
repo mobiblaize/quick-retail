@@ -53,11 +53,16 @@ const TransactionsTableSkeleton = () => (
 /* ---------- /Skeletons ---------- */
 
 const TransactionPage = () => {
-  const [tempDateRange, setTempDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [tempDateRange, setTempDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
     startDate: "",
     endDate: "",
   });
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
@@ -66,6 +71,7 @@ const TransactionPage = () => {
   // Track first load so later refetches don't swap in skeletons
   const firstLoad = useRef(true);
 
+  // Combine filter + pagination logic
   const mapFiltersToPayload = (filters: Partial<FilterValues>) => ({
     sort_by: filters.sortBy || "",
     start_date: filters.startDate ?? "",
@@ -75,18 +81,29 @@ const TransactionPage = () => {
     search: filters.search ?? "",
   });
 
-  const statsPayload = mapFiltersToPayload({}); // No filters for stats
+  // ✅ Apply same filters to overview and table
+  const activeFilters =
+    appliedFilters.startDate && appliedFilters.endDate ? appliedFilters : {};
 
+  // 🔹 Overview payload — filtered
+  const statsPayload = mapFiltersToPayload(activeFilters);
+
+  // 🔹 Table payload — filtered + pagination
   const payload = {
-    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    ...mapFiltersToPayload(activeFilters),
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
     sort_by: activeSort,
   };
 
-  const { data: statsData, isLoading: isLoadingStats, isFetching: isFetchingStats } = useFetchAllTransactions(statsPayload) || {};
-  const { data, isLoading, isFetching } = useFetchAllTransactions(payload) || {};
+  const {
+    data: statsData,
+    isLoading: isLoadingStats,
+    isFetching: isFetchingStats,
+  } = useFetchAllTransactions(statsPayload) || {};
+  const { data, isLoading, isFetching } =
+    useFetchAllTransactions(payload) || {};
   const transactionsArray = data?.data?.transactions?.data ?? [];
 
   useEffect(() => {
@@ -94,7 +111,9 @@ const TransactionPage = () => {
   }, [isLoadingStats, isLoading]);
 
   const showOverviewSkeleton = firstLoad.current && isLoadingStats;
-  const showTableSkeleton = (firstLoad.current && isLoading) || (!transactionsArray.length && isLoading);
+  const showTableSkeleton =
+    (firstLoad.current && isLoading) ||
+    (!transactionsArray.length && isLoading);
 
   const paginationData = data?.data?.transactions
     ? {
@@ -147,6 +166,12 @@ const TransactionPage = () => {
               setCurrentPage(1);
             }
           }}
+          onReset={() => {
+            // ✅ Reset filters and update both overview + table
+            setTempDateRange({ startDate: "", endDate: "" });
+            setAppliedFilters({} as FilterValues);
+            setCurrentPage(1);
+          }}
         />
       )}
 
@@ -175,7 +200,9 @@ const TransactionPage = () => {
       )}
 
       {!isLoading && !isFetching && transactionsArray.length === 0 && (
-        <div className="mt-6 text-center text-gray-600">No transactions to display</div>
+        <div className="mt-6 text-center text-gray-600">
+          No transactions to display
+        </div>
       )}
     </PageContainer>
   );

@@ -225,7 +225,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
           <Stack gap={6}>
             {/* top row: ID pill and role pill */}
             <Group gap="sm">
-              <Box
+              {/* <Box
                 component="div"
                 style={{
                   backgroundColor: "#FFECE5",
@@ -237,7 +237,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
                 }}
               >
                 User ID: #{causer_id}
-              </Box>
+              </Box> */}
 
               <Box
                 component="div"

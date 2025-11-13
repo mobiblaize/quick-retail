@@ -8,7 +8,7 @@ import SalesOverview from "../../../components/dashboard/pointOfSales/salesProce
 import { useFetchAllSales } from "../../../hooks/backendApis/pos/salesProcessing";
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 
-// ---------- Skeletons ----------
+/* ---------- Skeletons ---------- */
 const SalesOverviewSkeleton = () => (
   <section className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
     {Array.from({ length: 4 }).map((_, i) => (
@@ -23,7 +23,6 @@ const SalesOverviewSkeleton = () => (
 
 const OrdersTableSkeleton = () => (
   <section className="bg-white rounded-lg shadow-sm p-4">
-    {/* top controls: search/filters */}
     <div className="flex flex-wrap gap-3 mb-4">
       <Skeleton height={36} width={220} />
       <Skeleton height={36} width={160} />
@@ -31,13 +30,11 @@ const OrdersTableSkeleton = () => (
       <Skeleton height={36} width={120} />
       <Skeleton height={36} width={220} />
     </div>
-    {/* table head */}
     <div className="grid grid-cols-6 gap-4 border-b py-3">
       {Array.from({ length: 6 }).map((_, i) => (
         <Skeleton key={i} height={14} width="60%" />
       ))}
     </div>
-    {/* table rows */}
     {Array.from({ length: 8 }).map((_, r) => (
       <div key={r} className="grid grid-cols-6 gap-4 py-3 border-b">
         {Array.from({ length: 6 }).map((_, c) => (
@@ -45,7 +42,6 @@ const OrdersTableSkeleton = () => (
         ))}
       </div>
     ))}
-    {/* pagination */}
     <div className="flex items-center justify-between mt-4">
       <Skeleton height={28} width={180} />
       <div className="flex gap-2">
@@ -56,6 +52,7 @@ const OrdersTableSkeleton = () => (
     </div>
   </section>
 );
+/* ---------- /Skeletons ---------- */
 
 const SalesProcessingPage = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
@@ -93,24 +90,26 @@ const SalesProcessingPage = () => {
   const mapFiltersToPayload = (filters: FilterValues) => ({
     search: filters.search ?? "",
     sort_by: filters.sortBy ?? "",
-    per_page: perPage.toString(),
-    paginate: true,
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     status: mapOrderStatus(filters.paymentStatus),
     price_from: filters.priceFrom ?? 100,
     price_to: filters.priceTo ?? "",
-    page: currentPage.toString(),
   });
 
-  // Separate payloads for overview and table data
+  /* ---------------------- PAYLOADS ---------------------- */
+  // Overview now depends on periodic dateRange + applied filters
   const overviewPayload = {
+    ...mapFiltersToPayload(appliedFilters),
+    ...(dateRange.startDate ? { start_date: dateRange.startDate } : {}),
+    ...(dateRange.endDate ? { end_date: dateRange.endDate } : {}),
     page: currentPage.toString(),
     per_page: perPage.toString(),
   };
 
+  // Table payload (same logic + pagination & sorting)
   const tablePayload = {
-    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
+    ...mapFiltersToPayload(appliedFilters),
     ...(dateRange.startDate ? { start_date: dateRange.startDate } : {}),
     ...(dateRange.endDate ? { end_date: dateRange.endDate } : {}),
     page: currentPage.toString(),
@@ -119,7 +118,7 @@ const SalesProcessingPage = () => {
     sort_by: activeSort,
   };
 
-  // Separate API calls for overview and table
+  /* ---------------------- API CALLS ---------------------- */
   const { data: overviewData = {}, isLoading: isOverviewLoading } =
     useFetchAllSales(overviewPayload) || {};
   const { data: tableData = {}, isLoading: isTableLoading } =
@@ -159,7 +158,7 @@ const SalesProcessingPage = () => {
 
   return (
     <PageContainer subHeaders={subHeaders}>
-      {/* Overview: skeleton while loading */}
+      {/* ---------- Sales Overview ---------- */}
       {isOverviewLoading ? (
         <SalesOverviewSkeleton />
       ) : (
@@ -167,10 +166,17 @@ const SalesProcessingPage = () => {
           data={overviewData?.data}
           isLoading={isOverviewLoading}
           onDateRangeChange={setDateRange}
+          onReset={() => {
+            setDateRange({ startDate: "", endDate: "" });
+            setAppliedFilters({} as FilterValues);
+            setCurrentPage(1);
+            setSearchTerm("");
+            setActiveSort("");
+          }}
         />
       )}
 
-      {/* Orders table: skeleton while loading */}
+      {/* ---------- Orders Table ---------- */}
       {isTableLoading ? (
         <OrdersTableSkeleton />
       ) : (
