@@ -42,7 +42,7 @@ const CustomerAnalysis = () => {
         <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center">
           <div className="flex flex-col mb-3 sm:mb-0">
             <Text size="xl" fw={600} c="textSecondary.9">
-              Customer Analysis
+              Customer Analytics
             </Text>
           </div>
 

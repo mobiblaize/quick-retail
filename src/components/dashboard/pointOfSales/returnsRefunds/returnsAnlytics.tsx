@@ -17,23 +17,25 @@ interface ReturnsAnalyticsData {
 interface ReturnsAnalyticsProps {
   data: ReturnsAnalyticsData;
   onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
+  onReset: () => void;
 }
 
-const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeChange, }) => {
-  const initialDateRange = {
+const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({
+  data,
+  onDateRangeChange,
+  onReset,
+}) => {
+  const [dateRange, setDateRange] = useState({
     start_date: "",
     end_date: "",
-  };
+  });
 
-  const [dateRange, setDateRange] = useState(initialDateRange);
-
-  // 🔹 Reset filter
   const handleReset = () => {
-    setDateRange(initialDateRange);
+    setDateRange({ start_date: "", end_date: "" });
     onDateRangeChange({ startDate: "", endDate: "" });
+    onReset();
   };
 
-  // 🔹 Handle date change
   const handleDateFilterChange = (dates: {
     startDate: Date | null;
     endDate: Date | null;
@@ -46,8 +48,16 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeCh
       : "";
 
     setDateRange({ start_date, end_date });
-    onDateRangeChange({ startDate: start_date, endDate: end_date });
+
+    // ✅ Trigger only when both are selected
+    if (start_date && end_date) {
+      onDateRangeChange({ startDate: start_date, endDate: end_date });
+    }
   };
+
+  const showResetButton =
+    dateRange.start_date !== "" && dateRange.end_date !== "";
+
   const cards = [
     {
       title: "Total Returned Product",
@@ -56,16 +66,13 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeCh
       iconColor: "#E17036",
       textColor: "white",
       cardBgColor: "linear-gradient(to bottom, #F16722, #B63D00)",
-      // percentageValue: 0,
       altText: "returned-product",
     },
     {
       title: "Complaints Pending",
       value: data?.pending_complaints ?? 0,
       icon: goldBox,
-      iconColor: "#E17036",
       cardBgColor: "#FEF6E7",
-      // percentageValue: 0,
       borderColor: "#98A2B3",
       altText: "pending-complaints",
     },
@@ -73,9 +80,7 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeCh
       title: "Complaints Resolved",
       value: data?.resolved_complaints ?? 0,
       icon: greenBox,
-      iconColor: "#E17036",
       cardBgColor: "#F0FDF9",
-      // percentageValue: 0,
       borderColor: "#98A2B3",
       altText: "resolved-complaints",
     },
@@ -83,11 +88,9 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeCh
       title: "Complaints Declined",
       value: data?.declined_complaints ?? 0,
       icon: redBox,
-      iconColor: "#E17036",
       cardBgColor: "#FBEAE9",
-      // percentageValue: 0,
       borderColor: "#98A2B3",
-      altText: "resolved-complaints",
+      altText: "declined-complaints",
     },
   ];
 
@@ -110,8 +113,8 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeCh
             />
           </Group>
 
-          {dateRange.start_date && dateRange.end_date && (
-            <Button onClick={handleReset} variant="outline">
+          {showResetButton && (
+            <Button onClick={handleReset} variant="outline" color="orange">
               Reset
             </Button>
           )}
@@ -132,7 +135,6 @@ const ReturnsAnalytics: React.FC<ReturnsAnalyticsProps> = ({ data, onDateRangeCh
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}
-            // percentageValue={card.percentageValue}
             borderColor={card.borderColor}
           />
         ))}
