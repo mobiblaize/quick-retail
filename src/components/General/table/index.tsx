@@ -73,6 +73,7 @@ export interface TanTableProps<T extends Record<string, any>> {
   onPageChange?: (page: number) => void;
   serverSidePagination?: boolean;
   isFilterActive?: boolean;
+  searchTerm?: string;
 }
 
 const TanTable = <T extends Record<string, any>>({
@@ -94,8 +95,10 @@ const TanTable = <T extends Record<string, any>>({
   onFilterChange,
   locations,
   categories,
+  sortOptions,
   roles,
   modules,
+  searchTerm,
   tableType,
   onSortChange,
   activeSort,
@@ -106,7 +109,6 @@ const TanTable = <T extends Record<string, any>>({
   onSearchChange,
 
 }: TanTableProps<T>) => {
-  const [searchTerm, setSearchTerm] = useState<string>("");
   const [sorting, setSorting] = useState<SortingState>([]);
   const [pageIndex, setPageIndex] = useState<number>(0);
   const [columnFilters, setColumnFilters] = useState<ColumnFiltersState>([]);
@@ -136,7 +138,7 @@ const TanTable = <T extends Record<string, any>>({
     onColumnFiltersChange: setColumnFilters,
     getCoreRowModel: getCoreRowModel(),
     getFilteredRowModel: getFilteredRowModel(),
-    onGlobalFilterChange: setSearchTerm,
+    onGlobalFilterChange: onSearchChange,
     onSortingChange: setSorting,
     getSortedRowModel: getSortedRowModel(),
     // Disable built-in pagination for server-side
@@ -328,7 +330,6 @@ const TanTable = <T extends Record<string, any>>({
   console.log("filtersApplied:", filtersApplied);
 
   const handleSearchChange = (term: string) => {
-    setSearchTerm(term);
     setPageIndex(0); // reset pagination
     if (serverSidePagination) {
       onPageChange?.(1); // go back to first page
@@ -336,6 +337,8 @@ const TanTable = <T extends Record<string, any>>({
     if (onSearchChange) onSearchChange(term);
   };
 
+  console.log(sortOptions);
+  
 
   return (
     <Box className="font-sans">
@@ -362,7 +365,7 @@ const TanTable = <T extends Record<string, any>>({
               <SearchComp
                 setSearchTerm={handleSearchChange}
                 setPageIndex={setPageIndex}
-                searchTerm={searchTerm}
+                searchTerm={searchTerm || ''}
                 handleFilterChange={handleFilterChange}
                 filterList={filterList}
                 placeholder={searchPlaceholder}
@@ -375,7 +378,7 @@ const TanTable = <T extends Record<string, any>>({
               <SortFilter
                 onSortChange={onSortChange!}
                 activeSort={activeSort || ""}
-                sortOptions={customSortOptions}
+                sortOptions={sortOptions ?? customSortOptions}
               />
             )}
           </div>
@@ -387,7 +390,7 @@ const TanTable = <T extends Record<string, any>>({
                   <SearchComp
                     setSearchTerm={handleSearchChange}
                     setPageIndex={setPageIndex}
-                    searchTerm={searchTerm}
+                    searchTerm={searchTerm || ''}
                     handleFilterChange={handleFilterChange}
                     filterList={filterList}
                     placeholder={searchPlaceholder}
@@ -402,7 +405,7 @@ const TanTable = <T extends Record<string, any>>({
                   <SortFilter
                     onSortChange={onSortChange!}
                     activeSort={activeSort || ""}
-                    sortOptions={customSortOptions}
+                    sortOptions={sortOptions ?? customSortOptions}
                   />
                 </div>
               )}

@@ -97,7 +97,7 @@ const SearchComp: FC<SearchCompProps> = ({
   placeholderColor,
   searchIcon,
   iconColor = "#000000",
-  debounceDelay = 5000,
+  debounceDelay = 500,
 }) => {
   const [localValue, setLocalValue] = useState(searchTerm);
 

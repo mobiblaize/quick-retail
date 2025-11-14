@@ -330,7 +330,7 @@ const sortOptionsToUse = sortOptions ?? defaultSortOptions;
           <TableSkeleton columns={columns.length + (actions ? 1 : 0)} />
         </Box>
       ) : (
-        <Box style={{ position: "relative", minHeight: "300px" }}>
+        <Box style={{ position: "relative", minHeight: "300px", overflowX: "auto" }}>
           <Table.ScrollContainer minWidth={800}>
             <Table
               striped={false}
