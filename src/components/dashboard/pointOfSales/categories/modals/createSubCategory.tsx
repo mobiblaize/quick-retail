@@ -109,7 +109,11 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
         <div className="flex mt-7 gap-5">
           <Button
             variant="outline"
-            onClick={onClose} 
+            onClick={() => {
+              setSubCategoryName("");
+              setSelectedCategoryId(null);
+              onClose();
+            }}
             style={{
               color: "#475367",
               borderRadius: "0.4rem",

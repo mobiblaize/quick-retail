@@ -72,8 +72,9 @@ const PaymentSuccessModal = ({
         Payment Success
       </Title>
       <Text ta="center" c="dimmed" mb="xl">
-        Congratulations! You have successfully paid for your subscription. Go
-        and onboard and log in to your system. We’ve also sent you an email.
+        Congratulations! Your subscription payment was successful. You can now
+        proceed to onboard and log in to your system. A confirmation email has
+        also been sent to your inbox.
       </Text>
       <Button
         fullWidth

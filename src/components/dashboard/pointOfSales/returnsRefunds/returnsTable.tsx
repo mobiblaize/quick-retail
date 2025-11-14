@@ -16,7 +16,7 @@ interface ReturnsTableProps {
   returns: any[];
   isLoading: boolean;
   onFilterChange: (filters: FilterValues) => void;
-  paginationData: {
+  paginationData?: {
     current_page: number;
     last_page: number;
     total: number;

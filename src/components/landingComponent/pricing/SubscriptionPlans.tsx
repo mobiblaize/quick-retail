@@ -303,7 +303,7 @@ import {
   billingTypeStore,
   totalPrice,
   selectedSubs,
-  seatCount
+  seatCount,
 } from "../../../store/subscriptionStore";
 import { notifications } from "@mantine/notifications";
 
@@ -328,23 +328,21 @@ const SubscriptionPlanCard = ({ data }: any) => {
       (sum, item) =>
         sum +
         (Number(item.amount || 0) +
-          Number(adminSeat || 0) *
-            Number(item.price_per_seat || 0)),
+          Number(adminSeat || 0) * Number(item.price_per_seat || 0)),
       0
     );
     setTotalPrice(total);
   };
 
-  useEffect(()=> {
+  useEffect(() => {
     validateSeatChange();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [adminSeat]);
 
   const handleSeatChange = (newSeat: number) => {
     setAdminSeat(newSeat);
   };
 
-  
   const validateSeatChange = () => {
     if (isChecked) {
       const updated = selectedSub.map((item: any) =>
@@ -355,7 +353,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
       setSelectedSub(updated);
       recalcTotal(updated);
     }
-  }
+  };
 
   const handleCheckboxChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     let updated;
@@ -463,103 +461,121 @@ const SubscriptionPlanCard = ({ data }: any) => {
           </Text>
         </Box>
         {/* Additional Seats */}
-        <Box
-          style={{ minWidth: 180, textAlign: "center" }}
-          className="space-y-2"
-        >
-          <Text size="sm" c="#6C6975" mb={2}>
-            Additional User Seat{" "}
-            <Tooltip label="These are extra user slots beyond the free seats provided.">
-              <HelpCircle
-                size={16}
-                style={{
-                  display: "inline",
-                  verticalAlign: "middle",
-                  cursor: "pointer",
-                }}
-                onClick={() => setSeatInfoOpen(true)} // This opens the modal
-              />
-            </Tooltip>
-          </Text>
-          <Text fw={500} c="#48464E">
-            (N {data?.price_per_seat} per seat)
-          </Text>
-          <Group gap={8} justify="center">
-            <Button
-              variant="outline"
-              color="#F56630"
-              radius="xl"
-              size="xs"
-              onClick={() =>
-                handleSeatChange(adminSeat > 0 ? adminSeat - 1 : 0)
-              }
-              style={{ width: 32, height: 32, padding: 0 }}
-              disabled={shouldBeDisabled}
-            >
-              -
-            </Button>
-            <Text
-              fw={600}
-              c="#F56630"
-              style={{
-                minWidth: 32,
-                textAlign: "center",
-                background: "#e9eaec",
-                borderRadius: 8,
-                padding: "6px 16px",
-                border: "1px solid #D0D5DD",
-              }}
-            >
-              {adminSeat}
+        {billingType !== "trial" && (
+          <Box
+            style={{ minWidth: 180, textAlign: "center" }}
+            className="space-y-2"
+          >
+            <Text size="sm" c="#6C6975" mb={2}>
+              Additional User Seat{" "}
+              <Tooltip label="These are extra user slots beyond the free seats provided.">
+                <HelpCircle
+                  size={16}
+                  style={{
+                    display: "inline",
+                    verticalAlign: "middle",
+                    cursor: "pointer",
+                  }}
+                  onClick={() => setSeatInfoOpen(true)} // opens modal
+                />
+              </Tooltip>
             </Text>
-            <Button
-              variant="outline"
-              color="gray"
-              radius="xl"
-              size="xs"
-              onClick={() => {
-                if (adminSeat >= data?.additional_user_seat_limit) {
-                  notifications.show({
-                    title: "Maximum additional user seat limit reached",
-                    message:
-                      "You have reached the maximum additional user seat limit",
-                  });
-                  return;
+            <Text fw={500} c="#48464E">
+              (N {data?.price_per_seat} per seat)
+            </Text>
+            <Group gap={8} justify="center">
+              <Button
+                variant="outline"
+                color="#F56630"
+                radius="xl"
+                size="xs"
+                onClick={() =>
+                  handleSeatChange(adminSeat > 0 ? adminSeat - 1 : 0)
                 }
-                handleSeatChange(adminSeat + 1);
-              }}
-              style={{ width: 32, height: 32, padding: 0 }}
-              disabled={shouldBeDisabled}
-            >
-              +
-            </Button>
-          </Group>
-        </Box>
+                style={{ width: 32, height: 32, padding: 0 }}
+                disabled={shouldBeDisabled}
+              >
+                -
+              </Button>
+              <Text
+                fw={600}
+                c="#F56630"
+                style={{
+                  minWidth: 32,
+                  textAlign: "center",
+                  background: "#e9eaec",
+                  borderRadius: 8,
+                  padding: "6px 16px",
+                  border: "1px solid #D0D5DD",
+                }}
+              >
+                {adminSeat}
+              </Text>
+              <Button
+                variant="outline"
+                color="gray"
+                radius="xl"
+                size="xs"
+                onClick={() => {
+                  if (adminSeat >= data?.additional_user_seat_limit) {
+                    notifications.show({
+                      title: "Maximum additional user seat limit reached",
+                      message:
+                        "You have reached the maximum additional user seat limit",
+                    });
+                    return;
+                  }
+                  handleSeatChange(adminSeat + 1);
+                }}
+                style={{ width: 32, height: 32, padding: 0 }}
+                disabled={shouldBeDisabled}
+              >
+                +
+              </Button>
+            </Group>
+          </Box>
+        )}
       </div>
 
       {/* Seat Info Modal - Controlled by seatInfoOpen */}
       <Modal
         opened={seatInfoOpen}
         onClose={() => setSeatInfoOpen(false)}
-        title={<Text fw={600} color="gray.8"
-              style={{ fontFamily: "DM Sans, sans-serif" }}>Seat Information</Text>}
+        title={
+          <Text
+            fw={600}
+            color="gray.8"
+            style={{ fontFamily: "DM Sans, sans-serif" }}
+          >
+            Seat Information
+          </Text>
+        }
         centered
         radius="md"
       >
-        <Text size="sm" mb="md" color="gray.8"
-              style={{ fontFamily: "DM Sans, sans-serif" }}
-        
+        <Text
+          size="sm"
+          mb="md"
+          color="gray.8"
+          style={{ fontFamily: "DM Sans, sans-serif" }}
         >
           This modal provides detailed information about user seats.
         </Text>
-        <Text size="sm" mb="md" color="gray.8"
-              style={{ fontFamily: "DM Sans, sans-serif" }}>
+        <Text
+          size="sm"
+          mb="md"
+          color="gray.8"
+          style={{ fontFamily: "DM Sans, sans-serif" }}
+        >
           **Free Seats:** These are included with your base subscription plan
           and allow a certain number of users to access the application without
           additional charges.
         </Text>
-        <Text size="sm" color="gray.8"
-              style={{ fontFamily: "DM Sans, sans-serif" }}>
+        <Text
+          size="sm"
+          color="gray.8"
+          style={{ fontFamily: "DM Sans, sans-serif" }}
+        >
           **Additional User Seats:** If you need more users to access the
           application beyond your free allocation, you can purchase additional
           seats at the specified price per seat.

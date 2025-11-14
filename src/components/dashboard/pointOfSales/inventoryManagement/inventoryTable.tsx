@@ -18,26 +18,26 @@ const InventoryTable = () => {
   );
   const [searchTerm, setSearchTerm] = useState("");
   const [activeSort, setActiveSort] = useState("");
+
+  // ✅ Fixed: normalized filters now dynamic, not hardcoded
   const normalizeFilters = (filters: FilterValues) => {
-    return {
-      ...(filters.startDate ? { start_date: filters.startDate } : {}),
-      ...(filters.endDate ? { end_date: filters.endDate } : {}),
-      ...(filters.stockFrom !== undefined && filters.stockFrom !== ""
-        ? { stock_from: String(filters.stockFrom) }
-        : {}),
-      ...(filters.stockTo !== undefined && filters.stockTo !== ""
-        ? { stock_to: String(filters.stockTo) }
-        : {}),
-      ...(filters.orderStatus ? { order_status: filters.orderStatus } : {}),
-      ...(filters.location ? { location_name: filters.location } : {}),
-      stock_status: "low stock",
-    };
+    const result: Record<string, any> = {};
+
+    if (filters.startDate) result.start_date = filters.startDate;
+    if (filters.endDate) result.end_date = filters.endDate;
+    if (filters.stockFrom !== undefined && filters.stockFrom !== "")
+      result.stock_level_from = Number(filters.stockFrom);
+    if (filters.stockTo !== undefined && filters.stockTo !== "")
+      result.stock_level_to = Number(filters.stockTo);
+    if (filters.orderStatus) result.stock_status = filters.orderStatus;
+    if (filters.location) result.location_name = filters.location;
+
+    return result;
   };
 
-  // Fetch all pages (disable pagination on backend by passing a large per_page)
   const payload = {
     page: "1",
-    per_page: "10", 
+    per_page: "10",
     search: searchTerm,
     sort_by: activeSort,
     ...normalizeFilters(appliedFilters),
@@ -49,17 +49,8 @@ const InventoryTable = () => {
     ? data.data.products.data
     : [];
 
-  // Apply global filtering on all fetched data
-  let filteredProducts = products;
-
-  if (appliedFilters.orderStatus) {
-    const statusFilter = appliedFilters.orderStatus.toLowerCase();
-    filteredProducts = filteredProducts.filter(
-      (p: any) => p.stock_status?.toLowerCase() === statusFilter
-    );
-  }
-
-  const mappedProducts = filteredProducts.map((product: any) => ({
+  // ✅ no more double-filtering (backend already handles it)
+  const mappedProducts = products.map((product: any) => ({
     name: product.name,
     sku: product.sku,
     location: product.product?.location?.name ?? "N/A",
@@ -78,13 +69,14 @@ const InventoryTable = () => {
         current_page: data.data.products.current_page,
         last_page: data.data.products.last_page,
         total: data.data.products.total,
-        per_page: data.data.products.per_page
+        per_page: data.data.products.per_page,
       }
     : undefined;
 
   const handlePageChange = (page: number) => {
     setCurrentPage(page);
   };
+
   const handleFilterChange = (filters: FilterValues) => {
     setAppliedFilters(filters);
   };
@@ -92,7 +84,7 @@ const InventoryTable = () => {
   const locations = Array.from(
     new Set(
       products
-        ?.map((p: any) => p.product?.location?.name) // ✅ nested under product
+        ?.map((p: any) => p.product?.location?.name)
         .filter(
           (name: string | undefined): name is string => typeof name === "string"
         )
@@ -178,7 +170,7 @@ const InventoryTable = () => {
           },
         };
 
-        const key = (status as StatusKey) ?? "available"; // fallback key if status undefined
+        const key = (status as StatusKey) ?? "available";
         const { bg, text, dot } = statusStyles[key] || {
           bg: "bg-gray-100",
           text: "text-gray-600",
@@ -209,17 +201,6 @@ const InventoryTable = () => {
 
   return (
     <main className="relative w-full h-auto">
-      {/* Add a search input to use setSearchTerm */}
-      {/* <div className="mb-4">
-        <input
-          type="text"
-          placeholder="Search inventory"
-          value={searchTerm}
-          onChange={(e) => setSearchTerm(e.target.value)}
-          className="border rounded px-3 py-2 w-full"
-        />
-      </div> */}
-
       <GenericTable
         columns={columns}
         data={mappedProducts}
@@ -236,7 +217,7 @@ const InventoryTable = () => {
         enableSort={true}
         showFilter={true}
         tableType="inventory"
-        searchPlaceholder="search Inventory"
+        searchPlaceholder="Search Inventory"
         //@ts-ignore
         locations={locations}
         titleSection={
@@ -245,10 +226,13 @@ const InventoryTable = () => {
               Inventory
             </Text>
             <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-              <Text c="customPrimary.10"> {paginationData?.total}</Text>
+              <Text c="customPrimary.10">
+                {paginationData?.total ?? mappedProducts.length}
+              </Text>
             </div>
           </div>
         }
+        emptyStateMessage="No products found matching your filters."
       />
     </main>
   );
