@@ -146,7 +146,7 @@ const SalesProcessingReportPage = () => {
 
       const storeName = selectedStore?.name || "All Stores";
       const title = "Sales Report";
-      const dateLine = `Date: ${formatDate(startDate)} - ${formatDate(endDate)}`;
+      const dateLine = `Date: ${formatDate(startDate, false)} - ${formatDate(endDate, false)}`;
 
       const didDrawPage = (data: any) => {
         if (!DRAW_PAGE_HEADER) return;
@@ -234,7 +234,7 @@ const SalesProcessingReportPage = () => {
         head: [["Order ID", "Date", "Customer", "Total Amount", "Status"]],
         body: allSales.map((s) => [
           s.orderId,
-          formatDate(s.date),
+          formatDate(s.date, false),
           s.customerName,
           formatAmount(s.totalAmount), // **no Naira sign**
           s.status,
@@ -322,7 +322,7 @@ const SalesProcessingReportPage = () => {
       allSales.forEach((s) => {
         lines.push([
           csvEscape(s.orderId),
-          csvEscape(formatDate(s.date)),
+          csvEscape(formatDate(s.date, false)),
           csvEscape(s.customerName),
           csvEscape(formatAmount(s.totalAmount)),
           csvEscape(s.status),
@@ -434,7 +434,7 @@ const SalesProcessingReportPage = () => {
           }}
         >
           <Text fw={500} size="sm" c="black">
-            {formatDate(startDate)} – {formatDate(endDate)}
+            {formatDate(startDate, false)} - {formatDate(endDate, false)}
           </Text>
         </Box>
       </div>,

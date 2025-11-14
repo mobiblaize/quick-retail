@@ -145,7 +145,7 @@ const RetunsRefundsReportPage = () => {
 
       const storeName = selectedStore?.name || "All Stores";
       const title = "Returns & Refunds Report";
-      const dateLine = `Date: ${formatDate(startDate)} - ${formatDate(endDate)}`;
+      const dateLine = `Date: ${formatDate(startDate, false)} - ${formatDate(endDate, false)}`;
       const storeLine = `Store: ${storeName}`;
 
       const didDrawPage = (data: any) => {
@@ -253,7 +253,7 @@ const RetunsRefundsReportPage = () => {
         body: (allReturns || []).map((s) => [
           s.orderId,
           s.productId,
-          s.dateReturned ? formatDate(s.dateReturned) : "",
+          s.dateReturned ? formatDate(s.dateReturned, false) : "",
           s.customerName,
           s.productName,
           s.reason,
@@ -311,7 +311,7 @@ const RetunsRefundsReportPage = () => {
       // Header block
       lines.push([csvEscape("Report"), csvEscape("Returns & Refunds Report")].join(","));
       lines.push([csvEscape("Store"), csvEscape(storeName)].join(","));
-      lines.push([csvEscape("Date Range"), csvEscape(`${formatDate(startDate)} - ${formatDate(endDate)}`)].join(","));
+      lines.push([csvEscape("Date Range"), csvEscape(`${formatDate(startDate, false)} - ${formatDate(endDate, false)}`)].join(","));
       lines.push("");
 
       // Stats
@@ -352,7 +352,7 @@ const RetunsRefundsReportPage = () => {
         lines.push([
           csvEscape(r.orderId),
           csvEscape(r.productId),
-          csvEscape(r.dateReturned ? formatDate(r.dateReturned) : ""),
+          csvEscape(r.dateReturned ? formatDate(r.dateReturned, false) : ""),
           csvEscape(r.customerName),
           csvEscape(r.productName),
           csvEscape(r.reason),

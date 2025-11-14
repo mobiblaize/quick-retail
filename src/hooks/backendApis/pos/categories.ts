@@ -56,8 +56,8 @@ export const useFetchSubCatOfCat = (categoryId: number | string,  enabled: boole
   return useGetData(`pos/category/${categoryId}/subcategories`, {}, enabled);
 };
 
-export const useFetchSingleSubCatOfCat = (categoryId: number | string,  enabled: boolean = true) => {
-  return useGetData(`pos/category/${categoryId}/subcategory`, {}, enabled);
+export const useFetchSingleSubCatOfCat = (categoryId: number | string, options={}, enabled: boolean = true) => {
+  return useGetData(`pos/category/${categoryId}/subcategory`, options, enabled);
 };
 
 export const useDeleteSubCategory = (subCategoryId: number | string) => {

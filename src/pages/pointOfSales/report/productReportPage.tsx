@@ -146,7 +146,7 @@ const ProductReportPage = () => {
 
       const storeName = selectedStore?.name || "All Stores";
       const title = "Product Report";
-      const dateLine = `Date: ${formatDate(startDate)} - ${formatDate(endDate)}`;
+      const dateLine = `Date: ${formatDate(startDate, false)} - ${formatDate(endDate, false)}`;
 
       const didDrawPage = (data: any) => {
         if (!DRAW_PAGE_HEADER) return;
@@ -464,7 +464,7 @@ const ProductReportPage = () => {
           }}
         >
           <Text fw={500} size="sm" c="black">
-            {formatDate(startDate)} – {formatDate(endDate)}
+            {formatDate(startDate, false)} - {formatDate(endDate, false)}
           </Text>
         </Box>
       </div>,

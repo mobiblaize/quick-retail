@@ -1,5 +1,5 @@
 // utils/dateFormatter.ts
-export const formatDate = (dateString: string) => {
+export const formatDate = (dateString: string, showTime=true) => {
   const date = new Date(dateString);
 
   const datePart = date.toLocaleDateString("en-US", {
@@ -14,7 +14,7 @@ export const formatDate = (dateString: string) => {
     hour12: true,
   });
 
-  return `${datePart} ${timePart}`; // 👈 no "at", no seconds
+  return `${datePart}${showTime ? ` ${timePart}`: ''}`; // 👈 no "at", no seconds
 };
 
 
