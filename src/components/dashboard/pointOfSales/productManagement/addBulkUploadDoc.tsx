@@ -1,5 +1,5 @@
 import { useRef, useState, useEffect } from "react";
-import { CheckCircle, FileText, UploadCloud } from "lucide-react";
+import { CheckCircle, Delete, DeleteIcon, FileText, Trash2, UploadCloud } from "lucide-react";
 import csv from "../../../../assets/images/excelimg.png";
 import { showNotification } from "@mantine/notifications";
 import { useDownloadProductTemplate } from "../../../../hooks/backendApis/pos/products";
@@ -88,9 +88,10 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
   return (
     <div>
       {/* Instructions */}
-      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full">
+      <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full grid grid-cols-[2fr_1.5fr] gap-8 items-center ">
+        <div>
         <Title order={3} c="gray.8" mb="md">
-          FOLLOW THE INSTRUCTIONS TO UPLOAD BULK PRODUCTS
+          FOLLOW THE INSTRUCTIONS TO UPLOAD BULK PRODUCTS 
         </Title>
         <img
           src={csv}
@@ -99,13 +100,14 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
           height={400}
           className="w-full object-contain mb-6"
         />
+        </div>
         <List
           type="unordered"
           withPadding
           listStyleType="disc"
           spacing="md"
-          c="gray.7"
-          fz="sm"
+          c="#F16722"
+          fz="xl"
         >
           <List.Item>
             <Text component="span">
@@ -132,33 +134,40 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
 
       {/* Upload section */}
       <div className="bg-white p-6 rounded-lg shadow-sm border border-gray-200 w-full mt-12">
-        <Title order={3} fz="sm" fw={600} c="gray.8" mb="md">
+        <Title order={3} fz="md" fw={600} c="gray.9" mb="md">
           UPLOAD CSV FILE
         </Title>
 
         {!file ? (
           <div
-            className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center text-center cursor-pointer transition hover:bg-gray-50 w-full md:w-[20%]"
+            className="border-2 border-dashed border-gray-300 rounded-md p-6 flex flex-col items-center justify-center text-center cursor-pointer transition hover:bg-gray-50 w-full"
             onClick={handleClickUpload}
           >
             <UploadCloud className="h-8 w-8 text-gray-400 mb-2" />
-            <Text fz="sm" c="orange.6" fw={500}>
+            <div className="flex gap-1"><Text fz="sm" c="orange.6" fw={500}>
               Click to upload
             </Text>
             <Text fz="sm" c="gray.5">
               or drag and drop
             </Text>
-            <Text fz="xs" c="gray.4" mt={4}>
+            </div>
+            <Text fz="xs" c="gray.5" mt={4}>
               CSV, XLSX (max. 4MB)
             </Text>
           </div>
         ) : (
-          <div className="flex items-center gap-4 border border-gray-200 rounded-md px-4 py-3 bg-gray-50 w-[30%]">
+          <div className="flex items-center gap-4 border border-gray-200 rounded-md px-4 py-3 bg-gray-50 w-full">
+            <div className="p-2">
             <FileText className="text-orange-500 w-6 h-6" />
+            </div>
             <div className="flex-1">
+              <div className="flex justify-between">
               <Text fz="sm" fw={500} c="gray.8">
                 {file.name}
               </Text>
+              <Trash2 className="text-gray-500 w-5 h-5" />
+
+              </div>
 
               <Text fz="xs" c="gray.5">
                 {(file.size / (1024 * 1024)).toFixed(1)} MB

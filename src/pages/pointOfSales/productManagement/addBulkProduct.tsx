@@ -18,42 +18,7 @@ const AddBulkProduct: React.FC = () => {
   const navigate = useNavigate();
 
   const handleSubmit = () => {
-    if (!file) {
-      showNotification({
-        title: "Missing file",
-        message: "Please upload a file first.",
-        color: "red",
-        icon: <IconX />,
-      });
-      return;
-    }
-
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("type", "variant");
-
-    createBulkProduct(formData, {
-      onSuccess: (res: any) => {
-        // Extract uploaded product count from response (if available)
-        const count = res?.data?.uploaded_count || 50; // fallback for demo
-        setUploadedCount(count);
-        setSuccessModalOpen(true);
-      },
-      onError: (err: any) => {
-        console.error("Upload failed", err);
-        const errorMsg =
-          err?.response?.data?.errors?.file?.[0] ||
-          err?.response?.data?.message ||
-          "Upload failed. Please try again.";
-
-        showNotification({
-          title: "Upload Failed",
-          message: errorMsg,
-          color: "red",
-          icon: <IconX />,
-        });
-      },
-    });
+    navigate("/dashboard/product-management/view-bulk")
   };
 
   const handleBack = () => {
@@ -100,9 +65,9 @@ const AddBulkProduct: React.FC = () => {
           variant="filled-primary"
           onClick={handleSubmit}
           loading={isPending}
-          style={{ width: 150 }}
+          style={{ width: 150, opacity: !file ? 0.5 : 1 }}
         >
-          Next
+          Upload
         </Button>
       </div>,
     ];
