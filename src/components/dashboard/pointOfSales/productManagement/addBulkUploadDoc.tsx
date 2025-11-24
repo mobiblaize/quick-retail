@@ -1,10 +1,10 @@
 import { useRef, useState, useEffect } from "react";
-import { CheckCircle, Delete, DeleteIcon, FileText, Trash2, UploadCloud } from "lucide-react";
+import { CheckCircle, FileText, UploadCloud } from "lucide-react";
 import csv from "../../../../assets/images/excelimg.png";
 import { showNotification } from "@mantine/notifications";
 import { useDownloadProductTemplate } from "../../../../hooks/backendApis/pos/products";
 import { IconX } from "@tabler/icons-react";
-import { Anchor, Box, List, Progress, Text, Title } from "@mantine/core";
+import { Anchor, Box, List, Progress, Text, Title, Loader } from "@mantine/core";
 
 type Props = {
   file: File | null;
@@ -16,7 +16,7 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
   const [error, setError] = useState<string | null>(null);
   const [uploadProgress, setUploadProgress] = useState<number>(0);
 
-  const { mutate: downloadTemplate } = useDownloadProductTemplate("variant");
+  const { mutate: downloadTemplate, isPending: isDownloading } = useDownloadProductTemplate("variant");
 
   const handleDownload = () => {
     downloadTemplate(undefined, {
@@ -29,6 +29,12 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
         a.click();
         a.remove();
         window.URL.revokeObjectURL(url);
+        
+        showNotification({
+          title: "Download Successful",
+          message: "CSV template downloaded successfully",
+          color: "green",
+        });
       },
       onError: () => {
         showNotification({
@@ -118,8 +124,23 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
                 underline="always"
                 c="blue.6"
                 fw={500}
+                disabled={isDownloading}
+                style={{ 
+                  opacity: isDownloading ? 0.6 : 1,
+                  cursor: isDownloading ? 'not-allowed' : 'pointer',
+                  display: 'inline-flex',
+                  alignItems: 'center',
+                  gap: '4px'
+                }}
               >
-                Download here
+                {isDownloading ? (
+                  <>
+                    <Loader size="xs" />
+                    Downloading...
+                  </>
+                ) : (
+                  'Download here'
+                )}
               </Anchor>
             </Text>
           </List.Item>
@@ -156,7 +177,7 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
             </Text>
           </div>
         ) : (
-          <div className="flex items-center gap-4 border border-gray-200 rounded-md px-4 py-3 bg-gray-50 w-full">
+          <div className="flex items-center gap-4 border border-gray-200 rounded-md px-4 py-3 bg-gray-50 w-full cursor-pointer" onClick={handleClickUpload}>
             <div className="p-2">
             <FileText className="text-orange-500 w-6 h-6" />
             </div>
@@ -165,7 +186,7 @@ const AddBulkUploadDoc: React.FC<Props> = ({ file, setFile }) => {
               <Text fz="sm" fw={500} c="gray.8">
                 {file.name}
               </Text>
-              <Trash2 className="text-gray-500 w-5 h-5" />
+              {/* <Trash2 className="text-gray-500 w-5 h-5" /> */}
 
               </div>
 
