@@ -231,7 +231,6 @@ import SettingsPage from "./pages/adminPages/settings/settingsPage";
 import ScrollToTop from "./components/General/scrollTop";
 import NotificationPage from "./pages/adminPages/notifications/notificationPage";
 import EditNewProduct from "./pages/pointOfSales/productManagement/EditNewProduct";
-import ValidationFailedUI from "./pages/pointOfSales/productManagement/ValidationFailedUI";
 // import AddVariableProductNew from "./components/dashboard/pointOfSales/productManagement/AddVariableProductNew";
 
 export default function App() {
@@ -287,7 +286,6 @@ export default function App() {
             element={<InventoryDetailsPage />}
           />
           <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
-          <Route path={ROUTES.viewBulk} element={<ValidationFailedUI />} />
           {/* <Route path={ROUTES.addVariableProduct} element={<AddVariableProductNew />} /> */}
           <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
           <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
