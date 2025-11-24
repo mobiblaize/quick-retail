@@ -18,7 +18,12 @@ interface AddNewStoreModalProps {
   setStore: React.Dispatch<React.SetStateAction<any>>;
 }
 
-const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) => {
+const EditStore = ({
+  opened,
+  onClose,
+  store,
+  setStore,
+}: AddNewStoreModalProps) => {
   const [isEnabled, setIsEnabled] = useState(false);
   const [name, setName] = useState("");
 
@@ -52,7 +57,9 @@ const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) 
       if (store.country_id) {
         setCountry(store.country_id.toString());
       } else {
-        const found = countriesData.data.find((c: any) => c.name === store.country);
+        const found = countriesData.data.find(
+          (c: any) => c.name === store.country
+        );
         if (found) setCountry(found.id.toString());
       }
     }
@@ -83,11 +90,23 @@ const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) 
   }, [store, citiesData]);
 
   const handleSubmit = () => {
+    const selectedCountryName =
+      countriesData?.data?.find((c: any) => c.id.toString() === country)
+        ?.name || store.country;
+
+    const selectedStateName =
+      statesData?.data?.find((s: any) => s.id.toString() === stateVal)?.name ||
+      store.state;
+
+    const selectedLgaName =
+      citiesData?.data?.find((c: any) => c.id.toString() === lga)?.name ||
+      store.lga;
+
     const payload = {
       name,
-      country: "", // ID as string
-      state: stateVal, // ID as string
-      lga: "", // ID as string
+      country: selectedCountryName, // ID as string
+      state: selectedStateName, // ID as string
+      lga: selectedLgaName, // ID as string
       address,
       is_active: isEnabled ? 1 : 0,
     };
@@ -100,26 +119,11 @@ const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) 
           color: "green",
         });
 
-        const selectedCountryName =
-          countriesData?.data?.find((c: any) => c.id.toString() === country)?.name || store.country;
-
-        const selectedStateName =
-          statesData?.data?.find((s: any) => s.id.toString() === stateVal)?.name || store.state;
-
-        const selectedLgaName =
-          citiesData?.data?.find((c: any) => c.id.toString() === lga)?.name || store.lga;
-
         // Update UI after success
         setStore((prev: any) => ({
           ...prev,
-          name,
-          country: selectedCountryName,
-          state: selectedStateName,
-          lga: selectedLgaName,
-          address,
-          is_active: isEnabled ? 1 : 0,
+          ...payload
         }));
-
         onClose();
       },
 
@@ -140,7 +144,9 @@ const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) 
         onClose={onClose}
         title={
           <div>
-            <Text size="1.5rem" fw={700}>Edit Store</Text>
+            <Text size="1.5rem" fw={700}>
+              Edit Store
+            </Text>
             <Text mt="5">Edit store details below.</Text>
           </div>
         }
@@ -162,10 +168,14 @@ const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) 
 
         <div className="flex flex-col space-y-6 mt-4">
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-
             <div>
               <label className="mb-1.5 block">Store Name</label>
-              <FormInput value={name} onChange={setName} type="text" paddingY="6px" />
+              <FormInput
+                value={name}
+                onChange={setName}
+                type="text"
+                paddingY="6px"
+              />
             </div>
 
             <Dropdown
@@ -214,16 +224,29 @@ const EditStore = ({ opened, onClose, store, setStore }: AddNewStoreModalProps) 
 
             <div className="col-span-2">
               <label className="mb-1.5 block">Address</label>
-              <FormInput value={address} onChange={setAddress} type="text" paddingY="6px" />
+              <FormInput
+                value={address}
+                onChange={setAddress}
+                type="text"
+                paddingY="6px"
+              />
             </div>
           </div>
 
           <div className="grid grid-cols-2 gap-4 mt-4">
-            <Button variant="outline-primary" onClick={onClose} style={{ border: "1px solid #F16722", color: "#F16722" }}>
+            <Button
+              variant="outline-primary"
+              onClick={onClose}
+              style={{ border: "1px solid #F16722", color: "#F16722" }}
+            >
               Cancel
             </Button>
 
-            <Button variant="filled-primary" loading={isPending} onClick={handleSubmit}>
+            <Button
+              variant="filled-primary"
+              loading={isPending}
+              onClick={handleSubmit}
+            >
               Save Changes
             </Button>
           </div>
