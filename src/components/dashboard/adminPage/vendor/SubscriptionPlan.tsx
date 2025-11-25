@@ -5,7 +5,6 @@ import { useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import {
-  billingType,
   billingTypeStore2,
   billingTypeStore,
   selectedApp,

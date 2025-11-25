@@ -18,7 +18,6 @@ import {
   totalPrice,
   selectedSubs,
   seatCount,
-  billingTypeStore2,
 } from "../../../store/subscriptionStore";
 import { notifications } from "@mantine/notifications";
 
@@ -27,7 +26,6 @@ const SubscriptionPlanCard = ({ data }: any) => {
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
   const setTotalPrice = useSetAtom(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
-  const billingType2 = useAtomValue(billingTypeStore2);
   const [seatInfoOpen, setSeatInfoOpen] = useState(false); // This state will now be used
 
   const isChecked = selectedSub.some((item: any) => item.id === data.id);
