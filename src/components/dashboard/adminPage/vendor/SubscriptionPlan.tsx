@@ -6,6 +6,7 @@ import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import {
   billingType,
+  billingTypeStore2,
   billingTypeStore,
   selectedApp,
   selectedSubs,
@@ -26,7 +27,7 @@ const subscriptionPlan = [
 ];
 
 const SubscriptionPlan = () => {
-  const activePlan = useAtomValue(billingTypeStore);
+  const activePlan = useAtomValue(billingTypeStore2);
   const setActivePlan = useSetAtom(billingTypeStore);
   const [selectedApps, setSelectedApps] = useAtom(selectedApp);
   const totalPriceValue = useAtomValue(totalPrice);
