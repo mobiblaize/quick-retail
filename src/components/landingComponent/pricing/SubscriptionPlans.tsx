@@ -298,7 +298,7 @@ import {
 } from "@mantine/core"; // Import Modal
 import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { HelpCircle } from "lucide-react";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import {
   billingTypeStore,
   totalPrice,
@@ -323,7 +323,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
     data?.application?.name === "Point of Sales Management System";
   const shouldBeDisabled = posIsSelected && !thisIsPOS;
 
-  const recalcTotal = (subs: any[]) => {
+  const recalcTotal = useCallback((subs: any[]) => {
     const total = subs.reduce(
       (sum, item) =>
         sum +
@@ -332,7 +332,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
       0
     );
     setTotalPrice(total);
-  };
+  }, [adminSeat, setTotalPrice]);
 
   useEffect(() => {
     validateSeatChange();
@@ -371,7 +371,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
   useEffect(() => {
     recalcTotal(selectedSub);
-  }, [billingType, selectedSub]); // Removed recalcTotal from dependencies
+  }, [billingType, selectedSub, recalcTotal]);
 
   return (
     <Card
