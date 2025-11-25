@@ -29,7 +29,7 @@ const Login = () => {
 
   const { mutateAsync: login, isPending } = usePostData("auth/signin/login");
   const {
-    mutateAsync: getUser,
+    // mutateAsync: getUser,
     isPending: isUserPending,
     // data: userData,
   } = usePostData("auth/signin/user-info");
@@ -78,16 +78,16 @@ const Login = () => {
     }
   };
 
-  const handleGetUser = async () => {
-    const payload = {
-      email: form.values.email,
-    };
-    try {
-      await getUser(payload);
-    } catch (error) {
-      console.error("Get user error:", error);
-    }
-  };
+  // const handleGetUser = async () => {
+  //   const payload = {
+  //     email: form.values.email,
+  //   };
+  //   try {
+  //     await getUser(payload);
+  //   } catch (error) {
+  //     console.error("Get user error:", error);
+  //   }
+  // };
 
   return (
     <AuthLayout image={placeholderImage}>
@@ -115,7 +115,7 @@ const Login = () => {
           <p className="text-gray-400 text-sm font-normal mb-1">
               Welcome Back,
             </p>
-          <h1 className="text-[#1D2739] text-[32px] font-semibold ">Login to Quick Retail</h1></div>
+          <h3 className="text-[#1D2739] text-[32px] font-[500] font-[DM Sans] ">Login to Quick Retail</h3></div>
         {/* Form */}
         <form
           onSubmit={form.onSubmit(handleLogin)}
@@ -129,11 +129,6 @@ const Login = () => {
             radius="md"
             withAsterisk
             disabled={isUserPending}
-            onBlur={() => {
-              if (form.values.email) {
-                handleGetUser();
-              }
-            }}
             classNames={{ label: "text-[14px] text-[#222] font-medium" }}
             styles={{
               input: {

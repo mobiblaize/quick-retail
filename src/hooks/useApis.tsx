@@ -64,6 +64,16 @@ export const useUploadData = (url: string) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      
+      // Check if response indicates an error
+      if (response.data?.error === true) {
+        throw {
+          response: {
+            data: response.data
+          }
+        };
+      }
+      
       return response.data;
     },
   });
@@ -163,8 +173,9 @@ export const useGetData = (url: string, options?: any, enabled?: boolean) => {
 
   return {
     ...query,
-    // enabled,
-    isLoading: query.isLoading && !query.isFetching,
+    // Use isPending for React Query v5 (replaces isLoading)
+    // isPending is true when query has no data and is currently fetching
+    isLoading: query.isPending,
   };
 };
 
@@ -184,7 +195,8 @@ export const useFetchData = (url: string, options?: any) => {
 
   return {
     ...query,
-    isLoading: query.isFetching || query.isLoading
+    // Use isPending for React Query v5 (replaces isLoading)
+    isLoading: query.isPending,
   };
 };
 
@@ -198,7 +210,11 @@ export const useFetchPostData = (url: string, options: any) => {
     },
   });
 
-  return { ...query, isLoading: query.isFetching || query.isLoading };
+  return {
+    ...query,
+    // Use isPending for React Query v5 (replaces isLoading)
+    isLoading: query.isPending,
+  };
 };
 
 export const useLazyGetData = (url: string) => {

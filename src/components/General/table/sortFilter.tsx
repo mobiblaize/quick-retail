@@ -1,5 +1,6 @@
 import { Menu, Button, Box, Text } from "@mantine/core";
 import { ChevronDown } from "lucide-react";
+import { useState } from "react";
 
 interface SortFilterProps {
   onSortChange: (sortBy: string) => void;
@@ -8,6 +9,8 @@ interface SortFilterProps {
 }
 
 const SortFilter = ({ onSortChange, activeSort, sortOptions }: SortFilterProps) => {
+  const [active, setActive] = useState(activeSort);
+  
   const defaultSortOptions = [
     { label: "All", key: "" },
     { label: "Recent", key: "recent" },
@@ -41,18 +44,21 @@ const SortFilter = ({ onSortChange, activeSort, sortOptions }: SortFilterProps) 
               },
             }}
           >
-            <Text size="md" c="#000" fw={300}>{activeSort || "All"}</Text>
+            <Text size="md" c="#000" fw={300}>{active || "All"}</Text>
           </Button>
         </Menu.Target>
         <Menu.Dropdown style={{ minWidth: "120px" }}>
           {optionsToUse.map((option) => (
             <Menu.Item
               key={option.key}
-              onClick={() => onSortChange(option.key)}
+              onClick={() => {
+                onSortChange(option.key);
+                setActive(option.key);
+              }}
               styles={{
                 item: {
                   backgroundColor:
-                    activeSort === option.key
+                    active === option.key
                       ? "var(--mantine-color-gray-1)"
                       : undefined,
                 },

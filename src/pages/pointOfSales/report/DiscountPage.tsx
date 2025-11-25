@@ -153,7 +153,7 @@ const DiscountReportPage = () => {
 
       const storeName = selectedStore?.name || "All Stores";
       const title = "Discount Report";
-      const dateLine = `Date: ${formatDate(startDate)} - ${formatDate(endDate)}`;
+      const dateLine = `Date: ${formatDate(startDate, false)} - ${formatDate(endDate, false)}`;
       const storeLine = `Store: ${storeName}`;
 
       const didDrawPage = (data: any) => {
@@ -231,8 +231,8 @@ const DiscountReportPage = () => {
           d.name,
           formatPercent(d.percentOff),
           formatAmount(d.priceOff),
-          d.dateFrom ? formatDate(d.dateFrom) : "",
-          d.dateTo ? formatDate(d.dateTo) : "",
+          d.dateFrom ? formatDate(d.dateFrom, false) : "",
+          d.dateTo ? formatDate(d.dateTo, false) : "",
           String(asNumber(d.redemption)),
           d.status,
         ]),
@@ -289,7 +289,7 @@ const DiscountReportPage = () => {
       // Header block with report title, store, and date range
       lines.push([csvEscape("Report"), csvEscape("Discount Report")].join(","));
       lines.push([csvEscape("Store"), csvEscape(storeName)].join(","));
-      lines.push([csvEscape("Date Range"), csvEscape(`${formatDate(startDate)} - ${formatDate(endDate)}`)].join(","));
+      lines.push([csvEscape("Date Range"), csvEscape(`${formatDate(startDate, false)} - ${formatDate(endDate, false)}`)].join(","));
       lines.push(""); // blank line
 
       // Stats
@@ -314,8 +314,8 @@ const DiscountReportPage = () => {
           csvEscape(d.name),
           csvEscape(formatPercent(d.percentOff)),
           csvEscape(formatAmount(d.priceOff)),
-          csvEscape(d.dateFrom ? formatDate(d.dateFrom) : ""),
-          csvEscape(d.dateTo ? formatDate(d.dateTo) : ""),
+          csvEscape(d.dateFrom ? formatDate(d.dateFrom, false) : ""),
+          csvEscape(d.dateTo ? formatDate(d.dateTo, false) : ""),
           csvEscape(asNumber(d.redemption)),
           csvEscape(d.status),
         ].join(","));
@@ -430,7 +430,7 @@ const DiscountReportPage = () => {
           }}
         >
           <Text fw={500} size="sm" c="black">
-            {formatDate(startDate)} – {formatDate(endDate)}
+            {formatDate(startDate, false)} – {formatDate(endDate, false)}
           </Text>
         </Box>
       </div>,

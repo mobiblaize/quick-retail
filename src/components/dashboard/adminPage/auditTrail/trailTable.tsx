@@ -123,8 +123,7 @@ TrailTableProps) {
       ),
     },
   ];
-  console.log(paginationData);
-
+  
   // Compute unique roles and modules for filters
   const roles = Array.from(
     new Set(

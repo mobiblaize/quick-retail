@@ -126,7 +126,7 @@ interface ProfileHeaderProps {
 }
 
 export default function ViewHeader({ profile }: ProfileHeaderProps) {
-  const { profile_picture, firstname, lastname, email, store_name, roles, causer_id } =
+  const { profile_picture, firstname, lastname, email, store_name, roles, } =
     profile;
   const { mutate: updatePhoto } = useFetchPhoto();
   const fileInputRef = useRef<HTMLInputElement | null>(null);
@@ -225,7 +225,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
           <Stack gap={6}>
             {/* top row: ID pill and role pill */}
             <Group gap="sm">
-              <Box
+              {/* <Box
                 component="div"
                 style={{
                   backgroundColor: "#FFECE5",
@@ -237,7 +237,7 @@ export default function ViewHeader({ profile }: ProfileHeaderProps) {
                 }}
               >
                 User ID: #{causer_id}
-              </Box>
+              </Box> */}
 
               <Box
                 component="div"

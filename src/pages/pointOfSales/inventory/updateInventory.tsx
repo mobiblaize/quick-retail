@@ -74,7 +74,7 @@ const UpdateInventory = () => {
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
-          Trigger Reorder
+          Update Inventory
         </Text>
       </div>,
     ];

@@ -1,12 +1,13 @@
 import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core";
-import { MoreVertical } from "lucide-react";
+import { Check, MoreVertical, X } from "lucide-react";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
 import DeleteProduct from "../categories/modals/deleteProduct";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDeleteProuct } from "../../../../hooks/backendApis/pos/products";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
 import { FilterValues } from "../../../General/table/reuseableFilter";
+import { showNotification } from "@mantine/notifications";
 
 interface ApiProduct {
   id: string;
@@ -65,12 +66,13 @@ export default function ProductTable({
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
+  const [localProducts, setLocalProducts] = useState<ApiProduct[]>(products);
 
-  const handleDelete = async () => {
-    if (!selectedId) return;
-    await deleteMutation.mutateAsync();
-    setIsDeleteOpen(false);
-  };
+  // const handleDelete = async () => {
+  //   if (!selectedId) return;
+  //   await deleteMutation.mutateAsync();
+  //   setIsDeleteOpen(false);
+  // };
 
   const formatPrice = (price: string) =>
     `₦ ${Number.parseFloat(price).toLocaleString()}`;
@@ -104,6 +106,42 @@ export default function ProductTable({
     )
   );
   
+  useEffect(() => {
+  setLocalProducts(products);
+}, [products]);
+
+const handleDelete = async () => {
+  if (!selectedId) return;
+
+  try {
+    await deleteMutation.mutateAsync();
+
+    // Remove the deleted product from the local list immediately
+    setLocalProducts((prev) =>
+      prev.filter((item) => item.variationID !== selectedId)
+    );
+
+    // Close modal
+    setIsDeleteOpen(false);
+
+    // ✅ Show success toast
+    showNotification({
+      title: "Product Deleted",
+      message: "The product has been removed successfully.",
+      color: "green",
+      icon: <Check size={16} />,
+    });
+  } catch (error) {
+    // use the caught error to avoid unused variable linting and aid debugging
+    console.error(error);
+    showNotification({
+      title: "Deletion Failed",
+      message: "An error occurred while deleting the product.",
+      color: "red",
+      icon: <X size={16} />,
+    });
+  }
+};
 
   const columns = [
     {
@@ -255,7 +293,7 @@ export default function ProductTable({
       <GenericTable
         enableSearch ={true}
        enableSort={true}
-        data={products}
+        data={localProducts}
         isLoading={isLoading}
         paginationData={paginationData}
         onPageChange={onPageChange}

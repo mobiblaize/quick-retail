@@ -15,29 +15,30 @@ interface TransactionOverviewProps {
   data: TransactionData;
   isLoading: boolean;
   onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
+  onReset: () => void; // ✅ new prop
 }
 
 const TransactionOverview: React.FC<TransactionOverviewProps> = ({
   data,
   onDateRangeChange,
-  // isLoading,
+  onReset,
 }) => {
   const currencySymbol = "₦";
 
-  const initialDateRange = {
+  const [dateRange, setDateRange] = useState({
     start_date: "",
     end_date: "",
-  };
+  });
 
-  const [dateRange, setDateRange] = useState(initialDateRange);
-
-  // 🔹 Reset filter
+  // 🔹 Reset filter instantly
   const handleReset = () => {
-    setDateRange(initialDateRange);
+    const clearedRange = { start_date: "", end_date: "" };
+    setDateRange(clearedRange);
     onDateRangeChange({ startDate: "", endDate: "" });
+    onReset(); // ✅ tell parent to reset table data
   };
 
-  // 🔹 Handle date change
+  // 🔹 Handle date filter change
   const handleDateFilterChange = (dates: {
     startDate: Date | null;
     endDate: Date | null;
@@ -53,14 +54,10 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
     onDateRangeChange({ startDate: start_date, endDate: end_date });
   };
 
-  // 🔹 Format sales value
   const formattedValue = data?.total_transaction_value
-    ? `${currencySymbol}${Number(
-        data.total_transaction_value
-      ).toLocaleString()}`
+    ? `${currencySymbol}${Number(data.total_transaction_value).toLocaleString()}`
     : `${currencySymbol}0`;
 
-  // 🔹 Card data
   const cards = [
     {
       title: "TOTAL TRANSACTION VALUE",
@@ -84,7 +81,6 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
 
   return (
     <main className="w-full h-auto overflow-auto px-6 py-8 rounded-lg bg-white">
-      {/* Header */}
       <header className="flex flex-col sm:flex-row sm:justify-between sm:items-center mb-4">
         <div className="flex flex-col mb-3 sm:mb-0">
           <Text size="xl" fw={500} c="textSecondary.9">
@@ -96,6 +92,7 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
         <div className="flex items-center gap-3">
           <Group>
             <DateFilterMenu
+              key={`${dateRange.start_date}-${dateRange.end_date}`}
               onDateFilterChange={handleDateFilterChange}
               startDate={dateRange.start_date}
               endDate={dateRange.end_date}
@@ -110,18 +107,13 @@ const TransactionOverview: React.FC<TransactionOverviewProps> = ({
         </div>
       </header>
 
-      {/* Cards */}
       <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
         {cards.map((card, index) => (
           <AnalyticsCard
             key={index}
             title={card.title}
             value={card.value}
-            icon={
-              <div>
-                <img src={card.icon} alt={card.altText} />
-              </div>
-            }
+            icon={<img src={card.icon} alt={card.altText} />}
             iconColor={card.iconColor}
             textColor={card.textColor}
             cardBgColor={card.cardBgColor}

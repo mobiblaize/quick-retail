@@ -1,4 +1,3 @@
-// components/SalesOverview.tsx
 import { Button, Group, Text } from "@mantine/core";
 import AnalyticsCard from "../../../General/card";
 import dollar from "../../../../assets/images/orangeNaira.png";
@@ -17,15 +16,15 @@ interface TransactionOverviewProps {
   data: TransactionData;
   isLoading: boolean;
   onDateRangeChange: (range: { startDate: string; endDate: string }) => void;
-  startDate?: string
-  endDate?: string
+  startDate?: string;
+  endDate?: string;
 }
 
 const ProductOverview: React.FC<TransactionOverviewProps> = ({
   data,
   onDateRangeChange,
   startDate,
-  endDate
+  endDate,
 }) => {
   const currencySymbol = "₦";
   const initialDateRange = {
@@ -35,9 +34,11 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 
   const [dateRange, setDateRange] = useState(initialDateRange);
 
-  // 🔹 Reset filter
+  // 🔹 Reset filter — now calls API correctly
   const handleReset = () => {
-    setDateRange(initialDateRange);
+    setDateRange({ start_date: "", end_date: "" });
+
+    // ✅ Immediately trigger default data reload
     onDateRangeChange({ startDate: "", endDate: "" });
   };
 
@@ -53,7 +54,11 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
       : "";
 
     setDateRange({ start_date, end_date });
-    onDateRangeChange({ startDate: start_date, endDate: end_date });
+
+    // 🔹 If both selected, fetch filtered data
+    if (start_date && end_date) {
+      onDateRangeChange({ startDate: start_date, endDate: end_date });
+    }
   };
 
   const formattedValue = data?.total_revenue
@@ -62,7 +67,7 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 
   const cards = [
     {
-      title: "TOTAL PRODUCT VALUE ",
+      title: "TOTAL PRODUCT VALUE",
       value: formattedValue,
       icon: dollar,
       iconColor: "#E17036",
@@ -110,13 +115,12 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
           </Group>
 
           {dateRange.start_date && dateRange.end_date && (
-            <Button onClick={handleReset} variant="outline">
+            <Button onClick={handleReset} variant="outline" color="orange">
               Reset
             </Button>
           )}
         </div>
       </header>
-
 
       <section className="flex md:flex-row flex-col gap-4 overflow-auto mt-2.5">
         {cards.map((card, index) => (
@@ -137,4 +141,3 @@ const ProductOverview: React.FC<TransactionOverviewProps> = ({
 };
 
 export default ProductOverview;
-

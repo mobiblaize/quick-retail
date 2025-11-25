@@ -37,8 +37,7 @@ export default function PaymentSuccessModal({
         <CheckCircle className="text-green-500 w-12 h-12 mb-4 animate-pulse" />
         <h2 className="text-lg font-semibold">Subscription Successful</h2>
         <p className="text-sm text-gray-500 mt-2 mb-4">
-          You have successfully changed your <b/> subscription plan. You can
-          choose to renew <b/> this plan or change plan later.
+          You have successfully updated your <b/> subscription plan. You can choose to renew<b/> or change your plan anytime later.
         </p>
 
         {reference && (

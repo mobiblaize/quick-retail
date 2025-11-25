@@ -1,8 +1,9 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import TanTable from "../../../General/table";
 import { ColumnDef } from "@tanstack/react-table";
-import { TableRowData } from "../../../../types";
-import {  Button, Loader, Text } from "@mantine/core";
-import { useEffect, useState } from "react";
+import { SortOption, TableRowData } from "../../../../types";
+import { Button, Loader, Text } from "@mantine/core";
+import { useEffect, useState, useMemo } from "react";
 import DeleteSubCategory from "./modals/deleteSubCategory";
 import { Link } from "react-router";
 import { ROUTES } from "../../../../constants/routes";
@@ -14,29 +15,88 @@ interface SubCategoriesTableProps {
   category: Array<any>;
   isLoading?: boolean;
   onDeleteSuccess?: () => void;
+  refetch: () => void;
 }
 
-const SubCategoryTable = ({ subCategories, category, isLoading}: SubCategoriesTableProps) => {
+const sortOptions: SortOption[] = [
+  { label: "All", key: "" },
+  { label: "Recent", key: "recent" },
+  { label: "Oldest", key: "oldest" },
+  { label: "A-Z", key: "a-z" },
+  { label: "Z-A", key: "z-a" }
+];
+
+const SubCategoryTable = ({ subCategories, category, isLoading, refetch }: SubCategoriesTableProps) => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
+  const [searchQuery, setSearchQuery] = useState("");
+  const [sortKey, setSortKey] = useState("");
   const deleteMutation = useDeleteSubCategory(selectedId ?? "");
+  
   const [localSubCategories, setLocalSubCategories] = useState(() =>
-  subCategories.map((subCat) => ({ ...subCat, category }))
-);
+    subCategories.map((subCat) => ({ ...subCat, category }))
+  );
 
-useEffect(() => {
-  setLocalSubCategories(subCategories.map((subCat) => ({ ...subCat, category })));
-}, [subCategories, category]);
+  useEffect(() => {
+    setLocalSubCategories(subCategories.map((subCat) => ({ ...subCat, category })));
+  }, [subCategories, category]);
 
   const handleOpenDelete = (id: string | number) => {
     setSelectedId(id);
     setIsDeleteOpen(true);
   };
-  const enhancedSubCategories = localSubCategories.map((subCat) => ({
-    ...subCat,
-    category,
-  }));
-  
+
+  // Enhanced subcategories with search and sort applied
+  const enhancedSubCategories = useMemo(() => {
+    let filtered = localSubCategories.map((subCat) => ({
+      ...subCat,
+      category,
+    }));
+
+    // Apply search filter
+    if (searchQuery.trim()) {
+      const query = searchQuery.toLowerCase();
+      filtered = filtered.filter((subCat) =>
+        subCat.name?.toLowerCase().includes(query)
+      );
+    }
+
+    // Apply sorting
+    if (sortKey) {
+      filtered = [...filtered].sort((a, b) => {
+        switch (sortKey) {
+          case "recent":
+            // Most recent first (newest to oldest)
+            return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+          
+          case "oldest":
+            // Oldest first
+            return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+          
+          case "a-z":
+            // Alphabetical A-Z
+            return (a.name || "").localeCompare(b.name || "");
+          
+          case "z-a":
+            // Alphabetical Z-A
+            return (b.name || "").localeCompare(a.name || "");
+          
+          default:
+            return 0;
+        }
+      });
+    }
+
+    return filtered;
+  }, [localSubCategories, category, searchQuery, sortKey]);
+
+  const handleSearchChange = (search: string) => {
+    setSearchQuery(search);
+  };
+
+  const handleSortChange = (sort: string) => {
+    setSortKey(sort);
+  };
 
   const handleDelete = async () => {
     if (!selectedId) return;
@@ -44,10 +104,7 @@ useEffect(() => {
     try {
       await deleteMutation.mutateAsync();
 
-      // ✅ Optimistically remove deleted item from the local state
-      setLocalSubCategories((prev) =>
-        prev.filter((item) => item.id !== selectedId)
-      );
+      refetch();
 
       notifications.show({
         title: "Sub-category Deleted!",
@@ -65,28 +122,8 @@ useEffect(() => {
       });
     }
   };
-  
+
   const columns: ColumnDef<TableRowData>[] = [
-    // {
-    //   id: "select",
-    //   header: ({ table }) => (
-    //     <input
-    //       type="checkbox"
-    //       checked={table.getIsAllRowsSelected()}
-    //       onChange={table.getToggleAllRowsSelectedHandler()}
-    //     />
-    //   ),
-    //   cell: ({ row }) => (
-    //     <input
-    //       type="checkbox"
-    //       checked={row.getIsSelected()}
-    //       onChange={row.getToggleSelectedHandler()}
-    //     />
-    //   ),
-    //   enableSorting: false,
-    //   enableColumnFilter: false,
-    //   size: 10,
-    // },
     {
       header: "Division",
       accessorKey: "name",
@@ -131,31 +168,27 @@ useEffect(() => {
             dateObj
           );
 
-          return <Text>{`${datePart}  ${timePart}`}</Text>; 
+          return <Text>{`${datePart}  ${timePart}`}</Text>;
         }
 
-    
         return <Text>Invalid date</Text>;
       },
     },
     {
       header: "",
-      accessorKey: "action",
+      accessorKey: "delete",
       cell: ({ row }) => (
-        //@ts-ignore
-        <Button bg="#FFEADF" onClick={() => handleOpenDelete(row.original.id)}>
+        <Button bg="#FFEADF" onClick={() => handleOpenDelete(row.original.id as any)}>
           <Text fw={500} c="red" className="cursor-pointer">
             Delete
           </Text>
         </Button>
       ),
     },
- 
     {
       header: "",
-      accessorKey: "action",
+      accessorKey: "view",
       cell: ({ row }) => (
-        
         <Link
           to={ROUTES.categoryCollection}
           state={{
@@ -169,37 +202,41 @@ useEffect(() => {
         </Link>
       ),
     }
-  ]
+  ];
+
   return (
     <main className="w-full h-auto py-6 rounded-lg bg-white">
-    {isLoading ? (
-  <div className="w-full h-[300px] flex items-center justify-center bg-white rounded-lg">
-    <Loader color="customPrimary.10" size="lg" />
-    <Text ml={10} size="md" c="dimmed">
-      Loading sub-categories...
-    </Text>
-  </div>
-) : (
-  <TanTable
-    columnData={columns}
-    data={enhancedSubCategories}
-    showSearch
-    showSortFilter
-    searchPlaceholder="Search categories"
-    length={8}
-    tableTitle={
-      <div className="flex gap-2.5">
-        <Text fw={500} size="xl" c="textSecondary.9">
-          All Sub-categories
-        </Text>
-        <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
-          <Text c="customPrimary.10">{subCategories.length}</Text>
+      {isLoading ? (
+        <div className="w-full h-[300px] flex items-center justify-center bg-white rounded-lg">
+          <Loader color="customPrimary.10" size="lg" />
+          <Text ml={10} size="md" c="dimmed">
+            Loading sub-categories...
+          </Text>
         </div>
-      </div>
-    }
-  />
-)}
-
+      ) : (
+        <TanTable
+          columnData={columns}
+          data={enhancedSubCategories}
+          showSearch
+          showSortFilter
+          sortOptions={sortOptions}
+          activeSort={sortKey}
+          onSearchChange={handleSearchChange}
+          onSortChange={handleSortChange}
+          searchPlaceholder="Search sub categories"
+          length={8}
+          tableTitle={
+            <div className="flex gap-2.5">
+              <Text fw={500} size="xl" c="textSecondary.9">
+                All Sub-categories
+              </Text>
+              <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-3">
+                <Text c="customPrimary.10">{enhancedSubCategories.length}</Text>
+              </div>
+            </div>
+          }
+        />
+      )}
 
       <DeleteSubCategory
         opened={isDeleteOpen}
@@ -210,6 +247,5 @@ useEffect(() => {
     </main>
   );
 };
-
 
 export default SubCategoryTable;

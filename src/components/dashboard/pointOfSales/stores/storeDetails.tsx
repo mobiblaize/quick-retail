@@ -107,15 +107,15 @@ const StoreDetails: React.FC<StoreDetailsProps> = ({ store }) => {
             </Text>
           </div>
           <div className="flex flex-col">
-            <Text fw={"500"}>State Lagos</Text>
+            <Text fw={"500"}>State</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {store.state}
+              {typeof store.state === 'string' ? store.state : 'N/A'}
             </Text>
           </div>
           <div className="flex flex-col">
             <Text fw={"500"}>Local Government Area</Text>
             <Text size="lg" c={"black"} fw={"400"}>
-              {store.lga}
+              {typeof store.lga === 'string' ? store.lga : 'N/A'}
             </Text>
           </div>
 
