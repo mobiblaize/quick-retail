@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
-import { useDeleteData, useFetchPostData, useGetData, useGetExportData, usePostData, usePutData, useUploadData,  } from "../../useApis";
+import { useCreateExportData, useDeleteData, useFetchPostData, useGetData, useGetExportData, usePostData, usePutData, useUploadData,  } from "../../useApis";
 import { defaultSalesAnalysis } from "../../../types";
 
   const defaultPayload = {
@@ -41,7 +42,11 @@ export const useCreateProduct = () => {
 };
 
 export const useCreateBulkProduct = () => {
-  return useUploadData("pos/product/bulk-upload");
+  return useUploadData("pos/product/process");
+}
+
+export const useDownloadBulkErrorReport = () => {
+  return useCreateExportData(`pos/product/error-report`);
 }
 
 export const useFetchAllProducts = (
@@ -63,12 +68,6 @@ export const useFetchProductOverview = (customPayload?: Partial<typeof defaultSa
   
     return useFetchPostData("pos/product/all", payload);
   };
-
-
-
-export const getAllLocation = () => {
-  return usePostData("");
-};
 
 export const useFetchAllLocations = (
   customPayload?: Partial<typeof defaultPayload>

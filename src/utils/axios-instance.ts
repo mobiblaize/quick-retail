@@ -50,7 +50,6 @@ const handleError = (error: any) => {
     notifications.show({
       color: "red",
       message: errorMessage,
-      // classNames: classes,
     });
 
     // Reset the flag after timeout
@@ -64,7 +63,9 @@ const handleError = (error: any) => {
     window.location.replace("/login");
   }
 
-  return Promise.reject(new Error(errorMessage));
+  // CRITICAL: Reject with the original error to preserve response data
+  // This maintains backward compatibility while allowing components to access error.response
+  return Promise.reject(error);
 };
 
 axiosInstance.interceptors.request.use(attachToken, Promise.reject);

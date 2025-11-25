@@ -64,6 +64,16 @@ export const useUploadData = (url: string) => {
           "Content-Type": "multipart/form-data",
         },
       });
+      
+      // Check if response indicates an error
+      if (response.data?.error === true) {
+        throw {
+          response: {
+            data: response.data
+          }
+        };
+      }
+      
       return response.data;
     },
   });
