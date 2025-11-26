@@ -7,10 +7,10 @@ import { useEffect, useState } from "react";
 
 const defaultFeatures = [
   "Point of sales management system",
-  "Finance management system",
-  "2 admin seats",
-  "Asset management system",
-  "Procurement management system",
+  // "Finance management system",
+  // "2 admin seats",
+  // "Asset management system",
+  // "Procurement management system",
 ];
 
 export default function SubscriptionComponent() {
