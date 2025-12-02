@@ -110,6 +110,18 @@ const EditStore = ({
       address,
       is_active: isEnabled ? 1 : 0,
     };
+    setStore((prev: any) => ({
+      ...prev,
+      name,
+      country: selectedCountryName,
+      state: selectedStateName,
+      lga: selectedLgaName,
+      country_id: country,
+      state_id: stateVal,
+      lga_id: lga,
+      address,
+      is_active: isEnabled ? 1 : 0,
+    }));
 
     editStore(payload, {
       onSuccess: () => {
@@ -122,7 +134,7 @@ const EditStore = ({
         // Update UI after success
         setStore((prev: any) => ({
           ...prev,
-          ...payload
+          ...payload,
         }));
         onClose();
       },
