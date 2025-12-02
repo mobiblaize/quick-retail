@@ -39,7 +39,7 @@ const slideVariants = {
 
 const StoreOrderContent: React.FC = () => {
   const location = useLocation();
-  const store = location.state?.store;
+  // const store = location.state?.store;
   const navigate = useNavigate();
   const { currentStep, prevStep } = useStoreOrder();
   const [storeData, setStoreData] = useState(location.state?.store);
@@ -151,7 +151,7 @@ const StoreOrderContent: React.FC = () => {
      <EditStore
         opened={isAddNewStoreOpen}
         onClose={() => setIsAddNewStoreOpen(false)}
-        store={store} 
+        store={storeData} 
         setStore={setStoreData}
       />
     <PageContainer subHeaders={getSubHeaders()}>

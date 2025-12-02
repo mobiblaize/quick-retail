@@ -5,12 +5,10 @@ import {
   Button,
   Group,
   Avatar,
-  FileButton,
   Stack,
   Text,
 } from "@mantine/core";
 import { motion } from "framer-motion";
-import { Edit } from "lucide-react";
 
 interface EditVendorProfileModalProps {
   opened: boolean;
@@ -21,7 +19,7 @@ interface EditVendorProfileModalProps {
     email?: string;
     companyName?: string;
     phoneNumber?: string;
-    avatar?: string;
+    localImage?: string;
   };
   onSave: (data: {
     firstName: string;
@@ -29,7 +27,7 @@ interface EditVendorProfileModalProps {
     email: string;
     companyName: string;
     phoneNumber: string;
-    avatar?: string;
+    localImage?: string;
   }) => void;
 }
 
@@ -44,7 +42,7 @@ export default function EditVendorProfileModal({
   const [email, setEmail] = useState("");
   const [companyName, setCompanyName] = useState("");
   const [phoneNumber, setPhoneNumber] = useState("");
-  const [avatar, setAvatar] = useState("");
+  const [localImage, setLocalImage] = useState("");
 
   // ✅ Load initial data when modal opens
   useEffect(() => {
@@ -54,16 +52,10 @@ export default function EditVendorProfileModal({
       setEmail(initialData.email || "");
       setCompanyName(initialData.companyName || "");
       setPhoneNumber(initialData.phoneNumber || "");
-      setAvatar(initialData.avatar || "");
+      setLocalImage(initialData.localImage || "");
     }
   }, [initialData]);
 
-  const handleFileChange = (file: File | null) => {
-    if (!file) return;
-    const reader = new FileReader();
-    reader.onload = (e) => setAvatar(e.target?.result as string);
-    reader.readAsDataURL(file);
-  };
 
   const handleSubmit = () => {
     onSave({
@@ -72,7 +64,7 @@ export default function EditVendorProfileModal({
       email,
       companyName,
       phoneNumber,
-      avatar,
+      localImage,
     });
     onClose();
   };
@@ -110,27 +102,13 @@ export default function EditVendorProfileModal({
           {/* Avatar Upload */}
           <div className="relative flex justify-start mb-2">
             <Avatar
-              src={avatar}
+              src={localImage}
               radius="100%"
               size={90}
               alt="Profile Picture"
               styles={{ root: { border: "2px solid #FF6B00" } }}
             />
-            <FileButton onChange={handleFileChange} accept="image/*">
-              {(props) => (
-                <Button
-                  {...props}
-                  radius="xl"
-                  variant="subtle"
-                  color="orange"
-                  size="compact-xs"
-                  className="!absolute bottom-1 right-[calc(90%-40px)] bg-white border border-orange-400 shadow-sm hover:bg-orange-50"
-                  p={4}
-                >
-                  <Edit size={14} color="#FF6B00" />
-                </Button>
-              )}
-            </FileButton>
+            
           </div>
 
           {/* Editable Name Fields */}
