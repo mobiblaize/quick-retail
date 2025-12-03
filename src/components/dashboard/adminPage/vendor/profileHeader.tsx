@@ -89,7 +89,7 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
                 variant="subtle"
                 color="orange"
                 size="compact"
-                className="!absolute top-20 right-2 bg-white border border-orange-400 shadow-sm hover:bg-orange-50 "
+                className="!absolute top-20 right-2 !bg-gray-50 border border-orange-400 shadow-sm hover:!bg-orange-900 "
                 p={4}
               >
                 <Edit size={24} color="#FF6B00" />

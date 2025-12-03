@@ -22,7 +22,11 @@ const slideVariants = {
     x: direction > 0 ? "100%" : "-100%",
     opacity: 0,
   }),
-  animate: { x: 0, opacity: 1, transition: { type: "tween" as const, duration: 0.3 } },
+  animate: {
+    x: 0,
+    opacity: 1,
+    transition: { type: "tween" as const, duration: 0.3 },
+  },
   exit: (direction: number) => ({
     x: direction > 0 ? "-100%" : "100%",
     opacity: 0,
@@ -68,9 +72,13 @@ const CreateOrderPageContent: React.FC = () => {
   // ---- Step navigation ----
   const { currentStep, nextStep, prevStep } = useOrderCreation();
   const handleBack = () =>
-    currentStep === OrderCreationStep.SEARCH_PRODUCT ? navigate(-1) : prevStep();
+    currentStep === OrderCreationStep.SEARCH_PRODUCT
+      ? navigate(-1)
+      : prevStep();
 
   const [isRedirecting, setIsRedirecting] = useState(false);
+  const [isConfirmingOrder, setIsConfirmingOrder] = useState(false);
+  const [isConfirmingPayment, setIsConfirmingPayment] = useState(false);
   const handleBack2 = () => {
     setIsRedirecting(true);
     setTimeout(() => {
@@ -132,11 +140,18 @@ const CreateOrderPageContent: React.FC = () => {
         if (!cancelled) {
           setBreakdown({
             originalAmount: Number(apiData?.originalAmount ?? 0),
-            subtotal: Number(apiData?.subtotal ?? apiData?.subTotal ?? apiData?.sub_total ?? 0),
+            subtotal: Number(
+              apiData?.subtotal ?? apiData?.subTotal ?? apiData?.sub_total ?? 0
+            ),
             discount: Number(apiData?.discount ?? 0),
             tax: Number(apiData?.taxValue ?? apiData?.tax ?? 0),
             total: Number(apiData?.total ?? 0),
-            itemCount: Number(apiData?.itemCount ?? parsed.length ?? paymentDetails.items.length ?? 0),
+            itemCount: Number(
+              apiData?.itemCount ??
+                parsed.length ??
+                paymentDetails.items.length ??
+                0
+            ),
             taxRate: Number(apiData?.taxRate ?? 7.5),
           });
         }
@@ -148,7 +163,12 @@ const CreateOrderPageContent: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [paymentDetails.customerId, itemsKey, postPaymentBreakdown, paymentDetails.items.length]);
+  }, [
+    paymentDetails.customerId,
+    itemsKey,
+    postPaymentBreakdown,
+    paymentDetails.items.length,
+  ]);
 
   // ---- Display helpers & fallbacks ----
   const formatCurrency = (n: number) => `₦ ${Number(n || 0).toLocaleString()}`;
@@ -164,8 +184,14 @@ const CreateOrderPageContent: React.FC = () => {
   );
 
   const localTaxRate = 7.5;
-  const localTax = useMemo(() => localSubtotal * (localTaxRate / 100), [localSubtotal]);
-  const localTotal = useMemo(() => localSubtotal + localTax, [localSubtotal, localTax]);
+  const localTax = useMemo(
+    () => localSubtotal * (localTaxRate / 100),
+    [localSubtotal]
+  );
+  const localTotal = useMemo(
+    () => localSubtotal + localTax,
+    [localSubtotal, localTax]
+  );
 
   const usingApi =
     breakdown.originalAmount > 0 ||
@@ -180,8 +206,10 @@ const CreateOrderPageContent: React.FC = () => {
     discount: usingApi ? breakdown.discount : 0,
     tax: usingApi ? breakdown.tax : localTax,
     total: usingApi ? breakdown.total : localTotal,
-    itemCount: usingApi ? (breakdown.itemCount || paymentDetails.items.length) : paymentDetails.items.length,
-    taxRate: usingApi ? (breakdown.taxRate || localTaxRate) : localTaxRate,
+    itemCount: usingApi
+      ? breakdown.itemCount || paymentDetails.items.length
+      : paymentDetails.items.length,
+    taxRate: usingApi ? breakdown.taxRate || localTaxRate : localTaxRate,
   };
 
   const paymentItems = [
@@ -190,7 +218,10 @@ const CreateOrderPageContent: React.FC = () => {
     { label: "Subtotal", amount: formatCurrency(effective.subtotal) },
     {
       label: "Discount",
-      amount: effective.discount > 0 ? `- ${formatCurrency(effective.discount)}` : formatCurrency(0),
+      amount:
+        effective.discount > 0
+          ? `- ${formatCurrency(effective.discount)}`
+          : formatCurrency(0),
     },
     // { label: `Tax (${effective.taxRate}% VAT)`, amount: formatCurrency(effective.tax) },
   ];
@@ -254,7 +285,8 @@ const CreateOrderPageContent: React.FC = () => {
       status,
       customerId: paymentDetails.customerId,
       payment_method: paymentDetails.method,
-      amount_collected: paymentDetails.method === "cash" ? paymentDetails.amount : "",
+      amount_collected:
+        paymentDetails.method === "cash" ? paymentDetails.amount : "",
       items: paymentDetails.items.map((item) => ({
         variationId: item.variationId || item.variationID,
         quantity: Number(item.quantity),
@@ -289,14 +321,12 @@ const CreateOrderPageContent: React.FC = () => {
   const updatePaymentDetails = useCallback(
     (
       updater:
-        | ((
-            prev: {
-              method: string;
-              amount: string;
-              items: any[];
-              customerId: string | null;
-            }
-          ) => {
+        | ((prev: {
+            method: string;
+            amount: string;
+            items: any[];
+            customerId: string | null;
+          }) => {
             method: string;
             amount: string;
             items: any[];
@@ -323,7 +353,10 @@ const CreateOrderPageContent: React.FC = () => {
   // ---- Headers & bottom buttons ----
   const getSubHeaders = () => {
     const backButton = (
-      <button onClick={handleBack} className="flex cursor-pointer gap-2 items-center">
+      <button
+        onClick={handleBack}
+        className="flex cursor-pointer gap-2 items-center"
+      >
         <ChevronLeft />
         <Text fw={500} c="black">
           Back
@@ -358,8 +391,13 @@ const CreateOrderPageContent: React.FC = () => {
             </Button>
             <Button
               variant="filled-primary"
-              onClick={() => isOrderValid && nextStep()}
-              disabled={!isOrderValid}
+              onClick={() => {
+                if (isOrderValid && !isConfirmingOrder) {
+                  setIsConfirmingOrder(true);
+                  nextStep();
+                }
+              }}
+              disabled={!isOrderValid || isConfirmingOrder}
               w={150}
               title={
                 !hasCustomer
@@ -394,8 +432,13 @@ const CreateOrderPageContent: React.FC = () => {
 
             <Button
               variant="filled-primary"
-              onClick={() => canConfirmPayment && handleSubmit("completed")}
-              disabled={!canConfirmPayment}
+              onClick={() => {
+                if (canConfirmPayment && !isConfirmingPayment) {
+                  setIsConfirmingPayment(true);
+                  handleSubmit("completed");
+                }
+              }}
+              disabled={!canConfirmPayment || isConfirmingPayment}
               title={
                 !hasCustomer
                   ? "Select a customer"
@@ -403,7 +446,8 @@ const CreateOrderPageContent: React.FC = () => {
                   ? "Add at least one product with quantity"
                   : !paymentDetails.method
                   ? "Choose a payment method"
-                  : paymentDetails.method === "cash" && numericAmount < numericTotal
+                  : paymentDetails.method === "cash" &&
+                    numericAmount < numericTotal
                   ? "Collected cash cannot be less than total"
                   : undefined
               }
@@ -414,7 +458,10 @@ const CreateOrderPageContent: React.FC = () => {
         ];
       case OrderCreationStep.CUSTOMER_RECEIPT:
         return [
-          <div key="customer-receipt-buttons" className="flex gap-4 justify-end">
+          <div
+            key="customer-receipt-buttons"
+            className="flex gap-4 justify-end"
+          >
             <Button variant="filled-primary">Download Receipt</Button>
           </div>,
         ];
@@ -445,7 +492,10 @@ const CreateOrderPageContent: React.FC = () => {
               orderId={orderId}
               // @ts-ignore
               onCustomerSelected={(c: any) =>
-                updatePaymentDetails((prev) => ({ ...prev, customerId: c?.customerID ?? null }))
+                updatePaymentDetails((prev) => ({
+                  ...prev,
+                  customerId: c?.customerID ?? null,
+                }))
               }
               onItemsChange={(items: any[]) =>
                 updatePaymentDetails((prev) => ({ ...prev, items }))
@@ -498,13 +548,18 @@ const CreateOrderPageContent: React.FC = () => {
   if (isRedirecting) {
     return (
       <div className="flex h-screen items-center justify-center bg-white">
-        <Text fw={500} size="lg">Redirecting...</Text>
+        <Text fw={500} size="lg">
+          Redirecting...
+        </Text>
       </div>
     );
   }
 
   return (
-    <PageContainer subHeaders={getSubHeaders()} subHeaderButtom={getBottomButtons()}>
+    <PageContainer
+      subHeaders={getSubHeaders()}
+      subHeaderButtom={getBottomButtons()}
+    >
       <AnimatePresence mode="wait">{renderStepContent()}</AnimatePresence>
     </PageContainer>
   );
