@@ -13,6 +13,7 @@ import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
 import { useUserStore } from "../../hooks/useUserStore";
+import { getFirstAccessibleRoute } from "../../utils/routeUtils";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -81,8 +82,20 @@ const Login = () => {
         color: "green",
       });
 
-      // navigate("/dashboard");
-      window.location.replace("/dashboard");
+      // Smart redirect: Find the first route the user has access to
+      const firstAccessibleRoute = getFirstAccessibleRoute(
+        permissions || [],
+        user.roles || []
+      );
+
+      console.log("Redirecting to:", firstAccessibleRoute);
+      
+      // Use React Router navigate for smooth SPA navigation
+      // Store is already updated, so components will read fresh data on mount
+      // Use setTimeout to ensure store updates are flushed before navigation
+      setTimeout(() => {
+        navigate(firstAccessibleRoute);
+      }, 0);
     } catch (error) {
       console.error("Login error:", error);
     }

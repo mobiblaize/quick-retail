@@ -1,7 +1,9 @@
 import { Button } from "@mantine/core";
 import { ShieldAlert } from "lucide-react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { ROUTES } from "../../constants/routes";
+import { useUserStore } from "../../hooks/useUserStore";
+import { getFirstAccessibleRoute, getRouteLabel } from "../../utils/routeUtils";
 
 interface UnauthorizedProps {
   message?: string;
@@ -17,6 +19,22 @@ const Unauthorized = ({
   showBackButton = true,
 }: UnauthorizedProps) => {
   const navigate = useNavigate();
+  const location = useLocation();
+  const { user, permissions } = useUserStore();
+
+  // Find the first accessible route for this user
+  const firstAccessibleRoute = getFirstAccessibleRoute(
+    permissions,
+    user?.roles || []
+  );
+
+  // Get the menu label for the accessible route
+  const routeLabel = getRouteLabel(firstAccessibleRoute);
+
+  // Check if user is already on that route or has no accessible routes
+  const isOnFirstAccessibleRoute = location.pathname === firstAccessibleRoute;
+  const hasAccessibleRoutes = firstAccessibleRoute !== ROUTES.dashboard || 
+    permissions.some(p => p.name === "view_dashboard");
 
   return (
     <div className="flex flex-col items-center justify-center min-h-[calc(100vh-200px)] px-4">
@@ -56,13 +74,15 @@ const Unauthorized = ({
               Go Back
             </Button>
           )}
-          <Button
-            size="md"
-            onClick={() => navigate(ROUTES.dashboard)}
-            className="min-w-[150px]"
-          >
-            Go to Dashboard
-          </Button>
+          {hasAccessibleRoutes && !isOnFirstAccessibleRoute && (
+            <Button
+              size="md"
+              onClick={() => navigate(firstAccessibleRoute)}
+              className="min-w-[150px]"
+            >
+              Go to {routeLabel}
+            </Button>
+          )}
         </div>
       </div>
     </div>
