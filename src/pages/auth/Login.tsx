@@ -53,11 +53,21 @@ const Login = () => {
       const res = await login(payload);
       if (!res?.data) return;
 
-      const { accessToken, user } = res.data;
+      const { accessToken, user, permissions } = res.data;
+      
+      // Store user data
       setUser(user);
+      
+      // Store permissions using the store's setPermissions method
+      const setPermissions = useUserStore.getState().setPermissions;
+      if (permissions) {
+        setPermissions(permissions);
+      }
+      
       const tenant_uuid = user.tenants?.[0]?.uuid;
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("permissions", JSON.stringify(permissions || []));
       sessionStorage.setItem(
         "customer_name",
         `${user.firstname} ${user.lastname}`
