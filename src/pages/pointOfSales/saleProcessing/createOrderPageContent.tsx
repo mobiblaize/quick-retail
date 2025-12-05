@@ -296,8 +296,9 @@ const CreateOrderPageContent: React.FC = () => {
     };
 
     try {
-      if (orderId) await updateDraftMutation.mutateAsync(payload);
-      else await createSaleMutation.mutateAsync(payload);
+      let orderResponse:any;
+      if (orderId) orderResponse = await updateDraftMutation.mutateAsync(payload);
+      else orderResponse = await createSaleMutation.mutateAsync(payload);
 
       notifications.show({
         title: "Order Successful",
@@ -308,7 +309,7 @@ const CreateOrderPageContent: React.FC = () => {
         color: "green",
       });
 
-      navigate(ROUTES.sales);
+      navigate(ROUTES.viewOrder, {state: {orderID: orderResponse?.data?.salesOrder?.orderID}});
     } catch (error: any) {
       notifications.show({
         title: "Error",
