@@ -19,42 +19,15 @@ import {
 } from "../../../assets/svg";
 import { useUserStore } from "../../../hooks/useUserStore";
 import { useLocation } from "react-router";
-
-// const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
-//   const { activeSection } = useDashboard();
-//   const { user, } = useUserStore();
-
-//   const getSidebarItems = () => {
-//     if (location.pathname.startsWith("/dashboard/admin")) {
-//       return Admin;
-//     }
-//   // console.log(user)
-//   const getSidebarItems = () => {
-//     switch (activeSection) {
-//       case "Point of Sales":
-//         return PointOfSale;
-//       case "Financial Management":
-//         return FinancialManagement;
-//       case "Procurement":
-//         return Procurement;
-//       case "Asset Management":
-//         return AssetManagement;
-//       case "Reports":
-//         return Reports;
-//       case "Admin":
-//         return Admin;
-//       case "Overview":
-//       default:
-//         return PointOfSale;
-//     }
-//   };
-
-//   const sidebarItems = getSidebarItems();
+import { useMemo } from "react";
+import { usePermissions } from "../../../hooks/usePermissions";
+import { getMenuPermissions, requiresAllPermissions } from "../../../config/menuPermissions";
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
   const { user } = useUserStore();
   const location = useLocation();
+  const { hasAnyPermission, hasAllPermissions, isAdmin } = usePermissions();
 
   const getSidebarItems = () => {
     if (location.pathname.startsWith("/dashboard/admin")) {
@@ -80,7 +53,31 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
     }
   };
 
-  const sidebarItems = getSidebarItems();
+  // Filter sidebar items based on user permissions
+  const sidebarItems = useMemo(() => {
+    const items = getSidebarItems();
+
+    // Admin users see all items
+    if (isAdmin) {
+      return items;
+    }
+
+    // Filter items based on permissions
+    return items.filter((item) => {
+      const requiredPermissions = getMenuPermissions(item.label);
+
+      // If no permissions required, show the item
+      if (requiredPermissions.length === 0) {
+        return true;
+      }
+
+      // Check if user has required permissions
+      const requireAll = requiresAllPermissions(item.label);
+      return requireAll
+        ? hasAllPermissions(requiredPermissions)
+        : hasAnyPermission(requiredPermissions);
+    });
+  }, [activeSection, isAdmin, location.pathname, hasAnyPermission, hasAllPermissions]);
 
   return (
     <Card className="h-full w-full max-w-[20rem] shadow-none rounded-none p-0 bg-black">

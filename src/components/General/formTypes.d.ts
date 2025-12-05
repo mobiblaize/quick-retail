@@ -15,6 +15,7 @@ interface iFormProps {
   label?: string;
   value?: string | number;
   onChange?: ChangeEventHandler<HTMLInputElement>;
+  onKeyDown?: KeyboardEventHandler<HTMLInputElement>;
   error?: string;
   placeholder?: string;
   type?: HTMLInputTypeAttribute;
