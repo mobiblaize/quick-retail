@@ -1,6 +1,6 @@
 import { Text } from "@mantine/core";
 import { useEffect, useState } from "react";
-import productMain from "../../../../assets/images/productImage.png";
+import productMain from "../../../../assets/images/emptyillustration.png";
 
 type DetailsProps = {
   image_path?: string; // comma-separated thumbnail URLs

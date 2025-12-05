@@ -120,7 +120,7 @@ const InventoryTable = () => {
       render: (row: any) => {
         const available = row.stockLevel;
         const supplied = row.quantitySupplied;
-        const originalQty = supplied || available;
+        const originalQty = available + supplied;
 
         return (
           <Text fw={500}>
