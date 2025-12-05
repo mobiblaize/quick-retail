@@ -27,7 +27,7 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
   const { user } = useUserStore();
   const location = useLocation();
-  const { hasAnyPermission, hasAllPermissions, isAdmin } = usePermissions();
+  const { hasAnyPermission, hasAllPermissions, isAdmin, permissions } = usePermissions();
 
   const getSidebarItems = () => {
     if (location.pathname.startsWith("/dashboard/admin")) {
@@ -77,7 +77,7 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         ? hasAllPermissions(requiredPermissions)
         : hasAnyPermission(requiredPermissions);
     });
-  }, [activeSection, isAdmin, location.pathname, hasAnyPermission, hasAllPermissions]);
+  }, [activeSection, isAdmin, location.pathname, hasAnyPermission, hasAllPermissions, permissions]);
 
   return (
     <Card className="h-full w-full max-w-[20rem] shadow-none rounded-none p-0 bg-black">
