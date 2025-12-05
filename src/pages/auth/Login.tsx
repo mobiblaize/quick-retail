@@ -13,6 +13,7 @@ import { notifications } from "@mantine/notifications";
 import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
 import { useUserStore } from "../../hooks/useUserStore";
+import { getFirstAccessibleRoute } from "../../utils/routeUtils";
 
 const placeholderImage =
   "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
@@ -53,11 +54,21 @@ const Login = () => {
       const res = await login(payload);
       if (!res?.data) return;
 
-      const { accessToken, user } = res.data;
+      const { accessToken, user, permissions } = res.data;
+      
+      // Store user data
       setUser(user);
+      
+      // Store permissions using the store's setPermissions method
+      const setPermissions = useUserStore.getState().setPermissions;
+      if (permissions) {
+        setPermissions(permissions);
+      }
+      
       const tenant_uuid = user.tenants?.[0]?.uuid;
       sessionStorage.setItem("access_token", accessToken);
       sessionStorage.setItem("user", JSON.stringify(user));
+      sessionStorage.setItem("permissions", JSON.stringify(permissions || []));
       sessionStorage.setItem(
         "customer_name",
         `${user.firstname} ${user.lastname}`
@@ -71,8 +82,20 @@ const Login = () => {
         color: "green",
       });
 
-      // navigate("/dashboard");
-      window.location.replace("/dashboard");
+      // Smart redirect: Find the first route the user has access to
+      const firstAccessibleRoute = getFirstAccessibleRoute(
+        permissions || [],
+        user.roles || []
+      );
+
+      console.log("Redirecting to:", firstAccessibleRoute);
+      
+      // Use React Router navigate for smooth SPA navigation
+      // Store is already updated, so components will read fresh data on mount
+      // Use setTimeout to ensure store updates are flushed before navigation
+      setTimeout(() => {
+        navigate(firstAccessibleRoute);
+      }, 0);
     } catch (error) {
       console.error("Login error:", error);
     }

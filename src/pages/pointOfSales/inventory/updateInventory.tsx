@@ -128,7 +128,7 @@ const UpdateInventory = () => {
             )
           }
         >
-          Trigger reorder
+          Update reorder
         </Button>
       </div>,
     ];
