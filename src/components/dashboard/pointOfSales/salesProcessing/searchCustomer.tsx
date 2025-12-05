@@ -1,6 +1,6 @@
 import { Divider, Text } from "@mantine/core";
 import { X } from "lucide-react";
-import { useState, useEffect, useRef, ReactNode } from "react";
+import { useState, useEffect, ReactNode } from "react";
 import { useSearchAllCustomers } from "../../../../hooks/backendApis/pos/products";
 import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import { notifications } from "@mantine/notifications";
@@ -24,11 +24,12 @@ interface SearchCustomerProps {
 
 const SearchCustomer: React.FC<SearchCustomerProps> = ({
   onCustomerSelect,
-  // initialCustomerName,
+  initialCustomerId,
+  initialCustomerName,
   collapsible = true,
   showIcon,
 }) => {
-  const { setCustomer, } = useOrderStore();
+  const { setCustomer, customer: storeCustomer } = useOrderStore();
 
   // --- collapsing UI (if you kept it)
   const [isExpanded, setIsExpanded] = useState(true);
@@ -38,8 +39,36 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
 
+  // Initialize selected customer from props or store
+  const getInitialCustomer = (): CustomerData | null => {
+    if (initialCustomerId && initialCustomerName) {
+      return {
+        customerID: initialCustomerId,
+        customer_name: initialCustomerName,
+        customer_email: "",
+        customer_phone: "",
+      };
+    }
+    if (storeCustomer?.id && storeCustomer?.name) {
+      return {
+        customerID: storeCustomer.id,
+        customer_name: storeCustomer.name,
+        customer_email: "",
+        customer_phone: "",
+      };
+    }
+    return null;
+  };
+
+  // Initialize search term from selected customer
+  const getInitialSearchTerm = (): string => {
+    if (initialCustomerName) return initialCustomerName;
+    if (storeCustomer?.name) return storeCustomer.name;
+    return "";
+  };
+
   // seed search input from props or store
-  const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState(getInitialSearchTerm);
 
   const [newCustomer, setNewCustomer] = useState({
     customer_name: "",
@@ -50,23 +79,39 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 
   const createCustomer = useCreateCustomer();
 
-  const seededRef = useRef(false);
-  useEffect(() => {
-    if (seededRef.current) return;
-    // Set the search term as empty when navigating away
-    setSearchTerm(""); // Reset search term
-    seededRef.current = true;
-  }, []);
-
   // Local "selected" card state (purely visual)
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(null);
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
+    getInitialCustomer()
+  );
 
+  // Update selected customer when initialCustomerId changes (when navigating back to step)
   useEffect(() => {
-    // Reset the selected customer when the component unmounts
-    return () => {
-      setSelectedCustomer(null); // Clear the selected customer on unmount
-    };
-  }, []);
+    if (initialCustomerId && initialCustomerName) {
+      // Only update if the selected customer doesn't match the initial customer
+      const currentCustomerId = selectedCustomer?.customerID;
+      if (currentCustomerId !== initialCustomerId) {
+        const customer: CustomerData = {
+          customerID: initialCustomerId,
+          customer_name: initialCustomerName,
+          customer_email: "",
+          customer_phone: "",
+        };
+        setSelectedCustomer(customer);
+        setSearchTerm(initialCustomerName);
+        // Also update the store to keep it in sync
+        if (storeCustomer?.id !== initialCustomerId) {
+          setCustomer({ id: initialCustomerId, name: initialCustomerName });
+        }
+      }
+    } else if (!initialCustomerId) {
+      // Clear selection if initialCustomerId is cleared (but only if we have a selected customer)
+      if (selectedCustomer) {
+        setSelectedCustomer(null);
+        setSearchTerm("");
+      }
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [initialCustomerId, initialCustomerName]);
 
   const { data, refetch } = useSearchAllCustomers({ search: searchTerm }, false);
   const customerList: CustomerData[] = Array.isArray(data) ? data : data ? [data] : [];
@@ -204,6 +249,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                           setSelectedCustomer(null);
                           setSearchTerm(""); // Clear search term when customer is cleared
                           onCustomerSelect(null); // user action
+                          setCustomer({ id: null, name: "" }); // Clear from store
                         }}
                         type="button"
                         className="focus:outline-none"
@@ -284,7 +330,7 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
                     value={newCustomer.customer_phone}
                     onChange={handlePhoneChange}
                     paddingY="0.7rem"
-                    // @ts-ignore
+                    // @ts-expect-error - FormInput may not have all HTML input props in its type definition
                     inputMode="numeric"
                     pattern="\d*"
                     autoComplete="tel"
