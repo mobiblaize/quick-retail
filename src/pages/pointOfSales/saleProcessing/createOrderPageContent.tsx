@@ -45,6 +45,8 @@ const CreateOrderPageContent: React.FC = () => {
     customerId: string | null;
   }>({ method: "", amount: "", items: [], customerId: null });
 
+  console.log("Create Order Page Content");
+
   useEffect(() => {
     if (!saleData) return;
 
@@ -137,7 +139,7 @@ const CreateOrderPageContent: React.FC = () => {
             discount: Number(apiData?.discount ?? 0),
             tax: Number(apiData?.taxValue ?? apiData?.tax ?? 0),
             total: Number(apiData?.total ?? 0),
-            itemCount: Number(apiData?.itemCount ?? parsed.length ?? paymentDetails.items.length ?? 0),
+            itemCount: Number(apiData?.itemCount ?? parsed.length ?? 0),
             taxRate: Number(apiData?.taxRate ?? 7.5),
           });
         }
@@ -149,7 +151,7 @@ const CreateOrderPageContent: React.FC = () => {
     return () => {
       cancelled = true;
     };
-  }, [paymentDetails.customerId, itemsKey, postPaymentBreakdown, paymentDetails.items.length]);
+  }, [paymentDetails.customerId, itemsKey, postPaymentBreakdown]);
 
   // ---- Display helpers & fallbacks ----
   const formatCurrency = (n: number) => `₦ ${Number(n || 0).toLocaleString()}`;
@@ -439,18 +441,10 @@ const CreateOrderPageContent: React.FC = () => {
           >
             <CreateOrderForm
               paymentDetails={paymentDetails}
-              // keep your existing prop
               updatePaymentDetails={updatePaymentDetails as any}
               paymentItems={paymentItems}
               total={total}
               orderId={orderId}
-              // @ts-expect-error - This is a workaround to fix the type error
-              onCustomerSelected={(c: any) =>
-                updatePaymentDetails((prev) => ({ ...prev, customerId: c?.customerID ?? null }))
-              }
-              onItemsChange={(items: any[]) =>
-                updatePaymentDetails((prev) => ({ ...prev, items }))
-              }
             />
           </motion.div>
         );

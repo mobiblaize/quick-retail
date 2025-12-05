@@ -1,5 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-import { useEffect } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import PaymentDetails1 from "../../../components/dashboard/pointOfSales/salesProcessing/paymentDetails";
 import SearchCustomer from "../../../components/dashboard/pointOfSales/salesProcessing/searchCustomer";
 import SearchProduct from "../../../components/dashboard/pointOfSales/salesProcessing/searchProduct";
@@ -52,6 +52,12 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   // const { data: saleData } = useFetchSingleSale(safeOrderId as any, !!safeOrderId as any);
   const { data: saleData } = useFetchSingleSale(safeOrderId);
 
+  // Use ref to store updatePaymentDetails to avoid infinite loops
+  const updatePaymentDetailsRef = useRef(updatePaymentDetails);
+  useEffect(() => {
+    updatePaymentDetailsRef.current = updatePaymentDetails;
+  }, [updatePaymentDetails]);
+
   // Prefill from server order (only once when saleData arrives)
   useEffect(() => {
     if (!saleData?.data) return;
@@ -69,7 +75,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
     }));
 
     // avoid resetting to identical values (prevents render loops)
-    updatePaymentDetails((prev) => {
+    updatePaymentDetailsRef.current((prev) => {
       const sameCustomer = (saleData.data.customer?.customerID || null) === prev.customerId;
       const prevKey = JSON.stringify(
         (prev.items || []).map((i: any) => ({
@@ -95,29 +101,35 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         customerId: saleData.data.customer?.customerID || prev.customerId || null,
       };
     });
-  }, [saleData, updatePaymentDetails]);
+  }, [saleData]);
 
-  const handleSelectedItemsChange = (items: any[]) => {
-    const payloadItems = items
-      .filter((item) => !item.custom && (item.variationID || item.variationId) && item.quantity)
-      .map((item) => ({
-        variationId: item.variationId || item.variationID,
-        quantity: Number(item.quantity),
-        price: Number(item.selling_price ?? item.price ?? 0),
+  const handleSelectedItemsChange = useCallback(
+    (items: any[]) => {
+      const payloadItems = items
+        .filter((item) => !item.custom && (item.variationID || item.variationId) && item.quantity)
+        .map((item) => ({
+          variationId: item.variationId || item.variationID,
+          quantity: Number(item.quantity),
+          price: Number(item.selling_price ?? item.price ?? 0),
+        }));
+
+      updatePaymentDetails((prev) => ({
+        ...prev,
+        items: payloadItems,
       }));
+    },
+    [updatePaymentDetails]
+  );
 
-    updatePaymentDetails((prev) => ({
-      ...prev,
-      items: payloadItems,
-    }));
-  };
-
-  const handleCustomerChange = (id: string | null) => {
-    updatePaymentDetails((prev) => ({
-      ...prev,
-      customerId: id,
-    }));
-  };
+  const handleCustomerChange = useCallback(
+    (id: string | null) => {
+      updatePaymentDetails((prev) => ({
+        ...prev,
+        customerId: id,
+      }));
+    },
+    [updatePaymentDetails]
+  );
 
   return (
     <main className="flex flex-col gap-8">
