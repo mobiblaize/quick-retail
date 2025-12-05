@@ -11,7 +11,7 @@ export const DashboardHeader = ({
   toggleSidebar: () => void;
 }) => {
   const { activeSection, setActiveSection } = useDashboard();
-  const { isAdmin } = useUserStore();
+  const isAdmin = useUserStore((state) => state.isAdmin());
   const location = useLocation();
 
   type DashboardSection =
@@ -60,7 +60,7 @@ export const DashboardHeader = ({
     ];
 
     // Only add Admin tab for admin users
-    if (isAdmin()) {
+    if (isAdmin) {
       links.push({
         label: "Admin" as DashboardSection,
         to: ROUTES.vendorpage,
