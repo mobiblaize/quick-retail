@@ -25,9 +25,7 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
   const [opened, { open, close }] = useDisclosure(false);
   const [localImage, setLocalImage] = useState(profile_pic || "");
 
-  const changeProfileImage = usePutData(
-    "profile/change-profile-image"
-  );
+  const changeProfileImage = usePutData("profile/change-profile-image");
 
   const handleFileChange = (file: File | null) => {
     if (!file) return;
@@ -37,28 +35,29 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
       const base64 = e.target?.result as string;
 
       changeProfileImage.mutate(
-      { profile_image: base64 },
-      {
-        onSuccess: () => {
-          setLocalImage(base64); // instant preview
+        { profile_image: base64 },
+        {
+          onSuccess: () => {
+            setLocalImage(base64); // instant preview
 
-          showNotification({
-            title: "Profile Picture Updated",
-            message: "Your profile photo has been changed successfully.",
-            color: "green",
-          });
-        },
+            showNotification({
+              title: "Profile Picture Updated",
+              message: "Your profile photo has been changed successfully.",
+              color: "green",
+            });
+          },
 
-        onError: () => {
-          showNotification({
-            title: "Upload Failed",
-            message: "Unable to update your profile picture. Please try again.",
-            color: "red",
-          });
-        },
-      }
-    );
-  };
+          onError: () => {
+            showNotification({
+              title: "Upload Failed",
+              message:
+                "Unable to update your profile picture. Please try again.",
+              color: "red",
+            });
+          },
+        }
+      );
+    };
 
     reader.readAsDataURL(file);
   };
@@ -75,12 +74,24 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
         <div className="relative w-32 h-32 border-4 border-orange-500 rounded-full overflow-hidden mx-auto sm:mx-0 bg-gray-100">
           {localImage ? (
             <div className="relative">
-            <img
-              src={localImage}
-              alt="Profile"
-              className="w-full h-full object-cover"
-            />
-             {/* Edit Avatar Button */}
+              <img
+                src={localImage}
+                alt="Profile"
+                className="w-full h-full object-cover"
+              />
+              {/* Edit Avatar Button */}
+            </div>
+          ) : (
+            <Text
+              size="xl"
+              fw={600}
+              c="gray"
+              className="flex items-center justify-center h-full"
+            >
+              {firstName?.charAt(0).toUpperCase()}
+              {lastName?.charAt(0).toUpperCase()}
+            </Text>
+          )}
           <FileButton onChange={handleFileChange} accept="image/*">
             {(props) => (
               <Button
@@ -96,20 +107,6 @@ export default function ProfileHeader({ profile, onSave }: ProfileHeaderProps) {
               </Button>
             )}
           </FileButton>
-          </div>
-          ) : (
-            <Text
-              size="xl"
-              fw={600}
-              c="gray"
-              className="flex items-center justify-center h-full"
-            >
-              {firstName?.charAt(0).toUpperCase()}
-              {lastName?.charAt(0).toUpperCase()}
-            </Text>
-          )}
-
-         
         </div>
 
         {/* Profile Info */}

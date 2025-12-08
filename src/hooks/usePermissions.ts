@@ -1,3 +1,4 @@
+import { useCallback } from "react";
 import { useUserStore } from "./useUserStore";
 import { getRoutePermissions, isAdminRoute } from "../config/routePermissions";
 
@@ -10,7 +11,7 @@ export const usePermissions = () => {
   /**
    * Check if user has access to a specific route
    */
-  const hasRouteAccess = (path: string): boolean => {
+  const hasRouteAccess = useCallback((path: string): boolean => {
     // Admin users have access to all admin routes
     if (isAdminRoute(path)) {
       return isAdmin();
@@ -33,28 +34,28 @@ export const usePermissions = () => {
 
     // Check if user has any of the required permissions
     return routeConfig.permissions.some((permission) => hasPermission(permission));
-  };
+  }, [hasPermission, isAdmin]);
 
   /**
    * Check if user has a specific permission by name
    */
-  const checkPermission = (permissionName: string): boolean => {
+  const checkPermission = useCallback((permissionName: string): boolean => {
     return hasPermission(permissionName);
-  };
+  }, [hasPermission]);
 
   /**
    * Check if user has any of the specified permissions
    */
-  const hasAnyPermission = (permissionNames: string[]): boolean => {
+  const hasAnyPermission = useCallback((permissionNames: string[]): boolean => {
     return permissionNames.some((name) => hasPermission(name));
-  };
+  }, [hasPermission]);
 
   /**
    * Check if user has all of the specified permissions
    */
-  const hasAllPermissions = (permissionNames: string[]): boolean => {
+  const hasAllPermissions = useCallback((permissionNames: string[]): boolean => {
     return permissionNames.every((name) => hasPermission(name));
-  };
+  }, [hasPermission]);
 
   return {
     hasRouteAccess,
