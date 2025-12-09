@@ -151,7 +151,7 @@ const handleDelete = async () => {
         <Group gap="sm">
           <Avatar
             src={
-              Array.isArray(p.image_path) ? p.image_path[0] ?? "" : p.image_path
+              Array.isArray(p.image_path) ? p.image_path[1] ?? "" : p.image_path
             }
             size={32}
             radius="sm"

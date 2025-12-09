@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Divider, Text } from "@mantine/core";
 import FormInput from "../../../components/General/formInput";
 
@@ -60,10 +61,9 @@ const NewInventoryDetails = ({
           placeholder="Enter reason for reorder"
           optional
           paddingY={"0.7rem"}
-          value={reason_for_update}
-          onChange={(e: any) => {
-            const input = e.target.value;
-            const onlyLetters = input.replace(/[^A-Za-z\s]/g, "");
+          value={reason_for_update.toString()}
+          onChange={(value: string) => {
+            const onlyLetters = value.replace(/[^A-Za-z\s]/g, "");
             setReasonForUpdate(onlyLetters);
           }}
         />
