@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Text, Avatar, Group } from "@mantine/core";
 import { Link } from "react-router";
@@ -11,7 +12,8 @@ import GenericTable from "../../../General/genericTable";
 type StatusKey = "available" | "low stock" | "sold out";
 
 const InventoryTable = () => {
-  const [, setCurrentPage] = useState(1);
+ const [currentPage, setCurrentPage] = useState(1);
+
 
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
@@ -36,14 +38,15 @@ const InventoryTable = () => {
   };
 
   const payload = {
-    page: "1",
+    page: String(currentPage),
+
     per_page: "10",
     search: searchTerm,
     sort_by: activeSort,
     ...normalizeFilters(appliedFilters),
   };
 
-  const { data, isLoading } = useFetchAllProducts(payload);
+  const { data, isLoading } = useFetchAllProducts(payload) || {};
 
   const products = Array.isArray(data?.data?.products?.data)
     ? data.data.products.data
@@ -56,6 +59,8 @@ const InventoryTable = () => {
     location: product.product?.location?.name ?? "N/A",
     stockLevel: product.quantity_available ?? 0,
     quantitySupplied: product.quantity_supplied ?? 0,
+    quantity: product.quantity ?? 0,
+    quantitySold: product.quantity_sold ?? 0,
     date: product.created_at,
     status: product.stock_status,
     image: product.image_path,
@@ -70,6 +75,10 @@ const InventoryTable = () => {
         last_page: data.data.products.last_page,
         total: data.data.products.total,
         per_page: data.data.products.per_page,
+        from: data.data.products.from,
+        to: data.data.products.to,
+        next_page_url: data.data.products.next_page_url,
+        prev_page_url: data.data.products.prev_page_url,
       }
     : undefined;
 
@@ -120,7 +129,7 @@ const InventoryTable = () => {
       render: (row: any) => {
         const available = row.stockLevel;
         const supplied = row.quantitySupplied;
-        const originalQty = available + supplied;
+        const originalQty = row.quantity + supplied;
 
         return (
           <Text fw={500}>
@@ -216,6 +225,7 @@ const InventoryTable = () => {
         enableSearch={true}
         enableSort={true}
         showFilter={true}
+        paginate={true}
         tableType="inventory"
         searchPlaceholder="Search Inventory"
         //@ts-ignore
