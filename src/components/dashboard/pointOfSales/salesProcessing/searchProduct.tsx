@@ -286,6 +286,7 @@ const SearchProduct = ({
           Search Product
         </Text>
       </div>
+      <div className="flex items-center justify-between">
       <div className="pt-4 pb-4 max-w-md px-6">
         <FormInput
           placeholder="Search by name, SKU, or EAN"
@@ -320,6 +321,7 @@ const SearchProduct = ({
             {scanError}
           </Text>
         )}
+      </div>
       </div>
 
       {isLoading && (
