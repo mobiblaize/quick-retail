@@ -106,7 +106,16 @@ const InventoryTable = () => {
       header: "Product",
       render: (row: any) => (
         <Group gap="sm" align="center">
-          <Avatar src={row.image || ""} alt={row.name} radius="md" size={40} />
+          <Avatar 
+            src={
+              row.image
+                ? (() => {
+                    const images = row.image.split(',').map((url: string) => url.trim()).filter((url: string) => url);
+                    return images[1] ?? images[0] ?? "";
+                  })()
+                : ""
+            }
+             alt={row.name} radius="md" size={40} />
           <Text fw={500} c="black">
             {row.name}
           </Text>
@@ -129,14 +138,13 @@ const InventoryTable = () => {
       render: (row: any) => {
         const available = row.stockLevel;
         const supplied = row.quantitySupplied;
-        const originalQty = row.quantity + supplied;
 
         return (
           <Text fw={500}>
             <span className={available < 10 ? "text-red-600" : "text-black"}>
               {available}
             </span>{" "}
-            of {originalQty}
+            of {supplied}
           </Text>
         );
       },
@@ -228,7 +236,7 @@ const InventoryTable = () => {
         paginate={true}
         tableType="inventory"
         searchPlaceholder="Search Inventory"
-        //@ts-ignore
+        // @ts-expect-error locations are not used in the table
         locations={locations}
         titleSection={
           <div className="flex gap-2.5">
