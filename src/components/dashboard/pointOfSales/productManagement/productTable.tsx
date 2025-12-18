@@ -21,7 +21,7 @@ interface ApiProduct {
   selling_price: string;
   quantity: number;
   reorder_level: string;
-  image_path: string[];
+  image_path: string;
   status: string;
   stock_status: string;
 
@@ -152,7 +152,12 @@ const handleDelete = async () => {
         <Group gap="sm">
           <Avatar
             src={
-              Array.isArray(p.image_path) ? p.image_path[1] ?? "" : p.image_path
+              p.image_path
+                ? (() => {
+                    const images = p.image_path.split(',').map((url: string) => url.trim()).filter((url: string) => url);
+                    return images[1] ?? images[0] ?? "";
+                  })()
+                : ""
             }
             size={32}
             radius="sm"
@@ -309,8 +314,7 @@ const handleDelete = async () => {
         showFilter={true}
         tableType="product"
         searchPlaceholder="search products"
-        filters={filters}    
-        //@ts-ignore
+        filters={filters}
         locations={locations}
         categories={categories}
         titleSection={
