@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Text, Avatar, Group, Badge, Menu, ActionIcon } from "@mantine/core";
 import { Check, MoreVertical, X } from "lucide-react";
 import { Link } from "react-router";
