@@ -295,7 +295,9 @@ function EditProductFormNew({
           ? String(product.total_quantity)
           : "",
         reorder_level: product?.product_variations?.[0]?.reorder_level || "",
-        image_path: product.image_path ? [product.image_path] : [],
+        image_path: product.image_path 
+          ? product.image_path.split(',').map((url: string) => url.trim()).filter((url: string) => url)
+          : [],
         // Variable product fields
         variations:
           isVariable && product.product_variations?.length > 0
@@ -331,7 +333,9 @@ function EditProductFormNew({
                       return Object.values(grouped);
                     })()
                   : [],
-                image: v.image_path ? [v.image_path] : [],
+                image: v.image_path 
+                  ? v.image_path.split(',').map((url: string) => url.trim()).filter((url: string) => url)
+                  : [],
               }))
             : form.values.variations,
       });
