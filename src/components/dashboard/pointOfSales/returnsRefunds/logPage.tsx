@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import {
   Button,
@@ -80,6 +81,9 @@ const LogOrder = () => {
     }
   };
 
+  const order = data?.data;
+  const fees = JSON.parse(order.fees || "{}");
+
   const calculateRefundDetails = () => {
     let subtotal = 0;
 
@@ -98,12 +102,13 @@ const LogOrder = () => {
       });
     }
 
-    const discount = 0;
-    const tax = parseFloat((0.075 * subtotal).toFixed(2));
+    const discount = fees.discount || 0;
+    const tax = fees.tax;
     const total = subtotal - discount + tax;
 
     return { subtotal, discount, tax, total };
   };
+  
 
   const handleSave = async () => {
     // Basic validation
