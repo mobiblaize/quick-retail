@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge, Paper, Text, Group, Stack, Loader } from "@mantine/core";
 import { Circle } from 'lucide-react';
 import { useNotifications } from "../../../../hooks/backendApis/admin/settings";

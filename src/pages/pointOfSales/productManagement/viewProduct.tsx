@@ -76,7 +76,7 @@ const ViewProduct = () => {
           <div className="order-1 md:order-2 flex flex-col h-full">
             <ProductImagesSection
               details={{
-                image: data?.data?.image_path,
+                image: data?.data?.image_path,                
                 image_path: data?.data?.product?.image_path,
               }}
             />

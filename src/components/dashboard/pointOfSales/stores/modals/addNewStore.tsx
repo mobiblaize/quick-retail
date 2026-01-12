@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Button, Modal, Text } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import Dropdown from "../../../../General/dropdown";
@@ -41,17 +42,42 @@ const AddNewStore = ({
   const { data: citiesData, isLoading: citiesLoading } =
     useFetchCities(stateVal);
 
+  const resetForm = () => {
+    setName("");
+    setCountry("");
+    setStateVal("");
+    setLga("");
+    setAddress("");
+  };
+
   const handleSubmit = () => {
+    // Find names from the selected IDs (handle both string and number ID types)
+    const selectedCountry = country
+      ? countriesData?.data?.find(
+          (c: any) => String(c.id) === String(country)
+        )
+      : null;
+    const selectedState = stateVal
+      ? statesData?.data?.find((s: any) => String(s.id) === String(stateVal))
+      : null;
+    const selectedCity = lga
+      ? citiesData?.data?.find((c: any) => String(c.id) === String(lga))
+      : null;
+
     const payload = {
       name,
       // gla,
       // gsa,
       staff_no,
-      country,
-      state: stateVal,
-      lga,
+      country: selectedCountry?.name || "",
+      state: selectedState?.name || "",
+      lga: selectedCity?.name || "",
       address,
     };
+
+    console.log("Submit payload:", payload);
+    console.log("Selected values:", { country, stateVal, lga });
+    console.log("Found items:", { selectedCountry, selectedState, selectedCity });
 
     createStore(payload, {
       onSuccess: async () => {
@@ -70,6 +96,7 @@ const AddNewStore = ({
           }
         }
 
+        resetForm();
         onClose();
       },
       onError: (err: any) => {
@@ -88,7 +115,10 @@ const AddNewStore = ({
     <>
       <Modal
         opened={opened}
-        onClose={onClose}
+        onClose={() => {
+          resetForm();
+          onClose();
+        }}
         title={
           <div>
             <Text size="1.5rem" c="black" fw={700}>
@@ -203,7 +233,10 @@ const AddNewStore = ({
           <div className="grid grid-cols-2 gap-4 mt-4">
             <Button
               variant="outline-primary"
-              onClick={onClose}
+              onClick={() => {
+                resetForm();
+                onClose();
+              }}
               style={{ border: "1px solid #D0D5DD", color: "#344054" }}
               className="order-2 sm:order-1"
             >

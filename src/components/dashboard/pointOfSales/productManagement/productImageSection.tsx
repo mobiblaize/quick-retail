@@ -1,30 +1,36 @@
 import { Text } from "@mantine/core";
-import { useEffect, useState } from "react";
-import productMain from "../../../../assets/images/productImage.png";
+import { useEffect, useMemo, useState } from "react";
+import productMain from "../../../../assets/images/emptyillustration.png";
 
 type DetailsProps = {
   image_path?: string; // comma-separated thumbnail URLs
-  image?: string;      // main image
+  image?: string; // main image
 };
 
 const ProductImagesSection = ({ details }: { details: DetailsProps }) => {
-  const [selectedImage, setSelectedImage] = useState<string | undefined>(
-    details.image
-  );
-
-  // Update selected image if details.image changes
-  useEffect(() => {
-    setSelectedImage(details.image);
-  }, [details.image]);
-
   // Convert comma-separated string into array
-  const thumbnails: string[] = details.image_path
-    ? details.image_path.split(",").map((img) => img.trim())
-    : [];
+  const thumbnails = useMemo(() => {
+    return details.image_path
+      ? details.image_path.split(",").map((img) => img.trim())
+      : [];
+  }, [details.image_path]);
+
+  const [selectedImage, setSelectedImage] = useState<string | undefined>();
+
+  // Always select the FIRST uploaded image
+  useEffect(() => {
+    if (thumbnails.length > 0) {
+      setSelectedImage(thumbnails[0]);
+    } else if (details.image) {
+      setSelectedImage(details.image);
+    } else {
+      setSelectedImage(undefined);
+    }
+  }, [thumbnails, details.image]);
 
   return (
     <main className="bg-white rounded-xl h-auto p-6">
-      <Text c="black" size="lg" tt="uppercase" fw={"600"}>
+      <Text c="black" size="lg" tt="uppercase" fw={600}>
         product images
       </Text>
       <hr className="text-gray-200 mt-2" />

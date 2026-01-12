@@ -151,6 +151,10 @@ export const useSearchLocationProducts = (
   });
 };
 
+export const useScanProduct = () => {
+  return usePostData("pos/product/scan-product");
+};
+
 export const useDownloadProductTemplate = (type: string = "variant") => {
   return useGetExportData(`pos/product/download-import-template?type=${type}`);
 };

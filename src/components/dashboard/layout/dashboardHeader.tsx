@@ -1,7 +1,8 @@
-import { useEffect } from "react";
-import { Link } from "react-router-dom";
+import { useEffect, useMemo } from "react";
+import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import { useDashboard } from "../../../layout/dashboardContext";
+import { useUserStore } from "../../../hooks/useUserStore";
 
 
 export const DashboardHeader = ({
@@ -10,6 +11,8 @@ export const DashboardHeader = ({
   toggleSidebar: () => void;
 }) => {
   const { activeSection, setActiveSection } = useDashboard();
+  const isAdmin = useUserStore((state) => state.isAdmin());
+  const location = useLocation();
 
   type DashboardSection =
     | "Overview"
@@ -20,44 +23,53 @@ export const DashboardHeader = ({
     // | "Reports"
     | "Admin";
 
-  const navLinks = [
-    // {
-    //   label: "Overview" as DashboardSection,
-    //   to: ROUTES.dashboard,
-    //   active: activeSection === "Overview",
-    // },
-    {
-      label: "Point of Sales" as DashboardSection,
-      to: ROUTES.dashboard,
-      active: activeSection === "Point of Sales",
-    },
-    // {
-    //   label: "Financial Management" as DashboardSection,
-    //   to: ROUTES.financialDashboard,
-    //   active: activeSection === "Financial Management",
-    // },
-    // {
-    //   label: "Procurement" as DashboardSection,
-    //   to: ROUTES.procurementDashboard,
-    //   active: activeSection === "Procurement",
-    // },
-    // {
-    //   label: "Asset Management" as DashboardSection,
-    //   to: ROUTES.assetDashboard,
-    //   active: activeSection === "Asset Management",
-    // },
+  // Filter nav links based on user role - only show Admin tab to admin users
+  const navLinks = useMemo(() => {
+    const links = [
+      // {
+      //   label: "Overview" as DashboardSection,
+      //   to: ROUTES.dashboard,
+      //   active: activeSection === "Overview",
+      // },
+      {
+        label: "Point of Sales" as DashboardSection,
+        to: ROUTES.dashboard,
+        active: activeSection === "Point of Sales",
+      },
+      // {
+      //   label: "Financial Management" as DashboardSection,
+      //   to: ROUTES.financialDashboard,
+      //   active: activeSection === "Financial Management",
+      // },
+      // {
+      //   label: "Procurement" as DashboardSection,
+      //   to: ROUTES.procurementDashboard,
+      //   active: activeSection === "Procurement",
+      // },
+      // {
+      //   label: "Asset Management" as DashboardSection,
+      //   to: ROUTES.assetDashboard,
+      //   active: activeSection === "Asset Management",
+      // },
 
-    // {
-    //   label: "Reports" as DashboardSection,
-    //   to: ROUTES.dashboard,
-    //   active: activeSection === "Reports",
-    // },
-    {
-      label: "Admin" as DashboardSection,
-      to: ROUTES.vendorpage,
-      active: activeSection === "Admin",
-    },
-  ];
+      // {
+      //   label: "Reports" as DashboardSection,
+      //   to: ROUTES.dashboard,
+      //   active: activeSection === "Reports",
+      // },
+    ];
+
+    // Only add Admin tab for admin users
+    if (isAdmin) {
+      links.push({
+        label: "Admin" as DashboardSection,
+        to: ROUTES.vendorpage,
+        active: activeSection === "Admin",
+      });
+    }
+
+    return links;
+  }, [activeSection, isAdmin]);
 
   useEffect(() => {
     if (location.pathname.startsWith("/dashboard/admin")) {

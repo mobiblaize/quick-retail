@@ -1,6 +1,6 @@
 import { Avatar, Center, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
-import imageSrc from "../../../../assets/images/productIMG.png"; // fallback
+import imageSrc from "../../../../assets/images/emptyillustration.png"; // fallback
 import { useLocation } from "react-router";
 import { useFetchSingleSale } from "../../../../hooks/backendApis/pos/salesProcessing";
 import { formatMoney } from "../../../../utils/helpers";

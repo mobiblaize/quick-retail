@@ -1,8 +1,8 @@
 import { create } from 'zustand';
 
-interface SelectedItemPayload {
-  variationId: string;
-  quantity: number;
+export interface SelectedItemPayload {
+  variationId?: string;
+  quantity?: number;
   price?: number;
   name?: string;
   custom?: boolean;

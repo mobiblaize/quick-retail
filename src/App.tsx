@@ -231,6 +231,7 @@ import SettingsPage from "./pages/adminPages/settings/settingsPage";
 import ScrollToTop from "./components/General/scrollTop";
 import NotificationPage from "./pages/adminPages/notifications/notificationPage";
 import EditNewProduct from "./pages/pointOfSales/productManagement/EditNewProduct";
+import ProtectedRoute from "./components/common/ProtectedRoute";
 // import AddVariableProductNew from "./components/dashboard/pointOfSales/productManagement/AddVariableProductNew";
 
 export default function App() {
@@ -266,103 +267,103 @@ export default function App() {
         >
           {/* POINT OF SALES ROUTES */}
 
-          <Route index element={<DashboardPage />} />
+          <Route index element={<ProtectedRoute><DashboardPage /></ProtectedRoute>} />
           <Route
             path={ROUTES.productManagement}
-            element={<ProductManagementPage />}
+            element={<ProtectedRoute><ProductManagementPage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.addNewProduct} element={<AddNewProduct />} />
-          <Route path={ROUTES.viewProduct} element={<ViewProduct />} />
+          <Route path={ROUTES.addNewProduct} element={<ProtectedRoute><AddNewProduct /></ProtectedRoute>} />
+          <Route path={ROUTES.viewProduct} element={<ProtectedRoute><ViewProduct /></ProtectedRoute>} />
           <Route
             path={ROUTES.viewStoreProduct}
-            element={<ViewStoreProduct />}
+            element={<ProtectedRoute><ViewStoreProduct /></ProtectedRoute>}
           />
           <Route
             path={`${ROUTES.editProduct}/:id`}
-            element={<EditNewProduct />}
+            element={<ProtectedRoute><EditNewProduct /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.inventoryDetails}
-            element={<InventoryDetailsPage />}
+            element={<ProtectedRoute><InventoryDetailsPage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.addBulkProduct} element={<AddBulkProduct />} />
+          <Route path={ROUTES.addBulkProduct} element={<ProtectedRoute><AddBulkProduct /></ProtectedRoute>} />
           {/* <Route path={ROUTES.addVariableProduct} element={<AddVariableProductNew />} /> */}
-          <Route path={ROUTES.sales} element={<SalesProcessingPage />} />
-          <Route path={ROUTES.viewOrder} element={<ViewOrderPage />} />
-          <Route path={ROUTES.createOrder} element={<CreateOrderPage />} />
+          <Route path={ROUTES.sales} element={<ProtectedRoute><SalesProcessingPage /></ProtectedRoute>} />
+          <Route path={ROUTES.viewOrder} element={<ProtectedRoute><ViewOrderPage /></ProtectedRoute>} />
+          <Route path={ROUTES.createOrder} element={<ProtectedRoute><CreateOrderPage /></ProtectedRoute>} />
           <Route
             path={ROUTES.viewOrderdraft}
-            element={<ViewOrderDraftPage />}
+            element={<ProtectedRoute><ViewOrderDraftPage /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.previewdownload}
-            element={<PreviewSalesDownloadPage />}
+            element={<ProtectedRoute><PreviewSalesDownloadPage /></ProtectedRoute>}
           />
           {/* <Route   path= '/dashboard/sales/preview-download/:orderId' element={<PreviewSalesDownloadPage/>} /> */}
           <Route
             path={ROUTES.inventory}
-            element={<InventoryManagementPage />}
+            element={<ProtectedRoute><InventoryManagementPage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.updateInventory} element={<UpdateInventory />} />
-          <Route path={ROUTES.triggerOrder} element={<TriggerOrder />} />
-          <Route path={ROUTES.category} element={<CategoriesPage />} />
-          <Route path={ROUTES.subCategory} element={<SubCategories />} />
+          <Route path={ROUTES.updateInventory} element={<ProtectedRoute><UpdateInventory /></ProtectedRoute>} />
+          <Route path={ROUTES.triggerOrder} element={<ProtectedRoute><TriggerOrder /></ProtectedRoute>} />
+          <Route path={ROUTES.category} element={<ProtectedRoute><CategoriesPage /></ProtectedRoute>} />
+          <Route path={ROUTES.subCategory} element={<ProtectedRoute><SubCategories /></ProtectedRoute>} />
           <Route
             path={ROUTES.categoryCollection}
-            element={<ViewCollection />}
+            element={<ProtectedRoute><ViewCollection /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.storeBillingInformation}
-            element={<BillingInformation />}
+            element={<ProtectedRoute><BillingInformation /></ProtectedRoute>}
           />
-          <Route path={ROUTES.aboutProduct} element={<AboutProduct />} />
-          <Route path={ROUTES.returns} element={<ReturnsPage />} />
-          <Route path={ROUTES.viewReturns} element={<ViewReturnsPage />} />
-          <Route path={ROUTES.logReturns} element={<LogPage />} />
-          <Route path={ROUTES.customer} element={<CustomerPage />} />
-          <Route path={ROUTES.happyTime} element={<HappyTimePage />} />
+          <Route path={ROUTES.aboutProduct} element={<ProtectedRoute><AboutProduct /></ProtectedRoute>} />
+          <Route path={ROUTES.returns} element={<ProtectedRoute><ReturnsPage /></ProtectedRoute>} />
+          <Route path={ROUTES.viewReturns} element={<ProtectedRoute><ViewReturnsPage /></ProtectedRoute>} />
+          <Route path={ROUTES.logReturns} element={<ProtectedRoute><LogPage /></ProtectedRoute>} />
+          <Route path={ROUTES.customer} element={<ProtectedRoute><CustomerPage /></ProtectedRoute>} />
+          <Route path={ROUTES.happyTime} element={<ProtectedRoute><HappyTimePage /></ProtectedRoute>} />
           <Route
             path={ROUTES.happyDiscountAnalytics}
-            element={<DiscountAnalysisPage />}
+            element={<ProtectedRoute><DiscountAnalysisPage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.createDiscounts} element={<CreateDiscounts />} />
-          <Route path={ROUTES.happyGiftCard} element={<GiftCardPage />} />
-          <Route path={ROUTES.transaction} element={<TransactionPage />} />
+          <Route path={ROUTES.createDiscounts} element={<ProtectedRoute><CreateDiscounts /></ProtectedRoute>} />
+          <Route path={ROUTES.happyGiftCard} element={<ProtectedRoute><GiftCardPage /></ProtectedRoute>} />
+          <Route path={ROUTES.transaction} element={<ProtectedRoute><TransactionPage /></ProtectedRoute>} />
           <Route
             path={ROUTES.viewTransaction}
-            element={<ViewTransactionPage />}
+            element={<ProtectedRoute><ViewTransactionPage /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.viewPendingTransaction}
-            element={<ViewPendingTransactionPage />}
+            element={<ProtectedRoute><ViewPendingTransactionPage /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.previewTransaction}
-            element={<PreviewTransactionDownloadPage />}
+            element={<ProtectedRoute><PreviewTransactionDownloadPage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.stores} element={<StoresPage />} />
-          <Route path={ROUTES.viewStore} element={<View />} />
-          <Route path={ROUTES.storeTarget} element={<StoreTarget />} />
-          <Route path={ROUTES.report} element={<ReportsPage />} />
+          <Route path={ROUTES.stores} element={<ProtectedRoute><StoresPage /></ProtectedRoute>} />
+          <Route path={ROUTES.viewStore} element={<ProtectedRoute><View /></ProtectedRoute>} />
+          <Route path={ROUTES.storeTarget} element={<ProtectedRoute><StoreTarget /></ProtectedRoute>} />
+          <Route path={ROUTES.report} element={<ProtectedRoute><ReportsPage /></ProtectedRoute>} />
           <Route
             path={ROUTES.reportDateSelect}
-            element={<ReportDateSelect />}
+            element={<ProtectedRoute><ReportDateSelect /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.salesProcessing}
-            element={<SalesProcessingReportPage />}
+            element={<ProtectedRoute><SalesProcessingReportPage /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.productManagementReport}
-            element={<ProductReportPage />}
+            element={<ProtectedRoute><ProductReportPage /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.returnsRefundsReport}
-            element={<RetunsRefundsReportPage />}
+            element={<ProtectedRoute><RetunsRefundsReportPage /></ProtectedRoute>}
           />
           <Route
             path={ROUTES.discountReport}
-            element={<DiscountReportPage />}
+            element={<ProtectedRoute><DiscountReportPage /></ProtectedRoute>}
           />
 
           {/* PROCUREMENT ROUTES */}
@@ -813,30 +814,30 @@ export default function App() {
           {/* ADMIN ROUTES */}
           <Route
             path={ROUTES.adminDashboard}
-            element={<AdminDashboardPage />}
+            element={<ProtectedRoute adminOnly><AdminDashboardPage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.userManagement} element={<UserManagement />} />
+          <Route path={ROUTES.userManagement} element={<ProtectedRoute adminOnly><UserManagement /></ProtectedRoute>} />
           {/* <Route path={ROUTES.viewUser} element={<ViewUser/>} /> */}
           <Route
             path="/dashboard/admin/user-management/view-user/:userId"
-            element={<ViewUser />}
+            element={<ProtectedRoute adminOnly><ViewUser /></ProtectedRoute>}
           />
-          <Route path={ROUTES.addNewRole} element={<AddNewRole />} />
-          <Route path={ROUTES.helpPage} element={<HelpPage />} />
-          <Route path={`${ROUTES.learnMore}/:id`} element={<LearnMoreHelp />} />
-          <Route path={ROUTES.vendorpage} element={<VendorPage />} />
-          <Route path={ROUTES.history} element={<SubscriptionHistoryPage />} />
-          <Route path={ROUTES.subplan} element={<SubscriptionPage />} />
+          <Route path={ROUTES.addNewRole} element={<ProtectedRoute adminOnly><AddNewRole /></ProtectedRoute>} />
+          <Route path={ROUTES.helpPage} element={<ProtectedRoute adminOnly><HelpPage /></ProtectedRoute>} />
+          <Route path={`${ROUTES.learnMore}/:id`} element={<ProtectedRoute adminOnly><LearnMoreHelp /></ProtectedRoute>} />
+          <Route path={ROUTES.vendorpage} element={<ProtectedRoute adminOnly><VendorPage /></ProtectedRoute>} />
+          <Route path={ROUTES.history} element={<ProtectedRoute adminOnly><SubscriptionHistoryPage /></ProtectedRoute>} />
+          <Route path={ROUTES.subplan} element={<ProtectedRoute adminOnly><SubscriptionPage /></ProtectedRoute>} />
           <Route
             path={ROUTES.changeplan}
-            element={<SubscriptionChangePage />}
+            element={<ProtectedRoute adminOnly><SubscriptionChangePage /></ProtectedRoute>}
           />
-          <Route path={ROUTES.auditTrail} element={<AuditTrailPage />} />
-          <Route path={ROUTES.viewTrail} element={<ViewAuditPage />} />
-          <Route path={ROUTES.adminSettings} element={<SettingsPage />} />
+          <Route path={ROUTES.auditTrail} element={<ProtectedRoute adminOnly><AuditTrailPage /></ProtectedRoute>} />
+          <Route path={ROUTES.viewTrail} element={<ProtectedRoute adminOnly><ViewAuditPage /></ProtectedRoute>} />
+          <Route path={ROUTES.adminSettings} element={<ProtectedRoute adminOnly><SettingsPage /></ProtectedRoute>} />
           <Route
             path={ROUTES.notificationPage}
-            element={<NotificationPage />}
+            element={<ProtectedRoute adminOnly><NotificationPage /></ProtectedRoute>}
           />
         </Route>
       </Routes>

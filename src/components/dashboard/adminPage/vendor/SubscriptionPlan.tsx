@@ -5,8 +5,8 @@ import { useEffect } from "react";
 import { Link } from "react-router";
 import { ArrowUpRight } from "lucide-react";
 import {
-  billingType,
-  billingTypeStore2,
+  // billingTypeStore2,
+  billingTypeStore,
   selectedApp,
   selectedSubs,
   totalPrice,
@@ -26,7 +26,8 @@ const subscriptionPlan = [
 ];
 
 const SubscriptionPlan = () => {
-  const [activePlan, setActivePlan] = useAtom(billingTypeStore2);
+  const activePlan = useAtomValue(billingTypeStore);
+  const setActivePlan = useSetAtom(billingTypeStore);
   const [selectedApps, setSelectedApps] = useAtom(selectedApp);
   const totalPriceValue = useAtomValue(totalPrice);
   const setTotalPriceValue = useSetAtom(totalPrice);
@@ -157,7 +158,7 @@ const SubscriptionPlan = () => {
                             },
                           }}
                           onClick={() => {
-                            setActivePlan(plan.slug as billingType);
+                            setActivePlan(plan.slug as any);
                           }}
                         >
                           <Text>{plan.name}</Text>

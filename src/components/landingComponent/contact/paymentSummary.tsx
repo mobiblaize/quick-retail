@@ -42,13 +42,16 @@ const PaymentSummary = () => {
   const totalPriceValue = useAtomValue(totalPrice);
   const billingType = useAtomValue(billingTypeStore);
   const navigate = useNavigate();
-  const reference = new URLSearchParams(window.location.search).get("reference");
+  const reference = new URLSearchParams(window.location.search).get(
+    "reference"
+  );
   const [opened, setOpened] = useState(!!reference);
   const adminSeat = useAtomValue(seatCount);
   const windowUrl = window.location.origin;
 
-  const { data: companySizes, isPending: isCompanySizesPending } =
-    useFetchData("applications/company-sizes");
+  const { data: companySizes, isPending: isCompanySizesPending } = useFetchData(
+    "applications/company-sizes"
+  );
 
   const { mutateAsync: createPayment, isPending } = usePostData(
     "auth/signup/register"
@@ -118,11 +121,22 @@ const PaymentSummary = () => {
   return (
     <div className="flex flex-col min-h-screen mt-6">
       <main className="flex-grow">
-        <form onSubmit={paymentForm.onSubmit(handleSubmit)} className="space-y-8">
+        <form
+          onSubmit={paymentForm.onSubmit(handleSubmit)}
+          className="space-y-8"
+        >
           {/* User Details */}
           <div className="flex flex-col gap-8">
-            <Card shadow="sm" radius="lg" p={32} withBorder className="!bg-white">
-              <h4 className="text-xl font-bold text-[#48464E] mb-4">Your Details</h4>
+            <Card
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+              className="!bg-white"
+            >
+              <h4 className="text-xl font-bold text-[#48464E] mb-4">
+                Your Details
+              </h4>
               <div className="flex flex-col gap-4">
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <TextInput
@@ -144,7 +158,9 @@ const PaymentSummary = () => {
                     maxLength={11}
                     onInput={(e) => {
                       const target = e.target as HTMLInputElement;
-                      target.value = target.value.replace(/\D/g, "").slice(0, 11);
+                      target.value = target.value
+                        .replace(/\D/g, "")
+                        .slice(0, 11);
                     }}
                     {...paymentForm.getInputProps("phoneNumber")}
                   />
@@ -169,11 +185,22 @@ const PaymentSummary = () => {
                       companySizes?.data?.map((size: any) => ({
                         value: size?.label,
                         label: size?.label,
+                        description: size?.description,
                       })) || []
                     }
                     {...paymentForm.getInputProps("companySize")}
                     rightSection={<ChevronDown size={16} />}
                     rightSectionProps={{ className: "text-[#F56630] text-sm" }}
+                    renderOption={({ option }) => (
+                      <div >
+                        <div className="text-[14px] font-medium text-[#48464E]">
+                          {option.label}
+                        </div>
+                        <div className="text-[12px] text-[#6C6975]">
+                          {(option as any).description}
+                        </div>
+                      </div>
+                    )}
                   />
                 </div>
               </div>
@@ -183,7 +210,13 @@ const PaymentSummary = () => {
           {/* Payment Summary Section */}
           <div className="bg-white grid grid-cols-1 md:grid-cols-2 gap-8">
             {/* Left: Subscription Summary */}
-            <Card shadow="sm" radius="lg" p={32} withBorder className="!bg-white">
+            <Card
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+              className="!bg-white"
+            >
               <h4 className="text-lg font-bold text-[#48464E] mb-4">
                 Subscription Summary
               </h4>
@@ -205,7 +238,10 @@ const PaymentSummary = () => {
                     <div className="font-bold text-[#F16722]">
                       ₦{" "}
                       {formatMoney(
-                        Number(sub?.amount + (adminSeat || 0) * (sub?.price_per_seat || 0))
+                        Number(
+                          sub?.amount +
+                            (adminSeat || 0) * (sub?.price_per_seat || 0)
+                        )
                       )}
                     </div>
                   </div>
@@ -264,7 +300,13 @@ const PaymentSummary = () => {
             </Card>
 
             {/* Right: Payment Summary */}
-            <Card className="flex flex-col gap-8 h-fit" shadow="sm" radius="lg" p={32} withBorder>
+            <Card
+              className="flex flex-col gap-8 h-fit"
+              shadow="sm"
+              radius="lg"
+              p={32}
+              withBorder
+            >
               <div>
                 <h4 className="text-lg font-bold text-[#48464E] mb-4">
                   Payment Summary
@@ -274,7 +316,9 @@ const PaymentSummary = () => {
                     <div
                       key={sub.id}
                       className={`flex justify-between text-sm py-2 border-b border-[#EAECF0] ${
-                        index === selectedSub.length - 1 ? "border-b-0" : "border-b"
+                        index === selectedSub.length - 1
+                          ? "border-b-0"
+                          : "border-b"
                       }`}
                     >
                       <span>{sub?.application?.name}</span>
@@ -293,7 +337,8 @@ const PaymentSummary = () => {
                         0
                       )}{" "}
                       X ₦
-                      {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))})
+                      {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))}
+                      )
                     </span>
                     <span className="text-[#F16722]">
                       ₦{" "}
@@ -311,13 +356,19 @@ const PaymentSummary = () => {
                   <div className="flex justify-between text-sm py-2 border-b border-[#EAECF0]">
                     <span>V.A.T (7.5%)</span>
                     <span className="text-[#F16722]">
-                      ₦ {formatMoney(Math.round(totalPriceValue * 0.075)).toLocaleString()}
+                      ₦{" "}
+                      {formatMoney(
+                        Math.round(totalPriceValue * 0.075)
+                      ).toLocaleString()}
                     </span>
                   </div>
                   <div className="flex justify-between text-sm pb-2 mt-2 border-b border-[#EAECF0]">
                     <span>Total Cost</span>
                     <span className="text-[#F16722]">
-                      ₦ {formatMoney(Math.round(totalPriceValue * 1.075)).toLocaleString()}
+                      ₦{" "}
+                      {formatMoney(
+                        Math.round(totalPriceValue * 1.075)
+                      ).toLocaleString()}
                     </span>
                   </div>
                 </div>
@@ -339,7 +390,10 @@ const PaymentSummary = () => {
                   }
                 >
                   Pay ₦{" "}
-                  {formatMoney(Math.round(totalPriceValue * 1.075)).toLocaleString()} Now
+                  {formatMoney(
+                    Math.round(totalPriceValue * 1.075)
+                  ).toLocaleString()}{" "}
+                  Now
                 </Button>
               </div>
             </Card>
