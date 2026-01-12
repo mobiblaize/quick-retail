@@ -1,5 +1,14 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
-import { Button, Divider, FileButton, Group, NumberInput, Stack, Text } from "@mantine/core";
+import {
+  Button,
+  Divider,
+  FileButton,
+  Group,
+  NumberInput,
+  Stack,
+  Text,
+} from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import Dropdown2 from "../../../General/dropdown2";
 import {
@@ -72,6 +81,9 @@ const LogOrder = () => {
     }
   };
 
+  const order = data?.data;
+  const fees = JSON.parse(order.fees || "{}");
+
   const calculateRefundDetails = () => {
     let subtotal = 0;
 
@@ -90,12 +102,13 @@ const LogOrder = () => {
       });
     }
 
-    const discount = 0;
-    const tax = parseFloat((0.075 * subtotal).toFixed(2));
+    const discount = fees.discount || 0;
+    const tax = fees.tax;
     const total = subtotal - discount + tax;
 
     return { subtotal, discount, tax, total };
   };
+  
 
   const handleSave = async () => {
     // Basic validation
@@ -178,7 +191,6 @@ const LogOrder = () => {
         setNotes("");
         setDefectImages([]);
 
-
         navigate(ROUTES.returns);
       },
       onError: () => {
@@ -190,7 +202,6 @@ const LogOrder = () => {
       },
     });
   };
-
 
   return (
     <main className="w-full h-auto rounded-lg bg-white pb-[3em]">
@@ -292,7 +303,10 @@ const LogOrder = () => {
                               Unit Price
                             </Text>
                             <Text fw={500} c="dark">
-                              ₦ {Number(product?.selling_price || 0).toLocaleString()}
+                              ₦{" "}
+                              {Number(
+                                product?.selling_price || 0
+                              ).toLocaleString()}
                             </Text>
                           </Stack>
 
@@ -307,14 +321,14 @@ const LogOrder = () => {
                             <FormInput
                               value={salesOrder?.quantity_ordered || 0}
                               min={1}
-                            // disabled
-                            // hideControls
-                            // styles={{
-                            //   input: {
-                            //     textAlign: "center",
-                            //   },
-                            // }}
-                            // w={{ base: "100%", md: 64 }} // replaces w-full and md:w-16
+                              // disabled
+                              // hideControls
+                              // styles={{
+                              //   input: {
+                              //     textAlign: "center",
+                              //   },
+                              // }}
+                              // w={{ base: "100%", md: 64 }} // replaces w-full and md:w-16
                             />
                           </Stack>
 
@@ -356,21 +370,26 @@ const LogOrder = () => {
                             />
                           </div> */}
 
-
                           <div className="flex flex-col items-start md:items-center min-w-[90px]">
                             <Text size="xs" c="dimmed">
                               Return Quantity
                             </Text>
-
                             <NumberInput
                               min={1}
-                              value={quantitiesReturned[salesOrder.order_detail_id] || 0}
+                              value={
+                                quantitiesReturned[
+                                  salesOrder.order_detail_id
+                                ] || 0
+                              }
                               onChange={(value) => {
                                 const inputQty = Number(value);
                                 const orderedQty = salesOrder.quantity_ordered;
 
                                 if (inputQty <= orderedQty) {
-                                  handleQuantityReturnedChange(salesOrder.order_detail_id, inputQty);
+                                  handleQuantityReturnedChange(
+                                    salesOrder.order_detail_id,
+                                    inputQty
+                                  );
                                 } else {
                                   notifications.show({
                                     title: "Invalid Quantity",
@@ -379,7 +398,12 @@ const LogOrder = () => {
                                   });
                                 }
                               }}
-                              disabled={!isSelected}
+                              disabled={
+                                !isSelected ||
+                                quantitiesReturned[
+                                  salesOrder.order_detail_id
+                                ] === salesOrder.quantity_ordered
+                              }
                               className="w-full md:w-16"
                               styles={{
                                 input: {
@@ -387,7 +411,7 @@ const LogOrder = () => {
                                   color: "#374151", // Mantine gray-700
                                 },
                               }}
-                            />
+                            />{" "}
                           </div>
                         </div>
                       </li>
@@ -462,7 +486,6 @@ const LogOrder = () => {
                 )}
               </FileButton>
 
-
               <div className="mt-2 flex gap-4 flex-wrap">
                 {defectImages.map((file, index) => (
                   <div key={index} className="relative w-32 h-32">
@@ -529,40 +552,48 @@ const LogOrder = () => {
             );
           })()} */}
 
-{(() => {
-  const { subtotal, discount, tax, total } = calculateRefundDetails();
-  return (
-    <Stack gap="xs">
-      <Group justify="space-between">
-        <Text size="sm" c="dimmed">Subtotal</Text>
-        <Text size="sm" fw={500}>
-          ₦ {subtotal.toLocaleString()}
-        </Text>
-      </Group>
+          {(() => {
+            const { subtotal, discount, tax, total } = calculateRefundDetails();
+            return (
+              <Stack gap="xs">
+                <Group justify="space-between">
+                  <Text size="sm" c="dimmed">
+                    Subtotal
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    ₦ {subtotal.toLocaleString()}
+                  </Text>
+                </Group>
 
-      <Group justify="space-between">
-        <Text size="sm" c="dimmed">Discount</Text>
-        <Text size="sm" fw={500}>
-          ₦ {discount.toLocaleString()}
-        </Text>
-      </Group>
+                <Group justify="space-between">
+                  <Text size="sm" c="dimmed">
+                    Discount
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    ₦ {discount.toLocaleString()}
+                  </Text>
+                </Group>
 
-      <Group justify="space-between">
-        <Text size="sm" c="dimmed">Tax (VAT)</Text>
-        <Text size="sm" fw={500}>
-          ₦ {tax.toLocaleString()}
-        </Text>
-      </Group>
+                <Group justify="space-between">
+                  <Text size="sm" c="dimmed">
+                    Tax (VAT)
+                  </Text>
+                  <Text size="sm" fw={500}>
+                    ₦ {tax.toLocaleString()}
+                  </Text>
+                </Group>
 
-      <Group justify="space-between">
-        <Text size="md" fw={600}>Total</Text>
-        <Text size="md" fw={600}>
-          ₦ {total.toLocaleString()}
-        </Text>
-      </Group>
-    </Stack>
-  );
-})()}
+                <Group justify="space-between">
+                  <Text size="md" fw={600}>
+                    Total
+                  </Text>
+                  <Text size="md" fw={600}>
+                    ₦ {total.toLocaleString()}
+                  </Text>
+                </Group>
+              </Stack>
+            );
+          })()}
         </div>
       )}
       {/* <div className="fixed bottom-4 left-4 right-9 flex flex-col md:flex-row justify-end gap-3 z-50">
@@ -582,8 +613,6 @@ const LogOrder = () => {
           Log Returns
         </button>
       </div> */}
-
-
 
       <div
         key="search-product-buttons"

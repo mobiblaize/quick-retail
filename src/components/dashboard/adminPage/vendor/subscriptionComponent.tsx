@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { CheckCircle } from "lucide-react";
 import { useNavigate } from "react-router-dom";
 import { ROUTES } from "../../../../constants/routes";
@@ -14,22 +15,33 @@ const defaultFeatures = [
 ];
 
 export default function SubscriptionComponent() {
-  const { data, isLoading } = useFetchCurrentSub();
+  const { data, isLoading, error, isError } = useFetchCurrentSub();
   const navigate = useNavigate();
 
   const [subscription, setSubscription] = useState<any>({});
   const [status, setStatus] = useState<string>("Loading...");
-
   // ✅ Sync state immediately when data changes
   useEffect(() => {
+    if (isError) {
+      const sub = (error as any)?.response?.data?.data;
+      const expires = new Date(sub.expired_at);
+      const now = new Date();
+      const computedStatus =
+        sub.status === "Active" && expires > now ? "Active" : "Expired";
+
+      setSubscription(sub);
+
+      setStatus(computedStatus);
+    }
     if (data?.data) {
       const sub = data.data;
       const expires = new Date(sub.expires);
       const now = new Date();
       const computedStatus =
-        sub.status === "Active" && expires > now ? "Active" : "Inactive";
+        sub.status === "Active" && expires > now ? "Active" : "Expired";
 
       setSubscription(sub);
+
       setStatus(computedStatus);
     }
   }, [data]);
@@ -43,7 +55,8 @@ export default function SubscriptionComponent() {
 
   const plan = subscription.plan ?? "No";
   const amount = subscription.amount ?? 0;
-  const expires = subscription.expires ?? new Date().toISOString();
+  const expires = subscription.expired_at ?? new Date().toISOString();
+  console.log(subscription);
   const features =
     status === "Active"
       ? subscription.features ?? defaultFeatures
@@ -72,12 +85,7 @@ export default function SubscriptionComponent() {
       <div className="border rounded-lg p-4 bg-orange-50 border-orange-700 transition-colors duration-300">
         <div className="flex justify-between items-center mb-2">
           <div>
-            <Text
-              size="lg"
-              fw={600}
-              c="secondary.9"
-              className="!capitalize"
-            >
+            <Text size="lg" fw={600} c="secondary.9" className="!capitalize">
               {plan} Plan
             </Text>
             <Text size="xl" fw={500} c="#F56630">
