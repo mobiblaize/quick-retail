@@ -82,7 +82,7 @@ const LogOrder = () => {
   };
 
   const order = data?.data;
-  const fees = JSON.parse(order.fees || "{}");
+  const fees = JSON.parse(order?.fees || "{}");
 
   const calculateRefundDetails = () => {
     let subtotal = 0;
@@ -108,7 +108,6 @@ const LogOrder = () => {
 
     return { subtotal, discount, tax, total };
   };
-  
 
   const handleSave = async () => {
     // Basic validation
