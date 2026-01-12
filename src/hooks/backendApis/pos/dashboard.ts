@@ -91,5 +91,5 @@ export const useFetchAnalysisOverview = (customPayload?: Partial<typeof defaultD
   
     const payload = { ...defaultsPayload, ...productPayload };
   
-    return useFetchPostData("pos/customer/all", payload);
+    return useFetchPostData("pos/dashboard/all-customers", payload);
   };
