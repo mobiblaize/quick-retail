@@ -82,7 +82,15 @@ const LogOrder = () => {
   };
 
   const order = data?.data;
-  const fees = JSON.parse(order?.fees || "{}");
+
+  const fees = (() => {
+    try {
+      if (!order?.fees) return {};
+      return JSON.parse(order.fees);
+    } catch {
+      return {};
+    }
+  })();
 
   const calculateRefundDetails = () => {
     let subtotal = 0;
@@ -102,8 +110,9 @@ const LogOrder = () => {
       });
     }
 
-    const discount = fees.discount || 0;
-    const tax = fees.tax;
+    const tax = Number(fees?.tax ?? 0);
+    const discount = Number(fees?.discount ?? 0);
+
     const total = subtotal - discount + tax;
 
     return { subtotal, discount, tax, total };
