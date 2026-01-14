@@ -34,7 +34,7 @@ export default function SubscriptionComponent() {
       setStatus(computedStatus);
     }
     if (data?.data) {
-      const sub = data.data;
+      const sub = data?.data;
       const expires = new Date(sub.expired_at);
       const now = new Date();
       const computedStatus =
@@ -44,7 +44,7 @@ export default function SubscriptionComponent() {
 
       setStatus(computedStatus);
     }
-  }, [data]);
+  }, [data, error, isError]);
 
   if (isLoading)
     return (

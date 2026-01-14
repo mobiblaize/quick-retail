@@ -17,6 +17,8 @@ export type Reason = "all" | "damaged" | "mistaken" | "size issue" | "others";
 
 export interface FilterValues {
   startDate: string;
+  lowStock: string;
+  soldOut: string;
   endDate: string;
   location: string;
   category?: string;
@@ -46,7 +48,14 @@ export interface ReusableFilterComponentProps {
   roles?: string[];
   modules?: string[];
   types?: string[];
-  filterType: "inventory" | "product" | "sales" | "returns" | "discount" | "audit" | "userManagement";
+  filterType:
+    | "inventory"
+    | "product"
+    | "sales"
+    | "returns"
+    | "discount"
+    | "audit"
+    | "userManagement";
   showLocation?: boolean;
   showCategory?: boolean;
   showStockLevel?: boolean;
@@ -103,47 +112,51 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   setFiltersApplied,
 }) => {
   const [filters, setFilters] = useState<FilterValues>({
-    startDate: '',
-    endDate: '',
-    location: '',
-    category: '',
-    reason:'all',
-    stockFrom: '',
-    stockTo: '',
-    orderStatus: 'All',
-    priceFrom: '',
-    priceTo: '',
-    paymentStatus: 'All',
+    startDate: "",
+    lowStock: "",
+    soldOut: "",
+    endDate: "",
+    location: "",
+    category: "",
+    reason: "all",
+    stockFrom: "",
+    stockTo: "",
+    orderStatus: "All",
+    priceFrom: "",
+    priceTo: "",
+    paymentStatus: "All",
     auditStatus: "All",
-    productStatus: 'All',
-    type: '',
-    discountStatus: 'All',
-     returnStatus: 'All',
-     userStatus: 'all',
-    role: '',
-    module: '',
+    productStatus: "All",
+    type: "",
+    discountStatus: "All",
+    returnStatus: "All",
+    userStatus: "all",
+    role: "",
+    module: "",
   });
 
   const handleClear = () => {
     const cleared: FilterValues = {
-      startDate: '',
-      endDate: '',
-      location: '',
-      category: '',
-      reason: 'all',
-      stockFrom: '',
-      stockTo: '',
-      orderStatus: 'All',
-      paymentStatus: 'All',
-      priceFrom: '',
-      priceTo: '',
-      productStatus: '',
-      type: '',
-      discountStatus: 'All',
-      returnStatus: 'All',
-      userStatus: '',
-      role: '',
-      module: '',
+      startDate: "",
+      lowStock: "",
+      soldOut: "",
+      endDate: "",
+      location: "",
+      category: "",
+      reason: "all",
+      stockFrom: "",
+      stockTo: "",
+      orderStatus: "All",
+      paymentStatus: "All",
+      priceFrom: "",
+      priceTo: "",
+      productStatus: "",
+      type: "",
+      discountStatus: "All",
+      returnStatus: "All",
+      userStatus: "",
+      role: "",
+      module: "",
     };
 
     setFilters(cleared);
@@ -157,13 +170,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
   }, [filters, setFiltersApplied]);
 
   return (
-    <Paper
-      w={320}
-      bg="white"
-      radius="lg"
-      p="md"
-      withBorder={false}
-    >
+    <Paper w={320} bg="white" radius="lg" p="md" withBorder={false}>
       <Title
         order={4}
         style={{ fontSize: "1.125rem", fontWeight: 600, marginBottom: 16 }}
@@ -180,13 +187,17 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           <TextInput
             type="date"
             value={filters.startDate}
-            onChange={(e) => setFilters({ ...filters, startDate: e.currentTarget.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, startDate: e.currentTarget.value })
+            }
             styles={inputStyles}
           />
           <TextInput
             type="date"
             value={filters.endDate}
-            onChange={(e) => setFilters({ ...filters, endDate: e.currentTarget.value })}
+            onChange={(e) =>
+              setFilters({ ...filters, endDate: e.currentTarget.value })
+            }
             styles={inputStyles}
           />
         </Group>
@@ -378,8 +389,8 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
               {[
                 { value: "All", label: "All" },
                 { value: "available", label: "Available" },
-                { value: "low stock", label: "Low Stock" },
-                { value: "sold out", label: "Sold Out" },
+                { value: "low_stock", label: "Low Stock" },
+                { value: "sold_out", label: "Sold Out" },
               ].map((status) => (
                 <Radio
                   key={status.value}
@@ -392,7 +403,6 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           </Radio.Group>
         </Stack>
       )}
-
 
       {/* ✅ Payment Status */}
       {showPaymentStatus && (
@@ -503,14 +513,18 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           radius="lg"
           onClick={handleClear}
         >
-          <Text fz="sm" fw={500} c="textSecondary.9">Clear All</Text>
+          <Text fz="sm" fw={500} c="textSecondary.9">
+            Clear All
+          </Text>
         </Button>
         <Button
           color="orange"
           radius="lg"
           onClick={() => onFilterChange(filters)}
         >
-          <Text fz="sm" fw={500} c="#fff">Filter</Text>
+          <Text fz="sm" fw={500} c="#fff">
+            Filter
+          </Text>
         </Button>
       </Group>
     </Paper>
