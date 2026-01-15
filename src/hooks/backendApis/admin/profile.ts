@@ -24,7 +24,7 @@ export const useFetchPhoto = () => {
 };
 
 export const useFetchCurrentSub = () => {
-  return useGetData(`profile/current-subscription`);
+  return useGetData(`profile/current-subscription`, undefined, undefined, 5);
 };
 
 export const useFetchAllSub = (payload: Record<string, any>) => {

@@ -5,6 +5,7 @@ import { ROUTES } from "../../../../constants/routes";
 import { useFetchCurrentSub } from "../../../../hooks/backendApis/admin/profile";
 import { List, Text, ThemeIcon, Loader } from "@mantine/core";
 import { useEffect, useState } from "react";
+import { notifications } from "@mantine/notifications"
 
 const defaultFeatures = [
   "Point of sales management system",
@@ -19,32 +20,42 @@ export default function SubscriptionComponent() {
   const navigate = useNavigate();
 
   const [subscription, setSubscription] = useState<any>({});
+
+  const [expires, setExpires] = useState<Date>(new Date());
   const [status, setStatus] = useState<string>("Loading...");
   // ✅ Sync state immediately when data changes
   useEffect(() => {
     if (isError) {
       const sub = (error as any)?.response?.data?.data;
-      const expires = new Date(sub.expired_at);
+      const expiryDate = new Date(sub.expired_at);
       const now = new Date();
       const computedStatus =
-        sub.status === "Active" && expires > now ? "Active" : "Expired";
+        sub.status === "Active" && expiryDate > now ? "Active" : "Expired";
+
+        setExpires(expiryDate)
 
       setSubscription(sub);
 
       setStatus(computedStatus);
+      console.log(sub);
     }
     if (data?.data) {
       const sub = data?.data;
-      const expires = new Date(sub.expired_at);
+      const expiryDate = new Date(sub.expires);
       const now = new Date();
+      if (sub.status === "Active" && expiryDate > now ) {
+        notifications.show({message: data.message, color: "red"})
+      }
       const computedStatus =
-        sub.status === "Active" && expires > now ? "Active" : "Expired";
+        sub.status === "Active" && expiryDate > now ? "Active" : "Expired";
 
+        setExpires(expiryDate)
       setSubscription(sub);
 
       setStatus(computedStatus);
     }
   }, [data, error, isError]);
+  
 
   if (isLoading)
     return (
@@ -55,7 +66,7 @@ export default function SubscriptionComponent() {
 
   const plan = subscription.plan ?? "No";
   const amount = subscription.amount ?? 0;
-  const expires = subscription.expired_at ?? new Date().toISOString();
+  // const expiryDate = expires ?? new Date().toISOString();
   console.log(subscription);
   const features =
     status === "Active"
@@ -63,7 +74,7 @@ export default function SubscriptionComponent() {
       : defaultFeatures;
 
   const formattedAmount = `₦${Number(amount).toLocaleString()}`;
-  const formattedExpiry = new Date(expires).toLocaleDateString("en-GB", {
+  const formattedExpiry = expires.toLocaleDateString("en-GB", {
     year: "numeric",
     month: "long",
     day: "numeric",
