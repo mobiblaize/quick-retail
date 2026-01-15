@@ -12,8 +12,7 @@ import GenericTable from "../../../General/genericTable";
 type StatusKey = "available" | "low stock" | "sold out";
 
 const InventoryTable = () => {
- const [currentPage, setCurrentPage] = useState(1);
-
+  const [currentPage, setCurrentPage] = useState(1);
 
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
     {} as FilterValues
@@ -31,18 +30,36 @@ const InventoryTable = () => {
       result.stock_level_from = Number(filters.stockFrom);
     if (filters.stockTo !== undefined && filters.stockTo !== "")
       result.stock_level_to = Number(filters.stockTo);
-    if (filters.orderStatus) result.stock_status = filters.orderStatus;
+    // if (filters.orderStatus) result.stock_status = filters.orderStatus;
     if (filters.location) result.location_name = filters.location;
-
     return result;
+  };
+
+  const mapOrderStatus = (status?: string) => {
+    if (!status) return undefined;
+
+    switch (status.toLowerCase()) {
+      case "available":
+        return "available";
+      case "low stock":
+      case "low_stock":
+        return "low_stock";
+      case "sold out":
+      case "sold_out":
+        return "sold_out";
+      default:
+        return undefined;
+    }
   };
 
   const payload = {
     page: String(currentPage),
-
     per_page: "10",
     search: searchTerm,
     sort_by: activeSort,
+
+    order_status: mapOrderStatus(appliedFilters.orderStatus),
+
     ...normalizeFilters(appliedFilters),
   };
 
@@ -68,6 +85,7 @@ const InventoryTable = () => {
     price: product.selling_price,
     original: product,
   }));
+  console.log(mappedProducts);
 
   const paginationData = data?.data?.products
     ? {
@@ -106,16 +124,22 @@ const InventoryTable = () => {
       header: "Product",
       render: (row: any) => (
         <Group gap="sm" align="center">
-          <Avatar 
+          <Avatar
             src={
               row.image
                 ? (() => {
-                    const images = row.image.split(',').map((url: string) => url.trim()).filter((url: string) => url);
+                    const images = row.image
+                      .split(",")
+                      .map((url: string) => url.trim())
+                      .filter((url: string) => url);
                     return images[1] ?? images[0] ?? "";
                   })()
                 : ""
             }
-             alt={row.name} radius="md" size={40} />
+            alt={row.name}
+            radius="md"
+            size={40}
+          />
           <Text fw={500} c="black">
             {row.name}
           </Text>
@@ -165,7 +189,25 @@ const InventoryTable = () => {
       key: "status",
       header: "Status",
       render: (row: any) => {
-        const status = row.status?.toLowerCase();
+        const normalizeStatus = (status?: string): StatusKey => {
+          if (!status) return "available";
+
+          switch (status.toLowerCase()) {
+            case "low_stock":
+            case "low stock":
+              return "low stock";
+
+            case "sold_out":
+            case "sold out":
+              return "sold out";
+
+            default:
+              return "available";
+          }
+        };
+
+        const status = normalizeStatus(row.status);
+
         const statusStyles: Record<
           StatusKey,
           { bg: string; text: string; dot: any }
@@ -187,20 +229,16 @@ const InventoryTable = () => {
           },
         };
 
-        const key = (status as StatusKey) ?? "available";
-        const { bg, text, dot } = statusStyles[key] || {
-          bg: "bg-gray-100",
-          text: "text-gray-600",
-          dot: <UnpaidDot />,
-        };
+  const { bg, text, dot } = statusStyles[status];
 
-        return (
-          <div
-            className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bg} ${text}`}
-          >
-            {dot} <span className="ml-2 capitalize">{status || "N/A"}</span>
-          </div>
-        );
+  return (
+    <div
+      className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${bg} ${text}`}
+    >
+      {dot}
+      <span className="ml-2 capitalize">{status}</span>
+    </div>
+  );
       },
     },
     {

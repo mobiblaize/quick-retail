@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useQuery, useMutation } from "@tanstack/react-query";
 import { axiosInstance, baseUrl } from "../utils/axios-instance";
 
@@ -157,7 +158,7 @@ export const useGetDataWithNoQuery = (url: string) => {
 };
 
 // Fetch Data (GET with Query)
-export const useGetData = (url: string, options?: any, enabled?: boolean) => {
+export const useGetData = (url: string, options?: any, enabled?: boolean, staleTime= 300) => {
   const query = useQuery({
     queryKey: [url, options],
     queryFn: async () => {
@@ -166,9 +167,11 @@ export const useGetData = (url: string, options?: any, enabled?: boolean) => {
       });
       return response.data;
     },
-    staleTime: 5 * 60 * 1000, // Cache data for 5 minutes
+    staleTime: staleTime * 1000, // Cache data for 5 minutes
     refetchOnWindowFocus: false,
     enabled: enabled,
+
+    
   });
 
   return {

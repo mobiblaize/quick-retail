@@ -110,113 +110,113 @@ function AddProductFormNew() {
 
     // conditional validators: second param is all values
     validate: {
-  product_name: (value) =>
-    !value?.trim() ? "Product name is required" : null,
+      product_name: (value) =>
+        !value?.trim() ? "Product name is required" : null,
 
-  sku: (value, values) =>
-    !values.has_variations && !value?.trim() ? "SKU is required" : null,
+      sku: (value, values) =>
+        !values.has_variations && !value?.trim() ? "SKU is required" : null,
 
-  category_id: (value) => (!value ? "Category is required" : null),
+      category_id: (value) => (!value ? "Category is required" : null),
 
-  sub_category_id: (value) => (!value ? "Sub-category is required" : null),
+      sub_category_id: (value) => (!value ? "Sub-category is required" : null),
 
-  short_description: (value) =>
-    !value?.trim() ? "Short description is required" : null,
+      short_description: (value) =>
+        !value?.trim() ? "Short description is required" : null,
 
-  location_id: (value) => (!value ? "Location is required" : null),
+      location_id: (value) => (!value ? "Location is required" : null),
 
-  selling_unit: (value, values) =>
-    !values.has_variations && !value?.toString().trim()
-      ? "Selling unit is required"
-      : null,
+      selling_unit: (value, values) =>
+        !values.has_variations && !value?.toString().trim()
+          ? "Selling unit is required"
+          : null,
 
-  cost_price: (value, values) =>
-    !values.has_variations && Number(value) <= 0
-      ? "Cost price must be greater than 0"
-      : null,
-
-  selling_price: (value, values) =>
-    !values.has_variations && Number(value) <= 0
-      ? "Selling price must be greater than 0"
-      : null,
-
-  total_quantity: (value, values) => {
-    if (!values.has_variations && Number(value) < 0)
-      return "Quantity cannot be negative";
-
-    if (
-      !values.has_variations &&
-      Number(values.reorder_level) > Number(value)
-    )
-      return "Quantity cannot be less than reorder level";
-
-    return null;
-  },
-
-  reorder_level: (value, values) => {
-    if (!values.has_variations && Number(value) < 0)
-      return "Reorder level cannot be negative";
-
-    if (
-      !values.has_variations &&
-      Number(value) > Number(values.total_quantity)
-    )
-      return "Reorder level cannot be greater than quantity";
-
-    return null;
-  },
-
-  /* Nested validation for variations */
-  variations: {
-    cost_price: (value, values) =>
-      values.has_variations
-        ? value <= 0
+      cost_price: (value, values) =>
+        !values.has_variations && Number(value) <= 0
           ? "Cost price must be greater than 0"
-          : null
-        : null,
+          : null,
 
-    selling_price: (value, values) =>
-      values.has_variations
-        ? value <= 0
+      selling_price: (value, values) =>
+        !values.has_variations && Number(value) <= 0
           ? "Selling price must be greater than 0"
-          : null
-        : null,
+          : null,
 
-    attributes: (value, values) =>
-      values.has_variations && (!Array.isArray(value) || value.length === 0)
-        ? "At least one attribute is required for each variation"
-        : null,
+      total_quantity: (value, values) => {
+        if (!values.has_variations && Number(value) < 0)
+          return "Quantity cannot be negative";
 
-    image: (value, values) =>
-      values.has_variations && (!Array.isArray(value) || value.length === 0)
-        ? "At least one image is required for each variation"
-        : null,
+        if (
+          !values.has_variations &&
+          Number(values.reorder_level) > Number(value)
+        )
+          return "Quantity cannot be less than reorder level";
 
-    quantity: (value, values) =>
-      values.has_variations
-        ? value < 0
-          ? "Quantity cannot be negative"
-          : null
-        : null,
+        return null;
+      },
 
-    reorder_level: (value, values) =>
-      values.has_variations
-        ? value < 0
-          ? "Reorder level cannot be negative"
-          : null
-        : null,
+      reorder_level: (value, values) => {
+        if (!values.has_variations && Number(value) < 0)
+          return "Reorder level cannot be negative";
 
-    sku: (value, values) =>
-      values.has_variations && !value?.trim()
-        ? "Variation SKU is required"
-        : null,
+        if (
+          !values.has_variations &&
+          Number(value) > Number(values.total_quantity)
+        )
+          return "Reorder level cannot be greater than quantity";
 
-    selling_unit: (value, values) =>
-      values.has_variations && !value?.trim()
-        ? "Selling unit is required"
-        : null,
-  },
-},
+        return null;
+      },
+
+      /* Nested validation for variations */
+      variations: {
+        cost_price: (value, values) =>
+          values.has_variations
+            ? value <= 0
+              ? "Cost price must be greater than 0"
+              : null
+            : null,
+
+        selling_price: (value, values) =>
+          values.has_variations
+            ? value <= 0
+              ? "Selling price must be greater than 0"
+              : null
+            : null,
+
+        attributes: (value, values) =>
+          values.has_variations && (!Array.isArray(value) || value.length === 0)
+            ? "At least one attribute is required for each variation"
+            : null,
+
+        image: (value, values) =>
+          values.has_variations && (!Array.isArray(value) || value.length === 0)
+            ? "At least one image is required for each variation"
+            : null,
+
+        quantity: (value, values) =>
+          values.has_variations
+            ? value < 0
+              ? "Quantity cannot be negative"
+              : null
+            : null,
+
+        reorder_level: (value, values) =>
+          values.has_variations
+            ? value < 0
+              ? "Reorder level cannot be negative"
+              : null
+            : null,
+
+        sku: (value, values) =>
+          values.has_variations && !value?.trim()
+            ? "Variation SKU is required"
+            : null,
+
+        selling_unit: (value, values) =>
+          values.has_variations && !value?.trim()
+            ? "Selling unit is required"
+            : null,
+      },
+    },
   });
 
   useEffect(() => {
@@ -351,7 +351,6 @@ function AddProductFormNew() {
         };
       }
 
-
       const response = await createProduct.mutateAsync(payload);
 
       notifications.show({
@@ -364,9 +363,14 @@ function AddProductFormNew() {
     } catch (error: any) {
       notifications.clean();
 
+      const errorMessage =
+        error?.response?.data?.message ||
+        error?.message ||
+        "Failed to create product";
+
       notifications.show({
         title: "Error",
-        message: error?.message || "Failed to create product",
+        message: errorMessage,
         color: "red",
       });
     }
@@ -402,7 +406,7 @@ function AddProductFormNew() {
               {...form.getInputProps("product_name")}
               error={form.errors.product_name}
             />
-            
+
             {/* SKU field only for simple products */}
             {!form.values.has_variations && (
               <TextInput
