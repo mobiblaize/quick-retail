@@ -17,8 +17,6 @@ export type Reason = "all" | "damaged" | "mistaken" | "size issue" | "others";
 
 export interface FilterValues {
   startDate: string;
-  lowStock: string;
-  soldOut: string;
   endDate: string;
   location: string;
   category?: string;
