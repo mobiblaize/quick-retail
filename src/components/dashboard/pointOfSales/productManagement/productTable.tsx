@@ -22,8 +22,9 @@ interface ApiProduct {
   quantity: number;
   reorder_level: string;
   image_path: string;
-  status: string;
+  status: "active" | "inactive" | "";
   stock_status: string;
+  draft: number;
 
   product: {
     productID: string;

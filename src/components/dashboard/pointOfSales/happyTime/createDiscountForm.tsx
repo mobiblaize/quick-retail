@@ -9,6 +9,7 @@ import {
 } from "../../../../hooks/backendApis/pos/discount";
 import DiscountSearchProduct from "./discountSearchProduct";
 import Dropdown from "../../../General/dropdown";
+import { TbChevronsDownLeft } from "react-icons/tb";
 
 // interface SelectedItemPayload {
 //     variationId: string;
@@ -20,6 +21,7 @@ const CreateDiscountForm = () => {
 
   const [name, setName] = useState("");
   const [redemptionCount, setRedemptionCount] = useState("");
+  const [productLimit, setProductLimit] = useState("");
   const [from, setFrom] = useState("");
   const [to, setTo] = useState("");
   const [discountType, setDiscountType] = useState("Amount");
@@ -51,8 +53,10 @@ const CreateDiscountForm = () => {
       redemption_count: Number(redemptionCount),
       products: selectedProducts.map((item: any) => {
         const productId = item.variationID && item.id;
+
         return {
           id: productId,
+          stock_limit: Number(productLimit),
         };
       }),
     };
@@ -77,6 +81,7 @@ const CreateDiscountForm = () => {
       },
     });
   };
+  console.log(productLimit);
 
   return (
     <div>
@@ -93,7 +98,7 @@ const CreateDiscountForm = () => {
             paddingY={"0.7rem"}
             value={name}
             // onChange={(e: any) => setName(e.target.value)}
-            onChange={(val: string) =>  setName(val)}
+            onChange={(val: string) => setName(val)}
           />
 
           <FormInput
@@ -103,7 +108,7 @@ const CreateDiscountForm = () => {
             paddingY={"0.7rem"}
             value={redemptionCount}
             // onChange={(e: any) => setRedemptionCount(e.target.value)}
-            onChange={(val: string) =>  setRedemptionCount(val)}
+            onChange={(val: string) => setRedemptionCount(val)}
           />
 
           <FormInput
@@ -113,7 +118,7 @@ const CreateDiscountForm = () => {
             placeholder="Select start date"
             value={from}
             // onChange={(e: any) => setFrom(e.target.value)}
-            onChange={(val: string) =>  setFrom(val)}
+            onChange={(val: string) => setFrom(val)}
           />
 
           <FormInput
@@ -123,7 +128,7 @@ const CreateDiscountForm = () => {
             placeholder="Select end date"
             value={to}
             // onChange={(e: any) => setTo(e.target.value)}
-            onChange={(val: string) =>  setTo(val)}
+            onChange={(val: string) => setTo(val)}
           />
 
           {/* <Dropdown
@@ -160,7 +165,7 @@ const CreateDiscountForm = () => {
               leftPrefix="%"
               value={percentage}
               // onChange={(e: any) => setPercentage(e.target.value)}
-              onChange={(val: string) =>  setPercentage(val)}
+              onChange={(val: string) => setPercentage(val)}
             />
           ) : (
             <FormInput
@@ -171,9 +176,18 @@ const CreateDiscountForm = () => {
               leftPrefix="₦"
               value={discountValue}
               // onChange={(e: any) => setDiscountValue(e.target.value)}
-              onChange={(val: string) =>  setDiscountValue(val)}
+              onChange={(val: string) => setDiscountValue(val)}
             />
           )}
+          <FormInput
+            type="text"
+            label="Product Limit"
+            placeholder="Enter product limit"
+            paddingY={"0.7rem"}
+            value={productLimit}
+            // onChange={(e: any) => setRedemptionCount(e.target.value)}
+            onChange={(val: string) => setProductLimit(val)}
+          />
         </div>
       </div>
 
@@ -183,7 +197,7 @@ const CreateDiscountForm = () => {
         </Title>
         <Divider mb="md" />
         <DiscountSearchProduct
-          onSelect={() => { }}
+          onSelect={() => {}}
           onItemsChange={(items) => {
             setSelectedProducts(items);
           }}
@@ -194,11 +208,19 @@ const CreateDiscountForm = () => {
         key="search-product-buttons"
         className="flex gap-4 justify-end mt-[4em] bg-[#fff] p-4"
       >
-        <Button variant="outline-primary" onClick={() => navigate(-1)} style={{ width: 150 }}>
+        <Button
+          variant="outline-primary"
+          onClick={() => navigate(-1)}
+          style={{ width: 150 }}
+        >
           Cancel
         </Button>
 
-        <Button variant="filled-primary" onClick={handleSubmit} style={{ width: 150 }}>
+        <Button
+          variant="filled-primary"
+          onClick={handleSubmit}
+          style={{ width: 150 }}
+        >
           Create Discount
         </Button>
       </div>

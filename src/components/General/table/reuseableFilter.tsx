@@ -35,7 +35,8 @@ export interface FilterValues {
   userStatus?: string;
   role: string;
   module: string;
-  [key: string]: string | undefined;
+  draft?: boolean;
+  [key: string]: string | boolean | undefined;
 }
 
 export interface ReusableFilterComponentProps {
@@ -162,7 +163,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
 
   useEffect(() => {
     const hasFilters = Object.entries(filters).some(
-      ([, val]) => val && val !== "" && val !== "All" && val !== "all"
+      ([, val]) => val && val !== "" && val !== "All" && val !== "all",
     );
     setFiltersApplied?.(hasFilters);
   }, [filters, setFiltersApplied]);
@@ -434,7 +435,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
             onChange={(val) => setFilters({ ...filters, productStatus: val })}
           >
             <Group justify="space-around" gap="xs" wrap="wrap">
-              {["All", "Active", "Inactive"].map((status) => (
+              {["All", "Active", "Inactive", "Draft"].map((status) => (
                 <Radio key={status} value={status} label={status} size="sm" />
               ))}
             </Group>
