@@ -58,13 +58,16 @@ const TableSkeleton = () => (
   </section>
 );
 
-const ProductManagementPage = () => { 
+const ProductManagementPage = () => {
   const navigate = useNavigate();
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   // @ts-ignore
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>({});
-  const [dateRange, setDateRange] = useState<{ startDate: string; endDate: string }>({
+  const [dateRange, setDateRange] = useState<{
+    startDate: string;
+    endDate: string;
+  }>({
     startDate: "",
     endDate: "",
   });
@@ -72,20 +75,14 @@ const ProductManagementPage = () => {
   const [perPage] = useState(10);
   const [activeSort, setActiveSort] = useState("");
 
-  const handleAddBulkProducts = () => navigate("/dashboard/product-management/add-bulk-product");
+  const handleAddBulkProducts = () =>
+    navigate("/dashboard/product-management/add-bulk-product");
 
-  const mapOrderStatus = (status: string | undefined) => {
-    if (!status || status.toLowerCase() === "all") return "";
-    if (status.toLowerCase() === "active") return "active";
-    if (status.toLowerCase() === "inactive") return "inactive";
-    return status.toLowerCase();
-  };
+  const mapFiltersToPayload = (filters: FilterValues) => {
+  const productStatus = filters.productStatus?.toLowerCase();
 
-  const mapFiltersToPayload = (filters: FilterValues) => ({
-    // @ts-ignore
+  return {
     search: filters.search ?? "",
-    // search: searchTerm,
-    // @ts-ignore
     sort_by: filters.sortBy ?? "",
     per_page: perPage.toString(),
     paginate: true,
@@ -93,11 +90,20 @@ const ProductManagementPage = () => {
     category_name: filters.category,
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
-    status: mapOrderStatus(filters.productStatus),
-    price_from: filters.priceFrom ?? 100,
+    price_from: filters.priceFrom ?? "",
     price_to: filters.priceTo ?? "",
     page: currentPage.toString(),
-  });
+
+    // 👇 IMPORTANT PART
+    status:
+      productStatus === "active" || productStatus === "inactive"
+        ? productStatus
+        : "",
+
+    draft: productStatus === "draft" ? 1 : undefined,
+  };
+};
+
 
   const startDate = dateRange.startDate || appliedFilters?.startDate || "";
   const endDate = dateRange.endDate || appliedFilters?.endDate || "";
@@ -114,7 +120,9 @@ const ProductManagementPage = () => {
 
   // @ts-ignore
   const { data = {}, isLoading = false } = useFetchAllProducts(payload) || {};
-  const products = Array.isArray(data?.data?.products?.data) ? data.data.products.data : [];
+  const products = Array.isArray(data?.data?.products?.data)
+    ? data.data.products.data
+    : [];
   const paginationData = data?.data?.products
     ? {
         current_page: data.data.products.current_page,
@@ -129,7 +137,8 @@ const ProductManagementPage = () => {
     : undefined;
 
   const handlePageChange = (page: number) => setCurrentPage(page);
-  const handleFilterChange = (filters: FilterValues) => setAppliedFilters(filters);
+  const handleFilterChange = (filters: FilterValues) =>
+    setAppliedFilters(filters);
 
   const subHeaders = [
     <div className="justify-between flex items-center" key="hdr">
@@ -154,8 +163,12 @@ const ProductManagementPage = () => {
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <Menu.Item onClick={() => setIsLogComplaintsOpen(true)}>Add a product</Menu.Item>
-              <Menu.Item onClick={handleAddBulkProducts}>Add bulk products</Menu.Item>
+              <Menu.Item onClick={() => setIsLogComplaintsOpen(true)}>
+                Add a product
+              </Menu.Item>
+              <Menu.Item onClick={handleAddBulkProducts}>
+                Add bulk products
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </div>
@@ -187,15 +200,19 @@ const ProductManagementPage = () => {
                 boxShadow: "0px 4px 10px rgba(0, 0, 0, 0.1)",
               }}
             >
-              <Menu.Item onClick={() => setIsLogComplaintsOpen(true)}>Add a product</Menu.Item>
-              <Menu.Item onClick={handleAddBulkProducts}>Add bulk products</Menu.Item>
+              <Menu.Item onClick={() => setIsLogComplaintsOpen(true)}>
+                Add a product
+              </Menu.Item>
+              <Menu.Item onClick={handleAddBulkProducts}>
+                Add bulk products
+              </Menu.Item>
             </Menu.Dropdown>
           </Menu>
         </div>
       </div>
     </div>,
   ];
-
+// console.log(draft)
   return (
     <PageContainer subHeaders={subHeaders}>
       <main>
@@ -206,7 +223,13 @@ const ProductManagementPage = () => {
           </>
         ) : (
           <>
-            <ProductOverview data={data?.data} isLoading={isLoading} onDateRangeChange={setDateRange} startDate={dateRange.startDate} endDate={dateRange.endDate} />
+            <ProductOverview
+              data={data?.data}
+              isLoading={isLoading}
+              onDateRangeChange={setDateRange}
+              startDate={dateRange.startDate}
+              endDate={dateRange.endDate}
+            />
             <ProductTable
               products={products}
               isLoading={isLoading}
@@ -231,7 +254,10 @@ const ProductManagementPage = () => {
           </>
         )}
 
-        <AddProduct opened={isLogComplaintsOpen} onClose={() => setIsLogComplaintsOpen(false)} />
+        <AddProduct
+          opened={isLogComplaintsOpen}
+          onClose={() => setIsLogComplaintsOpen(false)}
+        />
       </main>
     </PageContainer>
   );

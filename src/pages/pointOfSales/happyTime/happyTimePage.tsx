@@ -62,7 +62,9 @@ const DiscountTableSkeleton = () => (
 
 const HappyTimePage = () => {
   const [isLogComplaintsOpen, setIsLogComplaintsOpen] = useState(false);
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
+    {} as FilterValues,
+  );
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState("10");
   const [searchTerm, setSearchTerm] = useState("");
@@ -77,8 +79,8 @@ const HappyTimePage = () => {
   };
 
   const mapFiltersToPayload = (filters: Partial<FilterValues>) => ({
-    search: filters.search ?? "",
-    sort_by: filters.sortBy ?? "",
+    search: typeof filters.search === "string" ? filters.search : "",
+    sort_by: typeof filters.sortBy === "string" ? filters.sortBy : "",
     per_page: "",
     paginate: true,
     start_date: filters.startDate ?? "",
@@ -98,7 +100,8 @@ const HappyTimePage = () => {
     sort_by: activeSort,
   };
 
-  const { data: statsData = {}, isLoading: isLoadingStats = false } = useFetchAllDiscount(statsPayload) || {};
+  const { data: statsData = {}, isLoading: isLoadingStats = false } =
+    useFetchAllDiscount(statsPayload) || {};
   const { data = {}, isLoading = false } = useFetchAllDiscount(payload) || {};
 
   const rawDiscounts = data?.data?.discounts?.data || [];
@@ -151,7 +154,11 @@ const HappyTimePage = () => {
   return (
     <PageContainer subHeaders={subHeaders}>
       {/* Overview / stats */}
-      {isLoadingStats ? <OverviewSkeleton /> : <AnalysisOverview1 stats={stats} />}
+      {isLoadingStats ? (
+        <OverviewSkeleton />
+      ) : (
+        <AnalysisOverview1 stats={stats} />
+      )}
 
       {/* Discounts table */}
       {isLoading ? (
@@ -192,4 +199,3 @@ const HappyTimePage = () => {
 };
 
 export default HappyTimePage;
-

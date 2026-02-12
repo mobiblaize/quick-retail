@@ -61,7 +61,7 @@ const TransactionPage = () => {
     endDate: "",
   });
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
-    {} as FilterValues
+    {} as FilterValues,
   );
   const [currentPage, setCurrentPage] = useState(1);
   const [searchTerm, setSearchTerm] = useState("");
@@ -73,12 +73,12 @@ const TransactionPage = () => {
 
   // Combine filter + pagination logic
   const mapFiltersToPayload = (filters: Partial<FilterValues>) => ({
-    sort_by: filters.sortBy || "",
+    sort_by: typeof filters.sortBy === "string" ? filters.sortBy : "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     page: currentPage.toString(),
     per_page: perPage.toString(),
-    search: filters.search ?? "",
+    search: typeof filters.search === "string" ? filters.search : "",
   });
 
   // ✅ Apply same filters to overview and table

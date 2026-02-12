@@ -51,7 +51,7 @@ function AddProductFormNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -60,7 +60,7 @@ function AddProductFormNew() {
       (item: any) => ({
         value: String(item.name),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -69,7 +69,7 @@ function AddProductFormNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -80,6 +80,7 @@ function AddProductFormNew() {
     initialValues: {
       product_name: "",
       sku: "",
+      status: "",
       category_id: "",
       sub_category_id: "",
       short_description: "",
@@ -252,7 +253,7 @@ function AddProductFormNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -287,7 +288,7 @@ function AddProductFormNew() {
 
   const handleRemoveVariationImage = (
     variationIndex: number,
-    imageIndex: number
+    imageIndex: number,
   ) => {
     const key = `variations.${variationIndex}.image`;
     const existing: string[] = form.getInputProps(key).value || [];
@@ -310,12 +311,15 @@ function AddProductFormNew() {
 
   const handleRemoveSimpleImage = (index: number) => {
     const updated = (form.values.image_path || []).filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
     form.setFieldValue("image_path", updated);
   };
 
-  const handleSubmit = async (values: typeof form.values) => {
+  const handleSubmit = async (
+    values: typeof form.values,
+    isDraft: boolean = false,
+  ) => {
     try {
       let payload: any;
 
@@ -345,6 +349,7 @@ function AddProductFormNew() {
           location_id: Number(values.location_id),
           has_variations: true,
           variations: transformedVariations,
+          status: isDraft ? "draft" : "active",
         };
       } else {
         // simple product payload
@@ -362,14 +367,19 @@ function AddProductFormNew() {
           total_quantity: Number(values.total_quantity || 0),
           reorder_level: Number(values.reorder_level || 0),
           image_path: Array.isArray(values.image_path) ? values.image_path : [],
+          status: isDraft ? "draft" : "active",
         };
       }
 
       const response = await createProduct.mutateAsync(payload);
 
       notifications.show({
-        title: "New Product Saved!",
-        message: response?.message || "Product created successfully",
+        title: isDraft ? "Product Saved as Draft!" : "New Product Saved!",
+        message:
+          response?.message ||
+          (isDraft
+            ? "Product saved as draft successfully"
+            : "Product created successfully"),
         color: "green",
       });
 
@@ -389,6 +399,7 @@ function AddProductFormNew() {
       });
     }
   };
+  console.log(status);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -549,8 +560,15 @@ function AddProductFormNew() {
             {/* final action buttons (unchanged for variable flow) */}
             <Card mt="xl" shadow="md">
               <Flex justify={"flex-end"} gap={"lg"}>
-                <Button variant="outline" tt={"capitalize"}>
-                  cancel
+                <Button
+                  variant="outline"
+                  tt={"capitalize"}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleSubmit(form.values, true);
+                  }}
+                >
+                  save as draft
                 </Button>
                 <Button
                   loading={(createProduct as any).isPending}
@@ -649,8 +667,15 @@ function AddProductFormNew() {
             </Box>
 
             <Flex justify={"end"} mt="xl" gap={15} className="">
-              <Button radius={"md"} variant="outline">
-                Cancel
+              <Button
+                radius={"md"}
+                variant="outline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit(form.values, true);
+                }}
+              >
+                Save as Draft
               </Button>
               <Button
                 radius={"md"}
