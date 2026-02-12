@@ -1,4 +1,4 @@
-import hero from "../../../assets/images/hero.png";
+import hero from "../../../assets/images/heroImage2.png";
 import heroBg from "../../../assets/images/herobg.png";
 import { useNavigate } from "react-router-dom";
 
@@ -34,7 +34,7 @@ export default function HeroSection() {
               >
                 Get Started Now
               </button>
-              <div className="mt-auto shadow-lg max-w-4xl mx-auto rounded-lg sm:rounded-xl overflow-hidden">
+              <div className="mt-auto mb-5 shadow-lg max-w-4xl mx-auto rounded-lg sm:rounded-xl overflow-hidden">
                 <img
                   src={hero}
                   alt="ERP Dashboard"

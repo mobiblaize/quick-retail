@@ -1,7 +1,10 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useState } from "react";
-import { useCreateSubCategory } from "../../../../../hooks/backendApis/pos/categories";
+import {
+  useCreateSubCategory,
+  useFetchSubCatOfCat,
+} from "../../../../../hooks/backendApis/pos/categories";
 import Dropdown from "../../../../General/dropdown";
 import FormInput from "../../../../General/formInput";
 
@@ -15,15 +18,44 @@ const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
   const createSubCategory = useCreateSubCategory();
 
   const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null
+    null,
   );
   const [subCategoryName, setSubCategoryName] = useState("");
+
+  // Fetch existing subcategories for the selected category to check for duplicates
+  const { data: existingSubCategories } = useFetchSubCatOfCat(
+    selectedCategoryId,
+    !!selectedCategoryId,
+  );
+  
 
   const handleSubmit = async () => {
     if (!selectedCategoryId || !subCategoryName.trim()) {
       notifications.show({
         title: "Validation error",
         message: "Please select a category and enter a sub-category name",
+        color: "red",
+      });
+      return;
+    }
+
+    // Check if sub-category name already exists for the selected category
+    const existingSubCats = existingSubCategories?.data || [];
+
+const normalizedInput = subCategoryName.trim().toLowerCase();
+
+const isDuplicate = existingSubCats.some(
+  (subCat: { name: string }) =>
+    subCat.name.trim().toLowerCase() === normalizedInput,
+);
+console.log(isDuplicate)
+
+
+    if (isDuplicate) {
+      notifications.show({
+        title: "Duplicate Sub-Category",
+        message:
+          "A sub-category with this name already exists for the selected category",
         color: "red",
       });
       return;
