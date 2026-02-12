@@ -25,7 +25,7 @@ const ManageFinncial = () => {
   return (
     <main className="my-8 sm:my-15 max-w-7xl container mx-auto px-4 sm:px-6 lg:px-8">
       <h1 className="font-clash-regular text-2xl sm:text-3xl lg:text-4xl">
-        Mange financial transactions and <br className="hidden sm:block" />
+        Manage financial transactions and <br className="hidden sm:block" />
         support{" "}
         <span className="font-clash-medium text-orange-500 tracking-tight">
           financial decision-making

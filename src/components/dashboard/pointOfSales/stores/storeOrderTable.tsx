@@ -1,3 +1,5 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { Loader, Text, Group, Badge, Stack } from "@mantine/core";
 import { Link } from "react-router-dom";
@@ -17,10 +19,12 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({ locationId }) => {
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
   const [, setSortBy] = useState<string>("");
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(null);
+  const [appliedFilters, setAppliedFilters] = useState<FilterValues | null>(
+    null,
+  );
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
-    sort_by: filters.sortBy || "",
+    sort_by: typeof filters.sortBy === "string" ? filters.sortBy : undefined,
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     page: currentPage.toString(),
@@ -75,8 +79,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({ locationId }) => {
             {row.orderID}
           </Text>
           <Text fz="sm" c="dimmed">
-            Total Item:{" "}
-            {row.fees ? JSON.parse(row.fees).item_count : "N/A"}
+            Total Item: {row.fees ? JSON.parse(row.fees).item_count : "N/A"}
           </Text>
         </Stack>
       ),
@@ -124,7 +127,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({ locationId }) => {
             variant="light"
             radius="lg"
             size="md"
-            className='!text-lg'
+            className="!text-lg"
             style={{ textTransform: "none" }}
           >
             {neat}
@@ -136,10 +139,7 @@ const StoreOrderTable: React.FC<StoreOrderTableProps> = ({ locationId }) => {
       key: "action",
       header: "",
       render: (row: any) => (
-        <Link
-          to={ROUTES.storeBillingInformation}
-          state={{ orderData: row }}
-        >
+        <Link to={ROUTES.storeBillingInformation} state={{ orderData: row }}>
           <Text fw={600} c="orange" className="cursor-pointer">
             View Order
           </Text>
