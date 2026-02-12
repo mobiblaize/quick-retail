@@ -56,7 +56,7 @@ const OrdersTableSkeleton = () => (
 
 const SalesProcessingPage = () => {
   const [appliedFilters, setAppliedFilters] = useState<FilterValues>(
-    {} as FilterValues
+    {} as FilterValues,
   );
   const [dateRange, setDateRange] = useState<{
     startDate: string;
@@ -88,8 +88,8 @@ const SalesProcessingPage = () => {
   };
 
   const mapFiltersToPayload = (filters: FilterValues) => ({
-    search: filters.search ?? "",
-    sort_by: filters.sortBy ?? "",
+    search: typeof filters.search === "string" ? filters.search : "",
+    sort_by: typeof filters.sortBy === "string" ? filters.sortBy : "",
     start_date: filters.startDate ?? "",
     end_date: filters.endDate ?? "",
     status: mapOrderStatus(filters.paymentStatus),

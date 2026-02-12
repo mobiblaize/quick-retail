@@ -385,7 +385,7 @@ function AddProductFormNew() {
       });
     }
   };
-  console.log(status)
+  console.log(status);
 
   return (
     <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
@@ -648,8 +648,15 @@ function AddProductFormNew() {
             </Box>
 
             <Flex justify={"end"} mt="xl" gap={15} className="">
-              <Button radius={"md"} variant="outline">
-                Cancel
+              <Button
+                radius={"md"}
+                variant="outline"
+                onClick={(e) => {
+                  e.preventDefault();
+                  handleSubmit(form.values, true);
+                }}
+              >
+                Save as Draft
               </Button>
               <Button
                 radius={"md"}

@@ -9,7 +9,6 @@ import {
 } from "../../../../hooks/backendApis/pos/discount";
 import DiscountSearchProduct from "./discountSearchProduct";
 import Dropdown from "../../../General/dropdown";
-import { TbChevronsDownLeft } from "react-icons/tb";
 
 // interface SelectedItemPayload {
 //     variationId: string;

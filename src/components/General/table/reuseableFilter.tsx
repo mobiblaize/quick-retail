@@ -490,7 +490,7 @@ const ReusableFilterComponent: React.FC<ReusableFilterComponentProps> = ({
           </Text>
           <Radio.Group
             name="userStatus"
-            value={filters.status}
+            value={filters.userStatus}
             onChange={(val) => setFilters({ ...filters, userStatus: val })}
           >
             <Group justify="space-around" gap="xs" wrap="wrap">
