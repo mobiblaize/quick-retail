@@ -7,7 +7,6 @@ import {
 import { Box, Button, Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
-// import { SqrCode } from "../../../../assets/svg";
 import {
   useScanProduct,
   useSearchLocationProducts,
@@ -43,7 +42,6 @@ const SearchProduct = ({
   const { items, setItems } = useOrderStore();
   const [searchTerm, setSearchTerm] = useState("");
   const [debouncedSearch, setDebouncedSearch] = useState("");
-  // const [selectedItems, setSelectedItems] = useState<SelectedItem[]>([]);
   const [selectedItems, setSelectedItems] = useState<SelectedItem[]>(items);
   const [hasSetInitial, setHasSetInitial] = useState(false);
   const [scanError, setScanError] = useState<string | null>(null);
@@ -51,8 +49,6 @@ const SearchProduct = ({
   const [scannedBuffer, setScannedBuffer] = useState("");
   const scanProductMutation = useScanProduct();
   const isScanningBarcode = scanProductMutation.isPending;
-
-
 
   useEffect(() => {
     if (!hasSetInitial && initialItems.length > 0) {
@@ -69,13 +65,10 @@ const SearchProduct = ({
     }
   }, [initialItems, hasSetInitial]);
 
-
-
   useEffect(() => {
     setItems(selectedItems);
     onItemsChange(selectedItems);
   }, [selectedItems, setItems, onItemsChange]);
-
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -89,11 +82,15 @@ const SearchProduct = ({
     !!debouncedSearch
   );
 
+  // --- FIX START: Logic updated to handle Arrays correctly ---
   const products = data?.products?.data
     ? data.products.data
-    : data?.data
-      ? [data.data]
-      : [];
+    : Array.isArray(data?.data) // Check if data.data is already an array
+      ? data.data
+      : data?.data
+        ? [data.data] // Only wrap in array if it's a single object
+        : [];
+  // --- FIX END ---
 
   const handleSelect = useCallback((item: {
     name: string;
@@ -207,7 +204,6 @@ const SearchProduct = ({
     }
   }, [isScanningBarcode, scanProductMutation, handleSelect]);
 
-  // Listen for physical barcode scanner input when scanning is active
   useEffect(() => {
     if (!isScanning) {
       setScannedBuffer("");
@@ -217,27 +213,20 @@ const SearchProduct = ({
     let bufferTimeout: NodeJS.Timeout;
 
     const handleKeyPress = (event: KeyboardEvent) => {
-      // Prevent default behavior during scanning
       if (event.target instanceof HTMLInputElement || event.target instanceof HTMLTextAreaElement) {
-        // Don't interfere if user is typing in an input
         return;
       }
 
-      // Clear any existing timeout
       clearTimeout(bufferTimeout);
 
       if (event.key === "Enter") {
-        // Barcode scanner typically sends Enter after the code
         event.preventDefault();
         if (scannedBuffer.trim()) {
           processScannedBarcode(scannedBuffer);
           setScannedBuffer("");
         }
       } else if (event.key.length === 1) {
-        // Accumulate characters (barcode scanners type very fast)
         setScannedBuffer((prev) => prev + event.key);
-
-        // Auto-submit after 100ms of no input (barcode scanners are fast)
         bufferTimeout = setTimeout(() => {
           if (scannedBuffer.trim()) {
             processScannedBarcode(scannedBuffer);
@@ -279,49 +268,48 @@ const SearchProduct = ({
   useEffect(() => { }, [initialItems]);
 
   return (
-    <main className="w-full h-auto  bg-white p-6 rounded-lg shadow-md border border-gray-200">
-
+    <main className="w-full h-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
       <div className="px-6 py-2">
         <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
           Search Product
         </Text>
       </div>
       <div className="flex items-center justify-between">
-      <div className="pt-4 pb-4 max-w-md px-6">
-        <FormInput
-          placeholder="Search by name, SKU, or EAN"
-          value={searchTerm}
-          paddingY="0.7rem"
-          onChange={(val: string) => setSearchTerm(val)}
-          leftIcon={<Search color="#667185" />}
-        />
-      </div>
+        <div className="pt-4 pb-4 max-w-md px-6 w-full">
+          <FormInput
+            placeholder="Search by name, SKU, or EAN"
+            value={searchTerm}
+            paddingY="0.7rem"
+            onChange={(val: string) => setSearchTerm(val)}
+            leftIcon={<Search color="#667185" />}
+          />
+        </div>
 
-      <div className="px-6 pb-4">
-        <Button
-          variant={"filled-primary"}
-          loading={isScanningBarcode}
-          disabled={isScanningBarcode}
-          onClick={toggleScanning}
-          type="button"
-          style={{
-            backgroundColor: isScanning ? "#F97316" : undefined,
-            animation: isScanning ? "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite" : undefined,
-          }}
-        >
-          {isScanning ? "⏹ Stop Scanning" : "Scan Barcode"}
-        </Button>
-        {isScanning && (
-          <Text size="xs" c="orange.6" mt="xs">
-            Scanner active - scan a barcode now...
-          </Text>
-        )}
-        {scanError && (
-          <Text size="xs" c="red" mt="xs">
-            {scanError}
-          </Text>
-        )}
-      </div>
+        <div className="px-6 pb-4">
+          <Button
+            variant={"filled-primary"}
+            loading={isScanningBarcode}
+            disabled={isScanningBarcode}
+            onClick={toggleScanning}
+            type="button"
+            style={{
+              backgroundColor: isScanning ? "#F97316" : undefined,
+              animation: isScanning ? "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite" : undefined,
+            }}
+          >
+            {isScanning ? "⏹ Stop Scanning" : "Scan Barcode"}
+          </Button>
+          {isScanning && (
+            <Text size="xs" c="orange.6" mt="xs">
+              Scanner active - scan a barcode now...
+            </Text>
+          )}
+          {scanError && (
+            <Text size="xs" c="red" mt="xs">
+              {scanError}
+            </Text>
+          )}
+        </div>
       </div>
 
       {isLoading && (
@@ -331,7 +319,7 @@ const SearchProduct = ({
       )}
 
       {!isLoading && debouncedSearch && (
-        <ul className="px-6 pb-4 space-y-2 max-h-64 overflow-y-auto max-w-md">
+        <ul className="px-6 pb-4 space-y-2 max-h-64 overflow-y-auto w-full max-w-md">
           {products.length > 0 ? (
             products.map(
               (item: {
@@ -344,6 +332,8 @@ const SearchProduct = ({
                 quantity?: number;
                 quantity_available?: number;
                 custom?: any;
+                selling_price?: number;
+                ean?: string;
               }) => {
                 const isOutOfStock =
                   item.quantity === 0 ||
@@ -351,20 +341,12 @@ const SearchProduct = ({
 
                 return (
                   <li
-                    key={item.variationID}
+                    key={item.variationID || Math.random().toString()} // Fallback key just in case
                     onClick={() => {
                       if (!isOutOfStock) {
                         handleSelect({
-                          // @ts-expect-error - This is a workaround to fix the type error
-                          name: item.name,
                           custom: false,
                           variationId: item.variationID,
-                          image_path: item.image_path,
-                          // @ts-expect-error - This is a workaround to fix the type error
-                          selling_price: item.selling_price,
-                          sku: item.sku,
-                          // @ts-expect-error - This is a workaround to fix the type error
-                          ean: item.ean,
                           quantity: 1,
                           ...item,
                         });
@@ -378,14 +360,12 @@ const SearchProduct = ({
                   >
                     <img
                       src={item.image_path}
-                      // alt={item.name}
                       alt=""
                       className="w-12 h-12 object-cover rounded"
                     />
                     <div className="flex flex-col">
                       <Text fw={500}>{item.name}</Text>
 
-                      {/* Stock warning */}
                       {isOutOfStock && (
                         <Text size="xs" fw={600} c="red">
                           No stock
@@ -414,12 +394,9 @@ const SearchProduct = ({
             )
           ) : (
             <li
-              onClick={() =>
-                handleSelect({ name: debouncedSearch, custom: true })
-              }
-            // className="cursor-pointer px-4 py-2 rounded bg-yellow-50 hover:bg-yellow-100 border border-yellow-300 text-yellow-800 italic"
+              className="px-4 py-2 text-gray-500"
             >
-              {/* Use custom entry: <strong>{debouncedSearch}</strong> */}
+              No products found for "{debouncedSearch}"
             </li>
           )}
         </ul>
@@ -433,10 +410,8 @@ const SearchProduct = ({
           <ul className="mt-[2em]">
             {selectedItems.map((item) => {
               const itemKey = item.custom
-                ? 
-                `custom-${item.name}`
-                :
-                item.variationId;
+                ? `custom-${item.name}`
+                : item.variationId;
               const quantity = item.quantity ?? 0;
               const unitPrice = Number(item.selling_price || 0);
               const totalPrice = unitPrice * quantity;
@@ -444,44 +419,34 @@ const SearchProduct = ({
               return (
                 <li
                   key={itemKey}
-                  className="flex items-center gap-4 p-3 rounded bg-gray-50"
+                  className="flex items-center gap-4 p-3 rounded bg-gray-50 mb-2"
                 >
-                  {/* Image */}
                   {!item.custom && (
                     <img
                       src={item.image_path}
-                      // alt={item.name}
                       className="w-16 h-16 object-cover rounded"
                     />
                   )}
 
-                  {/* Name, color, sku */}
                   <div className="flex justify-around gap-[2em] w-full">
-                    {
-                      <div className="flex flex-col ">
-                        <Text fw={500} c="dark.9">
-                          {item.name}
+                    <div className="flex flex-col w-1/3">
+                      <Text fw={500} c="dark.9">
+                        {item.name}
+                      </Text>
+
+                      {item.ean && (
+                        <Text size="sm" c="gray.6">
+                          EAN: <Text span fw={500}>{item.ean}</Text>
                         </Text>
+                      )}
 
-                        {item.ean && (
-                          <Text size="sm" c="gray.6">
-                            EAN:{" "}
-                            <Text span fw={500}>
-                              {item.ean}
-                            </Text>
-                          </Text>
-                        )}
-
-                        {item.sku && (
-                          <Text size="sm" c="gray.6">
-                            SKU:{" "}
-                            <Text span fw={500}>
-                              {item.sku}
-                            </Text>
-                          </Text>
-                        )}
-                      </div>
-                    }
+                      {item.sku && (
+                        <Text size="sm" c="gray.6">
+                          SKU: <Text span fw={500}>{item.sku}</Text>
+                        </Text>
+                      )}
+                    </div>
+                    
                     <div className="flex flex-col items-center min-w-[70px]">
                       <Text size="xs" c="dark.7">
                         Unit Price
@@ -491,7 +456,6 @@ const SearchProduct = ({
                       </Text>
                     </div>
 
-                    {/* Quantity Input */}
                     <div className="min-w-[70px]">
                       <Text size="xs" c="dark.7">
                         Quantity
@@ -501,12 +465,10 @@ const SearchProduct = ({
                         min={1}
                         value={item.quantity?.toString() ?? ""}
                         onChange={(val: string) => {
-
                           if (val === "") {
                             handleQuantityChange(itemKey, "");
                             return;
                           }
-
                           const parsed = parseInt(val, 10);
                           if (!isNaN(parsed) && parsed >= 1) {
                             handleQuantityChange(itemKey, parsed);
@@ -516,8 +478,6 @@ const SearchProduct = ({
                       />
                     </div>
 
-
-                    {/* Total Price */}
                     <div className="flex flex-col items-center min-w-[70px]">
                       <Text size="xs" c="dark.9">
                         Total Price
@@ -527,7 +487,6 @@ const SearchProduct = ({
                       </Text>
                     </div>
 
-                    {/* Remove Button */}
                     <Button
                       variant="subtle"
                       color="dark"
