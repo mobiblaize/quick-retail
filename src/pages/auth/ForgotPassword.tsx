@@ -1,7 +1,8 @@
 import { TextInput, Button, Box } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { z } from "zod";
-import { usePostData } from "../../hooks/useApis";
+// Adjust this import path based on where your hook actually is
+import { usePostData } from "../../hooks/useApis"; 
 import { notifications } from "@mantine/notifications";
 import AuthLayout from "../../layout/AuthLayout";
 import ForgotPasswordImage from "../../assets/images/forgetPassword.png";
@@ -10,17 +11,22 @@ import { useNavigate } from "react-router-dom";
 import { useState } from "react";
 import CheckMail from "../../components/landingComponent/contact/CheckMail";
 
-const schema = z.object({
+export const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
 });
 
 const ForgotPassword = () => {
+  // Using 'mutateAsync' to handle the promise manually in the handler
   const { mutateAsync: forgotPassword, isPending } = usePostData(
     "auth/forgot-password/reset-link"
   );
+  
   const windowUrl = window.location.origin;
   const navigate = useNavigate();
+  
   const [checkMail, setCheckMail] = useState(false);
+  const [isResending, setIsResending] = useState(false);
+
   const form = useForm({
     validate: zodResolver(schema),
     initialValues: {
@@ -28,7 +34,19 @@ const ForgotPassword = () => {
     },
   });
 
-  const handleForgotPassword = async () => {
+  // This function handles both the initial submit and the resend
+  const handleForgotPassword = async (isResendRequest = false) => {
+    // If validation fails (and it's not a resend), stop.
+    if (!form.values.email) {
+      form.validate();
+      return;
+    }
+
+    // Set local loading state if this is a resend action
+    if (isResendRequest) {
+      setIsResending(true);
+    }
+
     const payload = {
       email: form.values.email,
       password_url: windowUrl + "/verify-otp",
@@ -44,26 +62,23 @@ const ForgotPassword = () => {
         color: "green",
       });
 
+      // Open the modal
       setCheckMail(true);
     } catch (error) {
       console.log(error);
+      notifications.show({
+        title: "Error",
+        message: "Failed to send email. Please try again.",
+        color: "red",
+      });
+    } finally {
+      setIsResending(false); 
     }
   };
 
-  if (checkMail) {
-    return (
-      <CheckMail
-        email={form.values.email}
-        message="Email sent successfully"
-        onClose={() => setCheckMail(false)}
-        opened={checkMail}
-      />
-    );
-  }
-
   return (
     <AuthLayout image={ForgotPasswordImage}>
-      {/* back  arrow */}
+      {/* back arrow */}
       <div className="w-full md:w-[496px] bg-white ">
         <button
           className="cursor-pointer"
@@ -74,8 +89,6 @@ const ForgotPassword = () => {
           <IconArrowLeft size={24} />
         </button>
         <Box className=" rounded-2xl md:shadow-sm p-9 flex flex-col gap-6 mt-10 border border-gray-200">
-          {/* Logo */}
-
           {/* Title */}
           <div className="mb-2">
             <div className="flex items-center font-bold text-2xl tracking-tight">
@@ -85,9 +98,11 @@ const ForgotPassword = () => {
               An OTP code will be sent to your email to verify your account
             </div>
           </div>
+          
           {/* Form */}
           <form
-            onSubmit={form.onSubmit(handleForgotPassword)}
+            // We pass a lambda so we can ensure isResendRequest is false for the main button
+            onSubmit={form.onSubmit(() => handleForgotPassword(false))}
             className="flex flex-col gap-6"
           >
             <TextInput
@@ -110,7 +125,7 @@ const ForgotPassword = () => {
             <Button
               type="submit"
               fullWidth
-              loading={isPending}
+              loading={isPending} 
               size="md"
               radius="md"
               className="font-bold text-lg mt-2 shadow-md"
@@ -119,24 +134,22 @@ const ForgotPassword = () => {
             >
               Send Email
             </Button>
-            {/* resent otp */}
-            <div className="flex justify-center items-center ">
-              <p className="text-gray-300 text-sm font-medium no-underline">
-                Didn't receive the email?
-              </p>
-              <Button
-                variant="transparent"
-                className="text-gray-300 text-sm font-medium no-underline"
-                onClick={() => {
-                  handleForgotPassword();
-                }}
-              >
-                Resend Email
-              </Button>
-            </div>
           </form>
         </Box>
       </div>
+
+      {/* 
+        Render the Modal here. 
+        It sits on top of the layout when 'opened' is true. 
+      */}
+      <CheckMail
+        email={form.values.email}
+        message="Email sent successfully"
+        onClose={() => setCheckMail(false)}
+        opened={checkMail}
+        onResend={() => handleForgotPassword(true)} // Pass true to indicate resend
+        isResending={isResending}
+      />
     </AuthLayout>
   );
 };
