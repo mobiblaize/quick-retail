@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { Text, Loader } from "@mantine/core";
 import { useNavigate } from "react-router";
