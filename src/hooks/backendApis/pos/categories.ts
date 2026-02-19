@@ -7,10 +7,12 @@ import {
   usePutData,
 } from "../../useApis";
 
+// --- Create ---
 export const useCreateCategory = () => {
   return usePostData("pos/category/add-category");
 };
 
+// --- Read (Fetch) ---
 export const useFetchAllCategories = (
   customPayload?: Partial<typeof defaultPayload>,
 ) => {
@@ -47,17 +49,6 @@ export const useFetchAllSubCategories = (
   return useFetchPostData("pos/subcategory/all", payload);
 };
 
-export const useUpdateCategories = (categoryId: number | string) => {
-  return usePutData(`pos/category/update-category/${categoryId}`);
-};
-export const useUpdateSubCategories = (subCategoryId: number | string) => {
-  return usePutData(`pos/subcategory/update-subcategory/${subCategoryId}`);
-};
-
-export const useCreateSubCategory = () => {
-  return usePostData("pos/subcategory/add-subcategory");
-};
-
 export const useFetchSubCatOfCat = (
   categoryId: number | string | null,
   enabled: boolean = true,
@@ -73,12 +64,34 @@ export const useFetchSingleSubCatOfCat = (
   return useGetData(`pos/category/${categoryId}/subcategory`, options, enabled);
 };
 
+// --- Update ---
+export const useUpdateCategories = (categoryId: number | string) => {
+  return usePutData(`pos/category/update-category/${categoryId}`);
+};
+
+export const useUpdateSubCategories = (subCategoryId: number | string) => {
+  return usePutData(`pos/subcategory/update-subcategory/${subCategoryId}`);
+};
+
+// --- Delete ---
+// ADDED THIS based on your CURL request
+export const useDeleteCategory = (categoryId: number | string) => {
+  return useDeleteData(`pos/category/delete-category/${categoryId}`);
+};
+
 export const useDeleteSubCategory = (subCategoryId: number | string) => {
   return useDeleteData(`pos/subcategory/delete-subcategory/${subCategoryId}`);
 };
+
+// --- Subcategory Specifics ---
+export const useCreateSubCategory = () => {
+  return usePostData("pos/subcategory/add-subcategory");
+};
+
 export const useActivateCategories = (subCategoryId: number | string) => {
   return usePutData(`pos/subcategory/activate-subcategory/${subCategoryId}`);
 };
+
 export const useDeactivateCategories = (subCategoryId: number | string) => {
   return usePutData(`pos/subcategory/deactivate-subcategory/${subCategoryId}`);
 };
@@ -89,7 +102,7 @@ export const useFetchSubCategory = (
 ) => {
   return useGetData(
     `pos/subcategory/show-subcategory/${subCategoryId}`,
-  {},
-  enabled,
+    {},
+    enabled,
   );
 };
