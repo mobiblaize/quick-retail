@@ -1,4 +1,4 @@
-import { Card, Text, Button, Modal, Loader } from "@mantine/core";
+import { Card, Text, Button, Modal } from "@mantine/core";
 import { ArrowUpRight } from "lucide-react";
 import { handleOpenEmail } from "../../../utils/handleEmail";
 
