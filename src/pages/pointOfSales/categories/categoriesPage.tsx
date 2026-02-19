@@ -157,12 +157,6 @@ const CategoriesPage = () => {
         <CategoriesTable
           categories={categories}
           isLoading={isLoading}
-          onSortChange={(sortKey) => {
-            const newFilters = { ...appliedFilters, sortBy: sortKey };
-            setAppliedFilters(newFilters);
-            setSortBy(sortKey);
-            setCurrentPage(1);
-          }}
           paginationData={paginationData}
           onPageChange={handlePageChange}
           searchTerm={searchTerm}

@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Modal, Button, Text, Group } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useQueryClient } from "@tanstack/react-query";
@@ -17,7 +18,7 @@ const DeleteCategoryModal = ({ opened, onClose, category }: DeleteModalProps) =>
     if (!category) return;
 
     try {
-      await mutateAsync({});
+      await mutateAsync();
 
       // Refresh the table data
       queryClient.invalidateQueries({ queryKey: ["pos/category/all"] });
