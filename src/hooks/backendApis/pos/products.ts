@@ -151,6 +151,25 @@ export const useSearchLocationProducts = (
   });
 };
 
+export const useSearchDiscountProducts = (
+  productPayload?: Partial<typeof defaultSearchPayload>,
+  enabled = true
+) => {
+  const payload = { ...defaultSearchPayload, ...productPayload };
+
+  return useQuery({
+    queryKey: ["pos/product/product-search", payload],
+    queryFn: async () => {
+      const response = await axiosInstance.post(
+        baseUrl + "pos/product/product-search",
+        payload
+      );
+      return response.data;
+    },
+    enabled,
+  });
+};
+
 export const useScanProduct = () => {
   return usePostData("pos/product/scan-product");
 };
