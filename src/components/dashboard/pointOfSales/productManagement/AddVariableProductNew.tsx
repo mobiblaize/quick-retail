@@ -49,7 +49,7 @@ export default function AddVariableProductNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -58,7 +58,7 @@ export default function AddVariableProductNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -67,7 +67,7 @@ export default function AddVariableProductNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -75,6 +75,7 @@ export default function AddVariableProductNew() {
     initialValues: {
       product_name: "",
       sku: "",
+      barcode: "",
       category_id: "",
       sub_category_id: "",
       short_description: "",
@@ -86,6 +87,7 @@ export default function AddVariableProductNew() {
       selling_price: "",
       total_quantity: "",
       reorder_level: "",
+
       image_path: [] as string[],
 
       // variable product (kept when has_variations === true)
@@ -197,7 +199,7 @@ export default function AddVariableProductNew() {
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -230,7 +232,10 @@ export default function AddVariableProductNew() {
     }
   };
 
-  const handleRemoveVariationImage = (variationIndex: number, imageIndex: number) => {
+  const handleRemoveVariationImage = (
+    variationIndex: number,
+    imageIndex: number,
+  ) => {
     const key = `variations.${variationIndex}.image`;
     const existing: string[] = form.getInputProps(key).value || [];
     const updated = existing.filter((_, i) => i !== imageIndex);
@@ -251,7 +256,9 @@ export default function AddVariableProductNew() {
   };
 
   const handleRemoveSimpleImage = (index: number) => {
-    const updated = (form.values.image_path || []).filter((_, i) => i !== index);
+    const updated = (form.values.image_path || []).filter(
+      (_, i) => i !== index,
+    );
     form.setFieldValue("image_path", updated);
   };
 
@@ -272,6 +279,7 @@ export default function AddVariableProductNew() {
         payload = {
           product_name: values.product_name,
           sku: values.sku,
+          barcode: values.barcode,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -284,6 +292,7 @@ export default function AddVariableProductNew() {
         payload = {
           product_name: values.product_name,
           sku: values.sku,
+          barcode: values.barcode,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -357,6 +366,16 @@ export default function AddVariableProductNew() {
               }}
               {...form.getInputProps("sku")}
               error={form.errors.sku}
+            />
+            <TextInput
+              label="Barcode"
+              placeholder="Enter barcode"
+              classNames={{
+                label: "capitalize font-semibold py-1",
+                input: "!py-5 placeholder:text-#6B7280 ",
+              }}
+              {...form.getInputProps("barcode")}
+              error={form.errors.barcode}
             />
 
             <Select
@@ -443,7 +462,9 @@ export default function AddVariableProductNew() {
           <Group mt="md">
             <Switch
               label={
-                form.values.has_variations ? "Variable Product" : "Simple Product"
+                form.values.has_variations
+                  ? "Variable Product"
+                  : "Simple Product"
               }
               checked={form.values.has_variations}
               onChange={(e) =>
@@ -486,7 +507,11 @@ export default function AddVariableProductNew() {
         ) : (
           /* Simple product: INVENTORY DETAILS card (matches your old template) */
           <Card withBorder radius={"sm"} shadow="md" mt="xl" py="xl">
-            <Title order={3} mb="sm" style={{ color: "#1F2937", fontWeight: 600 }}>
+            <Title
+              order={3}
+              mb="sm"
+              style={{ color: "#1F2937", fontWeight: 600 }}
+            >
               INVENTORY DETAILS
             </Title>
             <Divider mb="md" />

@@ -238,7 +238,7 @@ const CreateOrderPageContent: React.FC = () => {
 
   const hasProducts = validItems.length > 0;
 
-  const isOrderValid = hasCustomer && hasProducts;
+  const isOrderValid = hasProducts;
 
   const numericTotal = Number(effective.total || 0);
   const numericAmount = Number(paymentDetails.amount || 0);
@@ -253,7 +253,7 @@ const CreateOrderPageContent: React.FC = () => {
     if (!isOrderValid) {
       notifications.show({
         title: "Incomplete Order",
-        message: "Select a customer and at least one item.",
+        message: "Add at least one item.",
         color: "red",
       });
       return;
