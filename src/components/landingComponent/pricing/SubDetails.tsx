@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Box, Button, Card, Group, Loader, Text, Title } from "@mantine/core";
 import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useEffect } from "react";
@@ -197,3 +198,4 @@ const SubDetails = () => {
 };
 
 export default SubDetails;
+

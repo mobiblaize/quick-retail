@@ -2,7 +2,6 @@
 import { useEffect, useState } from "react";
 import CreateSubCategory from "../../../components/dashboard/pointOfSales/categories/modals/createSubCategory";
 import { useFetchAllCategories } from "../../../hooks/backendApis/pos/categories";
-import { FilterValues } from "../../../components/General/table/reuseableFilter";
 import PageContainer from "../../../layout/pageContainer";
 import CategoriesTable from "../../../components/dashboard/pointOfSales/categories/categoriesTable";
 import { Text, Button, Menu, Skeleton } from "@mantine/core";
@@ -54,21 +53,12 @@ const CategoriesPage = () => {
   const [isCreateSubCategoryOpen, setIsSubCreateCategoryOpen] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
   const [perPage] = useState(10);
-  const [, setSortBy] = useState<string>("");
   const [searchTerm, setSearchTerm] = useState("");
-  const [appliedFilters, setAppliedFilters] = useState<FilterValues>({} as FilterValues);
   const [activeSort, setActiveSort] = useState("");
   const [searchParams] = useSearchParams();
   const create = searchParams.get("create");
 
-  const mapFiltersToPayload = (filters: FilterValues) => ({
-    sort_by: filters.sortBy || "",
-    page: currentPage.toString(),
-    per_page: perPage.toString(),
-  });
-
   const payload = {
-    ...(appliedFilters ? mapFiltersToPayload(appliedFilters) : {}),
     page: currentPage,
     per_page: perPage,
     search: searchTerm,
@@ -157,12 +147,6 @@ const CategoriesPage = () => {
         <CategoriesTable
           categories={categories}
           isLoading={isLoading}
-          onSortChange={(sortKey) => {
-            const newFilters = { ...appliedFilters, sortBy: sortKey };
-            setAppliedFilters(newFilters);
-            setSortBy(sortKey);
-            setCurrentPage(1);
-          }}
           paginationData={paginationData}
           onPageChange={handlePageChange}
           searchTerm={searchTerm}

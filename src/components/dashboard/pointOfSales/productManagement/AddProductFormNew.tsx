@@ -92,6 +92,7 @@ function AddProductFormNew() {
       selling_price: "",
       total_quantity: "",
       reorder_level: "",
+      barcode: "",
       image_path: [] as string[],
 
       // variable product (kept when has_variations === true)
@@ -189,8 +190,8 @@ function AddProductFormNew() {
             : null,
 
         image: (value, values) =>
-          values.has_variations && (!Array.isArray(value) || value.length === 0)
-            ? "At least one image is required for each variation"
+          values.has_variations && !Array.isArray(value)
+            ? "Invalid image format"
             : null,
 
         quantity: (value, values) =>
@@ -223,10 +224,9 @@ function AddProductFormNew() {
   useEffect(() => {
     const current = searchParams.get("variable") === "true";
     if (form.values.has_variations !== current) {
-      // Update the query param when value changes
       const params = new URLSearchParams(searchParams);
       params.set("variable", String(form.values.has_variations));
-      setSearchParams(params, { replace: true }); // replace avoids pushing new history entries
+      setSearchParams(params, { replace: true });
     }
   }, [form.values.has_variations, searchParams, setSearchParams]);
 
@@ -244,12 +244,10 @@ function AddProductFormNew() {
   })();
 
   useEffect(() => {
-    // Reset sub-category when category changes
     form.setFieldValue("sub_category_id", "");
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values.category_id]);
 
-  // helper to convert File -> base64 string
   const readFileAsDataURL = (file: File) =>
     new Promise<string>((resolve, reject) => {
       const reader = new FileReader();
@@ -258,7 +256,6 @@ function AddProductFormNew() {
       reader.readAsDataURL(file);
     });
 
-  // variation images: accepts multiple files, appends to variation.image[]
   const handleImageUpload = async (files: File[], variationIndex: number) => {
     if (!files || files.length === 0) return;
 
@@ -282,7 +279,6 @@ function AddProductFormNew() {
     form.setFieldValue(key, updated);
   };
 
-  // simple product images: accepts multiple files, appends to image_path[]
   const handleSimpleImageUpload = async (files: File[]) => {
     if (!files || files.length === 0) return;
 
@@ -302,12 +298,16 @@ function AddProductFormNew() {
     form.setFieldValue("image_path", updated);
   };
 
+  // 1. Updated handleSubmit to accept isDraft flag
   const handleSubmit = async (
     values: typeof form.values,
     isDraft: boolean = false,
   ) => {
     try {
       let payload: any;
+
+      // Determine Status
+      const statusValue = isDraft ? "draft" : "active";
 
       if (values.has_variations) {
         if (!Array.isArray(values.variations) || values.variations.length < 2) {
@@ -316,7 +316,7 @@ function AddProductFormNew() {
             message: "At least 2 variations are required for variable products",
             color: "red",
           });
-          return; // stop submission
+          return;
         }
         const transformedVariations = values.variations.map((variation) => ({
           ...variation,
@@ -333,15 +333,18 @@ function AddProductFormNew() {
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
           location_id: Number(values.location_id),
+          barcode: values.barcode,
           has_variations: true,
           variations: transformedVariations,
-          status: isDraft ? "draft" : "active",
+          status: statusValue, // Correctly setting status
+          // Note: If you need parent SKU for variable products, add `sku: values.sku` here,
+          // but ensure the input is visible in the form or generated.
         };
       } else {
-        // simple product payload
         payload = {
           product_name: values.product_name,
           sku: values.sku,
+          barcode: values.barcode,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -353,9 +356,11 @@ function AddProductFormNew() {
           total_quantity: Number(values.total_quantity || 0),
           reorder_level: Number(values.reorder_level || 0),
           image_path: Array.isArray(values.image_path) ? values.image_path : [],
-          status: isDraft ? "draft" : "active",
+          status: statusValue, // Correctly setting status
         };
       }
+
+      console.log("Submitting Payload:", payload); // Debugging
 
       const response = await createProduct.mutateAsync(payload);
 
@@ -385,12 +390,11 @@ function AddProductFormNew() {
       });
     }
   };
-  console.log(status);
 
   return (
-    <form onSubmit={form.onSubmit((values) => handleSubmit(values))}>
+    // 2. Default form submit is for "Active" state (isDraft = false)
+    <form onSubmit={form.onSubmit((values) => handleSubmit(values, false))}>
       <Box px="xl" py="lg">
-        {/* Top BASIC INFORMATION (variable mode) or BASIC INFORMATION (simple mode) */}
         <Card withBorder radius={"sm"} shadow="md" py="xl">
           <Title
             order={3}
@@ -406,7 +410,6 @@ function AddProductFormNew() {
             verticalSpacing={{ base: "md", sm: "xl" }}
             className="capitalize"
           >
-            {/* shared top fields */}
             <TextInput
               label="product name"
               placeholder="Enter product name"
@@ -418,19 +421,32 @@ function AddProductFormNew() {
               error={form.errors.product_name}
             />
 
-            {/* SKU field only for simple products */}
             {!form.values.has_variations && (
-              <TextInput
-                label="SKU (Store Keeping Unit)"
-                placeholder="Enter SKU"
-                classNames={{
-                  label: "capitalize font-semibold py-1",
-                  input: "!py-5 placeholder:text-#6B7280 ",
-                }}
-                {...form.getInputProps("sku")}
-                error={form.errors.sku}
-              />
+              <>
+                <TextInput
+                  label="SKU (Store Keeping Unit)"
+                  placeholder="Enter SKU"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("sku")}
+                  error={form.errors.sku}
+                />
+
+                
+              </>
             )}
+            <TextInput
+                  label="Barcode"
+                  placeholder="Enter barcode"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("barcode")}
+                  error={form.errors.barcode}
+                />
 
             <Select
               label="category"
@@ -460,9 +476,7 @@ function AddProductFormNew() {
               error={form.errors.sub_category_id}
             />
 
-            {/* For simple product, show cost & selling price in BASIC INFORMATION */}
             {form.values.has_variations ? (
-              // variable product: show short description and store in this card
               <>
                 <Textarea
                   label="short description"
@@ -486,7 +500,6 @@ function AddProductFormNew() {
                 />
               </>
             ) : (
-              // simple product: move prices into BASIC INFORMATION
               <>
                 <TextInput
                   label="cost price"
@@ -510,7 +523,6 @@ function AddProductFormNew() {
                   {...form.getInputProps("short_description")}
                   error={form.errors.short_description}
                 />
-                {/* Note: store will be shown in INVENTORY DETAILS for simple product */}
               </>
             )}
           </SimpleGrid>
@@ -530,10 +542,8 @@ function AddProductFormNew() {
           </Group>
         </Card>
 
-        {/* content varies per mode */}
         {form.values.has_variations ? (
           <>
-            {/* Variable product variants UI */}
             <Box mt="xl">
               <ProductVariant
                 sellingUnits={sellingUnits}
@@ -543,19 +553,21 @@ function AddProductFormNew() {
               />
             </Box>
 
-            {/* final action buttons (unchanged for variable flow) */}
             <Card mt="xl" shadow="md">
               <Flex justify={"flex-end"} gap={"lg"}>
+                {/* 3. Updated Save as Draft Button for Variables */}
                 <Button
                   variant="outline"
                   tt={"capitalize"}
+                  type="button"
                   onClick={(e) => {
                     e.preventDefault();
-                    handleSubmit(form.values, true);
+                    form.onSubmit((values) => handleSubmit(values, true))();
                   }}
                 >
                   save as draft
                 </Button>
+                {/* 4. Continue Button triggers default form submit (active) */}
                 <Button
                   loading={(createProduct as any).isPending}
                   disabled={(createProduct as any).isPending}
@@ -568,7 +580,6 @@ function AddProductFormNew() {
             </Card>
           </>
         ) : (
-          /* Simple product: INVENTORY DETAILS card (matches your old template) */
           <Card withBorder radius={"sm"} shadow="md" mt="xl" py="xl">
             <Title
               order={3}
@@ -648,12 +659,14 @@ function AddProductFormNew() {
             </Box>
 
             <Flex justify={"end"} mt="xl" gap={15} className="">
+              {/* 5. Updated Save as Draft Button for Simple Products */}
               <Button
                 radius={"md"}
                 variant="outline"
+                type="button"
                 onClick={(e) => {
                   e.preventDefault();
-                  handleSubmit(form.values, true);
+                  form.onSubmit((values) => handleSubmit(values, true))();
                 }}
               >
                 Save as Draft

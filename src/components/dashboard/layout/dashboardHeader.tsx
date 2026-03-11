@@ -3,7 +3,8 @@ import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import { useDashboard } from "../../../layout/dashboardContext";
 import { useUserStore } from "../../../hooks/useUserStore";
-
+import NavItem from "../../../layout/navItem";
+import { InActiveNotification } from "../../../assets/svg";
 
 export const DashboardHeader = ({
   toggleSidebar,
@@ -92,15 +93,14 @@ export const DashboardHeader = ({
             <Link
               key={index}
               to={route.to}
-              className={`relative group pb-2 ${route.active
+              className={`relative group pb-2 ${
+                route.active
                   ? "text-orange-500 font-medium"
                   : "text-[#667185] font-normal"
-                }`}
+              }`}
               onClick={() => handleNavClick(route.label)}
             >
-              <p
-                style={{ cursor: "pointer", fontFamily: "Inter, sans-serif" }}
-              >
+              <p style={{ cursor: "pointer", fontFamily: "Inter, sans-serif" }}>
                 {route.label}
               </p>
               {route.active ? (
@@ -111,6 +111,12 @@ export const DashboardHeader = ({
             </Link>
           ))}
         </div>
+        <NavItem
+          href={ROUTES.notificationPage}
+          label=""
+          inactiveIcon={InActiveNotification}
+          activeIcon={InActiveNotification}
+        />
         {/* <div className="flex items-center gap-3">
           <Settings />
           <QuestionMark />

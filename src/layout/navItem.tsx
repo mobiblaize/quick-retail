@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState } from "react";
 import { List, Anchor, Text } from "@mantine/core";
 import { Link, useLocation } from "react-router-dom";
@@ -132,6 +133,18 @@ const NavItem = ({
   // -------------------------------
   // 📄 NORMAL NAV ITEM
   // -------------------------------
+  const getLabelClassName = () => {
+    if (isActive) return "font-semibold text-[#F16722]";
+    if (isLogOut) return "text-red-500";
+    return "text-[#787486] font-[400] hover:text-black";
+  };
+
+  const renderIcon = () => {
+    if (isActive && ActiveIcon) return <ActiveIcon size={20} />;
+    if (InactiveIcon) return <InactiveIcon size={20} />;
+    return null;
+  };
+
   return (
     <Anchor component={Link} to={href} underline="never" onClick={onNavigate}>
       <div
@@ -142,28 +155,16 @@ const NavItem = ({
         <div className="flex gap-2 items-center relative">
           {/* Icon */}
           <div className="min-w-6 min-h-6 w-6 h-6 flex items-center justify-center">
-            {isActive && ActiveIcon ? (
-              <ActiveIcon size={20} />
-            ) : InactiveIcon ? (
-              <InactiveIcon size={20} />
-            ) : null}
+            {renderIcon()}
           </div>
+          
 
           {/* ✅ Label with unread count in front */}
           <div className="flex items-center justify-between  w-full gap-2">
-            
-            <p
-              className={`${
-                isActive
-                  ? "font-semibold text-[#F16722]"
-                  : isLogOut
-                  ? "text-red-500"
-                  : "text-[#787486] font-[400] hover:text-black"
-              }`}
-            >
+            <p className={getLabelClassName()}>
               {label}
             </p>
-            {label === "Notifications" && unreadCount > 0 && (
+            {label == "" && unreadCount > 0 && (
               <div className="bg-[#FFEADF] rounded-full flex items-center py-0.5 px-2">
                 <Text c="customPrimary.10" fw={600} size="xs">
                   {unreadCount}

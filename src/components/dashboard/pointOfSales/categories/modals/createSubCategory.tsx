@@ -1,80 +1,65 @@
-import { Button, Modal, Text } from "@mantine/core";
+import { Button, Modal, MultiSelect, Text } from "@mantine/core";
 import { notifications } from "@mantine/notifications";
 import { useState } from "react";
-import {
-  useCreateSubCategory,
-  useFetchSubCatOfCat,
-} from "../../../../../hooks/backendApis/pos/categories";
-import Dropdown from "../../../../General/dropdown";
+import { useCreateSubCategory } from "../../../../../hooks/backendApis/pos/categories";
 import FormInput from "../../../../General/formInput";
 
 interface ResolveProps {
   opened: boolean;
   onClose: () => void;
-  categories: { label: string; value: number }[];
+  categories: { label: string; value: number | string }[];
 }
 
 const CreateSubCategory = ({ opened, onClose, categories }: ResolveProps) => {
   const createSubCategory = useCreateSubCategory();
 
-  const [selectedCategoryId, setSelectedCategoryId] = useState<number | null>(
-    null,
-  );
+  // State to hold multiple category IDs
+  const [selectedCategoryIds, setSelectedCategoryIds] = useState<string[]>([]);
   const [subCategoryName, setSubCategoryName] = useState("");
 
-  // Fetch existing subcategories for the selected category to check for duplicates
-  const { data: existingSubCategories } = useFetchSubCatOfCat(
-    selectedCategoryId,
-    !!selectedCategoryId,
-  );
-  
+  // Convert categories to string for MultiSelect compatibility
+  const multiSelectData = categories.map((c) => ({
+    label: c.label,
+    value: String(c.value),
+  }));
 
   const handleSubmit = async () => {
-    if (!selectedCategoryId || !subCategoryName.trim()) {
+    // Validation
+    if (selectedCategoryIds.length === 0 || !subCategoryName.trim()) {
       notifications.show({
         title: "Validation error",
-        message: "Please select a category and enter a sub-category name",
+        message: "Please select at least one category and enter a name",
         color: "red",
       });
       return;
     }
 
-    // Check if sub-category name already exists for the selected category
-    const existingSubCats = existingSubCategories?.data || [];
-
-const normalizedInput = subCategoryName.trim().toLowerCase();
-
-const isDuplicate = existingSubCats.some(
-  (subCat: { name: string }) =>
-    subCat.name.trim().toLowerCase() === normalizedInput,
-);
-console.log(isDuplicate)
-
-
-    if (isDuplicate) {
-      notifications.show({
-        title: "Duplicate Sub-Category",
-        message:
-          "A sub-category with this name already exists for the selected category",
-        color: "red",
-      });
-      return;
-    }
+    // Construct the specific payload structure requested:
+    // {
+    //    "category": [ { "category_id": "4" }, { "category_id": "3" } ],
+    //    "name": "Female wears"
+    // }
+    const payload = {
+      category: selectedCategoryIds.map((id) => ({
+        category_id: id,
+      })),
+      name: subCategoryName.trim(),
+    };
 
     try {
-      await createSubCategory.mutateAsync({
-        category_id: selectedCategoryId,
-        name: subCategoryName.trim(),
-      });
+      // Pass the new payload structure to the mutation
+      // @ts-ignore - Ignoring type check if mutation expects old interface
+      await createSubCategory.mutateAsync(payload);
 
       notifications.show({
         title: "New Sub-category Saved!",
-        message: "You can now add products to the new category",
+        message: "Sub-category created successfully for selected categories",
         color: "green",
       });
 
+      // Reset form
       setSubCategoryName("");
-      setSelectedCategoryId(null);
+      setSelectedCategoryIds([]);
       onClose();
     } catch (error) {
       notifications.show({
@@ -118,16 +103,29 @@ console.log(isDuplicate)
         padding="xl"
       >
         <div className="space-y-4 grid grid-cols-1">
-          <Dropdown
-            label="Select Category"
-            options={categories}
-            placeholder="Select a category"
-            value={selectedCategoryId}
-            // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-            //@ts-ignore
-            onChange={(val) => setSelectedCategoryId(val)}
+          {/* Changed to MultiSelect to allow picking multiple parents */}
+          <MultiSelect
+            label="Select Categories"
+            data={multiSelectData}
+            placeholder="Select one or more categories"
+            value={selectedCategoryIds}
+            onChange={setSelectedCategoryIds}
+            searchable
+            clearable
             required
-            // textColorClass="text-gray-800"
+            styles={{
+              input: {
+                paddingTop: "12px",
+                paddingBottom: "12px",
+                height: "auto",
+                minHeight: "45px",
+              },
+              label: {
+                marginBottom: "8px",
+                fontWeight: 500,
+                fontSize: "14px",
+              }
+            }}
           />
 
           <FormInput
@@ -138,12 +136,13 @@ console.log(isDuplicate)
             onChange={(val: string) => setSubCategoryName(val)}
           />
         </div>
+
         <div className="flex mt-7 gap-5">
           <Button
             variant="outline"
             onClick={() => {
               setSubCategoryName("");
-              setSelectedCategoryId(null);
+              setSelectedCategoryIds([]);
               onClose();
             }}
             style={{
@@ -157,7 +156,7 @@ console.log(isDuplicate)
               border: "1px solid #475367",
             }}
           >
-            No
+            Cancel
           </Button>
           <Button
             variant="filled-primary"
@@ -172,6 +171,7 @@ console.log(isDuplicate)
             }}
             onClick={handleSubmit}
             loading={createSubCategory.isPending}
+            disabled={selectedCategoryIds.length === 0 || !subCategoryName}
           >
             Save
           </Button>

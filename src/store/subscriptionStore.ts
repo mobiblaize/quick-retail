@@ -6,6 +6,8 @@ export interface SubscriptionData {
   id: number;
   application_id: number;
   amount: number;
+  name?: string;
+  description?: string;
   additional_user_seat_number?: number;
   price_per_seat?: number;
   application?: {

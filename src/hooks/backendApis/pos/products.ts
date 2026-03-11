@@ -139,6 +139,25 @@ export const useSearchLocationProducts = (
   const payload = { ...defaultSearchPayload, ...productPayload };
 
   return useQuery({
+    queryKey: ["pos/product/search-product", payload],
+    queryFn: async () => {
+      const response = await axiosInstance.post(
+        baseUrl + "pos/product/search-product",
+        payload
+      );
+      return response.data;
+    },
+    enabled,
+  });
+};
+
+export const useSearchDiscountProducts = (
+  productPayload?: Partial<typeof defaultSearchPayload>,
+  enabled = true
+) => {
+  const payload = { ...defaultSearchPayload, ...productPayload };
+
+  return useQuery({
     queryKey: ["pos/product/product-search", payload],
     queryFn: async () => {
       const response = await axiosInstance.post(
