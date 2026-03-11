@@ -1,10 +1,11 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 
 import { useState, useEffect } from "react";
 import { Loader, Text } from "@mantine/core";
 import FormInput from "../../../General/formInput";
 import { Search } from "lucide-react";
 // import { SqrCode } from "../../../../assets/svg";
-import { useSearchLocationProducts } from "../../../../hooks/backendApis/pos/products";
+import { useSearchDiscountProducts } from "../../../../hooks/backendApis/pos/products";
 import { formatMoney } from "../../../../utils/helpers";
 
 
@@ -66,7 +67,7 @@ const DiscountSearchProduct = ({ onSelect, onItemsChange, initialItems = [] }: S
     return () => clearTimeout(timeout);
   }, [searchTerm]);
 
-  const { data, isLoading } = useSearchLocationProducts(
+  const { data, isLoading } = useSearchDiscountProducts(
     { search: debouncedSearch },
     !!debouncedSearch
   );

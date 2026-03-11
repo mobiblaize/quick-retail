@@ -68,7 +68,7 @@ function EditProductFormNew({
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -77,7 +77,7 @@ function EditProductFormNew({
       (item: any) => ({
         value: String(item.name),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -86,7 +86,7 @@ function EditProductFormNew({
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -97,6 +97,7 @@ function EditProductFormNew({
     initialValues: {
       product_name: "",
       sku: "",
+      ean: "",
       category_id: "",
       sub_category_id: "",
       short_description: "",
@@ -206,8 +207,8 @@ function EditProductFormNew({
             : null,
 
         image: (value, values) =>
-          values.has_variations && (!Array.isArray(value) || value.length === 0)
-            ? "At least one image is required for each variation"
+          values.has_variations && !Array.isArray(value)
+            ? "Invalid image format"
             : null,
 
         quantity: (value, values) =>
@@ -256,7 +257,7 @@ function EditProductFormNew({
       (item: any) => ({
         value: String(item.id),
         label: item.name,
-      })
+      }),
     );
   })();
 
@@ -280,6 +281,7 @@ function EditProductFormNew({
       form.setValues({
         product_name: product.product_name || "",
         sku: product.sku || "",
+        ean: product.ean || "",
         category_id: product.category_id ? String(product.category_id) : "",
         sub_category_id: product.sub_category_id
           ? String(product.sub_category_id)
@@ -295,8 +297,11 @@ function EditProductFormNew({
           ? String(product.total_quantity)
           : "",
         reorder_level: product?.product_variations?.[0]?.reorder_level || "",
-        image_path: product.image_path 
-          ? product.image_path.split(',').map((url: string) => url.trim()).filter((url: string) => url)
+        image_path: product.image_path
+          ? product.image_path
+              .split(",")
+              .map((url: string) => url.trim())
+              .filter((url: string) => url)
           : [],
         // Variable product fields
         variations:
@@ -323,7 +328,9 @@ function EditProductFormNew({
                             attribute_values: [], // For display purposes
                           };
                         }
-                        acc[attrId].attribute_value_ids.push(val.attribute_value_id);
+                        acc[attrId].attribute_value_ids.push(
+                          val.attribute_value_id,
+                        );
                         acc[attrId].attribute_values.push({
                           id: val.attribute_value_id,
                           value: val.attribute_value?.value || "",
@@ -333,8 +340,11 @@ function EditProductFormNew({
                       return Object.values(grouped);
                     })()
                   : [],
-                image: v.image_path 
-                  ? v.image_path.split(',').map((url: string) => url.trim()).filter((url: string) => url)
+                image: v.image_path
+                  ? v.image_path
+                      .split(",")
+                      .map((url: string) => url.trim())
+                      .filter((url: string) => url)
                   : [],
               }))
             : form.values.variations,
@@ -382,7 +392,7 @@ function EditProductFormNew({
 
   const handleRemoveVariationImage = (
     variationIndex: number,
-    imageIndex: number
+    imageIndex: number,
   ) => {
     const key = `variations.${variationIndex}.image`;
     const existing: string[] = form.getInputProps(key).value || [];
@@ -405,7 +415,7 @@ function EditProductFormNew({
 
   const handleRemoveSimpleImage = (index: number) => {
     const updated = (form.values.image_path || []).filter(
-      (_, i) => i !== index
+      (_, i) => i !== index,
     );
     form.setFieldValue("image_path", updated);
   };
@@ -434,7 +444,7 @@ function EditProductFormNew({
             selling_unit: variation.selling_unit,
             image: variation.image,
           };
-          
+
           // Only include variationID for existing variations (not new ones)
           if (variation.variationID) {
             return {
@@ -442,12 +452,14 @@ function EditProductFormNew({
               variationID: variation.variationID,
             };
           }
-          
+
           return baseVariation;
         });
 
         payload = {
           product_name: values.product_name,
+          sku: values.sku,
+          barcode: values.ean,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -460,6 +472,7 @@ function EditProductFormNew({
         payload = {
           product_name: values.product_name,
           sku: values.sku,
+          barcode: values.ean,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -546,19 +559,31 @@ function EditProductFormNew({
               {...form.getInputProps("product_name")}
               error={form.errors.product_name}
             />
-            
+
             {/* SKU field only for simple products */}
             {!form.values.has_variations && (
-              <TextInput
-                label="SKU (Store Keeping Unit)"
-                placeholder="Enter SKU"
-                classNames={{
-                  label: "capitalize font-semibold py-1",
-                  input: "!py-5 placeholder:text-#6B7280 ",
-                }}
-                {...form.getInputProps("sku")}
-                error={form.errors.sku}
-              />
+              <>
+                <TextInput
+                  label="SKU (Store Keeping Unit)"
+                  placeholder="Enter SKU"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("sku")}
+                  error={form.errors.sku}
+                />
+                <TextInput
+                  label="Barcode"
+                  placeholder="Enter barcode"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("barcode")}
+                  error={form.errors.barcode}
+                />
+              </>
             )}
 
             <Select

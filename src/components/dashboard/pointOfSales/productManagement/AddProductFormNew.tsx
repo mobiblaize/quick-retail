@@ -92,6 +92,7 @@ function AddProductFormNew() {
       selling_price: "",
       total_quantity: "",
       reorder_level: "",
+      barcode: "",
       image_path: [] as string[],
 
       // variable product (kept when has_variations === true)
@@ -203,8 +204,8 @@ function AddProductFormNew() {
             : null,
 
         image: (value, values) =>
-          values.has_variations && (!Array.isArray(value) || value.length === 0)
-            ? "At least one image is required for each variation"
+          values.has_variations && !Array.isArray(value)
+            ? "Invalid image format"
             : null,
 
         quantity: (value, values) =>
@@ -346,6 +347,7 @@ function AddProductFormNew() {
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
           location_id: Number(values.location_id),
+          barcode: values.barcode,
           has_variations: true,
           variations: transformedVariations,
           status: statusValue, // Correctly setting status
@@ -356,6 +358,7 @@ function AddProductFormNew() {
         payload = {
           product_name: values.product_name,
           sku: values.sku,
+          barcode: values.barcode,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -433,17 +436,31 @@ function AddProductFormNew() {
             />
 
             {!form.values.has_variations && (
-              <TextInput
-                label="SKU (Store Keeping Unit)"
-                placeholder="Enter SKU"
-                classNames={{
-                  label: "capitalize font-semibold py-1",
-                  input: "!py-5 placeholder:text-#6B7280 ",
-                }}
-                {...form.getInputProps("sku")}
-                error={form.errors.sku}
-              />
+              <>
+                <TextInput
+                  label="SKU (Store Keeping Unit)"
+                  placeholder="Enter SKU"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("sku")}
+                  error={form.errors.sku}
+                />
+
+                
+              </>
             )}
+            <TextInput
+                  label="Barcode"
+                  placeholder="Enter barcode"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("barcode")}
+                  error={form.errors.barcode}
+                />
 
             <Select
               label="category"
