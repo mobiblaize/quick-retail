@@ -97,7 +97,7 @@ function EditProductFormNew({
     initialValues: {
       product_name: "",
       sku: "",
-      ean: "",
+      barcode: "",
       category_id: "",
       sub_category_id: "",
       short_description: "",
@@ -281,7 +281,7 @@ function EditProductFormNew({
       form.setValues({
         product_name: product.product_name || "",
         sku: product.sku || "",
-        ean: product.ean || "",
+        barcode: product.ean || "",
         category_id: product.category_id ? String(product.category_id) : "",
         sub_category_id: product.sub_category_id
           ? String(product.sub_category_id)
@@ -313,6 +313,7 @@ function EditProductFormNew({
                 quantity: v.quantity || 0,
                 reorder_level: v.reorder_level || 0,
                 sku: v.sku || "",
+                barcode: v.ean || "",
                 selling_unit: v.selling_unit || "",
                 // Transform values array to attributes format
                 // Group by attribute_id and collect attribute_value_ids
@@ -459,7 +460,7 @@ function EditProductFormNew({
         payload = {
           product_name: values.product_name,
           sku: values.sku,
-          barcode: values.ean,
+          barcode: values.barcode,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -472,7 +473,7 @@ function EditProductFormNew({
         payload = {
           product_name: values.product_name,
           sku: values.sku,
-          barcode: values.ean,
+          barcode: values.barcode,
           category_id: Number(values.category_id),
           sub_category_id: Number(values.sub_category_id),
           short_description: values.short_description,
@@ -559,10 +560,20 @@ function EditProductFormNew({
               {...form.getInputProps("product_name")}
               error={form.errors.product_name}
             />
+            <TextInput
+                  label="Barcode"
+                  placeholder="Enter barcode"
+                  classNames={{
+                    label: "capitalize font-semibold py-1",
+                    input: "!py-5 placeholder:text-#6B7280 ",
+                  }}
+                  {...form.getInputProps("barcode")}
+                  error={form.errors.barcode}
+                />
 
             {/* SKU field only for simple products */}
             {!form.values.has_variations && (
-              <>
+              
                 <TextInput
                   label="SKU (Store Keeping Unit)"
                   placeholder="Enter SKU"
@@ -573,18 +584,8 @@ function EditProductFormNew({
                   {...form.getInputProps("sku")}
                   error={form.errors.sku}
                 />
-                <TextInput
-                  label="Barcode"
-                  placeholder="Enter barcode"
-                  classNames={{
-                    label: "capitalize font-semibold py-1",
-                    input: "!py-5 placeholder:text-#6B7280 ",
-                  }}
-                  {...form.getInputProps("barcode")}
-                  error={form.errors.barcode}
-                />
-              </>
             )}
+            
 
             <Select
               label="category"

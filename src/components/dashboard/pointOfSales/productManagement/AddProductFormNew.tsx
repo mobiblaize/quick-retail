@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
   Title,
@@ -47,7 +48,7 @@ function AddProductFormNew() {
   const { data: suData } = useFetchAllSellingUnits() || {};
 
   const categories = (() => {
-    return (Array.isArray(catData?.data) ? catData.data : []).map(
+    return (Array.isArray(catData?.data) ? catData.data :[]).map(
       (item: any) => ({
         value: String(item.id),
         label: item.name,
@@ -56,7 +57,7 @@ function AddProductFormNew() {
   })();
 
   const sellingUnits = (() => {
-    return (Array.isArray(suData?.data) ? suData.data : []).map(
+    return (Array.isArray(suData?.data) ? suData.data :[]).map(
       (item: any) => ({
         value: String(item.name),
         label: item.name,
@@ -65,7 +66,7 @@ function AddProductFormNew() {
   })();
 
   const stores = (() => {
-    return (Array.isArray(storeData?.data) ? storeData.data : []).map(
+    return (Array.isArray(storeData?.data) ? storeData.data :[]).map(
       (item: any) => ({
         value: String(item.id),
         label: item.name,
@@ -96,7 +97,7 @@ function AddProductFormNew() {
       image_path: [] as string[],
 
       // variable product (kept when has_variations === true)
-      variations: [
+      variations:[
         {
           cost_price: 0,
           selling_price: 0,
@@ -189,8 +190,9 @@ function AddProductFormNew() {
             ? "At least one attribute is required for each variation"
             : null,
 
+        // Image validation strictly allows optional/empty array now
         image: (value, values) =>
-          values.has_variations && !Array.isArray(value)
+          values.has_variations && value && !Array.isArray(value)
             ? "Invalid image format"
             : null,
 
@@ -235,7 +237,7 @@ function AddProductFormNew() {
     {};
 
   const subcategories = (() => {
-    return (Array.isArray(subCatData?.data) ? subCatData.data : []).map(
+    return (Array.isArray(subCatData?.data) ? subCatData.data :[]).map(
       (item: any) => ({
         value: String(item.id),
         label: item.name,
@@ -262,7 +264,7 @@ function AddProductFormNew() {
     try {
       const base64s = await Promise.all(files.map((f) => readFileAsDataURL(f)));
       const key = `variations.${variationIndex}.image`;
-      const existing = form.getInputProps(key).value || [];
+      const existing = form.getInputProps(key).value ||[];
       form.setFieldValue(key, [...existing, ...base64s]);
     } catch (err) {
       console.error("Error converting variation files", err);
@@ -274,7 +276,7 @@ function AddProductFormNew() {
     imageIndex: number,
   ) => {
     const key = `variations.${variationIndex}.image`;
-    const existing: string[] = form.getInputProps(key).value || [];
+    const existing: string[] = form.getInputProps(key).value ||[];
     const updated = existing.filter((_, i) => i !== imageIndex);
     form.setFieldValue(key, updated);
   };
@@ -284,7 +286,7 @@ function AddProductFormNew() {
 
     try {
       const base64s = await Promise.all(files.map((f) => readFileAsDataURL(f)));
-      const existing = form.values.image_path || [];
+      const existing = form.values.image_path ||[];
       form.setFieldValue("image_path", [...existing, ...base64s]);
     } catch (err) {
       console.error("Error converting files", err);
@@ -292,13 +294,12 @@ function AddProductFormNew() {
   };
 
   const handleRemoveSimpleImage = (index: number) => {
-    const updated = (form.values.image_path || []).filter(
+    const updated = (form.values.image_path ||[]).filter(
       (_, i) => i !== index,
     );
     form.setFieldValue("image_path", updated);
   };
 
-  // 1. Updated handleSubmit to accept isDraft flag
   const handleSubmit = async (
     values: typeof form.values,
     isDraft: boolean = false,
@@ -306,7 +307,6 @@ function AddProductFormNew() {
     try {
       let payload: any;
 
-      // Determine Status
       const statusValue = isDraft ? "draft" : "active";
 
       if (values.has_variations) {
@@ -325,6 +325,7 @@ function AddProductFormNew() {
           selling_price: Number(variation.selling_price),
           quantity: Number(variation.quantity),
           reorder_level: Number(variation.reorder_level),
+          // image array correctly handled even if empty
         }));
 
         payload = {
@@ -336,9 +337,7 @@ function AddProductFormNew() {
           barcode: values.barcode,
           has_variations: true,
           variations: transformedVariations,
-          status: statusValue, // Correctly setting status
-          // Note: If you need parent SKU for variable products, add `sku: values.sku` here,
-          // but ensure the input is visible in the form or generated.
+          status: statusValue,
         };
       } else {
         payload = {
@@ -355,12 +354,13 @@ function AddProductFormNew() {
           selling_price: Number(values.selling_price),
           total_quantity: Number(values.total_quantity || 0),
           reorder_level: Number(values.reorder_level || 0),
-          image_path: Array.isArray(values.image_path) ? values.image_path : [],
-          status: statusValue, // Correctly setting status
+          // image_path explicitly handles empty defaults securely 
+          image_path: Array.isArray(values.image_path) ? values.image_path :[],
+          status: statusValue, 
         };
       }
 
-      console.log("Submitting Payload:", payload); // Debugging
+      console.log("Submitting Payload:", payload);
 
       const response = await createProduct.mutateAsync(payload);
 
@@ -392,7 +392,6 @@ function AddProductFormNew() {
   };
 
   return (
-    // 2. Default form submit is for "Active" state (isDraft = false)
     <form onSubmit={form.onSubmit((values) => handleSubmit(values, false))}>
       <Box px="xl" py="lg">
         <Card withBorder radius={"sm"} shadow="md" py="xl">
@@ -433,20 +432,18 @@ function AddProductFormNew() {
                   {...form.getInputProps("sku")}
                   error={form.errors.sku}
                 />
-
-                
               </>
             )}
             <TextInput
-                  label="Barcode"
-                  placeholder="Enter barcode"
-                  classNames={{
-                    label: "capitalize font-semibold py-1",
-                    input: "!py-5 placeholder:text-#6B7280 ",
-                  }}
-                  {...form.getInputProps("barcode")}
-                  error={form.errors.barcode}
-                />
+              label="Barcode"
+              placeholder="Enter barcode"
+              classNames={{
+                label: "capitalize font-semibold py-1",
+                input: "!py-5 placeholder:text-#6B7280 ",
+              }}
+              {...form.getInputProps("barcode")}
+              error={form.errors.barcode}
+            />
 
             <Select
               label="category"
@@ -555,7 +552,6 @@ function AddProductFormNew() {
 
             <Card mt="xl" shadow="md">
               <Flex justify={"flex-end"} gap={"lg"}>
-                {/* 3. Updated Save as Draft Button for Variables */}
                 <Button
                   variant="outline"
                   tt={"capitalize"}
@@ -567,7 +563,6 @@ function AddProductFormNew() {
                 >
                   save as draft
                 </Button>
-                {/* 4. Continue Button triggers default form submit (active) */}
                 <Button
                   loading={(createProduct as any).isPending}
                   disabled={(createProduct as any).isPending}
@@ -649,7 +644,7 @@ function AddProductFormNew() {
 
             <Box mt="lg">
               <Text fw={600} fz="sm" my="xs" c="black">
-                Product image
+                Product image (Optional)
               </Text>
               <ProductImageUpload
                 images={form.values.image_path}
