@@ -1,5 +1,4 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
-/* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   Card,
   Title,
@@ -18,7 +17,7 @@ import {
 import { FaChevronDown } from "react-icons/fa6";
 import { TbCurrencyNaira } from "react-icons/tb";
 import ProductVariant from "./ProductVariant";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import {
   useFetchAllCategories,
@@ -37,6 +36,8 @@ import ProductImageUpload from "./ProductImageUpload";
 
 function AddProductFormNew() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isScanning, setIsScanning] = useState(false);
+  const [scannedBuffer, setScannedBuffer] = useState("");
 
   const createProduct = useCreateProduct();
   const navigate = useNavigate();
@@ -48,7 +49,7 @@ function AddProductFormNew() {
   const { data: suData } = useFetchAllSellingUnits() || {};
 
   const categories = (() => {
-    return (Array.isArray(catData?.data) ? catData.data :[]).map(
+    return (Array.isArray(catData?.data) ? catData.data : []).map(
       (item: any) => ({
         value: String(item.id),
         label: item.name,
@@ -57,7 +58,7 @@ function AddProductFormNew() {
   })();
 
   const sellingUnits = (() => {
-    return (Array.isArray(suData?.data) ? suData.data :[]).map(
+    return (Array.isArray(suData?.data) ? suData.data : []).map(
       (item: any) => ({
         value: String(item.name),
         label: item.name,
@@ -66,7 +67,7 @@ function AddProductFormNew() {
   })();
 
   const stores = (() => {
-    return (Array.isArray(storeData?.data) ? storeData.data :[]).map(
+    return (Array.isArray(storeData?.data) ? storeData.data : []).map(
       (item: any) => ({
         value: String(item.id),
         label: item.name,
@@ -97,7 +98,7 @@ function AddProductFormNew() {
       image_path: [] as string[],
 
       // variable product (kept when has_variations === true)
-      variations:[
+      variations: [
         {
           cost_price: 0,
           selling_price: 0,
@@ -223,6 +224,69 @@ function AddProductFormNew() {
     },
   });
 
+  const toggleScanning = () => {
+    setIsScanning((prev) => !prev);
+    setScannedBuffer("");
+  };
+
+  // Global barcode listener
+  useEffect(() => {
+    if (!isScanning) {
+      setScannedBuffer("");
+      return;
+    }
+
+    let bufferTimeout: NodeJS.Timeout;
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Ignore if user is manually typing in another input/textarea
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      clearTimeout(bufferTimeout);
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (scannedBuffer.trim()) {
+          form.setFieldValue("barcode", scannedBuffer.trim());
+          setIsScanning(false);
+          setScannedBuffer("");
+        }
+      } else if (event.key.length === 1) {
+        setScannedBuffer((prev) => prev + event.key);
+        // 100ms timeout to detect end of scan if scanner doesn't send "Enter" key
+        bufferTimeout = setTimeout(() => {
+          if (scannedBuffer.trim()) {
+            form.setFieldValue("barcode", scannedBuffer.trim());
+            setIsScanning(false);
+            setScannedBuffer("");
+          }
+        }, 100);
+      }
+    };
+
+    // Allow user to cancel scanning by pressing Escape
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsScanning(false);
+        setScannedBuffer("");
+      }
+    };
+
+    window.addEventListener("keypress", handleKeyPress);
+    window.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      window.removeEventListener("keypress", handleKeyPress);
+      window.removeEventListener("keydown", handleKeyDown);
+      clearTimeout(bufferTimeout);
+    };
+  }, [isScanning, scannedBuffer, form]);
+
   useEffect(() => {
     const current = searchParams.get("variable") === "true";
     if (form.values.has_variations !== current) {
@@ -237,7 +301,7 @@ function AddProductFormNew() {
     {};
 
   const subcategories = (() => {
-    return (Array.isArray(subCatData?.data) ? subCatData.data :[]).map(
+    return (Array.isArray(subCatData?.data) ? subCatData.data : []).map(
       (item: any) => ({
         value: String(item.id),
         label: item.name,
@@ -264,7 +328,7 @@ function AddProductFormNew() {
     try {
       const base64s = await Promise.all(files.map((f) => readFileAsDataURL(f)));
       const key = `variations.${variationIndex}.image`;
-      const existing = form.getInputProps(key).value ||[];
+      const existing = form.getInputProps(key).value || [];
       form.setFieldValue(key, [...existing, ...base64s]);
     } catch (err) {
       console.error("Error converting variation files", err);
@@ -276,7 +340,7 @@ function AddProductFormNew() {
     imageIndex: number,
   ) => {
     const key = `variations.${variationIndex}.image`;
-    const existing: string[] = form.getInputProps(key).value ||[];
+    const existing: string[] = form.getInputProps(key).value || [];
     const updated = existing.filter((_, i) => i !== imageIndex);
     form.setFieldValue(key, updated);
   };
@@ -286,7 +350,7 @@ function AddProductFormNew() {
 
     try {
       const base64s = await Promise.all(files.map((f) => readFileAsDataURL(f)));
-      const existing = form.values.image_path ||[];
+      const existing = form.values.image_path || [];
       form.setFieldValue("image_path", [...existing, ...base64s]);
     } catch (err) {
       console.error("Error converting files", err);
@@ -294,7 +358,7 @@ function AddProductFormNew() {
   };
 
   const handleRemoveSimpleImage = (index: number) => {
-    const updated = (form.values.image_path ||[]).filter(
+    const updated = (form.values.image_path || []).filter(
       (_, i) => i !== index,
     );
     form.setFieldValue("image_path", updated);
@@ -354,9 +418,9 @@ function AddProductFormNew() {
           selling_price: Number(values.selling_price),
           total_quantity: Number(values.total_quantity || 0),
           reorder_level: Number(values.reorder_level || 0),
-          // image_path explicitly handles empty defaults securely 
-          image_path: Array.isArray(values.image_path) ? values.image_path :[],
-          status: statusValue, 
+          // image_path explicitly handles empty defaults securely
+          image_path: Array.isArray(values.image_path) ? values.image_path : [],
+          status: statusValue,
         };
       }
 
@@ -435,11 +499,31 @@ function AddProductFormNew() {
               </>
             )}
             <TextInput
-              label="Barcode"
+              label={
+                <span className="text-gray-800">
+                  Barcode -{" "}
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={toggleScanning}
+                    onKeyDown={(e) => e.key === "Enter" && toggleScanning()}
+                    className={`font-normal normal-case cursor-pointer hover:underline ${
+                      isScanning
+                        ? "text-orange-500 animate-pulse"
+                        : "text-blue-500"
+                    }`}
+                  >
+                    {isScanning
+                      ? "Listening for scanner (Press Esc to cancel)..."
+                      : "Scan barcode"}
+                  </span>
+                </span>
+              }
               placeholder="Enter barcode"
               classNames={{
-                label: "capitalize font-semibold py-1",
-                input: "!py-5 placeholder:text-#6B7280 ",
+                label: "capitalize font-medium py-1",
+                input:
+                  "!py-5 placeholder:text-gray-400 border-gray-300 rounded-md focus:border-blue-500",
               }}
               {...form.getInputProps("barcode")}
               error={form.errors.barcode}

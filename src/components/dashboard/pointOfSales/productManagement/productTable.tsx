@@ -22,7 +22,7 @@ interface ApiProduct {
   quantity: number;
   reorder_level: string;
   image_path: string;
-  status: "active" | "inactive" | "";
+  status: "active" | "inactive" | "draft" | "";
   stock_status: string;
   draft: number;
 
@@ -64,29 +64,13 @@ export default function ProductTable({
   setSort,
   filters,
 }: ProductTableProps) {
-  // const navigate = useNavigate();
   const [selectedId, setSelectedId] = useState<string | number | null>(null);
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const deleteMutation = useDeleteProuct(selectedId ?? "");
   const [localProducts, setLocalProducts] = useState<ApiProduct[]>(products);
 
-  // const handleDelete = async () => {
-  //   if (!selectedId) return;
-  //   await deleteMutation.mutateAsync();
-  //   setIsDeleteOpen(false);
-  // };
-
   const formatPrice = (price: string) =>
     `₦ ${Number.parseFloat(price).toLocaleString()}`;
-
-
-
-  // const handleProductEdit = (product: ApiProduct) => {
-  //   console.log(product);
-  //   navigate(`/dashboard/product-managewwwment/edit-prouct/2`);
-  // };
-
- 
 
   const locations = Array.from(
     new Set(
@@ -109,43 +93,43 @@ export default function ProductTable({
   );
   
   useEffect(() => {
-  setLocalProducts(products);
-}, [products]);
+    setLocalProducts(products);
+  }, [products]);
 
-const handleDelete = async () => {
-  if (!selectedId) return;
+  const handleDelete = async () => {
+    if (!selectedId) return;
 
-  try {
-    await deleteMutation.mutateAsync();
+    try {
+      await deleteMutation.mutateAsync();
 
-    // Remove the deleted product from the local list immediately
-    setLocalProducts((prev) =>
-      prev.filter((item) => item.variationID !== selectedId)
-    );
+      // Remove the deleted product from the local list immediately
+      setLocalProducts((prev) =>
+        prev.filter((item) => item.variationID !== selectedId)
+      );
 
-    // Close modal
-    setIsDeleteOpen(false);
+      // Close modal
+      setIsDeleteOpen(false);
 
-    // ✅ Show success toast
-    showNotification({
-      title: "Product Deleted",
-      message: "The product has been removed successfully.",
-      color: "green",
-      icon: <Check size={16} />,
-    });
-  } catch (error) {
-    // use the caught error to avoid unused variable linting and aid debugging
-    console.error(error);
-    showNotification({
-      title: "Deletion Failed",
-      message: "An error occurred while deleting the product.",
-      color: "red",
-      icon: <X size={16} />,
-    });
-  }
-};
+      // ✅ Show success toast
+      showNotification({
+        title: "Product Deleted",
+        message: "The product has been removed successfully.",
+        color: "green",
+        icon: <Check size={16} />,
+      });
+    } catch (error) {
+      // use the caught error to avoid unused variable linting and aid debugging
+      console.error(error);
+      showNotification({
+        title: "Deletion Failed",
+        message: "An error occurred while deleting the product.",
+        color: "red",
+        icon: <X size={16} />,
+      });
+    }
+  };
 
-  const columns = [
+  const columns =[
     {
       key: "name",
       header: "Name",
@@ -169,7 +153,7 @@ const handleDelete = async () => {
               },
             }}
           >
-            {p.product.product_name.charAt(0).toUpperCase()}
+            {p.product?.product_name?.charAt(0).toUpperCase()}
           </Avatar>
 
           <div>
@@ -232,18 +216,32 @@ const handleDelete = async () => {
       key: "status",
       header: "Status",
       render: (p: ApiProduct) => {
-        const isActive = (p.quantity ?? 0) > 0;
-        const formattedStatus = isActive ? "Active" : "Inactive";
+        // Evaluate draft and active states
+        const isDraft = p.status?.toLowerCase() === "draft" || p.draft === 1;
+        const isActive = !isDraft && (p.quantity ?? 0) > 0;
+        
+        const formattedStatus = isDraft ? "Draft" : (isActive ? "Active" : "Inactive");
+
+        // Determine badge styling based on final status
+        let bgColor = "#fee2e2"; // default Inactive Red
+        let textColor = "#dc2626";
+
+        if (isDraft) {
+          bgColor = "#f3f4f6"; // Draft Gray
+          textColor = "#4b5563";
+        } else if (isActive) {
+          bgColor = "#dcfce7"; // Active Green
+          textColor = "#166534";
+        }
 
         return (
           <Badge
-            color={isActive ? "green" : "red"}
             variant="light"
             size="sm"
             styles={{
               root: {
-                backgroundColor: isActive ? "#dcfce7" : "#fee2e2",
-                color: isActive ? "#166534" : "#dc2626",
+                backgroundColor: bgColor,
+                color: textColor,
                 fontWeight: 500,
                 border: "none",
                 display: "flex",
@@ -298,8 +296,8 @@ const handleDelete = async () => {
   return (
     <>
       <GenericTable
-        enableSearch ={true}
-       enableSort={true}
+        enableSearch={true}
+        enableSort={true}
         data={localProducts}
         isLoading={isLoading}
         paginationData={paginationData}

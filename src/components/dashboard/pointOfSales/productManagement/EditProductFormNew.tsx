@@ -17,7 +17,7 @@ import {
 import { FaChevronDown } from "react-icons/fa6";
 import { TbCurrencyNaira } from "react-icons/tb";
 import ProductVariant from "./ProductVariant";
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useCallback } from "react";
 import { useForm } from "@mantine/form";
 import {
   useFetchAllCategories,
@@ -37,9 +37,147 @@ import { ROUTES } from "../../../../constants/routes";
 import { useNavigate, useSearchParams } from "react-router";
 import ProductImageUpload from "./ProductImageUpload";
 
+// Form initial values factory
+const createInitialFormValues = (isVariable: boolean) => ({
+  product_name: "",
+  sku: "",
+  barcode: "",
+  category_id: "",
+  sub_category_id: "",
+  short_description: "",
+  location_id: "",
+  has_variations: isVariable,
+  selling_unit: "",
+  cost_price: "",
+  selling_price: "",
+  total_quantity: "",
+  reorder_level: "",
+  image_path: [] as string[],
+  variations: [
+    {
+      variationID: null as string | null,
+      cost_price: 0,
+      selling_price: 0,
+      quantity: 0,
+      reorder_level: 0,
+      sku: "",
+      selling_unit: "",
+      attributes: [] as any[],
+      image: [] as string[],
+    },
+  ],
+});
+
+// Form validation schema
+const createFormValidation = () => ({
+  product_name: (value: any) =>
+    value?.trim() ? null : "Product name is required",
+
+  sku: (value: any, values: any) =>
+    values.has_variations || value?.trim() ? null : "SKU is required",
+
+  category_id: (value: any) => (value ? null : "Category is required"),
+
+  sub_category_id: (value: any) => (value ? null : "Sub-category is required"),
+
+  short_description: (value: any) =>
+    value?.trim() ? null : "Short description is required",
+
+  location_id: (value: any) => (value ? null : "Location is required"),
+
+  selling_unit: (value: any, values: any) =>
+    values.has_variations || value?.toString().trim()
+      ? null
+      : "Selling unit is required",
+
+  cost_price: (value: any, values: any) =>
+    values.has_variations || Number(value) > 0
+      ? null
+      : "Cost price must be greater than 0",
+
+  selling_price: (value: any, values: any) =>
+    values.has_variations || Number(value) > 0
+      ? null
+      : "Selling price must be greater than 0",
+
+  total_quantity: validateQuantityAndReorder,
+
+  reorder_level: validateReorderLevel,
+
+  variations: {
+    cost_price: validateVariationCostPrice,
+    selling_price: validateVariationSellingPrice,
+    attributes: (value: any, values: any) =>
+      values.has_variations && (!Array.isArray(value) || value.length === 0)
+        ? "At least one attribute is required for each variation"
+        : null,
+    image: (value: any, values: any) =>
+      values.has_variations && !Array.isArray(value)
+        ? "Invalid image format"
+        : null,
+    quantity: validateVariationQuantity,
+    reorder_level: validateVariationReorderLevel,
+    sku: (value: any, values: any) =>
+      values.has_variations && !value?.trim()
+        ? "Variation SKU is required"
+        : null,
+    selling_unit: (value: any, values: any) =>
+      values.has_variations && !value?.trim()
+        ? "Selling unit is required"
+        : null,
+  },
+});
+
+// Validation helpers outside component to reduce complexity
+const validateQuantityAndReorder = (value: any, values: any) => {
+  if (values.has_variations) return null;
+  
+  if (Number(value) < 0) return "Quantity cannot be negative";
+
+  if (Number(values.reorder_level) > Number(value))
+    return "Quantity cannot be less than reorder level";
+
+  return null;
+};
+
+const validateReorderLevel = (value: any, values: any) => {
+  if (values.has_variations) return null;
+  
+  if (Number(value) < 0) return "Reorder level cannot be negative";
+
+  if (Number(value) > Number(values.total_quantity))
+    return "Reorder level cannot be greater than quantity";
+
+  return null;
+};
+
+const validateVariationCostPrice = (value: any, values: any) => {
+  if (!values.has_variations) return null;
+  if (value <= 0) return "Cost price must be greater than 0";
+  return null;
+};
+
+const validateVariationSellingPrice = (value: any, values: any) => {
+  if (!values.has_variations) return null;
+  if (value <= 0) return "Selling price must be greater than 0";
+  return null;
+};
+
+const validateVariationQuantity = (value: any, values: any) => {
+  if (!values.has_variations) return null;
+  if (value < 0) return "Quantity cannot be negative";
+  return null;
+};
+
+const validateVariationReorderLevel = (value: any, values: any) => {
+  if (!values.has_variations) return null;
+  if (value < 0) return "Reorder level cannot be negative";
+  return null;
+};
+
 interface EditProductFormNewProps {
-  initialData?: any;
-  isLoading?: boolean;
+  readonly initialData?: any;
+  readonly isLoading?: boolean;
 }
 
 function EditProductFormNew({
@@ -63,203 +201,45 @@ function EditProductFormNew({
   const { data: storeData } = useFetchAllStore() || {};
   const { data: suData } = useFetchAllSellingUnits() || {};
 
-  const categories = (() => {
-    return (Array.isArray(catData?.data) ? catData.data : []).map(
-      (item: any) => ({
-        value: String(item.id),
-        label: item.name,
-      }),
-    );
-  })();
+  // Helper to map data arrays to select options
+  const mapToSelectOptions = (data: any[], idField: string = 'id', labelField: string = 'name') => {
+    return (Array.isArray(data) ? data : []).map((item: any) => ({
+      value: String(item[idField]),
+      label: item[labelField],
+    }));
+  };
 
-  const sellingUnits = (() => {
-    return (Array.isArray(suData?.data) ? suData.data : []).map(
-      (item: any) => ({
-        value: String(item.name),
-        label: item.name,
-      }),
-    );
-  })();
-
-  const stores = (() => {
-    return (Array.isArray(storeData?.data) ? storeData.data : []).map(
-      (item: any) => ({
-        value: String(item.id),
-        label: item.name,
-      }),
-    );
-  })();
+  const categories = mapToSelectOptions(catData?.data || []);
+  const sellingUnits = mapToSelectOptions(suData?.data || [], 'name', 'name');
+  const stores = mapToSelectOptions(storeData?.data || []);
 
   // Read the query parameter (?variable=true)
   const isVariable = searchParams.get("variable") === "true";
 
   const form = useForm({
-    initialValues: {
-      product_name: "",
-      sku: "",
-      barcode: "",
-      category_id: "",
-      sub_category_id: "",
-      short_description: "",
-      location_id: "",
-      has_variations: isVariable,
-      // simple product fields (used when has_variations === false)
-      selling_unit: "",
-      cost_price: "",
-      selling_price: "",
-      total_quantity: "",
-      reorder_level: "",
-      image_path: [] as string[],
-
-      // variable product (kept when has_variations === true)
-      variations: [
-        {
-          variationID: null as string | null,
-          cost_price: 0,
-          selling_price: 0,
-          quantity: 0,
-          reorder_level: 0,
-          sku: "",
-          selling_unit: "",
-          attributes: [] as any[],
-          image: [] as string[],
-        },
-      ],
-    },
-
-    // conditional validators: second param is all values
-    validate: {
-      product_name: (value) =>
-        !value?.trim() ? "Product name is required" : null,
-
-      sku: (value, values) =>
-        !values.has_variations && !value?.trim() ? "SKU is required" : null,
-
-      category_id: (value) => (!value ? "Category is required" : null),
-
-      sub_category_id: (value) => (!value ? "Sub-category is required" : null),
-
-      short_description: (value) =>
-        !value?.trim() ? "Short description is required" : null,
-
-      location_id: (value) => (!value ? "Location is required" : null),
-
-      selling_unit: (value, values) =>
-        !values.has_variations && !value?.toString().trim()
-          ? "Selling unit is required"
-          : null,
-
-      cost_price: (value, values) =>
-        !values.has_variations && Number(value) <= 0
-          ? "Cost price must be greater than 0"
-          : null,
-
-      selling_price: (value, values) =>
-        !values.has_variations && Number(value) <= 0
-          ? "Selling price must be greater than 0"
-          : null,
-
-      total_quantity: (value, values) => {
-        if (!values.has_variations && Number(value) < 0)
-          return "Quantity cannot be negative";
-
-        if (
-          !values.has_variations &&
-          Number(values.reorder_level) > Number(value)
-        )
-          return "Quantity cannot be less than reorder level";
-
-        return null;
-      },
-
-      reorder_level: (value, values) => {
-        if (!values.has_variations && Number(value) < 0)
-          return "Reorder level cannot be negative";
-
-        if (
-          !values.has_variations &&
-          Number(value) > Number(values.total_quantity)
-        )
-          return "Reorder level cannot be greater than quantity";
-
-        return null;
-      },
-
-      /* Nested validation for variations */
-      variations: {
-        cost_price: (value, values) =>
-          values.has_variations
-            ? value <= 0
-              ? "Cost price must be greater than 0"
-              : null
-            : null,
-
-        selling_price: (value, values) =>
-          values.has_variations
-            ? value <= 0
-              ? "Selling price must be greater than 0"
-              : null
-            : null,
-
-        attributes: (value, values) =>
-          values.has_variations && (!Array.isArray(value) || value.length === 0)
-            ? "At least one attribute is required for each variation"
-            : null,
-
-        image: (value, values) =>
-          values.has_variations && !Array.isArray(value)
-            ? "Invalid image format"
-            : null,
-
-        quantity: (value, values) =>
-          values.has_variations
-            ? value < 0
-              ? "Quantity cannot be negative"
-              : null
-            : null,
-
-        reorder_level: (value, values) =>
-          values.has_variations
-            ? value < 0
-              ? "Reorder level cannot be negative"
-              : null
-            : null,
-
-        sku: (value, values) =>
-          values.has_variations && !value?.trim()
-            ? "Variation SKU is required"
-            : null,
-
-        selling_unit: (value, values) =>
-          values.has_variations && !value?.trim()
-            ? "Selling unit is required"
-            : null,
-      },
-    },
+    initialValues: createInitialFormValues(isVariable),
+    validate: createFormValidation(),
   });
+
+  // Helper function to update search params
+  const updateSearchParams = useCallback((hasVariations: boolean) => {
+    const params = new URLSearchParams(searchParams);
+    params.set("variable", String(hasVariations));
+    setSearchParams(params, { replace: true });
+  }, [searchParams, setSearchParams]);
 
   useEffect(() => {
     const current = searchParams.get("variable") === "true";
     if (form.values.has_variations !== current) {
-      // Update the query param when value changes
-      const params = new URLSearchParams(searchParams);
-      params.set("variable", String(form.values.has_variations));
-      setSearchParams(params, { replace: true }); // replace avoids pushing new history entries
+      updateSearchParams(form.values.has_variations);
     }
-  }, [form.values.has_variations, searchParams, setSearchParams]);
+  }, [form.values.has_variations, searchParams, updateSearchParams]);
 
   const { data: subCatData } =
     useFetchSubCatOfCat(form.values.category_id, !!form.values.category_id) ||
     {};
 
-  const subcategories = (() => {
-    return (Array.isArray(subCatData?.data) ? subCatData.data : []).map(
-      (item: any) => ({
-        value: String(item.id),
-        label: item.name,
-      }),
-    );
-  })();
+  const subcategories = mapToSelectOptions(subCatData?.data || []);
 
   useEffect(() => {
     // Reset sub-category when category changes (but not during initialization)
@@ -269,6 +249,84 @@ function EditProductFormNew({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [form.values.category_id]);
 
+  // Helper function to group variation values by attribute
+  const groupVariationAttributes = (values: any[]) => {
+    const grouped = values.reduce((acc: any, val: any) => {
+      const attrId = val.attribute_id;
+      if (!acc[attrId]) {
+        acc[attrId] = {
+          attribute_id: attrId,
+          attribute_name: val.attribute?.name || "",
+          attribute_value_ids: [],
+          attribute_values: [],
+        };
+      }
+      acc[attrId].attribute_value_ids.push(val.attribute_value_id);
+      acc[attrId].attribute_values.push({
+        id: val.attribute_value_id,
+        value: val.attribute_value?.value || "",
+      });
+      return acc;
+    }, {});
+    return Object.values(grouped);
+  };
+
+  // Helper function to transform product variations for form
+  const transformProductVariations = (productVariations: any[]) => {
+    return productVariations.map((v: any) => ({
+      variationID: v.variationID || null,
+      cost_price: v.cost_price || 0,
+      selling_price: v.selling_price || 0,
+      quantity: v.quantity || 0,
+      reorder_level: v.reorder_level || 0,
+      sku: v.sku || "",
+      barcode: v.ean || "",
+      selling_unit: v.selling_unit || "",
+      attributes: Array.isArray(v.values)
+        ? groupVariationAttributes(v.values)
+        : [],
+      image: v.image_path
+        ? v.image_path.split(",").map((url: string) => url.trim()).filter(Boolean)
+        : [],
+    }));
+  };
+
+  // Helper function to set form values from product data
+  const setFormValuesFromProduct = (product: any, isVariable: boolean) => {
+    form.setValues({
+      product_name: product.product_name || "",
+      sku: product.sku || "",
+      barcode: product.ean || "",
+      category_id: product.category_id ? String(product.category_id) : "",
+      sub_category_id: product.sub_category_id ? String(product.sub_category_id) : "",
+      short_description: product.short_description || "",
+      location_id: product.location_id ? String(product.location_id) : "",
+      has_variations: isVariable,
+      selling_unit: product.selling_unit || "",
+      cost_price: product.cost_price || "",
+      selling_price: product.selling_price || "",
+      total_quantity: product.total_quantity ? String(product.total_quantity) : "",
+      reorder_level: product?.product_variations?.[0]?.reorder_level || "",
+      image_path: product.image_path
+        ? product.image_path.split(",").map((url: string) => url.trim()).filter(Boolean)
+        : [],
+      variations:
+        isVariable && product.product_variations?.length > 0
+          ? transformProductVariations(product.product_variations)
+          : form.values.variations,
+    });
+  };
+
+  // Helper to finalize initialization
+  const finalizeInitialization = (isVariable: boolean) => {
+    if (isVariable) {
+      updateSearchParams(true);
+    }
+    setTimeout(() => {
+      isInitializing.current = false;
+    }, 0);
+  };
+
   // Pre-populate form when initialData is available
   useEffect(() => {
     if (initialData?.data) {
@@ -277,93 +335,11 @@ function EditProductFormNew({
       const isVariable = product.has_variations === 1;
       console.log("initialData sub_category_id:", product.sub_category_id);
 
-      // Set basic fields
-      form.setValues({
-        product_name: product.product_name || "",
-        sku: product.sku || "",
-        barcode: product.ean || "",
-        category_id: product.category_id ? String(product.category_id) : "",
-        sub_category_id: product.sub_category_id
-          ? String(product.sub_category_id)
-          : "",
-        short_description: product.short_description || "",
-        location_id: product.location_id ? String(product.location_id) : "",
-        has_variations: product.has_variations === 1,
-        // Simple product fields
-        selling_unit: product.selling_unit || "",
-        cost_price: product.cost_price || "",
-        selling_price: product.selling_price || "",
-        total_quantity: product.total_quantity
-          ? String(product.total_quantity)
-          : "",
-        reorder_level: product?.product_variations?.[0]?.reorder_level || "",
-        image_path: product.image_path
-          ? product.image_path
-              .split(",")
-              .map((url: string) => url.trim())
-              .filter((url: string) => url)
-          : [],
-        // Variable product fields
-        variations:
-          isVariable && product.product_variations?.length > 0
-            ? product.product_variations.map((v: any) => ({
-                variationID: v.variationID || null,
-                cost_price: v.cost_price || 0,
-                selling_price: v.selling_price || 0,
-                quantity: v.quantity || 0,
-                reorder_level: v.reorder_level || 0,
-                sku: v.sku || "",
-                barcode: v.ean || "",
-                selling_unit: v.selling_unit || "",
-                // Transform values array to attributes format
-                // Group by attribute_id and collect attribute_value_ids
-                attributes: Array.isArray(v.values)
-                  ? (() => {
-                      const grouped = v.values.reduce((acc: any, val: any) => {
-                        const attrId = val.attribute_id;
-                        if (!acc[attrId]) {
-                          acc[attrId] = {
-                            attribute_id: attrId,
-                            attribute_name: val.attribute?.name || "",
-                            attribute_value_ids: [],
-                            attribute_values: [], // For display purposes
-                          };
-                        }
-                        acc[attrId].attribute_value_ids.push(
-                          val.attribute_value_id,
-                        );
-                        acc[attrId].attribute_values.push({
-                          id: val.attribute_value_id,
-                          value: val.attribute_value?.value || "",
-                        });
-                        return acc;
-                      }, {});
-                      return Object.values(grouped);
-                    })()
-                  : [],
-                image: v.image_path
-                  ? v.image_path
-                      .split(",")
-                      .map((url: string) => url.trim())
-                      .filter((url: string) => url)
-                  : [],
-              }))
-            : form.values.variations,
-      });
+      setFormValuesFromProduct(product, isVariable);
 
       console.log("Form values:", form.values);
 
-      // Update search params for variable product
-      if (isVariable) {
-        const params = new URLSearchParams(searchParams);
-        params.set("variable", "true");
-        setSearchParams(params, { replace: true });
-      }
-
-      // Mark initialization as complete
-      setTimeout(() => {
-        isInitializing.current = false;
-      }, 0);
+      finalizeInitialization(isVariable);
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [initialData]);
@@ -377,18 +353,22 @@ function EditProductFormNew({
       reader.readAsDataURL(file);
     });
 
-  // variation images: accepts multiple files, appends to variation.image[]
-  const handleImageUpload = async (files: File[], variationIndex: number) => {
+  // Helper to convert files to base64 and update form field
+  const convertAndAppendImages = async (files: File[], fieldKey: string) => {
     if (!files || files.length === 0) return;
 
     try {
-      const base64s = await Promise.all(files.map((f) => readFileAsDataURL(f)));
-      const key = `variations.${variationIndex}.image`;
-      const existing = form.getInputProps(key).value || [];
-      form.setFieldValue(key, [...existing, ...base64s]);
+      const base64s = await Promise.all(files.map(readFileAsDataURL));
+      const existing = form.getInputProps(fieldKey).value || [];
+      form.setFieldValue(fieldKey, [...existing, ...base64s]);
     } catch (err) {
-      console.error("Error converting variation files", err);
+      console.error("Error converting files", err);
     }
+  };
+
+  // variation images: accepts multiple files, appends to variation.image[]
+  const handleImageUpload = async (files: File[], variationIndex: number) => {
+    await convertAndAppendImages(files, `variations.${variationIndex}.image`);
   };
 
   const handleRemoveVariationImage = (
@@ -406,7 +386,7 @@ function EditProductFormNew({
     if (!files || files.length === 0) return;
 
     try {
-      const base64s = await Promise.all(files.map((f) => readFileAsDataURL(f)));
+      const base64s = await Promise.all(files.map(readFileAsDataURL));
       const existing = form.values.image_path || [];
       form.setFieldValue("image_path", [...existing, ...base64s]);
     } catch (err) {
@@ -421,6 +401,59 @@ function EditProductFormNew({
     form.setFieldValue("image_path", updated);
   };
 
+  // Helper to build variable product payload
+  const buildVariableProductPayload = (values: typeof form.values) => {
+    const transformedVariations = values.variations.map((variation) => {
+      const baseVariation = {
+        attributes: expandFormAttributesToValues(variation.attributes),
+        cost_price: Number(variation.cost_price),
+        selling_price: Number(variation.selling_price),
+        quantity: Number(variation.quantity),
+        reorder_level: Number(variation.reorder_level),
+        sku: variation.sku,
+        selling_unit: variation.selling_unit,
+        image: variation.image,
+      };
+
+      if (variation.variationID) {
+        return { ...baseVariation, variationID: variation.variationID };
+      }
+      return baseVariation;
+    });
+
+    return {
+      product_name: values.product_name,
+      sku: values.sku,
+      barcode: values.barcode,
+      category_id: Number(values.category_id),
+      sub_category_id: Number(values.sub_category_id),
+      short_description: values.short_description,
+      location_id: Number(values.location_id),
+      has_variations: true,
+      variations: transformedVariations,
+    };
+  };
+
+  // Helper to build simple product payload
+  const buildSimpleProductPayload = (values: typeof form.values) => {
+    return {
+      product_name: values.product_name,
+      sku: values.sku,
+      barcode: values.barcode,
+      category_id: Number(values.category_id),
+      sub_category_id: Number(values.sub_category_id),
+      short_description: values.short_description,
+      location_id: Number(values.location_id),
+      has_variations: false,
+      selling_unit: values.selling_unit,
+      cost_price: Number(values.cost_price),
+      selling_price: Number(values.selling_price),
+      total_quantity: Number(values.total_quantity || 0),
+      reorder_level: Number(values.reorder_level || 0),
+      image_path: Array.isArray(values.image_path) ? values.image_path : [],
+    };
+  };
+
   const handleSubmit = async (values: typeof form.values) => {
     try {
       let payload: any;
@@ -432,60 +465,11 @@ function EditProductFormNew({
             message: "At least 2 variations are required for variable products",
             color: "red",
           });
-          return; // stop submission
+          return;
         }
-        const transformedVariations = values.variations.map((variation) => {
-          const baseVariation = {
-            attributes: expandFormAttributesToValues(variation.attributes),
-            cost_price: Number(variation.cost_price),
-            selling_price: Number(variation.selling_price),
-            quantity: Number(variation.quantity),
-            reorder_level: Number(variation.reorder_level),
-            sku: variation.sku,
-            selling_unit: variation.selling_unit,
-            image: variation.image,
-          };
-
-          // Only include variationID for existing variations (not new ones)
-          if (variation.variationID) {
-            return {
-              ...baseVariation,
-              variationID: variation.variationID,
-            };
-          }
-
-          return baseVariation;
-        });
-
-        payload = {
-          product_name: values.product_name,
-          sku: values.sku,
-          barcode: values.barcode,
-          category_id: Number(values.category_id),
-          sub_category_id: Number(values.sub_category_id),
-          short_description: values.short_description,
-          location_id: Number(values.location_id),
-          has_variations: true,
-          variations: transformedVariations,
-        };
+        payload = buildVariableProductPayload(values);
       } else {
-        // simple product payload
-        payload = {
-          product_name: values.product_name,
-          sku: values.sku,
-          barcode: values.barcode,
-          category_id: Number(values.category_id),
-          sub_category_id: Number(values.sub_category_id),
-          short_description: values.short_description,
-          location_id: Number(values.location_id),
-          has_variations: false,
-          selling_unit: values.selling_unit,
-          cost_price: Number(values.cost_price),
-          selling_price: Number(values.selling_price),
-          total_quantity: Number(values.total_quantity || 0),
-          reorder_level: Number(values.reorder_level || 0),
-          image_path: Array.isArray(values.image_path) ? values.image_path : [],
-        };
+        payload = buildSimpleProductPayload(values);
       }
 
       // Use update or create based on edit mode
