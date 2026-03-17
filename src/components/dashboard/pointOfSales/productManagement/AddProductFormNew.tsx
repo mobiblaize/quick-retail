@@ -277,12 +277,12 @@ function AddProductFormNew() {
       }
     };
 
-    window.addEventListener("keypress", handleKeyPress);
-    window.addEventListener("keydown", handleKeyDown);
+    globalThis.addEventListener("keypress", handleKeyPress);
+    globalThis.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      window.removeEventListener("keypress", handleKeyPress);
-      window.removeEventListener("keydown", handleKeyDown);
+      globalThis.removeEventListener("keypress", handleKeyPress);
+      globalThis.removeEventListener("keydown", handleKeyDown);
       clearTimeout(bufferTimeout);
     };
   }, [isScanning, scannedBuffer, form]);
@@ -428,13 +428,13 @@ function AddProductFormNew() {
 
       const response = await createProduct.mutateAsync(payload);
 
+      const successMessage = isDraft
+        ? "Product saved as draft successfully"
+        : "Product created successfully";
+
       notifications.show({
         title: isDraft ? "Product Saved as Draft!" : "New Product Saved!",
-        message:
-          response?.message ||
-          (isDraft
-            ? "Product saved as draft successfully"
-            : "Product created successfully"),
+        message: response?.message || successMessage,
         color: "green",
       });
 

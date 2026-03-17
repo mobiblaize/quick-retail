@@ -33,6 +33,7 @@ const defaultsPayload = {
   paginate: true,
   // FIXED: Changed `draft: number` (which is invalid syntax in an object) to a valid default
   draft: undefined as number | undefined, 
+  status: "",
 };
 
 const defaultSearchPayload = {
