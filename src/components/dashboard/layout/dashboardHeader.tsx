@@ -3,8 +3,32 @@ import { Link, useLocation } from "react-router-dom";
 import { ROUTES } from "../../../constants/routes";
 import { useDashboard } from "../../../layout/dashboardContext";
 import { useUserStore } from "../../../hooks/useUserStore";
-import NavItem from "../../../layout/navItem";
-import { InActiveNotification } from "../../../assets/svg";
+import { Bell } from "lucide-react";
+import { useUnread } from "../../../hooks/backendApis/admin/settings";
+
+type DashboardSection =
+  | "Overview"
+  | "Point of Sales"
+  | "Admin";
+
+const NotificationBell = () => {
+  const { data: unreadCount } = useUnread();
+  const count = Number(unreadCount) || 0;
+
+  return (
+    <Link
+      to={ROUTES.notificationPage}
+      className="relative inline-flex items-center justify-center w-11 h-11 bg-[#F1F5F9] rounded-full cursor-pointer hover:bg-[#E2E8F0] transition-colors shrink-0"
+    >
+      <Bell className="w-5 h-5 text-[#64748B]" strokeWidth={2} />
+      {count > 0 && (
+        <span className="absolute top-0 right-0 flex items-center justify-center min-w-[20px] h-[20px] px-1.5 text-[11px] font-semibold text-white bg-[#D92D20] rounded-full translate-x-1/4 -translate-y-1/4 shadow-sm">
+          {count > 99 ? "99+" : count}
+        </span>
+      )}
+    </Link>
+  );
+};
 
 export const DashboardHeader = ({
   toggleSidebar,
@@ -15,52 +39,15 @@ export const DashboardHeader = ({
   const isAdmin = useUserStore((state) => state.isAdmin());
   const location = useLocation();
 
-  type DashboardSection =
-    | "Overview"
-    | "Point of Sales"
-    // | "Financial Management"
-    // | "Procurement"
-    // | "Asset Management"
-    // | "Reports"
-    | "Admin";
-
-  // Filter nav links based on user role - only show Admin tab to admin users
   const navLinks = useMemo(() => {
     const links = [
-      // {
-      //   label: "Overview" as DashboardSection,
-      //   to: ROUTES.dashboard,
-      //   active: activeSection === "Overview",
-      // },
       {
         label: "Point of Sales" as DashboardSection,
         to: ROUTES.dashboard,
         active: activeSection === "Point of Sales",
       },
-      // {
-      //   label: "Financial Management" as DashboardSection,
-      //   to: ROUTES.financialDashboard,
-      //   active: activeSection === "Financial Management",
-      // },
-      // {
-      //   label: "Procurement" as DashboardSection,
-      //   to: ROUTES.procurementDashboard,
-      //   active: activeSection === "Procurement",
-      // },
-      // {
-      //   label: "Asset Management" as DashboardSection,
-      //   to: ROUTES.assetDashboard,
-      //   active: activeSection === "Asset Management",
-      // },
-
-      // {
-      //   label: "Reports" as DashboardSection,
-      //   to: ROUTES.dashboard,
-      //   active: activeSection === "Reports",
-      // },
     ];
 
-    // Only add Admin tab for admin users
     if (isAdmin) {
       links.push({
         label: "Admin" as DashboardSection,
@@ -111,22 +98,7 @@ export const DashboardHeader = ({
             </Link>
           ))}
         </div>
-        <NavItem
-          href={ROUTES.notificationPage}
-          label=""
-          inactiveIcon={InActiveNotification}
-          activeIcon={InActiveNotification}
-        />
-        {/* <div className="flex items-center gap-3">
-          <Settings />
-          <QuestionMark />
-          <div className="bg-[#F7F9FC] text-center rounded-full p-1 flex items-center gap-2">
-            <img src={avatar} alt="avatar" />
-            <Text fw={500} c="black">
-              Victoria LLC
-            </Text>
-          </div>
-        </div> */}
+        <NotificationBell />
       </nav>
     </div>
   );
