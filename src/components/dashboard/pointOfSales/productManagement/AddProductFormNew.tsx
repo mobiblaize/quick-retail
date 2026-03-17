@@ -17,7 +17,7 @@ import {
 import { FaChevronDown } from "react-icons/fa6";
 import { TbCurrencyNaira } from "react-icons/tb";
 import ProductVariant from "./ProductVariant";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useForm } from "@mantine/form";
 import {
   useFetchAllCategories,
@@ -36,6 +36,8 @@ import ProductImageUpload from "./ProductImageUpload";
 
 function AddProductFormNew() {
   const [searchParams, setSearchParams] = useSearchParams();
+  const [isScanning, setIsScanning] = useState(false);
+  const [scannedBuffer, setScannedBuffer] = useState("");
 
   const createProduct = useCreateProduct();
   const navigate = useNavigate();
@@ -189,8 +191,9 @@ function AddProductFormNew() {
             ? "At least one attribute is required for each variation"
             : null,
 
+        // Image validation strictly allows optional/empty array now
         image: (value, values) =>
-          values.has_variations && !Array.isArray(value)
+          values.has_variations && value && !Array.isArray(value)
             ? "Invalid image format"
             : null,
 
@@ -220,6 +223,69 @@ function AddProductFormNew() {
       },
     },
   });
+
+  const toggleScanning = () => {
+    setIsScanning((prev) => !prev);
+    setScannedBuffer("");
+  };
+
+  // Global barcode listener
+  useEffect(() => {
+    if (!isScanning) {
+      setScannedBuffer("");
+      return;
+    }
+
+    let bufferTimeout: NodeJS.Timeout;
+
+    const handleKeyPress = (event: KeyboardEvent) => {
+      // Ignore if user is manually typing in another input/textarea
+      if (
+        event.target instanceof HTMLInputElement ||
+        event.target instanceof HTMLTextAreaElement
+      ) {
+        return;
+      }
+
+      clearTimeout(bufferTimeout);
+
+      if (event.key === "Enter") {
+        event.preventDefault();
+        if (scannedBuffer.trim()) {
+          form.setFieldValue("barcode", scannedBuffer.trim());
+          setIsScanning(false);
+          setScannedBuffer("");
+        }
+      } else if (event.key.length === 1) {
+        setScannedBuffer((prev) => prev + event.key);
+        // 100ms timeout to detect end of scan if scanner doesn't send "Enter" key
+        bufferTimeout = setTimeout(() => {
+          if (scannedBuffer.trim()) {
+            form.setFieldValue("barcode", scannedBuffer.trim());
+            setIsScanning(false);
+            setScannedBuffer("");
+          }
+        }, 100);
+      }
+    };
+
+    // Allow user to cancel scanning by pressing Escape
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === "Escape") {
+        setIsScanning(false);
+        setScannedBuffer("");
+      }
+    };
+
+    globalThis.addEventListener("keypress", handleKeyPress);
+    globalThis.addEventListener("keydown", handleKeyDown);
+
+    return () => {
+      globalThis.removeEventListener("keypress", handleKeyPress);
+      globalThis.removeEventListener("keydown", handleKeyDown);
+      clearTimeout(bufferTimeout);
+    };
+  }, [isScanning, scannedBuffer, form]);
 
   useEffect(() => {
     const current = searchParams.get("variable") === "true";
@@ -298,7 +364,6 @@ function AddProductFormNew() {
     form.setFieldValue("image_path", updated);
   };
 
-  // 1. Updated handleSubmit to accept isDraft flag
   const handleSubmit = async (
     values: typeof form.values,
     isDraft: boolean = false,
@@ -306,7 +371,6 @@ function AddProductFormNew() {
     try {
       let payload: any;
 
-      // Determine Status
       const statusValue = isDraft ? "draft" : "active";
 
       if (values.has_variations) {
@@ -325,6 +389,7 @@ function AddProductFormNew() {
           selling_price: Number(variation.selling_price),
           quantity: Number(variation.quantity),
           reorder_level: Number(variation.reorder_level),
+          // image array correctly handled even if empty
         }));
 
         payload = {
@@ -336,9 +401,7 @@ function AddProductFormNew() {
           barcode: values.barcode,
           has_variations: true,
           variations: transformedVariations,
-          status: statusValue, // Correctly setting status
-          // Note: If you need parent SKU for variable products, add `sku: values.sku` here,
-          // but ensure the input is visible in the form or generated.
+          status: statusValue,
         };
       } else {
         payload = {
@@ -355,22 +418,23 @@ function AddProductFormNew() {
           selling_price: Number(values.selling_price),
           total_quantity: Number(values.total_quantity || 0),
           reorder_level: Number(values.reorder_level || 0),
+          // image_path explicitly handles empty defaults securely
           image_path: Array.isArray(values.image_path) ? values.image_path : [],
-          status: statusValue, // Correctly setting status
+          status: statusValue,
         };
       }
 
-      console.log("Submitting Payload:", payload); // Debugging
+      console.log("Submitting Payload:", payload);
 
       const response = await createProduct.mutateAsync(payload);
 
+      const successMessage = isDraft
+        ? "Product saved as draft successfully"
+        : "Product created successfully";
+
       notifications.show({
         title: isDraft ? "Product Saved as Draft!" : "New Product Saved!",
-        message:
-          response?.message ||
-          (isDraft
-            ? "Product saved as draft successfully"
-            : "Product created successfully"),
+        message: response?.message || successMessage,
         color: "green",
       });
 
@@ -392,7 +456,6 @@ function AddProductFormNew() {
   };
 
   return (
-    // 2. Default form submit is for "Active" state (isDraft = false)
     <form onSubmit={form.onSubmit((values) => handleSubmit(values, false))}>
       <Box px="xl" py="lg">
         <Card withBorder radius={"sm"} shadow="md" py="xl">
@@ -433,20 +496,38 @@ function AddProductFormNew() {
                   {...form.getInputProps("sku")}
                   error={form.errors.sku}
                 />
-
-                
               </>
             )}
             <TextInput
-                  label="Barcode"
-                  placeholder="Enter barcode"
-                  classNames={{
-                    label: "capitalize font-semibold py-1",
-                    input: "!py-5 placeholder:text-#6B7280 ",
-                  }}
-                  {...form.getInputProps("barcode")}
-                  error={form.errors.barcode}
-                />
+              label={
+                <span className="text-gray-800">
+                  Barcode -{" "}
+                  <span
+                    role="button"
+                    tabIndex={0}
+                    onClick={toggleScanning}
+                    onKeyDown={(e) => e.key === "Enter" && toggleScanning()}
+                    className={`font-normal normal-case cursor-pointer hover:underline ${
+                      isScanning
+                        ? "text-orange-500 animate-pulse"
+                        : "text-blue-500"
+                    }`}
+                  >
+                    {isScanning
+                      ? "Listening for scanner (Press Esc to cancel)..."
+                      : "Scan barcode"}
+                  </span>
+                </span>
+              }
+              placeholder="Enter barcode"
+              classNames={{
+                label: "capitalize font-medium py-1",
+                input:
+                  "!py-5 placeholder:text-gray-400 border-gray-300 rounded-md focus:border-blue-500",
+              }}
+              {...form.getInputProps("barcode")}
+              error={form.errors.barcode}
+            />
 
             <Select
               label="category"
@@ -555,7 +636,6 @@ function AddProductFormNew() {
 
             <Card mt="xl" shadow="md">
               <Flex justify={"flex-end"} gap={"lg"}>
-                {/* 3. Updated Save as Draft Button for Variables */}
                 <Button
                   variant="outline"
                   tt={"capitalize"}
@@ -567,7 +647,6 @@ function AddProductFormNew() {
                 >
                   save as draft
                 </Button>
-                {/* 4. Continue Button triggers default form submit (active) */}
                 <Button
                   loading={(createProduct as any).isPending}
                   disabled={(createProduct as any).isPending}
@@ -649,7 +728,7 @@ function AddProductFormNew() {
 
             <Box mt="lg">
               <Text fw={600} fz="sm" my="xs" c="black">
-                Product image
+                Product image (Optional)
               </Text>
               <ProductImageUpload
                 images={form.values.image_path}

@@ -56,7 +56,8 @@ interface GenericTableProps<T> {
     | "discount"
     | "audit"
     | "transaction"
-    | "userManagement";
+    | "userManagement"
+    | "draft";
   locations?: string[];
   categories?: string[];
   roles?: string[];
