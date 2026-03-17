@@ -77,6 +77,8 @@ const ProductManagementPage = () => {
 
   const handleAddBulkProducts = () =>
     navigate("/dashboard/product-management/add-bulk-product");
+  const handleDrafts = () =>
+    navigate("/dashboard/product-management/drafts");
 
   const mapFiltersToPayload = (filters: FilterValues) => {
   const productStatus = filters.productStatus?.toLowerCase();
@@ -147,7 +149,10 @@ const ProductManagementPage = () => {
       </Text>
 
       <div>
-        <div className="hidden sm:block">
+        <div className="hidden sm:flex gap-4 items-center ">
+          <Button variant="outline" className="!h-12 !rounded-xl"  onClick={handleDrafts}>
+                Drafts
+              </Button>
           <Menu>
             <Menu.Target>
               <Button variant="filled-primary">

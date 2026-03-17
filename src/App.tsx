@@ -232,6 +232,7 @@ import ScrollToTop from "./components/General/scrollTop";
 import NotificationPage from "./pages/adminPages/notifications/notificationPage";
 import EditNewProduct from "./pages/pointOfSales/productManagement/EditNewProduct";
 import ProtectedRoute from "./components/common/ProtectedRoute";
+import ProductDraftsPage from "./components/dashboard/pointOfSales/productManagement/ProductDraftsPage";
 // import AddVariableProductNew from "./components/dashboard/pointOfSales/productManagement/AddVariableProductNew";
 
 export default function App() {
@@ -287,6 +288,7 @@ export default function App() {
             element={<ProtectedRoute><InventoryDetailsPage /></ProtectedRoute>}
           />
           <Route path={ROUTES.addBulkProduct} element={<ProtectedRoute><AddBulkProduct /></ProtectedRoute>} />
+          <Route path={ROUTES.productDraft} element={<ProtectedRoute><ProductDraftsPage /></ProtectedRoute>} />
           {/* <Route path={ROUTES.addVariableProduct} element={<AddVariableProductNew />} /> */}
           <Route path={ROUTES.sales} element={<ProtectedRoute><SalesProcessingPage /></ProtectedRoute>} />
           <Route path={ROUTES.viewOrder} element={<ProtectedRoute><ViewOrderPage /></ProtectedRoute>} />
