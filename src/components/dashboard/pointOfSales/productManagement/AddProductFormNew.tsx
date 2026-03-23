@@ -124,9 +124,6 @@ function AddProductFormNew() {
 
       sub_category_id: (value) => (!value ? "Sub-category is required" : null),
 
-      short_description: (value) =>
-        !value?.trim() ? "Short description is required" : null,
-
       location_id: (value) => (!value ? "Location is required" : null),
 
       selling_unit: (value, values) =>
@@ -189,12 +186,6 @@ function AddProductFormNew() {
         attributes: (value, values) =>
           values.has_variations && (!Array.isArray(value) || value.length === 0)
             ? "At least one attribute is required for each variation"
-            : null,
-
-        // Image validation strictly allows optional/empty array now
-        image: (value, values) =>
-          values.has_variations && value && !Array.isArray(value)
-            ? "Invalid image format"
             : null,
 
         quantity: (value, values) =>
@@ -563,7 +554,6 @@ function AddProductFormNew() {
                   label="short description"
                   placeholder="Enter a short description"
                   {...form.getInputProps("short_description")}
-                  error={form.errors.short_description}
                 />
 
                 <Select

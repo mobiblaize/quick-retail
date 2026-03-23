@@ -1,5 +1,5 @@
-import { Divider, Text } from "@mantine/core";
-import { X } from "lucide-react";
+import { Divider, Text, Button } from "@mantine/core"; // Added Button for better UI
+import { X, User } from "lucide-react";
 import { useState, useEffect, ReactNode } from "react";
 import { useSearchAllCustomers } from "../../../../hooks/backendApis/pos/products";
 import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
@@ -18,8 +18,9 @@ interface SearchCustomerProps {
   onCustomerSelect: (customerID: string | null) => void;
   initialCustomerId?: string | null;
   initialCustomerName?: string;
-  collapsible?: boolean; // optional if you added this earlier
-  showIcon?: boolean; // optional if you added this earlier
+  collapsible?: boolean;
+  showIcon?: boolean;
+  allowGuest?: boolean; // New prop to make customer optional
 }
 
 const SearchCustomer: React.FC<SearchCustomerProps> = ({
@@ -27,49 +28,27 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
   initialCustomerId,
   initialCustomerName,
   collapsible = true,
-  showIcon,
+  // allowGuest = true, 
 }) => {
   const { setCustomer, customer: storeCustomer } = useOrderStore();
-
-  // --- collapsing UI (if you kept it)
   const [isExpanded, setIsExpanded] = useState(true);
   const isOpen = collapsible ? isExpanded : true;
-  const hasIcon = (showIcon ?? collapsible) && collapsible;
   const toggleExpand = () => collapsible && setIsExpanded(!isExpanded);
 
   const [isAddingCustomer, setIsAddingCustomer] = useState(false);
 
-  // Initialize selected customer from props or store
   const getInitialCustomer = (): CustomerData | null => {
     if (initialCustomerId && initialCustomerName) {
-      return {
-        customerID: initialCustomerId,
-        customer_name: initialCustomerName,
-        customer_email: "",
-        customer_phone: "",
-      };
+      return { customerID: initialCustomerId, customer_name: initialCustomerName, customer_email: "", customer_phone: "" };
     }
     if (storeCustomer?.id && storeCustomer?.name) {
-      return {
-        customerID: storeCustomer.id,
-        customer_name: storeCustomer.name,
-        customer_email: "",
-        customer_phone: "",
-      };
+      return { customerID: storeCustomer.id, customer_name: storeCustomer.name, customer_email: "", customer_phone: "" };
     }
     return null;
   };
 
-  // Initialize search term from selected customer
-  const getInitialSearchTerm = (): string => {
-    if (initialCustomerName) return initialCustomerName;
-    if (storeCustomer?.name) return storeCustomer.name;
-    return "";
-  };
-
-  // seed search input from props or store
-  const [searchTerm, setSearchTerm] = useState(getInitialSearchTerm);
-
+  const [searchTerm, setSearchTerm] = useState(() => initialCustomerName || storeCustomer?.name || "");
+  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(getInitialCustomer());
   const [newCustomer, setNewCustomer] = useState({
     customer_name: "",
     customer_email: "",
@@ -79,292 +58,235 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 
   const createCustomer = useCreateCustomer();
 
-  // Local "selected" card state (purely visual)
-  const [selectedCustomer, setSelectedCustomer] = useState<CustomerData | null>(
-    getInitialCustomer()
-  );
-
-  // Update selected customer when initialCustomerId changes (when navigating back to step)
+  // Sync with external props
   useEffect(() => {
     if (initialCustomerId && initialCustomerName) {
-      // Only update if the selected customer doesn't match the initial customer
-      const currentCustomerId = selectedCustomer?.customerID;
-      if (currentCustomerId !== initialCustomerId) {
-        const customer: CustomerData = {
-          customerID: initialCustomerId,
-          customer_name: initialCustomerName,
-          customer_email: "",
-          customer_phone: "",
-        };
+      if (selectedCustomer?.customerID !== initialCustomerId) {
+        const customer = { customerID: initialCustomerId, customer_name: initialCustomerName, customer_email: "", customer_phone: "" };
         setSelectedCustomer(customer);
         setSearchTerm(initialCustomerName);
-        // Also update the store to keep it in sync
-        if (storeCustomer?.id !== initialCustomerId) {
-          setCustomer({ id: initialCustomerId, name: initialCustomerName });
-        }
-      }
-    } else if (!initialCustomerId) {
-      // Clear selection if initialCustomerId is cleared (but only if we have a selected customer)
-      if (selectedCustomer) {
-        setSelectedCustomer(null);
-        setSearchTerm("");
       }
     }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [initialCustomerId, initialCustomerName]);
+  }, [initialCustomerId, initialCustomerName, selectedCustomer?.customerID]);
 
   const { data, refetch } = useSearchAllCustomers({ search: searchTerm }, false);
-  const customerList: CustomerData[] = Array.isArray(data) ? data : data ? [data] : [];
+  const dataArray = Array.isArray(data) ? data : [data];
+  const customerList: CustomerData[] = data ? dataArray : [];
 
   useEffect(() => {
-    if (searchTerm.length > 2) {
+    if (searchTerm.length > 2 && !selectedCustomer) {
       refetch();
     }
-  }, [searchTerm, refetch]);
-
-  const [phoneError, setPhoneError] = useState<string | null>(null);
-
-  // Helpers
-  const digitsOnly = (s: string) => s.replace(/\D/g, "");
-  const clamp11 = (s: string) => digitsOnly(s).slice(0, 11);
-
-  const blockNonNumericKeys = (e: React.KeyboardEvent<HTMLInputElement>) => {
-    if (e.ctrlKey || e.metaKey) return; // allow copy/paste shortcuts
-    const allowed = ["Backspace", "Delete", "ArrowLeft", "ArrowRight", "Tab", "Home", "End"];
-    if (allowed.includes(e.key)) return;
-    if (!/^\d$/.test(e.key)) e.preventDefault();
-  };
-
-  const onPhonePaste = (e: React.ClipboardEvent<HTMLInputElement>) => {
-    const text = e.clipboardData.getData("text");
-    if (!/^\d+$/.test(text)) e.preventDefault();
-  };
-
-  const handlePhoneChange = (digits: string) => {
-    setNewCustomer(prev => ({ ...prev, customer_phone: digits }));
-    setPhoneError(digits.length === 11 ? null : "Phone must be 11 digits");
-  };
-
-  const handleCreateCustomer = () => {
-    const payload = {
-      ...newCustomer,
-      customer_phone: clamp11(newCustomer.customer_phone),
-    };
-
-    if (!/^\d{11}$/.test(payload.customer_phone)) {
-      notifications.show({
-        title: "Invalid phone",
-        message: "Please enter an 11-digit phone number (numbers only).",
-        color: "red",
-      });
-      return;
-    }
-
-    createCustomer.mutate(payload, {
-      onSuccess: (response) => {
-        const customerID = response?.data?.customerID;
-        if (customerID) {
-          onCustomerSelect(customerID);
-          setSearchTerm(newCustomer.customer_name); // Reset search term to new customer name
-          setIsAddingCustomer(false);
-          setCustomer({ id: customerID, name: newCustomer.customer_name });
-
-          notifications.show({
-            title: "Customer Created",
-            message: `${newCustomer.customer_name} has been added successfully.`,
-            color: "green",
-          });
-        }
-      },
-      onError: () => {
-        notifications.show({
-          title: "Error",
-          message: "Failed to create customer. Please try again.",
-          color: "red",
-        });
-      },
-    });
-  };
-
-  // const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-  //   setSearchTerm(e.target.value);
-  //   setSelectedCustomer(null); // Reset selected customer when searching
-  // };
+  }, [searchTerm, refetch, selectedCustomer]);
 
   const handleSelectCustomer = (c: CustomerData) => {
     setSelectedCustomer(c);
     setSearchTerm(c.customer_name);
-
     onCustomerSelect(c.customerID);
     setCustomer({ id: c.customerID, name: c.customer_name });
   };
 
+  // const handleSetGuest = () => {
+  //   setSelectedCustomer(null);
+  //   setSearchTerm("");
+  //   onCustomerSelect(null);
+  //   setCustomer({ id: null, name: "Guest Customer" });
+  //   notifications.show({
+  //     title: "Guest Mode",
+  //     message: "Proceeding without a registered customer.",
+  //     color: "blue",
+  //   });
+  // };
+
+  // Helper for creation
+  const handleCreateCustomer = () => {
+    if (newCustomer.customer_phone.length !== 11) {
+      notifications.show({ title: "Invalid phone", message: "Enter an 11-digit phone number.", color: "red" });
+      return;
+    }
+
+    createCustomer.mutate(newCustomer, {
+      onSuccess: (response) => {
+        const id = response?.data?.customerID;
+        if (id) {
+          onCustomerSelect(id);
+          setSearchTerm(newCustomer.customer_name);
+          setIsAddingCustomer(false);
+          setCustomer({ id, name: newCustomer.customer_name });
+          setSelectedCustomer({ ...newCustomer, customerID: id, customer_phone: newCustomer.customer_phone });
+        }
+      },
+    });
+  };
+
   return (
     <main className="w-full h-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <header
-        className={`px-6 py-2 ${collapsible ? "cursor-pointer" : ""}`}
-        onClick={collapsible ? toggleExpand : undefined}
-        aria-expanded={isOpen}
-      >
-        <div className={`flex items-center ${hasIcon ? "justify-between" : "justify-start"}`}>
-          <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
-            {isAddingCustomer ? "Add New Customer" : "Customer"}
-          </Text>
+      {collapsible ? (
+        <button
+          type="button"
+          className="w-full text-left px-6 py-2 cursor-pointer"
+          onClick={toggleExpand}
+        >
+          <div className="flex items-center justify-between">
+            <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
+              {isAddingCustomer ? "Add New Customer" : "Customer Selection"}
+            </Text>
+            {selectedCustomer && (
+              <div className="flex items-center gap-2 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                <User size={14} className="text-orange-600" />
+                <Text size="xs" fw={600} className="text-orange-700">{selectedCustomer.customer_name}</Text>
+              </div>
+            )}
+            {!selectedCustomer && !isAddingCustomer && (
+              <Text size="xs" c="dimmed">Optional</Text>
+            )}
+          </div>
+        </button>
+      ) : (
+        <div className="px-6 py-2">
+          <div className="flex items-center justify-between">
+            <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
+              {isAddingCustomer ? "Add New Customer" : "Customer Selection"}
+            </Text>
+            {selectedCustomer && (
+              <div className="flex items-center gap-2 bg-orange-50 px-3 py-1 rounded-full border border-orange-200">
+                <User size={14} className="text-orange-600" />
+                <Text size="xs" fw={600} className="text-orange-700">{selectedCustomer.customer_name}</Text>
+              </div>
+            )}
+            {!selectedCustomer && !isAddingCustomer && (
+              <Text size="xs" c="dimmed">Optional</Text>
+            )}
+          </div>
         </div>
-      </header>
+      )}
 
       {isOpen && (
         <>
-          <Divider size="sm" className="mt-3" color="#E4E7EC" />
+          <Divider size="sm" className="my-3" color="#E4E7EC" />
 
           <div className="w-full px-6 pb-6 relative">
             {!isAddingCustomer ? (
               <>
                 <div className="relative max-w-md">
-                  <Text mt="md" mb="1em">
-                    SEARCH CUSTOMER
-                  </Text>
+                  <Text size="xs" fw={700} mb="xs" c="dimmed">SEARCH EXISTING CUSTOMER</Text>
 
                   <div className="flex items-center gap-2">
-                    {/* <FormInput
-                      value={searchTerm}
-                      onChange={handleSearchChange}
-                      placeholder="Enter Customer Name"
-                      paddingY={"0.7rem"}
-                      className="w-full "
-                    /> */}
                     <FormInput
                       value={searchTerm}
                       onChange={(val: string) => {
                         setSearchTerm(val);
-                        setSelectedCustomer(null);
+                        if (selectedCustomer) setSelectedCustomer(null);
                       }}
-                      placeholder="Enter Customer Name"
+                      placeholder="Enter Name or Phone..."
                       paddingY={"0.7rem"}
                       className="w-full "
                     />
-                    {selectedCustomer && (
+                    {(selectedCustomer || searchTerm) && (
                       <button
                         onClick={() => {
                           setSelectedCustomer(null);
-                          setSearchTerm(""); // Clear search term when customer is cleared
-                          onCustomerSelect(null); // user action
-                          setCustomer({ id: null, name: "" }); // Clear from store
+                          setSearchTerm("");
+                          onCustomerSelect(null);
+                          setCustomer({ id: null, name: "" });
                         }}
-                        type="button"
-                        className="focus:outline-none"
-                        aria-label="Clear selected customer"
+                        className="p-2 hover:bg-gray-100 rounded-full"
                       >
-                        <X size={18} className="text-gray-400 hover:text-gray-600" />
+                        <X size={18} className="text-gray-400" />
                       </button>
                     )}
                   </div>
 
-                  {/* dropdown */}
+                  {/* Dropdown Results */}
                   {!selectedCustomer && searchTerm.length > 2 && customerList.length > 0 && (
-                    <div className="absolute left-0 right-0 border border-gray-300 mt-1 rounded shadow-md max-h-48 overflow-y-auto z-10 bg-white">
+                    <div className="absolute left-0 right-0 border border-gray-300 mt-1 rounded shadow-lg max-h-48 overflow-y-auto z-50 bg-white">
                       {customerList.map((c) => (
-                        <div
+                        <button
                           key={c.customerID}
-                          className="cursor-pointer hover:bg-gray-100 px-4 py-2 border-b last:border-none"
+                          type="button"
+                          className="w-full text-left cursor-pointer hover:bg-orange-50 px-4 py-2 border-b last:border-none transition-colors"
                           onClick={() => handleSelectCustomer(c)}
                         >
-                          <Text fw={500} c="dark">
-                            {c.customer_name}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            {c.customer_phone}
-                          </Text>
-                          <Text size="sm" c="dimmed">
-                            {c.customer_email}
-                          </Text>
-                        </div>
+                          <Text fw={500} size="sm">{c.customer_name}</Text>
+                          <Text size="xs" c="dimmed">{c.customer_phone}</Text>
+                        </button>
                       ))}
                     </div>
                   )}
                 </div>
 
-                <Text
-                  mt="md"
-                  c="#EB5017"
-                  style={{ cursor: "pointer" }}
-                  onClick={() => setIsAddingCustomer(true)}
-                >
-                  + Add New Customer
-                </Text>
+                <div className="flex items-center gap-6 mt-6">
+                  <Text
+                    size="sm"
+                    fw={600}
+                    c="#EB5017"
+                    className="cursor-pointer hover:underline"
+                    onClick={() => setIsAddingCustomer(true)}
+                  >
+                    + Add New Customer
+                  </Text>
+
+                  {/* {allowGuest && !selectedCustomer && (
+                    <Button 
+                        variant="subtle" 
+                        color="gray" 
+                        size="xs" 
+                        onClick={handleSetGuest}
+                        leftSection={<User size={14} />}
+                    >
+                        Continue as Guest
+                    </Button>
+                  )} */}
+                </div>
               </>
             ) : (
+              /* Create Customer Form */
               <div className="flex flex-col gap-4 w-full mt-4">
-                <div className="grid grid-cols-2 gap-4 ">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <FormInput
                     label="Customer Name"
                     value={newCustomer.customer_name}
-                    placeholder="Enter customer name"
-                    paddingY="0.7rem"
-                    onChange={(val: string) =>
-                      setNewCustomer({
-                        ...newCustomer,
-                        customer_name: val,
-                      })
-                    }
+                    placeholder="Full Name"
+                    onChange={(val: string) => setNewCustomer({ ...newCustomer, customer_name: val })}
                   />
-
                   <FormInput
                     label="Email"
                     value={newCustomer.customer_email}
-                    placeholder="Enter customer email"
-                    paddingY="0.7rem"
-                    onChange={(val: string) =>
-                      setNewCustomer({
-                        ...newCustomer,
-                        customer_email: val,
-                      })
-                    }
+                    placeholder="Email Address"
+                    onChange={(val: string) => setNewCustomer({ ...newCustomer, customer_email: val })}
                   />
-
-                </div>
-                <div className="grid grid-cols-2 gap-4">
                   <FormInput
                     label="Phone Number"
-                    placeholder="Enter phone number"
                     value={newCustomer.customer_phone}
-                    onChange={handlePhoneChange}
-                    paddingY="0.7rem"
-                    // @ts-expect-error - FormInput may not have all HTML input props in its type definition
-                    inputMode="numeric"
-                    pattern="\d*"
-                    autoComplete="tel"
+                    placeholder="080..."
                     maxLength={11}
-                    onKeyDown={blockNonNumericKeys}
-                    onPaste={onPhonePaste}
+                    onChange={(val: string) => setNewCustomer({ ...newCustomer, customer_phone: val.replaceAll(/\D/g, "") })}
                   />
                   <FormInput
                     label="Address"
                     value={newCustomer.customer_address}
-                    placeholder="Enter customer address"
-                    paddingY="0.7rem"
-                    onChange={(val: string) =>
-                      setNewCustomer({
-                        ...newCustomer,
-                        customer_address: val,
-                      })
-                    }
+                    placeholder="Delivery Address"
+                    onChange={(val: string) => setNewCustomer({ ...newCustomer, customer_address: val })}
                   />
-                  {phoneError && <div className="text-sm text-red-600 mt-3">{phoneError}</div>}
                 </div>
-                <div className="flex gap-4 justify-start text-right items-end">
-                  <button
-                    className="mt-2 w-[150px] px-2 h-[44px] border border-[#F16722] text-[#F16722] bg-[white] rounded-lg"
+                
+                <div className="flex gap-3 mt-2">
+                  <Button 
+                    variant="outline" 
+                    color="orange" 
                     onClick={() => setIsAddingCustomer(false)}
+                    className="flex-1 md:flex-none md:w-[140px]"
                   >
-                    <Text c="#f16722">Cancel</Text>
-                  </button>
-                  <button
-                    className="mt-4 w-[150px] h-[44px] px-2 rounded-lg text-[white] bg-[#F16722] font-medium"
+                    Cancel
+                  </Button>
+                  <Button 
+                    color="orange" 
                     onClick={handleCreateCustomer}
+                    className="flex-1 md:flex-none md:w-[180px]"
+                    loading={createCustomer.isPending}
                   >
-                    <Text c="#fff">Create Customer</Text>
-                  </button>
+                    Create & Select
+                  </Button>
                 </div>
               </div>
             )}
@@ -376,4 +298,3 @@ const SearchCustomer: React.FC<SearchCustomerProps> = ({
 };
 
 export default SearchCustomer;
-

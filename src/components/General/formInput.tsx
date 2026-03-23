@@ -13,6 +13,7 @@ interface FlexibleInputField
   onBlur?: () => void;
   onWheel?: (e: React.WheelEvent<HTMLInputElement>) => void;
   labelProps?: Record<string, any>;
+  maxLength?: number;
 }
 
 const FormInput = ({
