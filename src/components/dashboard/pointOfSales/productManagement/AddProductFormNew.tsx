@@ -34,6 +34,26 @@ import { ROUTES } from "../../../../constants/routes";
 import { useNavigate, useSearchParams } from "react-router";
 import ProductImageUpload from "./ProductImageUpload";
 
+function validateVariationCostPrice(value: number, values: { has_variations: boolean }) {
+  if (values.has_variations && value <= 0) return "Cost price must be greater than 0";
+  return null;
+}
+
+function validateVariationSellingPrice(value: number, values: { has_variations: boolean }) {
+  if (values.has_variations && value <= 0) return "Selling price must be greater than 0";
+  return null;
+}
+
+function validateVariationQuantity(value: number, values: { has_variations: boolean }) {
+  if (values.has_variations && value < 0) return "Quantity cannot be negative";
+  return null;
+}
+
+function validateVariationReorderLevel(value: number, values: { has_variations: boolean }) {
+  if (values.has_variations && value < 0) return "Reorder level cannot be negative";
+  return null;
+}
+
 function AddProductFormNew() {
   const [searchParams, setSearchParams] = useSearchParams();
   const [isScanning, setIsScanning] = useState(false);
@@ -135,6 +155,7 @@ function AddProductFormNew() {
         !values.has_variations && Number(value) <= 0
           ? "Cost price must be greater than 0"
           : null,
+          image_path: () => null, 
 
       selling_price: (value, values) =>
         !values.has_variations && Number(value) <= 0
@@ -169,38 +190,19 @@ function AddProductFormNew() {
 
       /* Nested validation for variations */
       variations: {
-        cost_price: (value, values) =>
-          values.has_variations
-            ? value <= 0
-              ? "Cost price must be greater than 0"
-              : null
-            : null,
+        cost_price: validateVariationCostPrice,
 
-        selling_price: (value, values) =>
-          values.has_variations
-            ? value <= 0
-              ? "Selling price must be greater than 0"
-              : null
-            : null,
+        selling_price: validateVariationSellingPrice,
 
         attributes: (value, values) =>
           values.has_variations && (!Array.isArray(value) || value.length === 0)
             ? "At least one attribute is required for each variation"
             : null,
 
-        quantity: (value, values) =>
-          values.has_variations
-            ? value < 0
-              ? "Quantity cannot be negative"
-              : null
-            : null,
+        quantity: validateVariationQuantity,
+        image: () => null,
 
-        reorder_level: (value, values) =>
-          values.has_variations
-            ? value < 0
-              ? "Reorder level cannot be negative"
-              : null
-            : null,
+        reorder_level: validateVariationReorderLevel,
 
         sku: (value, values) =>
           values.has_variations && !value?.trim()
@@ -227,7 +229,7 @@ function AddProductFormNew() {
       return;
     }
 
-    let bufferTimeout: NodeJS.Timeout;
+    let bufferTimeout: ReturnType<typeof setTimeout>;
 
     const handleKeyPress = (event: KeyboardEvent) => {
       // Ignore if user is manually typing in another input/textarea
@@ -380,7 +382,7 @@ function AddProductFormNew() {
           selling_price: Number(variation.selling_price),
           quantity: Number(variation.quantity),
           reorder_level: Number(variation.reorder_level),
-          // image array correctly handled even if empty
+          image: Array.isArray(variation.image) ? variation.image : [],
         }));
 
         payload = {
