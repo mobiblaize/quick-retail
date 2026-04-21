@@ -155,7 +155,6 @@ function AddProductFormNew() {
         !values.has_variations && Number(value) <= 0
           ? "Cost price must be greater than 0"
           : null,
-          image_path: () => null, 
 
       selling_price: (value, values) => {
         if (!values.has_variations) {
