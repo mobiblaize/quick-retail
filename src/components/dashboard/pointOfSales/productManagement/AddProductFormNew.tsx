@@ -195,11 +195,11 @@ function AddProductFormNew() {
         return null;
       },
 
-      image_path: (value, values) =>
-        !values.has_variations &&
-        (!Array.isArray(value) || value.length === 0)
-          ? "At least one product image is required"
-          : null,
+      // image_path: (value, values) =>
+      //   !values.has_variations &&
+      //   (!Array.isArray(value) || value.length === 0)
+      //     ? "At least one product image is required"
+      //     : null,
 
       /* Nested validation for variations */
       variations: {
