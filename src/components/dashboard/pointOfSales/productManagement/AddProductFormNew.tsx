@@ -157,10 +157,18 @@ function AddProductFormNew() {
           : null,
           image_path: () => null, 
 
-      selling_price: (value, values) =>
-        !values.has_variations && Number(value) <= 0
-          ? "Selling price must be greater than 0"
-          : null,
+      selling_price: (value, values) => {
+        if (!values.has_variations) {
+          if (Number(value) <= 0) {
+            return "Selling price must be greater than 0";
+          }
+          const costPrice = Number(values.cost_price || 0);
+          if (costPrice > 0 && Number(value) < costPrice) {
+            return "Selling price should not be less than cost price";
+          }
+        }
+        return null;
+      },
 
       total_quantity: (value, values) => {
         if (!values.has_variations && Number(value) < 0)
@@ -187,6 +195,12 @@ function AddProductFormNew() {
 
         return null;
       },
+
+      // image_path: (value, values) =>
+      //   !values.has_variations &&
+      //   (!Array.isArray(value) || value.length === 0)
+      //     ? "At least one product image is required"
+      //     : null,
 
       /* Nested validation for variations */
       variations: {
@@ -727,6 +741,11 @@ function AddProductFormNew() {
                 onFilesAdd={(files: File[]) => handleSimpleImageUpload(files)}
                 onRemove={(i: number) => handleRemoveSimpleImage(i)}
               />
+              {form.errors.image_path && (
+                <Text fz="xs" c="red" mt="xs">
+                  {form.errors.image_path}
+                </Text>
+              )}
             </Box>
 
             <Flex justify={"end"} mt="xl" gap={15} className="">
