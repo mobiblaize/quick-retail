@@ -1,12 +1,10 @@
 import { ReactNode } from "react";
-import { Text, Group, Card, useMantineTheme } from "@mantine/core";
+import { Text, Group, Card, useMantineTheme, rem } from "@mantine/core";
 import { ArrowIcon } from "../../assets/svg";
 
 interface AnalyticsCardProps {
   title: string;
   value: string | number;
-
-  // Optional props
   icon?: ReactNode;
   iconColor?: string;
   cardBgColor?: string;
@@ -27,11 +25,8 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   percentageValue,
   width = "100%",
   height = "auto",
-  // borderColor,
-  // lightColor,
 }) => {
   const theme = useMantineTheme();
-
   const defaultBgColor = cardBgColor || theme.colors.customPrimary[6];
 
   const cardStyle: React.CSSProperties = {
@@ -40,7 +35,6 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
     gap: "3px",
     width,
     height,
-    // border: borderColor ? `1px solid ${borderColor}` : undefined,
   };
 
   if (defaultBgColor.includes("gradient")) {
@@ -50,22 +44,42 @@ const AnalyticsCard: React.FC<AnalyticsCardProps> = ({
   }
 
   return (
-    <Card p="lg" radius="md" style={cardStyle} >
-  {icon && <div>{icon}</div>}
-      <Text c={textColor} size="xs" fw={700} mt="xs" tt={"uppercase"}>
+    <Card 
+      // Responsive padding: 'md' (16px) on mobile, 'lg' (20px) on desktop
+      p={{ base: "md", sm: "lg" }} 
+      radius="md" 
+      style={cardStyle}
+    >
+      {icon && <div>{icon}</div>}
+      
+      <Text 
+        c={textColor} 
+        size="xs" 
+        fw={700} 
+        mt="xs" 
+        tt={"uppercase"}
+      >
         {title}
       </Text>
 
       <Text
         c={textColor}
-        fz="24px"
+        // Responsive Font Size: 20px on mobile, 24px on desktop
+        fz={{ base: rem(13), lg: rem(24) }}
         fw="600"
-        style={{ display: "flex", alignItems: "center", gap: "8px" }}
+        style={{ 
+          display: "flex", 
+          alignItems: "center", 
+          gap: "8px", 
+          flexWrap: "wrap" // Ensures percentage wraps if value is very long on mobile
+        }}
       >
         {value}
+        
         {percentageValue !== undefined && (
           <Group
             gap="xs"
+            wrap="nowrap"
             style={{
               borderRadius: "0.8rem",
               padding: "4px 8px",
