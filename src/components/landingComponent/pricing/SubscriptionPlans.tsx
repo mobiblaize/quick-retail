@@ -155,7 +155,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
           )}
         </Box>
         {/* Free Seats */}
-        <Box style={{ minWidth: 120, textAlign: "center" }}>
+        {/* <Box style={{ minWidth: 120, textAlign: "center" }}>
           <Text size="sm" c="#6C6975" mb={2}>
             User Seat (Free){" "}
             <Tooltip label="This refers to the number of users that can access the application at no extra cost under your current plan.">
@@ -173,7 +173,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
           <Text fw={600} c="#48464E">
             {data?.application?.free_access_users} Seats
           </Text>
-        </Box>
+        </Box> */}
         {/* Additional Seats */}
         {billingType !== "trial" && (
           <Box
