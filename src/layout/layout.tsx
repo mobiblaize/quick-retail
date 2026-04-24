@@ -46,7 +46,7 @@ const DashboardLayout = () => {
               ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
             `}
           >
-            <DashboardSidebar toggleSidebar={toggleSidebar} isCollapsed={!isSidebarOpen} />
+            <DashboardSidebar toggleSidebar={toggleSidebar}/>
           </aside>
         )}
 
