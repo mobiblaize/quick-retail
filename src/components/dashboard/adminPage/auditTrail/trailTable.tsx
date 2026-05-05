@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { Text } from "@mantine/core";
 import { useNavigate } from "react-router-dom";
 import GenericTable, { PaginationData } from "../../../General/genericTable";
