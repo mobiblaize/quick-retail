@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/no-explicit-any */
 import { ArrowUpRight, ChevronDown } from "lucide-react";
 import { Card, Button, TextInput, Select } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
@@ -17,6 +18,7 @@ import PaymentSuccessModal from "./PaymentSuccessModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
+import { handleOpenEmail } from "../../../utils/handleEmail";
 
 // ✅ Updated schema to reject numbers in names
 const schema = z.object({
@@ -43,18 +45,18 @@ const PaymentSummary = () => {
   const billingType = useAtomValue(billingTypeStore);
   const navigate = useNavigate();
   const reference = new URLSearchParams(window.location.search).get(
-    "reference"
+    "reference",
   );
   const [opened, setOpened] = useState(!!reference);
   const adminSeat = useAtomValue(seatCount);
   const windowUrl = window.location.origin;
 
   const { data: companySizes, isPending: isCompanySizesPending } = useFetchData(
-    "applications/company-sizes"
+    "applications/company-sizes",
   );
 
   const { mutateAsync: createPayment, isPending } = usePostData(
-    "auth/signup/register"
+    "auth/signup/register",
   );
 
   const paymentForm = useForm({
@@ -71,11 +73,15 @@ const PaymentSummary = () => {
   });
 
   const handleSubmit = async (values: typeof paymentForm.values) => {
+    const selectedCompanySize = companySizes?.data?.find(
+      (size: any) => size.label === values.companySize,
+    );
+
     const payload = {
       company_name: values.companyName,
       firstname: values.firstName,
       lastname: values.lastName,
-      company_size_id: 1,
+      company_size_id: selectedCompanySize?.id || 1,
       phoneno: values.phoneNumber,
       email: values.email,
       billing_type: billingType,
@@ -83,18 +89,26 @@ const PaymentSummary = () => {
       password_url: windowUrl + "/create-password",
       paystack_complete_callback: windowUrl + "/payment-summary",
       applications: selectedSub.map((sub: SubscriptionData) => ({
-        subscription_id: sub.id,
-        application_id: sub.application_id,
-        amount: sub.amount,
-        additional_seat: adminSeat,
+        subscription_id: String(sub.id),
+        application_id: String(sub.application_id),
+        amount: String(sub.amount),
+        additional_seat: String(adminSeat || 0),
       })),
     };
 
     try {
       const response = await createPayment(payload);
       sessionStorage.setItem("registerEmail", values.email);
-      sessionStorage.setItem("registerData", response?.data);
-      window.location.href = response?.data?.auth_url;
+      sessionStorage.setItem("registerData", JSON.stringify(response?.data));
+
+      if (billingType === "trial") {
+        // For free trial, redirect to create password directly
+        handleOpenEmail(values.email ?? "");
+        navigate("/login");
+      } else {
+        // For paid plans, redirect to Paystack
+        window.location.href = response?.data?.auth_url;
+      }
     } catch (error) {
       notifications.show({
         title: "Payment Error",
@@ -192,7 +206,7 @@ const PaymentSummary = () => {
                     rightSection={<ChevronDown size={16} />}
                     rightSectionProps={{ className: "text-[#F56630] text-sm" }}
                     renderOption={({ option }) => (
-                      <div >
+                      <div>
                         <div className="text-[14px] font-medium text-[#48464E]">
                           {option.label}
                         </div>
@@ -240,8 +254,8 @@ const PaymentSummary = () => {
                       {formatMoney(
                         Number(
                           sub?.amount +
-                            (adminSeat || 0) * (sub?.price_per_seat || 0)
-                        )
+                            (adminSeat || 0) * (sub?.price_per_seat || 0),
+                        ),
                       )}
                     </div>
                   </div>
@@ -260,8 +274,8 @@ const PaymentSummary = () => {
                     {billingType === "monthly"
                       ? "1 Month"
                       : billingType === "yearly"
-                      ? "12 Months"
-                      : "60 Days"}
+                        ? "12 Months"
+                        : "60 Days"}
                     )
                   </span>
                 </div>
@@ -283,12 +297,12 @@ const PaymentSummary = () => {
                         (billingType === "monthly"
                           ? 30
                           : billingType === "yearly"
-                          ? 365
-                          : 60) *
+                            ? 365
+                            : 60) *
                           24 *
                           60 *
                           60 *
-                          1000
+                          1000,
                     ).toLocaleDateString("en-US", {
                       month: "long",
                       day: "numeric",
@@ -334,7 +348,7 @@ const PaymentSummary = () => {
                       Additional User Seats (
                       {selectedSub.reduce(
                         (sum: number) => sum + (adminSeat || 0),
-                        0
+                        0,
                       )}{" "}
                       X ₦
                       {formatMoney(Number(selectedSub[0]?.price_per_seat || 0))}
@@ -346,7 +360,7 @@ const PaymentSummary = () => {
                         .reduce(
                           (sum: number, sub: SubscriptionData) =>
                             sum + (adminSeat || 0) * (sub.price_per_seat || 0),
-                          0
+                          0,
                         )
                         .toLocaleString()}
                     </span>
@@ -358,7 +372,7 @@ const PaymentSummary = () => {
                     <span className="text-[#F16722]">
                       ₦{" "}
                       {formatMoney(
-                        Math.round(totalPriceValue * 0.075)
+                        Math.round(totalPriceValue * 0.075),
                       ).toLocaleString()}
                     </span>
                   </div>
@@ -367,7 +381,7 @@ const PaymentSummary = () => {
                     <span className="text-[#F16722]">
                       ₦{" "}
                       {formatMoney(
-                        Math.round(totalPriceValue * 1.075)
+                        Math.round(totalPriceValue * 1.075),
                       ).toLocaleString()}
                     </span>
                   </div>
@@ -381,7 +395,9 @@ const PaymentSummary = () => {
                   radius="xl"
                   size="md"
                   className="w-full mt-4"
-                  rightSection={<ArrowUpRight size={16} />}
+                  rightSection={
+                    billingType === "trial" ? null : <ArrowUpRight size={16} />
+                  }
                   type="submit"
                   loading={isPending}
                   disabled={
@@ -389,11 +405,11 @@ const PaymentSummary = () => {
                     Object.values(paymentForm.values).some((v) => !v)
                   }
                 >
-                  Pay ₦{" "}
-                  {formatMoney(
-                    Math.round(totalPriceValue * 1.075)
-                  ).toLocaleString()}{" "}
-                  Now
+                  {billingType === "trial"
+                    ? "Create Account"
+                    : `Pay ₦ ${formatMoney(
+                        Math.round(totalPriceValue * 1.075),
+                      ).toLocaleString()} Now`}
                 </Button>
               </div>
             </Card>

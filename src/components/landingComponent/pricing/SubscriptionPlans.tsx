@@ -20,7 +20,8 @@ import {
 // import { notifications } from "@mantine/notifications";
 
 const SubscriptionPlanCard = ({ data }: any) => {
-  const [adminSeat, 
+  const [
+    adminSeat,
     // setAdminSeat
   ] = useAtom(seatCount);
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
@@ -39,6 +40,11 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
   const recalcTotal = useCallback(
     (subs: any[]) => {
+      if (billingType === "trial") {
+        setTotalPrice(0);
+        return;
+      }
+
       const total = subs.reduce(
         (sum, item) =>
           sum +
@@ -48,7 +54,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
       );
       setTotalPrice(total);
     },
-    [adminSeat, setTotalPrice],
+    [adminSeat, billingType, setTotalPrice],
   );
 
   useEffect(() => {
@@ -156,9 +162,11 @@ const SubscriptionPlanCard = ({ data }: any) => {
               style={{ fontSize: "32px", color: "#F56630", lineHeight: 1 }}
             >
               ₦{" "}
-              {billingType === "monthly"
-                ? Number(data?.total_monthly_amount || 0).toLocaleString()
-                : Number(data?.total_yearly_amount || 0).toLocaleString()}
+              {billingType === "trial"
+                ? Number(0).toLocaleString()
+                : billingType === "monthly"
+                  ? Number(data?.total_monthly_amount || 0).toLocaleString()
+                  : Number(data?.total_yearly_amount || 0).toLocaleString()}
             </Text>
 
             <Text size="xs" c="#6C6975" mt={8}>

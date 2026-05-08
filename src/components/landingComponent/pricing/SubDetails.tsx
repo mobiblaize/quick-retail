@@ -4,107 +4,83 @@ import { useAtomValue, useAtom, useSetAtom } from "jotai";
 import { useEffect } from "react";
 import { Link } from "react-router";
 import { useFetchData } from "../../../hooks/useApis";
-// import { ArrowUpRight } from "lucide-react";
+import { ArrowUpRight } from "lucide-react";
 import { formatMoney } from "../../../utils/helpers";
+import SubscriptionPlans from "./SubscriptionPlans";
 import {
   billingTypeStore,
   selectedSubs,
   totalPrice,
   selectedApp,
-  // billingType,
+  billingType,
 } from "../../../store/subscriptionStore";
 
-// const subscriptionPlan = [{ id: 3, name: "Billed Annually", slug: "yearly" }];
-
-import { Check } from "lucide-react";
-
-const features = [
-  "Unlimited stores",
-  "Unlimited users",
-  "All Growth features",
-  "Advanced inventory, audits, shrinkage tracking",
-  "Loyalty programmes, advanced customer insights",
-  "Full financial management, multi-currency, tax",
-  "Custom reports, exports",
-  "Advanced analytics & KPIs",
-  "2FA, advanced security, system controls",
-  "APIs, third-party integrations",
-  "Dedicated account support + SLA (Service Level Agreement)",
+const subscriptionPlan = [
+  { id: 1, name: "Free Trial", slug: "trial" },
+  // { id: 2, name: "Billed Monthly", slug: "monthly" },
+  { id: 3, name: "Billed Annually", slug: "yearly" },
 ];
 
 const SubDetails = () => {
   const [activePlan, setActivePlan] = useAtom(billingTypeStore);
-  const setSelectedApps = useSetAtom(selectedApp);
+  const [selectedApps, setSelectedApps] = useAtom(selectedApp);
   const totalPriceValue = useAtomValue(totalPrice);
   const setTotalPriceValue = useSetAtom(totalPrice);
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
 
-  // Set default to yearly on mount
-  useEffect(() => {
-    setActivePlan("yearly");
-  }, [setActivePlan]);
+  const payableAmount = activePlan === "trial" ? 0 : Number(totalPriceValue);
 
   const { data: subscriptionPlans, isPending: subscriptionPlansLoading } =
     useFetchData(`applications/allSubscription?billing_type=${activePlan}`);
 
-  // Auto-select POS on mount if available
+  // Update total price when billing type changes
   useEffect(() => {
-    if (!subscriptionPlans?.data) return;
-    const posApp = subscriptionPlans.data.find(
-      (item: any) =>
-        item?.application?.name === "Point of Sales Management System",
-    );
-    if (posApp && !selectedSub.some((s: any) => s.id === posApp.id)) {
-      const updated = [
-        ...selectedSub,
-        { ...posApp, additional_user_seat_number: 0 },
-      ];
-      setSelectedSub(updated);
+    if (activePlan === "trial") {
+      setTotalPriceValue(0);
+      return;
     }
-  }, [subscriptionPlans, setSelectedSub, selectedSub]);
 
-  // Update total price for annual billing
-  useEffect(() => {
     if (subscriptionPlans?.data) {
-      const newTotal = selectedSub.reduce((sum: number, item: any) => {
-        const plan = subscriptionPlans.data.find((p: any) => p.id === item.id);
+      // Recalculate total based on new billing type for selected apps
+      const newTotal = selectedApps.reduce((sum: number, app: any) => {
+        const plan = subscriptionPlans.data.find(
+          (p: any) => p.application_id === app.id,
+        );
         if (!plan) return sum;
 
-        const baseAmount = plan.total_yearly_amount;
+        // Get base amount based on billing type
+        const baseAmount =
+          activePlan === "yearly"
+            ? plan.amount
+            : activePlan === "monthly"
+              ? plan.amount
+              : 0; // trial is free
 
-        const additionalSeatsCost = item.additional_user_seat_number
-          ? item.additional_user_seat_number * (plan.price_per_seat || 0)
+        // Calculate additional seats cost
+        const additionalSeatsCost = plan.additional_user_seat_number
+          ? plan.additional_user_seat_number * (plan.price_per_seat || 0)
           : 0;
 
         // For yearly billing, multiply additional seats cost by 12
-        const totalSeatsCost = additionalSeatsCost * 12;
+        const totalSeatsCost =
+          activePlan === "yearly"
+            ? additionalSeatsCost * 12
+            : additionalSeatsCost;
 
-        return sum + (Number(baseAmount) || 0) + totalSeatsCost;
+        return sum + (baseAmount || 0) + totalSeatsCost;
       }, 0);
 
+      // Update the total price atom
       setTotalPriceValue(newTotal);
     }
-  }, [subscriptionPlans, selectedSub, setTotalPriceValue]);
+  }, [activePlan, subscriptionPlans, selectedApps, setTotalPriceValue]);
 
   useEffect(() => {
     setSelectedApps([]);
-  }, [activePlan, setSelectedApps]);
+    setSelectedSub([]);
 
-  if (subscriptionPlansLoading) {
-    return (
-      <Box
-        style={{
-          minHeight: "100vh",
-          display: "flex",
-          flexDirection: "column",
-          justifyContent: "center",
-          alignItems: "center",
-        }}
-      >
-        <Loader size={50} color="#F56630" />
-      </Box>
-    );
-  }
+    console.log("working");
+  }, [activePlan]);
 
   return (
     <Box
@@ -119,80 +95,108 @@ const SubDetails = () => {
       <div className="max-w-[1008px] mx-auto px-5 w-full">
         <div className=" my-14 ">
           <Card
-            shadow="xs"
+            shadow="sm"
             radius="lg"
-            p={0}
+            p={32}
             withBorder
-            style={{ borderColor: "#FA9874", backgroundColor: "#F9FAFB" }}
+            style={{ borderColor: "#D0D5DD" }}
           >
-            {/* Header and Tabs */}
-            <div className="p-8 pb-4">
-              <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6 mb-8">
-                <Box>
-                  <Title order={2} size="h2" fw={700} c="#101828" mb={8}>
-                    Basic plan
-                  </Title>
-                  <Text size="md" c="#475467" className="max-w-[720px]">
-                    Manage sales and transactions, inventory tracking, customer
-                    engagement and reporting analytics with instant updates
-                  </Text>
-                </Box>
-              </div>
-
-              {/* Price */}
-              <div className="mb-8">
+            <div className="flex items-center justify-between flex-col lg:flex-row gap-4 mb-8 lg:mb-0">
+              <Title order={2} size="h3" fw={600} mb={24}>
+                Your Subscription Details
                 <Text
-                  fw={700}
-                  style={{
-                    fontSize: "48px",
-                    color: "#F56630",
-                    lineHeight: "1.2",
-                    display: "flex",
-                    alignItems: "baseline",
-                  }}
+                  size="sm"
+                  c="#6C6975"
+                  className="lg:max-w-[400px]"
+                  mt={10}
                 >
-                  ₦{formatMoney(Number(totalPriceValue))}
-                  <Text component="span" size="xl" c="#667085" fw={500} ml={4}>
-                    /year
-                  </Text>
+                  Subscribe to the point of sales business to effectively manage
+                  your retail business. You can add more seats if you need more
+                  that the given seats available for your plan.
                 </Text>
-              </div>
+              </Title>
 
-              {/* Features List */}
-              <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-y-4 mb-8">
-                {features.map((feature, index) => (
-                  <Group key={index} gap={12} align="start">
-                    <div className="mt-1 bg-[#FEF0E9] rounded-full p-0.5">
-                      <Check size={14} color="#F56630" strokeWidth={3} />
-                    </div>
-                    <Text size="md" c="#475467" fw={400}>
-                      {feature}
-                    </Text>
-                  </Group>
-                ))}
+              {/* Tabs for subscription type */}
+              <div className="">
+                <Group
+                  gap={8}
+                  className="bg-[#f7f6fb] max-w-[580px] mx-auto p-2 rounded-lg"
+                >
+                  {subscriptionPlansLoading
+                    ? null
+                    : subscriptionPlan.map((plan) => (
+                        <Button
+                          key={plan.id}
+                          radius="xs"
+                          size="md"
+                          styles={{
+                            root: {
+                              backgroundColor:
+                                activePlan === plan.slug ? "white" : "#f7f6fb",
+                              "&:hover": {
+                                backgroundColor:
+                                  activePlan === plan.slug
+                                    ? "white"
+                                    : "#f7f6fb",
+                                opacity: activePlan === plan.slug ? 0.8 : 1,
+                              },
+                            },
+                            inner: {
+                              color:
+                                activePlan === plan.slug ? "black" : "#6C6975",
+                              fontSize: "14px",
+                              fontWeight: 400,
+                            },
+                          }}
+                          onClick={() => {
+                            setActivePlan(plan.slug as billingType);
+                          }}
+                        >
+                          <Text>{plan.name}</Text>
+                        </Button>
+                      ))}
+                </Group>
               </div>
             </div>
+            {subscriptionPlansLoading && (
+              <div className="flex justify-center items-center h-[20vh] w-full bg-white rounded-lg">
+                <Loader size={40} />
+              </div>
+            )}
+            {/* Subscription plans section */}
+            <SubscriptionPlans data={subscriptionPlans?.data} />
 
-            {/* Footer */}
-            <div className="p-6 px-8 bg-white border-t border-[#EAECF0] rounded-b-lg flex flex-col md:flex-row items-center justify-between gap-4">
-              <Text size="md" c="#475467">
-                Subscribe to get full access to the platform and start managing
-                your business effectively
+            <Group
+              justify="space-between"
+              align="center"
+              mt={32}
+              className="shadow-xs border border-gray-200 p-4 rounded-lg"
+            >
+              <Box>
+                <Text fw={700} size="lg" c="#48464E">
+                  Total Price
+                </Text>
+                <Text size="sm" c="#6C6975">
+                  Excluding V.A.T or related tax
+                </Text>
+              </Box>
+              <Text fw={700} size="xl" className="text-[#F56630]">
+                ₦ {formatMoney(payableAmount)}
               </Text>
-
-              <Link to="/payment-summary" className="w-full md:w-auto">
+            </Group>
+            <Group justify="right" mt={32}>
+              <Link to="/payment-summary">
                 <Button
-                  radius="md"
+                  radius="xl"
                   color="#F56630"
-                  size="lg"
-                  px={40}
-                  className="w-full md:w-auto"
+                  size="md"
                   disabled={selectedSub.length === 0}
+                  rightSection={<ArrowUpRight size={16} />}
                 >
-                  Get Started
+                  Continue
                 </Button>
               </Link>
-            </div>
+            </Group>
           </Card>
         </div>
       </div>
