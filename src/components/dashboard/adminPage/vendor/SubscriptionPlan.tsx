@@ -20,8 +20,8 @@ import {
 } from "../../../../utils/helpers";
 
 const subscriptionPlan = [
-  // { id: 1, name: "Free Trial", slug: "trial" },
-  { id: 2, name: "Billed Monthly", slug: "monthly" },
+  { id: 1, name: "Free Trial", slug: "trial" },
+  // { id: 2, name: "Billed Monthly", slug: "monthly" },
   { id: 3, name: "Billed Annually", slug: "yearly" },
 ];
 

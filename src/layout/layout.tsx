@@ -14,9 +14,11 @@ const DashboardLayout = () => {
 
   useEffect(() => {
     const handleResize = () => {
+      // md breakpoint is 768px in Tailwind
       const mobile = window.innerWidth < 768;
       setIsMobile(mobile);
-      setIsSidebarOpen(!mobile);
+      // On desktop, we usually want the sidebar open by default
+      if (!mobile) setIsSidebarOpen(true);
     };
 
     handleResize();
@@ -26,35 +28,57 @@ const DashboardLayout = () => {
 
   return (
     <DashboardProvider>
-      <div className="flex h-screen overflow-hidden">
+      {/* 1. Main Wrapper: Prevents body scroll, sets background */}
+      <div className="flex h-screen w-full overflow-hidden bg-[#F9FAFB]">
+        
+        {/* 2. Sidebar: 
+            - Fixed on mobile/tablet (absolute/fixed)
+            - Relative on Desktop
+            - Width scales slightly based on screen size
+        */}
         {!isMobile && (
-          <div
-            className={`fixed top-0 left-0 h-full w-[20rem] z-30 transform transition-transform duration-300 md:relative ${
-              isSidebarOpen ? "translate-x-0" : "-translate-x-full"
-            } md:translate-x-0`}
+          <aside
+            className={`
+              fixed top-0 left-0 z-30 h-full overflow-y-auto border-r border-gray-200 bg-white
+              transition-all duration-300 ease-in-out
+              md:relative 
+              ${isSidebarOpen ? "w-[18rem] lg:w-[20rem]" : "w-0 md:w-20"} 
+              ${isSidebarOpen ? "translate-x-0" : "-translate-x-full md:translate-x-0"}
+            `}
           >
-            <DashboardSidebar toggleSidebar={toggleSidebar} />
-          </div>
+            <DashboardSidebar toggleSidebar={toggleSidebar}/>
+          </aside>
         )}
 
-        <div className="flex-1 flex flex-col w-full">
-          <div className="sticky top-0 z-20 w-full">
+        {/* 3. Main Content Area */}
+        <div className="flex flex-1 flex-col min-w-0 h-full relative">
+          
+          {/* Header: Sticky at the top */}
+          <header className="sticky top-0 z-20 w-full flex-shrink-0">
             {isMobile ? (
               <MobileDashboardHeader />
             ) : (
               <DashboardHeader toggleSidebar={toggleSidebar} />
             )}
-          </div>
-
-          <div
-            className={`flex-1 overflow-y-auto overflow-hidden ${
-              isMobile ? "pb-16" : ""
-            }`}
+          </header>
+          <main
+            className={`
+              flex-1 overflow-y-auto overflow-x-hidden 
+              ${isMobile ? "pb-24" : ""}
+            `}
           >
-            <Outlet />
-          </div>
+            {/* Inner container to center content on huge screens */}
+            <div className="mx-auto w-full max-w-[1600px]">
+              <Outlet />
+            </div>
+          </main>
 
-          {isMobile && <MobileMoreMnu />}
+          {/* 5. Mobile Bottom Navigation */}
+          {isMobile && (
+            <div className="fixed bottom-0 left-0 z-40 w-full border-t border-gray-100 bg-white shadow-[0_-4px_6px_-1px_rgba(0,0,0,0.05)]">
+              <MobileMoreMnu />
+            </div>
+          )}
         </div>
       </div>
     </DashboardProvider>

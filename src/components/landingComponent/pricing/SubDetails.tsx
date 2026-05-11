@@ -17,7 +17,7 @@ import {
 
 const subscriptionPlan = [
   { id: 1, name: "Free Trial", slug: "trial" },
-  { id: 2, name: "Billed Monthly", slug: "monthly" },
+  // { id: 2, name: "Billed Monthly", slug: "monthly" },
   { id: 3, name: "Billed Annually", slug: "yearly" },
 ];
 
@@ -28,17 +28,23 @@ const SubDetails = () => {
   const setTotalPriceValue = useSetAtom(totalPrice);
   const [selectedSub, setSelectedSub] = useAtom(selectedSubs);
 
+  const payableAmount = activePlan === "trial" ? 0 : Number(totalPriceValue);
 
   const { data: subscriptionPlans, isPending: subscriptionPlansLoading } =
     useFetchData(`applications/allSubscription?billing_type=${activePlan}`);
 
   // Update total price when billing type changes
   useEffect(() => {
+    if (activePlan === "trial") {
+      setTotalPriceValue(0);
+      return;
+    }
+
     if (subscriptionPlans?.data) {
       // Recalculate total based on new billing type for selected apps
       const newTotal = selectedApps.reduce((sum: number, app: any) => {
         const plan = subscriptionPlans.data.find(
-          (p: any) => p.application_id === app.id
+          (p: any) => p.application_id === app.id,
         );
         if (!plan) return sum;
 
@@ -47,8 +53,8 @@ const SubDetails = () => {
           activePlan === "yearly"
             ? plan.amount
             : activePlan === "monthly"
-            ? plan.amount
-            : 0; // trial is free
+              ? plan.amount
+              : 0; // trial is free
 
         // Calculate additional seats cost
         const additionalSeatsCost = plan.additional_user_seat_number
@@ -104,8 +110,9 @@ const SubDetails = () => {
                   className="lg:max-w-[400px]"
                   mt={10}
                 >
-                  Subscribe to the point of sales business to effectively manage your retail business. 
-                  You can add more seats if you need more that the given seats available for your plan. 
+                  Subscribe to the point of sales business to effectively manage
+                  your retail business. You can add more seats if you need more
+                  that the given seats available for your plan.
                 </Text>
               </Title>
 
@@ -174,7 +181,7 @@ const SubDetails = () => {
                 </Text>
               </Box>
               <Text fw={700} size="xl" className="text-[#F56630]">
-                ₦ {formatMoney(Number(totalPriceValue))}
+                ₦ {formatMoney(payableAmount)}
               </Text>
             </Group>
             <Group justify="right" mt={32}>
@@ -198,4 +205,3 @@ const SubDetails = () => {
 };
 
 export default SubDetails;
-

@@ -1,13 +1,12 @@
 import { Button, Modal, Text } from "@mantine/core";
 import { useState } from "react";
-import { notifications } from '@mantine/notifications';
+import { notifications } from "@mantine/notifications";
 import { useCreateCustomer } from "../../../../hooks/backendApis/pos/customer";
 import FormInput from "../../../General/formInput";
 
 // Strict validation for Nigerian phone numbers
 const phoneNumberRegex = /^(?:\+234|234|0)(7[0-9]|8[0-9]|9[0-9])[0-9]{8}$/;
-
-// Email validation regex
+// Standard email regex
 const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 interface ResolveProps {
@@ -25,90 +24,87 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
 
   const { mutate, isPending } = useCreateCustomer();
 
-  const isFormValid = firstName.trim() && lastName.trim() && email.trim() && phoneNumber.trim();
+  const isFormValid = firstName.trim() && lastName.trim() && phoneNumber.trim();
 
   const handleSave = () => {
-    // Validate email format
-    if (!emailRegex.test(email.trim())) {
-      notifications.show({
-        title: 'Validation error',
-        message: 'Please enter a valid email address.',
-        color: 'red',
-      });
-      return;
-    }
-
-    // Remove any non-numeric characters from the phone number
+    // 1. Sanitize and validate Phone Number
     const sanitizedPhoneNumber = phoneNumber.replace(/[^0-9]/g, "");
-
-    // Validate that the phone number matches the Nigerian format and is exactly 11 digits
     if (!phoneNumberRegex.test(sanitizedPhoneNumber)) {
       notifications.show({
-        title: 'Validation error',
-        message: 'Please enter a valid Nigerian phone number.',
-        color: 'red',
+        title: "Validation error",
+        message: "Please enter a valid Nigerian phone number.",
+        color: "red",
       });
       return;
     }
 
-    // If the form is not valid, show an error
+    // 2. Validate Email ONLY if it is not empty
+    if (email.trim() !== "" && !emailRegex.test(email.trim())) {
+      notifications.show({
+        title: "Validation error",
+        message: "Please enter a valid email address.",
+        color: "red",
+      });
+      return;
+    }
+
+    // 3. Check Required Fields
     if (!isFormValid) {
       notifications.show({
-        title: 'Validation error',
-        message: 'Please fill in all required fields (First name, Last name, Email, Phone number)',
-        color: 'red',
+        title: "Validation error",
+        message: "Please fill in all required fields (First name, Last name, Phone number)",
+        color: "red",
       });
       return;
     }
 
     mutate(
-        {
-          customer_name: `${firstName.trim()} ${lastName.trim()}`,
-          customer_email: email,
-          customer_phone: sanitizedPhoneNumber,  // Use the sanitized phone number
-          customer_address: address,
+      {
+        customer_name: `${firstName.trim()} ${lastName.trim()}`,
+        customer_email: email || null,
+        customer_phone: sanitizedPhoneNumber,
+        customer_address: address.trim(),
+      },
+      {
+        onSuccess: () => {
+          notifications.show({
+            title: "New Customer Saved!",
+            message: "New Customer successfully added.",
+            color: "green",
+          });
+
+          // Reset fields
+          setFirstName("");
+          setLastName("");
+          setEmail("");
+          setPhoneNumber("");
+          setAddress("");
+
+          if (onCreated) {
+            onCreated();
+          } else {
+            onClose();
+          }
         },
-        {
-          onSuccess: () => {
-            notifications.show({
-              title: 'New Customer Saved!',
-              message: 'New Customer successfully added.',
-              color: 'green',
-            });
-      
-            setFirstName('');
-            setLastName('');
-            setEmail('');
-            setPhoneNumber('');
-            setAddress('');
-      
-            if (onCreated) {
-              onCreated();
-            } else {
-              onClose();
-            }
-          },
-          onError: (error: unknown) => {
-            const message = (error as any)?.response?.data?.message || 'Failed to create customer';
-            notifications.show({
-              title: 'Error',
-              message,
-              color: 'red',
-            });
-          },
-        }
-      );
+        onError: (error: unknown) => {
+          const message =
+            (error as any)?.response?.data?.message ||
+            "Failed to create customer";
+          notifications.show({
+            title: "Error",
+            message,
+            color: "red",
+          });
+        },
+      },
+    );
   };
 
   const handlePhoneNumberChange = (val: string) => {
-    // Remove any non-numeric characters
     let value = val.replace(/[^0-9]/g, "");
-
-    // Restrict the length to 11 digits
     if (value.length > 11) {
-      value = value.slice(0, 11); // Truncate to 11 digits
+      value = value.slice(0, 11);
     }
-
     setPhoneNumber(value);
   };
 
@@ -136,41 +132,37 @@ const CreateNewCustomer = ({ opened, onClose, onCreated }: ResolveProps) => {
             placeholder="Enter first name"
             paddingY={6}
             value={firstName}
-            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setFirstName(e.target.value)}
-            onChange={(val: string) =>  setFirstName(val)}
+            onChange={(val: string) => setFirstName(val)}
           />
           <FormInput
             label="Last Name"
             placeholder="Enter last name"
             paddingY={6}
             value={lastName}
-            // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setLastName(e.target.value)}
-            onChange={(val: string) =>  setLastName(val)}
+            onChange={(val: string) => setLastName(val)}
           />
         </div>
 
         <FormInput
-          label="Email"
+          label="Email (Optional)"
           placeholder="Enter customer email"
           paddingY={6}
           value={email}
-          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setEmail(e.target.value)}
-          onChange={(val: string) =>  setEmail(val)}
+          onChange={(val: string) => setEmail(val)}
         />
         <FormInput
           label="Phone Number"
           placeholder="Enter phone number"
           paddingY={6}
           value={phoneNumber}
-          onChange={handlePhoneNumberChange} // Updated handler
+          onChange={handlePhoneNumberChange}
         />
         <FormInput
           label="Address (Optional)"
           placeholder="Enter address"
           paddingY={6}
           value={address}
-          // onChange={(e: React.ChangeEvent<HTMLInputElement>) => setAddress(e.target.value)}
-          onChange={(val: string) =>  setAddress(val)}
+          onChange={(val: string) => setAddress(val)}
         />
       </div>
 
