@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import {
   // TextInput,
@@ -81,7 +82,7 @@ const CreatePassword = () => {
     return (
       <div className="flex justify-center flex-col gap-4 items-center h-screen">
         <Text size="lg" className="text-gray-500">
-          Invalid or expired link
+             or expired link
         </Text>
         <div className="flex gap-4">
           <Button variant="outline" onClick={() => navigate("/login")}>
