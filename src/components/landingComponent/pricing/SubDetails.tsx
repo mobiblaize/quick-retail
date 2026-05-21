@@ -33,6 +33,8 @@ const SubDetails = () => {
   const { data: subscriptionPlans, isPending: subscriptionPlansLoading } =
     useFetchData(`applications/allSubscription?billing_type=${activePlan}`);
 
+  
+
   // Update total price when billing type changes
   useEffect(() => {
     if (activePlan === "trial") {
@@ -40,10 +42,10 @@ const SubDetails = () => {
       return;
     }
 
-    if (subscriptionPlans?.data) {
+    if (subscriptionPlans?.plans) {
       // Recalculate total based on new billing type for selected apps
       const newTotal = selectedApps.reduce((sum: number, app: any) => {
-        const plan = subscriptionPlans.data.find(
+        const plan = subscriptionPlans.plans.find(
           (p: any) => p.application_id === app.id,
         );
         if (!plan) return sum;
@@ -79,8 +81,9 @@ const SubDetails = () => {
     setSelectedApps([]);
     setSelectedSub([]);
 
-    console.log("working");
+   
   }, [activePlan]);
+
 
   return (
     <Box
@@ -164,7 +167,7 @@ const SubDetails = () => {
               </div>
             )}
             {/* Subscription plans section */}
-            <SubscriptionPlans data={subscriptionPlans?.data} />
+            <SubscriptionPlans data={subscriptionPlans?.data?.plans} />
 
             <Group
               justify="space-between"

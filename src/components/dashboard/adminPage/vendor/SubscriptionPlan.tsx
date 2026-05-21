@@ -38,11 +38,11 @@ const SubscriptionPlan = () => {
 
   // Update total price when billing type changes
   useEffect(() => {
-    if (subscriptionPlans?.data) {
+    if (subscriptionPlans?.plans) {
       // Recalculate total based on new billing type for selected apps
       const newTotal = selectedApps.reduce((sum: number, app: any) => {
-        const plan = subscriptionPlans.data.find(
-          (p: any) => p.application_id === app.id
+        const plan = subscriptionPlans.plans.find(
+          (p: any) => p.application_id === app.id,
         );
         if (!plan) return sum;
 
@@ -51,8 +51,8 @@ const SubscriptionPlan = () => {
           activePlan === "yearly"
             ? plan.amount
             : activePlan === "monthly"
-            ? plan.amount
-            : 0; // trial is free
+              ? plan.amount
+              : 0; // trial is free
 
         const additionalSeatsCost = plan.additional_user_seat_number
           ? plan.additional_user_seat_number * (plan.price_per_seat || 0)
@@ -74,15 +74,14 @@ const SubscriptionPlan = () => {
   useEffect(() => {
     setSelectedApps([]);
     setSelectedSub([]);
-
   }, [activePlan, setSelectedApps, setSelectedSub]);
 
   const billingType: BillingType =
     activePlan === "monthly"
       ? "monthly"
       : activePlan === "yearly"
-      ? "yearly"
-      : "free";
+        ? "yearly"
+        : "free";
 
   const billingStartDate = new Date();
   const billingStartFormatted = billingStartDate.toLocaleDateString("en-GB", {
@@ -93,7 +92,7 @@ const SubscriptionPlan = () => {
 
   const billingEndFormatted = getSubscriptionEndDate(
     billingStartDate.toISOString(),
-    billingType
+    billingType,
   );
   console.log("selectedSub", selectedSub);
 
@@ -173,7 +172,7 @@ const SubscriptionPlan = () => {
               </div>
             )}
             {/* Subscription plans section */}
-            <SubscriptionPlans data={subscriptionPlans?.data} />
+            <SubscriptionPlans data={subscriptionPlans?.plans} />
 
             <Group
               justify="space-between"
@@ -202,7 +201,7 @@ const SubscriptionPlan = () => {
                     price: Number(item.amount || 0),
                     seats: Number(item.application?.free_access_users || 1),
                     additionalSeats: Number(
-                      item.additional_user_seat_number || 0
+                      item.additional_user_seat_number || 0,
                     ),
                     subscription_id: item.id,
                     application_id: item.application_id,
@@ -211,8 +210,8 @@ const SubscriptionPlan = () => {
                     billingType === "yearly"
                       ? "Yearly"
                       : billingType === "monthly"
-                      ? "Monthly"
-                      : "Free",
+                        ? "Monthly"
+                        : "Free",
                   billingStart: billingStartFormatted,
                   billingEnd: billingEndFormatted,
 
