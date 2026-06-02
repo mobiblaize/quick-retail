@@ -10,7 +10,7 @@ export const useFetchTrialSubscriptions = (enabled: boolean = true) => {
 };
 
 export const useSignUpUser = () => {
-  return usePostData("auth/signup/register");
+  return usePostData("auth/onboarding/register");
 };
 
 export const useFetchCompanySize = () => {
@@ -19,4 +19,12 @@ export const useFetchCompanySize = () => {
 
 export const useFetchPaymentSummary = () => {
   return usePostData(`subscribe/payment-summary`);
-}
+};
+
+export const useOnboardingPaymentSummary = () => {
+  return usePostData(`auth/onboarding/payment-summary`);
+};
+
+export const useVerifyPayment = () => {
+  return usePostData(`auth/onboarding/verify-payment`);
+};

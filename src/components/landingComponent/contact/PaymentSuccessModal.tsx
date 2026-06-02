@@ -2,7 +2,7 @@ import { Modal, Button, Text, Box, Center, Title } from "@mantine/core";
 
 import successGif from "../../../assets/gif/bookingSuccess.gif";
 
-import { useFetchData } from "../../../hooks/useApis";
+import { useFetchPostData } from "../../../hooks/useApis";
 import { handleOpenEmail } from "../../../utils/handleEmail";
 import { useEffect } from "react";
 
@@ -27,8 +27,9 @@ const PaymentSuccessModal = ({
 
   const isValid = email && reference;
 
-  const { refetch, isPending } = useFetchData(
-    isValid ? `auth/payment/verify-payment?reference=${reference}` : ""
+  const { refetch, isPending } = useFetchPostData(
+    isValid ? `auth/onboarding/verify-payment?reference=${reference}` : "",
+    {}
   );
 
   useEffect(() => {

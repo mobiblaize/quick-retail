@@ -95,6 +95,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
   useEffect(() => {
     recalcTotal(selectedSub);
   }, [billingType, selectedSub, recalcTotal]);
+ 
 
   return (
     <Box
@@ -306,16 +307,16 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
 // The SubscriptionPlans component remains unchanged
 const SubscriptionPlans = ({ data }: any) => {
-  console.log("=== SubscriptionPlans RECEIVED data ===");
-  console.log("data:", data);
-  console.log("Array.isArray(data):", Array.isArray(data));
-  console.log("===================================");
-
+  console.log('=== SubscriptionPlans RECEIVED data ===');
+  console.log('data:', data);
+  console.log('Array.isArray(data):', Array.isArray(data));
+  console.log('===================================');
+  
   const setSelectedSub = useSetAtom(selectedSubs);
   const setTotal = useSetAtom(totalPrice);
   const selected = useAtomValue(selectedSubs);
   const plans = Array.isArray(data) ? data : [];
-
+ 
   // 👉 Auto-select POS on mount if available
   useEffect(() => {
     if (!plans.length) return;
