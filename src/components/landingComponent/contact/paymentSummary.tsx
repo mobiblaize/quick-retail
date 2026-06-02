@@ -56,7 +56,7 @@ const PaymentSummary = () => {
   );
 
   const { mutateAsync: createPayment, isPending } = usePostData(
-    "auth/signup/register",
+    "auth/onboarding/register",
   );
 
   const paymentForm = useForm({
@@ -67,6 +67,7 @@ const PaymentSummary = () => {
       companySize: "",
       phoneNumber: "",
       email: "",
+      
     },
     validate: zodResolver(schema),
     validateInputOnChange: true, // ✅ live validation
@@ -77,23 +78,48 @@ const PaymentSummary = () => {
       (size: any) => size.label === values.companySize,
     );
 
+    const companyUrlSlug = values.companyName
+      .toLowerCase()
+      .replace(/[^a-z0-9]+/g, "-")
+      .replace(/(^-|-$)/g, "");
+
+    const applicationsArray =
+      selectedSub.length > 0
+        ? selectedSub.map((sub: SubscriptionData) => ({
+            subscription_id: String(sub.id),
+            application_id: String(sub.application_id),
+            amount: String(sub.amount),
+            additional_seat: String(adminSeat || 0),
+          }))
+        : [
+            {
+              subscription_id: "1",
+              application_id: "1",
+              amount: "9000",
+              additional_seat: "0",
+            },
+          ];
+
     const payload = {
-      company_name: values.companyName,
       firstname: values.firstName,
       lastname: values.lastName,
-      company_size_id: selectedCompanySize?.id || 1,
-      phoneno: values.phoneNumber,
       email: values.email,
+      phoneno: values.phoneNumber,
+      company_name: values.companyName,
+      company_url: `${companyUrlSlug}.quick_retail.sbscuk.co.uk`,
+      company_size_id: selectedCompanySize?.id || 1,
+      product_modules:
+        selectedSub.length > 0
+          ? selectedSub.map((sub: SubscriptionData) => sub.application_id || 1)
+          : [1],
+      plan_id: selectedSub.length > 0 ? selectedSub[0].id : 1,
+      role: "admin",
       billing_type: billingType,
+      payment_type: "paystack",
       payment_method: "paystack",
       password_url: windowUrl + "/create-password",
       paystack_complete_callback: windowUrl + "/payment-summary",
-      applications: selectedSub.map((sub: SubscriptionData) => ({
-        subscription_id: String(sub.id),
-        application_id: String(sub.application_id),
-        amount: String(sub.amount),
-        additional_seat: String(adminSeat || 0),
-      })),
+      applications: applicationsArray,
     };
 
     try {
@@ -275,7 +301,7 @@ const PaymentSummary = () => {
                       ? "1 Month"
                       : billingType === "yearly"
                         ? "12 Months"
-                        : "60 Days"}
+                        : "30 Days"}
                     )
                   </span>
                 </div>
@@ -298,7 +324,7 @@ const PaymentSummary = () => {
                           ? 30
                           : billingType === "yearly"
                             ? 365
-                            : 60) *
+                            : 30) *
                           24 *
                           60 *
                           60 *
