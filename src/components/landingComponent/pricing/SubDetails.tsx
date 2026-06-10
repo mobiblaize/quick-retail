@@ -33,6 +33,8 @@ const SubDetails = () => {
   const { data: subscriptionPlans, isPending: subscriptionPlansLoading } =
     useFetchData(`applications/allSubscription?billing_type=${activePlan}`);
 
+  
+
   // Update total price when billing type changes
   useEffect(() => {
     if (activePlan === "trial") {
@@ -79,8 +81,9 @@ const SubDetails = () => {
     setSelectedApps([]);
     setSelectedSub([]);
 
-    console.log("working");
+   
   }, [activePlan]);
+
 
   return (
     <Box

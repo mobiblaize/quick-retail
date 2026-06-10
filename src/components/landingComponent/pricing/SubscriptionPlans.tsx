@@ -95,6 +95,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
   useEffect(() => {
     recalcTotal(selectedSub);
   }, [billingType, selectedSub, recalcTotal]);
+ 
 
   return (
     <Box
@@ -165,8 +166,8 @@ const SubscriptionPlanCard = ({ data }: any) => {
               {billingType === "trial"
                 ? Number(0).toLocaleString()
                 : billingType === "monthly"
-                  ? Number(data?.total_monthly_amount || 0).toLocaleString()
-                  : Number(data?.total_yearly_amount || 0).toLocaleString()}
+                  ? Number(data?.amount || 0).toLocaleString()
+                  : Number(data?.amount || 0).toLocaleString()}
             </Text>
 
             {billingType !== "trial" && (
@@ -299,14 +300,20 @@ const SubscriptionPlanCard = ({ data }: any) => {
 
 // The SubscriptionPlans component remains unchanged
 const SubscriptionPlans = ({ data }: any) => {
+  console.log('=== SubscriptionPlans RECEIVED data ===');
+  console.log('data:', data);
+  console.log('Array.isArray(data):', Array.isArray(data));
+  console.log('===================================');
+  
   const setSelectedSub = useSetAtom(selectedSubs);
   const setTotal = useSetAtom(totalPrice);
   const selected = useAtomValue(selectedSubs);
-  console.log(data);
+  const plans = Array.isArray(data) ? data : [];
+ 
   // 👉 Auto-select POS on mount if available
   useEffect(() => {
-    if (!data) return;
-    const posApp = data.find(
+    if (!plans.length) return;
+    const posApp = plans.find(
       (item: any) =>
         item?.application?.name === "Point of Sales Management System",
     );
@@ -326,11 +333,11 @@ const SubscriptionPlans = ({ data }: any) => {
       );
       setTotal(total);
     }
-  }, [data, selected, setSelectedSub, setTotal]); // Added dependencies for useEffect
+  }, [plans, selected, setSelectedSub, setTotal]); // Added dependencies for useEffect
   return (
     <Box w="100%">
       <div className="flex flex-col w-full">
-        {data?.map((item: any) => (
+        {plans.map((item: any) => (
           <Box key={item?.id} w="100%">
             <SubscriptionPlanCard data={item} />
           </Box>
