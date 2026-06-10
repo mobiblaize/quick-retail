@@ -18,7 +18,7 @@ import {
 const subscriptionPlan = [
   { id: 1, name: "Free Trial", slug: "trial" },
   // { id: 2, name: "Billed Monthly", slug: "monthly" },
-  { id: 3, name: "Billed Annually", slug: "yearly" },
+  // { id: 3, name: "Billed Annually", slug: "yearly" },
 ];
 
 const SubDetails = () => {
@@ -40,10 +40,10 @@ const SubDetails = () => {
       return;
     }
 
-    if (subscriptionPlans?.data) {
+    if (subscriptionPlans?.data?.plans) {
       // Recalculate total based on new billing type for selected apps
       const newTotal = selectedApps.reduce((sum: number, app: any) => {
-        const plan = subscriptionPlans.data.find(
+        const plan = subscriptionPlans.data.plans.find(
           (p: any) => p.application_id === app.id,
         );
         if (!plan) return sum;
@@ -164,7 +164,7 @@ const SubDetails = () => {
               </div>
             )}
             {/* Subscription plans section */}
-            <SubscriptionPlans data={subscriptionPlans?.data} />
+            <SubscriptionPlans data={subscriptionPlans?.data?.plans} />
 
             <Group
               justify="space-between"
