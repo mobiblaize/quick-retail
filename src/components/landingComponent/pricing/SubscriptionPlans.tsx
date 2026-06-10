@@ -146,7 +146,7 @@ const SubscriptionPlanCard = ({ data }: any) => {
                   ? "Annual fee"
                   : billingType === "monthly"
                     ? "Monthly fee"
-                    : "Trial Period"}
+                    : "Free"}
               </Text>
               <Tooltip label="This indicates how often you will be billed for this subscription.">
                 <HelpCircle
@@ -170,20 +170,13 @@ const SubscriptionPlanCard = ({ data }: any) => {
                   : Number(data?.amount || 0).toLocaleString()}
             </Text>
 
-            <Text size="xs" c="#6C6975" mt={8}>
-              {billingType === "yearly"
-                ? "Annual billing-renewal every 12 months"
-                : billingType === "monthly"
-                  ? "Monthly billing-renewal every month"
-                  : "Free trial for 30 days"}
-            </Text>
-          </div>
-
-          {/* Trial Badge */}
-          <div className="bg-[#FEF0E9] px-6 py-2.5 rounded-full">
-            <Text size="sm" fw={500} c="#F56630">
-              30 day free trial included
-            </Text>
+            {billingType !== "trial" && (
+              <Text size="xs" c="#6C6975" mt={8}>
+                {billingType === "yearly"
+                  ? "Annual billing-renewal every 12 months"
+                  : "Monthly billing-renewal every month"}
+              </Text>
+            )}
           </div>
 
           {/* Additional Seats Section */}
