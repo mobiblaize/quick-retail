@@ -1,6 +1,6 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { ArrowUpRight, ChevronDown } from "lucide-react";
-import { Card, Button, TextInput, Select } from "@mantine/core";
+import { Card, Button, TextInput, Select, Modal, Center, Box, Title } from "@mantine/core";
 import { useForm, zodResolver } from "@mantine/form";
 import { useAtomValue } from "jotai";
 import {
@@ -18,7 +18,7 @@ import PaymentSuccessModal from "./PaymentSuccessModal";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { z } from "zod";
-import { handleOpenEmail } from "../../../utils/handleEmail";
+import successGif from "../../../assets/gif/bookingSuccess.gif";
 
 // ✅ Updated schema to reject numbers in names
 const schema = z.object({
@@ -48,6 +48,7 @@ const PaymentSummary = () => {
     "reference",
   );
   const [opened, setOpened] = useState(!!reference);
+  const [trialSuccess, setTrialSuccess] = useState(false);
   const adminSeat = useAtomValue(seatCount);
   const windowUrl = window.location.origin;
 
@@ -128,9 +129,7 @@ const PaymentSummary = () => {
       sessionStorage.setItem("registerData", JSON.stringify(response?.data));
 
       if (billingType === "trial") {
-        // For free trial, redirect to create password directly
-        handleOpenEmail(values.email ?? "");
-        navigate("/login");
+        setTrialSuccess(true);
       } else {
         // For paid plans, redirect to Paystack
         window.location.href = response?.data?.auth_url;
@@ -146,6 +145,53 @@ const PaymentSummary = () => {
   };
 
   if (selectedSub.length === 0 && !reference) return <NoSubCard />;
+
+  if (trialSuccess)
+    return (
+      <Modal
+        opened={trialSuccess}
+        onClose={() => { setTrialSuccess(false); navigate("/login"); }}
+        centered
+        withCloseButton={false}
+        radius="lg"
+        padding="xl"
+        size="md"
+        overlayProps={{ blur: 2 }}
+      >
+        <Center mb="md">
+          <Box
+            style={{
+              background: "#F7FDF9",
+              borderRadius: "50%",
+              width: 90,
+              height: 90,
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "center",
+              marginBottom: 16,
+            }}
+          >
+            <img src={successGif} alt="success" className="size-30 object-cover" />
+          </Box>
+        </Center>
+        <Title order={3} ta="center" mb={8}>
+          Account Created Successfully
+        </Title>
+        <p className="text-center text-[#6C6975] text-sm mb-6">
+          Check your email for login credentials
+        </p>
+        <Button
+          fullWidth
+          color="#F56630"
+          radius="md"
+          size="md"
+          style={{ fontWeight: 600 }}
+          onClick={() => { setTrialSuccess(false); navigate("/login"); }}
+        >
+          Go to Login
+        </Button>
+      </Modal>
+    );
   if (reference)
     return (
       <PaymentSuccessModal
