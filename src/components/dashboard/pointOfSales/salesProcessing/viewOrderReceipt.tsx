@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import { Avatar, Center, Loader, Text } from "@mantine/core";
 import { PaidDot, UnpaidDot } from "../../../../assets/svg";
 import imageSrc from "../../../../assets/images/emptyillustration.png"; // fallback
@@ -53,7 +54,7 @@ const ViewOrderReceipt = () => {
         <header className="w-full md:max-w-[45%]">
           <div className="flex flex-wrap gap-2 items-center">
             <Text size="2rem" c="black" fw={600}>
-              Order ID: {order.order_number}
+              Order ID: {order.orderID}
             </Text>
             <div
               className={`inline-flex items-center px-3 py-1 rounded-full font-medium text-sm ${order.payment_status?.toLowerCase() === "pending"

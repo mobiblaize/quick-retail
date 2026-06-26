@@ -58,6 +58,8 @@ const CreateOrderPageContent: React.FC = () => {
       variationId: item.variationId || item.variation_id,
       quantity: item.quantity || 1,
       selling_price: item.price || item.selling_price || 0,
+      negotiated_price:
+        item.negotiated_price || item.price || item.selling_price || 0,
       name: item.name,
       image_path: item.image_path,
       sku: item.sku,
@@ -117,10 +119,13 @@ const CreateOrderPageContent: React.FC = () => {
           .map((i: any) => ({
             variationId: i.variationId || i.variationID,
             quantity: Number(i.quantity || 0),
+            negotiated_price: Number(
+              i.negotiated_price || i.selling_price || i.price || 0,
+            ),
           }))
-          .filter((i: any) => i.variationId && i.quantity > 0)
+          .filter((i: any) => i.variationId && i.quantity > 0),
       ),
-    [paymentDetails.items]
+    [paymentDetails.items],
   );
 
   useEffect(() => {
@@ -144,7 +149,7 @@ const CreateOrderPageContent: React.FC = () => {
           setBreakdown({
             originalAmount: Number(apiData?.originalAmount ?? 0),
             subtotal: Number(
-              apiData?.subtotal ?? apiData?.subTotal ?? apiData?.sub_total ?? 0
+              apiData?.subtotal ?? apiData?.subTotal ?? apiData?.sub_total ?? 0,
             ),
             discount: Number(apiData?.discount ?? 0),
             tax: Number(apiData?.taxValue ?? apiData?.tax ?? 0),
@@ -169,29 +174,43 @@ const CreateOrderPageContent: React.FC = () => {
   const localSubtotal = useMemo(
     () =>
       paymentDetails.items.reduce((acc, item) => {
-        const unit = Number(item.selling_price ?? item.price ?? 0);
+        const unit = Number(
+          item.negotiated_price ?? item.selling_price ?? item.price ?? 0,
+        );
         const qty = Number(item.quantity ?? 0);
         return acc + unit * qty;
       }, 0),
-    [paymentDetails.items]
+    [paymentDetails.items],
   );
 
   const localTaxRate = 7.5;
   const localTax = useMemo(
     () => localSubtotal * (localTaxRate / 100),
-    [localSubtotal]
+    [localSubtotal],
   );
   const localTotal = useMemo(
     () => localSubtotal + localTax,
-    [localSubtotal, localTax]
+    [localSubtotal, localTax],
+  );
+
+  // Check if any item has a negotiated price different from the regular price
+  const hasNegotiatedPrices = useMemo(
+    () =>
+      paymentDetails.items.some(
+        (item: any) =>
+          Number(item.negotiated_price) !== Number(item.selling_price) &&
+          Number(item.negotiated_price) !== Number(item.price),
+      ),
+    [paymentDetails.items],
   );
 
   const usingApi =
-    breakdown.originalAmount > 0 ||
-    breakdown.subtotal > 0 ||
-    breakdown.discount > 0 ||
-    breakdown.tax > 0 ||
-    breakdown.total > 0;
+    !hasNegotiatedPrices &&
+    (breakdown.originalAmount > 0 ||
+      breakdown.subtotal > 0 ||
+      breakdown.discount > 0 ||
+      breakdown.tax > 0 ||
+      breakdown.total > 0);
 
   const effective = {
     originalAmount: usingApi ? breakdown.originalAmount : localSubtotal,
@@ -216,7 +235,10 @@ const CreateOrderPageContent: React.FC = () => {
           ? `- ${formatCurrency(effective.discount)}`
           : formatCurrency(0),
     },
-    { label: `Tax (${effective.taxRate}% VAT)`, amount: formatCurrency(effective.tax) },
+    {
+      label: `Tax (${effective.taxRate}% VAT)`,
+      amount: formatCurrency(effective.tax),
+    },
   ];
 
   const total = formatCurrency(effective.total);
@@ -231,9 +253,9 @@ const CreateOrderPageContent: React.FC = () => {
   const validItems = useMemo(
     () =>
       (paymentDetails.items || []).filter(
-        (i) => (i.variationId || i.variationID) && Number(i.quantity) > 0
+        (i) => (i.variationId || i.variationID) && Number(i.quantity) > 0,
       ),
-    [paymentDetails.items]
+    [paymentDetails.items],
   );
 
   const hasProducts = validItems.length > 0;
@@ -284,12 +306,16 @@ const CreateOrderPageContent: React.FC = () => {
         variationId: item.variationId || item.variationID,
         quantity: Number(item.quantity),
         price: Number(item.selling_price ?? item.price ?? 0),
+        negotiated_price: Number(
+          item.negotiated_price ?? item.selling_price ?? item.price ?? 0,
+        ),
       })),
     };
 
     try {
-      let orderResponse:any;
-      if (orderId) orderResponse = await updateDraftMutation.mutateAsync(payload);
+      let orderResponse: any;
+      if (orderId)
+        orderResponse = await updateDraftMutation.mutateAsync(payload);
       else orderResponse = await createSaleMutation.mutateAsync(payload);
 
       notifications.show({
@@ -301,7 +327,9 @@ const CreateOrderPageContent: React.FC = () => {
         color: "green",
       });
 
-      navigate(ROUTES.viewOrder, {state: {orderID: orderResponse?.data?.salesOrder?.orderID}});
+      navigate(ROUTES.viewOrder, {
+        state: { orderID: orderResponse?.data?.salesOrder?.orderID },
+      });
     } catch (error: any) {
       notifications.show({
         title: "Error",
@@ -331,13 +359,13 @@ const CreateOrderPageContent: React.FC = () => {
             amount: string;
             items: any[];
             customerId: string | null;
-          }
+          },
     ) => {
       setPaymentDetails((prev) =>
-        typeof updater === "function" ? (updater as any)(prev) : updater
+        typeof updater === "function" ? (updater as any)(prev) : updater,
       );
     },
-    []
+    [],
   );
 
   const handlePaymentChange = useCallback((method: string, amount: string) => {
@@ -368,8 +396,8 @@ const CreateOrderPageContent: React.FC = () => {
           {currentStep === OrderCreationStep.SEARCH_PRODUCT
             ? "Create Order"
             : currentStep === OrderCreationStep.CONFIRM_PAYMENT
-            ? "Confirm Payment"
-            : "Customer Receipt"}
+              ? "Confirm Payment"
+              : "Customer Receipt"}
         </Text>
       </div>,
     ];
@@ -397,8 +425,8 @@ const CreateOrderPageContent: React.FC = () => {
                 !hasCustomer
                   ? "Select a customer"
                   : !hasProducts
-                  ? "Add at least one product with quantity"
-                  : undefined
+                    ? "Add at least one product with quantity"
+                    : undefined
               }
             >
               Confirm Order
@@ -417,8 +445,8 @@ const CreateOrderPageContent: React.FC = () => {
                 !hasCustomer
                   ? "Select a customer"
                   : !hasProducts
-                  ? "Add at least one product with quantity"
-                  : undefined
+                    ? "Add at least one product with quantity"
+                    : undefined
               }
             >
               Save as Draft
@@ -437,13 +465,13 @@ const CreateOrderPageContent: React.FC = () => {
                 !hasCustomer
                   ? "Select a customer"
                   : !hasProducts
-                  ? "Add at least one product with quantity"
-                  : !paymentDetails.method
-                  ? "Choose a payment method"
-                  : paymentDetails.method === "cash" &&
-                    numericAmount < numericTotal
-                  ? "Collected cash cannot be less than total"
-                  : undefined
+                    ? "Add at least one product with quantity"
+                    : !paymentDetails.method
+                      ? "Choose a payment method"
+                      : paymentDetails.method === "cash" &&
+                          numericAmount < numericTotal
+                        ? "Collected cash cannot be less than total"
+                        : undefined
               }
             >
               Confirm Payment

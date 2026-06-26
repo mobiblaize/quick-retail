@@ -36,6 +36,8 @@ import {
   InActiveHelp,
   ActiveHelp,
   ActiveVendorManagementIcon,
+  InActiveBilling,
+  ActiveBilling,
 } from "../assets/svg";
 import { ROUTES } from "../constants/routes";
 
@@ -325,6 +327,12 @@ export const Admin: NavItem[] = [
     href: ROUTES.helpPage,
     inactiveIcon: InActiveHelp,
     activeIcon: ActiveHelp,
+  },
+  {
+    label: "Billing",
+    href: ROUTES.billingPage,
+    inactiveIcon: InActiveBilling,
+    activeIcon: ActiveBilling,
   },
 ];
 
