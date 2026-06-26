@@ -12,26 +12,25 @@ interface CreateOrderFormProps {
     items: any[];
     customerId: string | null;
   };
-  updatePaymentDetails: (details:
-    | {
-        method: string;
-        amount: string;
-        items: any[];
-        customerId: string | null;
-      }
-    | ((
-        prev: {
+  updatePaymentDetails: (
+    details:
+      | {
           method: string;
           amount: string;
           items: any[];
           customerId: string | null;
         }
-      ) => {
-        method: string;
-        amount: string;
-        items: any[];
-        customerId: string | null;
-      })
+      | ((prev: {
+          method: string;
+          amount: string;
+          items: any[];
+          customerId: string | null;
+        }) => {
+          method: string;
+          amount: string;
+          items: any[];
+          customerId: string | null;
+        }),
   ) => void;
   paymentItems: { label: string; amount: string }[];
   total: string;
@@ -62,34 +61,40 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   useEffect(() => {
     if (!saleData?.data) return;
 
-    const itemsPayload = (saleData.data.sale_order_details || []).map((item: any) => ({
-      variationId: item.product_variation?.variationID || null,
-      quantity: Number(item.quantity_ordered || 0),
-      price: Number(item.unit_price || 0),
-      name: item.product_variation?.name || "Unknown Product",
-      selling_price: Number(item.unit_price || 0),
-      image_path: item.product_variation?.image_path || "",
-      custom: false,
-      sku: item.product_variation?.sku || "",
-      ean: item.product_variation?.ean || "",
-    }));
+    const itemsPayload = (saleData.data.sale_order_details || []).map(
+      (item: any) => ({
+        variationId: item.product_variation?.variationID || null,
+        quantity: Number(item.quantity_ordered || 0),
+        price: Number(item.unit_price || 0),
+        name: item.product_variation?.name || "Unknown Product",
+        selling_price: Number(item.unit_price || 0),
+        negotiated_price: Number(item.negotiated_price || item.unit_price || 0),
+        image_path: item.product_variation?.image_path || "",
+        custom: false,
+        sku: item.product_variation?.sku || "",
+        ean: item.product_variation?.ean || "",
+      }),
+    );
 
     // avoid resetting to identical values (prevents render loops)
     updatePaymentDetailsRef.current((prev) => {
-      const sameCustomer = (saleData.data.customer?.customerID || null) === prev.customerId;
+      const sameCustomer =
+        (saleData.data.customer?.customerID || null) === prev.customerId;
       const prevKey = JSON.stringify(
         (prev.items || []).map((i: any) => ({
           v: i.variationId || i.variationID,
           q: Number(i.quantity || 0),
           p: Number(i.selling_price ?? i.price ?? 0),
-        }))
+          np: Number(i.negotiated_price ?? i.selling_price ?? i.price ?? 0),
+        })),
       );
       const nextKey = JSON.stringify(
         itemsPayload.map((i: any) => ({
           v: i.variationId,
           q: Number(i.quantity || 0),
           p: Number(i.selling_price ?? i.price ?? 0),
-        }))
+          np: Number(i.negotiated_price ?? i.selling_price ?? i.price ?? 0),
+        })),
       );
 
       if (sameCustomer && prevKey === nextKey) return prev;
@@ -98,7 +103,8 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         method: saleData.data.payment_method || prev.method || "",
         amount: saleData.data.amount_collected || prev.amount || "",
         items: itemsPayload,
-        customerId: saleData.data.customer?.customerID || prev.customerId || null,
+        customerId:
+          saleData.data.customer?.customerID || prev.customerId || null,
       };
     });
   }, [saleData]);
@@ -106,11 +112,19 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   const handleSelectedItemsChange = useCallback(
     (items: any[]) => {
       const payloadItems = items
-        .filter((item) => !item.custom && (item.variationID || item.variationId) && item.quantity)
+        .filter(
+          (item) =>
+            !item.custom &&
+            (item.variationID || item.variationId) &&
+            item.quantity,
+        )
         .map((item) => ({
           variationId: item.variationId || item.variationID,
           quantity: Number(item.quantity),
           price: Number(item.selling_price ?? item.price ?? 0),
+          negotiated_price: Number(
+            item.negotiated_price ?? item.selling_price ?? item.price ?? 0,
+          ),
         }));
 
       updatePaymentDetails((prev) => ({
@@ -118,7 +132,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         items: payloadItems,
       }));
     },
-    [updatePaymentDetails]
+    [updatePaymentDetails],
   );
 
   const handleCustomerChange = useCallback(
@@ -128,13 +142,13 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         customerId: id,
       }));
     },
-    [updatePaymentDetails]
+    [updatePaymentDetails],
   );
 
   return (
     <main className="flex flex-col gap-8">
       <SearchProduct
-        onSelect={() => { }}
+        onSelect={() => {}}
         onItemsChange={handleSelectedItemsChange}
         initialItems={paymentDetails.items}
       />
@@ -144,7 +158,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         initialCustomerId={paymentDetails.customerId}
         initialCustomerName={saleData?.data?.customer?.customer_name || ""}
       />
-      <PaymentDetails1  items={paymentItems} total={total} />
+      <PaymentDetails1 items={paymentItems} total={total} />
     </main>
   );
 };

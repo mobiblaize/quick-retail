@@ -69,7 +69,7 @@ const VendorPage = () => {
         Profile Information
       </Text>
 
-      <Text
+      {/* <Text
         unstyled
         fw={500}
         size="xl"
@@ -81,7 +81,7 @@ const VendorPage = () => {
         onClick={() => setActiveTab("subscription")}
       >
         Subscription
-      </Text>
+      </Text> */}
     </div>,
   ];
 
