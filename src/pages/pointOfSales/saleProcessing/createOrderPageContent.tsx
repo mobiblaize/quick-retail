@@ -199,9 +199,9 @@ const CreateOrderPageContent: React.FC = () => {
       paymentDetails.items.some(
         (item: any) =>
           Number(item.negotiated_price) !== Number(item.selling_price) &&
-          Number(item.negotiated_price) !== Number(item.price),
+          Number(item.negotiated_price) !== Number(item.price)
       ),
-    [paymentDetails.items],
+    [paymentDetails.items]
   );
 
   const usingApi =

@@ -254,5 +254,6 @@ export const ROUTES = {
   viewTrail: "/dashboard/admin/view-trail",
   adminSettings: "/dashboard/admin/settings-page",
   notificationPage: "/dashboard/admin/notification-page",
+  transactionSuccessCallback: "/dashboard/admin/billing/transaction-success",
   adminSecurity: "/dashboard/admin/security-page",
 };

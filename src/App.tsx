@@ -222,6 +222,7 @@ import HelpPage from "./pages/adminPages/help/helpPage";
 import BillingPage from "./pages/adminPages/billing/billingPage";
 import ViewBilling from "./pages/adminPages/billing/viewBilling";
 import LearnMoreHelp from "./pages/adminPages/help/learnMoreHelp";
+import TransactionSuccessCallback from "./pages/adminPages/billing/TransactionSuccessCallback";
 import VendorPage from "./pages/adminPages/vendor/vendor";
 import SubscriptionHistoryPage from "./pages/adminPages/vendor/SubscriptionHistory";
 import SubscriptionChangePage from "./pages/adminPages/vendor/SubscriptionChnge";
@@ -1117,6 +1118,22 @@ export default function App() {
             element={
               <ProtectedRoute adminOnly>
                 <ViewBilling />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/admin/billing/transaction-success/:id"
+            element={
+              <ProtectedRoute adminOnly>
+                <TransactionSuccessCallback />
+              </ProtectedRoute>
+            }
+          />
+          <Route
+            path="/dashboard/admin/billing/transaction-success"
+            element={
+              <ProtectedRoute adminOnly>
+                <TransactionSuccessCallback />
               </ProtectedRoute>
             }
           />
