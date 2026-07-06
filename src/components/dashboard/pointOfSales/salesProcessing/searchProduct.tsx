@@ -288,14 +288,14 @@ const SearchProduct = ({
   useEffect(() => {}, [initialItems]);
 
   return (
-    <main className="w-full h-auto bg-white p-6 rounded-lg shadow-md border border-gray-200">
-      <div className="px-6 py-2">
+    <main className="w-full h-auto bg-white p-4 md:p-6 rounded-lg shadow-md border border-gray-200">
+      <div className="px-2 md:px-6 py-2">
         <Text size="lg" fw={500} c="textSecondary.9" tt="uppercase">
           Search Product
         </Text>
       </div>
-      <div className="flex items-center justify-between">
-        <div className="pt-4 pb-4 max-w-md px-6 w-full">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+        <div className="pt-4 pb-4 px-2 md:px-6 w-full md:max-w-md">
           <FormInput
             placeholder="Search by name, SKU, or EAN"
             value={searchTerm}
@@ -305,13 +305,14 @@ const SearchProduct = ({
           />
         </div>
 
-        <div className="px-6 pb-4">
+        <div className="px-2 md:px-6 pb-4 w-full md:w-auto">
           <Button
             variant={"filled-primary"}
             loading={isScanningBarcode}
             disabled={isScanningBarcode}
             onClick={toggleScanning}
             type="button"
+            fullWidth
             style={{
               backgroundColor: isScanning ? "#F97316" : undefined,
               animation: isScanning
@@ -322,12 +323,12 @@ const SearchProduct = ({
             {isScanning ? "⏹ Stop Scanning" : "Scan Barcode"}
           </Button>
           {isScanning && (
-            <Text size="xs" c="orange.6" mt="xs">
+            <Text size="xs" c="orange.6" mt="xs" ta="center">
               Scanner active - scan a barcode now...
             </Text>
           )}
           {scanError && (
-            <Text size="xs" c="red" mt="xs">
+            <Text size="xs" c="red" mt="xs" ta="center">
               {scanError}
             </Text>
           )}
@@ -341,7 +342,7 @@ const SearchProduct = ({
       )}
 
       {!isLoading && debouncedSearch && (
-        <ul className="px-6 pb-4 space-y-2 max-h-64 overflow-y-auto w-full max-w-md">
+        <ul className="px-2 md:px-6 pb-4 space-y-2 max-h-64 overflow-y-auto w-full">
           {products.length > 0 ? (
             products.map(
               (item: {
@@ -384,10 +385,12 @@ const SearchProduct = ({
                     <img
                       src={item.image_path}
                       alt=""
-                      className="w-12 h-12 object-cover rounded"
+                      className="w-12 h-12 object-cover rounded flex-shrink-0"
                     />
-                    <div className="flex flex-col">
-                      <Text fw={500}>{item.name}</Text>
+                    <div className="flex flex-col min-w-0">
+                      <Text fw={500} className="truncate">
+                        {item.name}
+                      </Text>
 
                       {isOutOfStock && (
                         <Text size="xs" fw={600} c="red">
@@ -398,7 +401,7 @@ const SearchProduct = ({
                       <Text size="sm" c="dimmed">
                         {item.sku}
                       </Text>
-                      <Text size="sm" c="dimmed">
+                      <Text size="sm" c="dimmed" className="truncate">
                         {item.variation_attributes
                           ?.map(
                             (attr: { option_type: any; option_value: any }) =>
@@ -425,7 +428,7 @@ const SearchProduct = ({
       )}
 
       {selectedItems.length > 0 && (
-        <section className="px-6 py-4 mt-6 border-t border-gray-300 w-full">
+        <section className="px-2 md:px-6 py-4 mt-6 border-t border-gray-300 w-full">
           <Text size="md" fw={600} c="black">
             SELECTED PRODUCT ({selectedItems.length})
           </Text>
@@ -444,18 +447,18 @@ const SearchProduct = ({
               return (
                 <li
                   key={itemKey}
-                  className="flex items-center gap-4 p-3 rounded bg-gray-50 mb-2"
+                  className="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded bg-gray-50 mb-2"
                 >
-                  {!item.custom && (
-                    <img
-                      src={item.image_path}
-                      className="w-16 h-16 object-cover rounded"
-                    />
-                  )}
+                  <div className="flex items-center gap-3 w-full">
+                    {!item.custom && (
+                      <img
+                        src={item.image_path}
+                        className="w-12 h-12 md:w-16 md:h-16 object-cover rounded flex-shrink-0"
+                      />
+                    )}
 
-                  <div className="flex justify-around gap-[2em] w-full">
-                    <div className="flex flex-col w-1/3">
-                      <Text fw={500} c="dark.9">
+                    <div className="flex flex-col flex-1 min-w-0">
+                      <Text fw={500} c="dark.9" className="truncate">
                         {item.name}
                       </Text>
 
@@ -477,8 +480,10 @@ const SearchProduct = ({
                         </Text>
                       )}
                     </div>
+                  </div>
 
-                    <div className="flex flex-col items-center min-w-[70px]">
+                  <div className="grid grid-cols-2 md:flex gap-3 w-full">
+                    <div className="flex flex-col items-center">
                       <Text size="xs" c="dark.7">
                         Unit Price
                       </Text>
@@ -487,7 +492,7 @@ const SearchProduct = ({
                       </Text>
                     </div>
 
-                    <div className="min-w-[70px]">
+                    <div className="flex flex-col">
                       <Text size="xs" c="dark.7">
                         Negotiated Price
                       </Text>
@@ -499,11 +504,11 @@ const SearchProduct = ({
                         onChange={(val: string) => {
                           handleNegotiatedPriceChange(itemKey, val);
                         }}
-                        className="w-27 font-medium"
+                        className="w-full font-medium"
                       />
                     </div>
 
-                    <div className="min-w-[70px]">
+                    <div className="flex flex-col">
                       <Text size="xs" c="dark.7">
                         Quantity
                       </Text>
@@ -521,11 +526,11 @@ const SearchProduct = ({
                             handleQuantityChange(itemKey, parsed);
                           }
                         }}
-                        className="w-16 font-medium"
+                        className="w-full font-medium"
                       />
                     </div>
 
-                    <div className="flex flex-col items-center min-w-[70px]">
+                    <div className="flex flex-col items-center">
                       <Text size="xs" c="dark.9">
                         Total Price
                       </Text>
@@ -533,38 +538,39 @@ const SearchProduct = ({
                         ₦ {formatMoney(totalPrice.toFixed(2))}
                       </Text>
                     </div>
-
-                    <Button
-                      variant="subtle"
-                      color="dark"
-                      size="lg"
-                      aria-label="Remove selected item"
-                      styles={(theme) => ({
-                        root: {
-                          fontFamily: '"DM Sans", sans-serif',
-                          fontWeight: 400,
-                          fontSize: "16px",
-                          cursor: "pointer",
-                          color: "red",
-                          "&:hover": {
-                            color: theme.colors.orange[5],
-                            backgroundColor: "transparent",
-                          },
-                        },
-                      })}
-                      onClick={() => {
-                        setSelectedItems((prev) =>
-                          prev.filter((i) =>
-                            item.custom
-                              ? !(i.custom && i.name === item.name)
-                              : i.variationID !== item.variationID,
-                          ),
-                        );
-                      }}
-                    >
-                      &times; Remove
-                    </Button>
                   </div>
+
+                  <Button
+                    variant="subtle"
+                    color="dark"
+                    size="md"
+                    fullWidth
+                    aria-label="Remove selected item"
+                    styles={(theme) => ({
+                      root: {
+                        fontFamily: '"DM Sans", sans-serif',
+                        fontWeight: 400,
+                        fontSize: "14px",
+                        cursor: "pointer",
+                        color: "red",
+                        "&:hover": {
+                          color: theme.colors.orange[5],
+                          backgroundColor: "transparent",
+                        },
+                      },
+                    })}
+                    onClick={() => {
+                      setSelectedItems((prev) =>
+                        prev.filter((i) =>
+                          item.custom
+                            ? !(i.custom && i.name === item.name)
+                            : i.variationID !== item.variationID,
+                        ),
+                      );
+                    }}
+                  >
+                    &times; Remove
+                  </Button>
                 </li>
               );
             })}
