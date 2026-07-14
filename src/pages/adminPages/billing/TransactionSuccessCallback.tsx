@@ -35,7 +35,7 @@ export default function TransactionSuccessCallback() {
         }
         return prev - 1;
       });
-    }, 1000);
+    }, 10000);
 
     return () => {
       clearTimeout(timer);
