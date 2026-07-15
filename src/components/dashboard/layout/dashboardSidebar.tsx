@@ -13,21 +13,22 @@ import { useDashboard } from "../../../layout/dashboardContext";
 import { X } from "lucide-react";
 import LogoutModal from "../../LogoutModal";
 import { ROUTES } from "../../../constants/routes";
-import {
-  InActiveNotification,
-  Settings,
-} from "../../../assets/svg";
+import { InActiveNotification, Settings } from "../../../assets/svg";
 import { useUserStore } from "../../../hooks/useUserStore";
 import { useLocation } from "react-router";
 import { useMemo } from "react";
 import { usePermissions } from "../../../hooks/usePermissions";
-import { getMenuPermissions, requiresAllPermissions } from "../../../config/menuPermissions";
+import {
+  getMenuPermissions,
+  requiresAllPermissions,
+} from "../../../config/menuPermissions";
 
 const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
   const { activeSection } = useDashboard();
   const { user } = useUserStore();
   const location = useLocation();
-  const { hasAnyPermission, hasAllPermissions, isAdmin, permissions } = usePermissions();
+  const { hasAnyPermission, hasAllPermissions, isAdmin, permissions } =
+    usePermissions();
 
   const getSidebarItems = () => {
     if (location.pathname.startsWith("/dashboard/admin")) {
@@ -77,7 +78,14 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         ? hasAllPermissions(requiredPermissions)
         : hasAnyPermission(requiredPermissions);
     });
-  }, [activeSection, isAdmin, location.pathname, hasAnyPermission, hasAllPermissions, permissions]);
+  }, [
+    activeSection,
+    isAdmin,
+    location.pathname,
+    hasAnyPermission,
+    hasAllPermissions,
+    permissions,
+  ]);
 
   return (
     <Card className="h-full w-full max-w-[20rem] shadow-none rounded-none p-0 bg-black">
@@ -92,12 +100,16 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
           </div>
         </div>
 
-        <div className="mt-8 px-3 overflow-y-auto hide-scrollbar flex-1">
+        <div className="mt-8 px-3 overflow-y-auto flex-1">
           <div className="mb-6 px-3 bg-[#F0F2F5] p-4 rounded-lg">
-            <Text size="lg" fw={600} c="textSecondary.9">{user?.firstname} {user?.lastname}</Text>
-            <Text fw={400} size="md" c="secondary">  {user?.locations?.[0]?.name}</Text>
+            <Text size="lg" fw={600} c="textSecondary.9">
+              {user?.firstname} {user?.lastname}
+            </Text>
+            <Text fw={400} size="md" c="secondary">
+              {" "}
+              {user?.locations?.[0]?.name}
+            </Text>
           </div>
-
 
           <div className="mb-6">
             <List spacing="md" size="sm" className="p-0">
@@ -117,11 +129,12 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
         </div>
         <div className="px-3">
           {activeSection === "Admin" && (
-            <div className="mb-6"> {/* Adds spacing below Settings */}
+            <div className="mb-6">
+              {" "}
+              {/* Adds spacing below Settings */}
               <NavItem
                 href={ROUTES.notificationPage}
                 label="Notifications"
-
                 inactiveIcon={InActiveNotification}
                 activeIcon={InActiveNotification}
               />
@@ -138,7 +151,6 @@ const DashboardSidebar = ({ toggleSidebar }: { toggleSidebar: () => void }) => {
             <LogoutModal />
           </List>
         </div>
-
       </div>
     </Card>
   );

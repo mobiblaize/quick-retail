@@ -17,9 +17,9 @@ const Details = ({ form }: { form: UseFormReturnType<any> }) => {
           : values.company_size_id,
       billing_type: "trial",
       payment_method: "paystack",
-      password_url: "https://api-quick-retail.sbscuk.co.uk/public",
+      password_url: (import.meta.env.VITE_BACKEND_ROOT_ENDPOINT ?? "https://api-quick-retail.sbscuk.co.uk") + "/public",
       paystack_complete_callback:
-        "https://api-quick-retail.sbscuk.co.uk/public",
+        (import.meta.env.VITE_BACKEND_ROOT_ENDPOINT ?? "https://api-quick-retail.sbscuk.co.uk") + "/public",
       applications: [
         {
           subscription_id: "3",

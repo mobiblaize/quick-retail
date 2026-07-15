@@ -242,6 +242,9 @@ export const ROUTES = {
     `/dashboard/admin/user-management/view-user/${userId}`,
   addNewRole: "/dashboard/admin/user-management/add-new-role",
   helpPage: "/dashboard/admin/help-page",
+  billingPage: "/dashboard/admin/billing",
+  viewBillingPage: (billingId: string) =>
+    `/dashboard/admin/billing/view/${billingId}`,
   learnMore: "/dashboard/admin/help-page/learn-more",
   vendorpage: "/dashboard/admin/vendor-page",
   history: "/dashboard/admin/subscription-history",

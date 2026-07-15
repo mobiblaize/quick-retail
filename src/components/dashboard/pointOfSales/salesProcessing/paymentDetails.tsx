@@ -23,7 +23,7 @@ const PaymentDetails1: React.FC<PaymentDetailsProps> = ({ items, total }) => {
       <header className="px-6 py-2 cursor-pointer" onClick={toggleExpand}>
         <div className="flex items-center justify-between">
           <Text size="lg" fw={500} c="textSecondary.9" tt={"uppercase"}>
-            Payment Details
+            Payment Detail
           </Text>
           {/* {isExpanded ? <ChevronUp size={20} /> : <ChevronDown size={20} />} */}
         </div>
