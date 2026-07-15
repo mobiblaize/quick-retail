@@ -5,8 +5,10 @@ import { notifications } from "@mantine/notifications";
 import { clearUser } from "../hooks/useCustomSession";
 
 export const baseUrl =
-  import.meta.env.VITE_BACKEND_BASE_ENDPOINT ||
-  "https://api-quick-retail.sbscuk.co.uk/public/api/v1/";
+  (import.meta.env.VITE_BACKEND_BASE_ENDPOINT ||
+    "https://api-quick-retail.sbscuk.co.uk/public/api/v1/")
+    .replace(/`/g, "")
+    .trim();
 
 const axiosInstance = axios.create({
   baseURL: baseUrl,
