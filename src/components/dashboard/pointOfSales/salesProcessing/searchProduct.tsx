@@ -428,11 +428,14 @@ const SearchProduct = ({
       )}
 
       {selectedItems.length > 0 && (
-        <section className="px-2 md:px-6 py-4 mt-6 border-t border-gray-300 w-full">
-          <Text size="md" fw={600} c="black">
-            SELECTED PRODUCT ({selectedItems.length})
-          </Text>
-          <ul className="mt-[2em]">
+        <section className="px-2 md:px-6 py-6 mt-8 border-t border-orange-200 w-full">
+          <div className="flex items-center gap-3 mb-4">
+            <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full" />
+            <Text size="lg" fw={700} c="#1D2739">
+              Selected Products ({selectedItems.length})
+            </Text>
+          </div>
+          <ul className="space-y-3">
             {selectedItems.map((item) => {
               const itemKey = item.custom
                 ? `custom-${item.name}`
@@ -447,34 +450,34 @@ const SearchProduct = ({
               return (
                 <li
                   key={itemKey}
-                  className="flex flex-col md:flex-row items-start md:items-center gap-3 p-3 rounded bg-gray-50 mb-2"
+                  className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-orange-100/50 border border-orange-200 mb-3 transition-all duration-200 hover:shadow-sm"
                 >
-                  <div className="flex items-center gap-3 w-full">
+                  <div className="flex items-center gap-4 w-full md:w-auto">
                     {!item.custom && (
                       <img
                         src={item.image_path}
-                        className="w-12 h-12 md:w-16 md:h-16 object-cover rounded flex-shrink-0"
+                        className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl flex-shrink-0 border border-orange-200 shadow-sm"
                       />
                     )}
 
                     <div className="flex flex-col flex-1 min-w-0">
-                      <Text fw={500} c="dark.9" className="truncate">
+                      <Text fw={600} c="#1D2739" className="truncate text-base">
                         {item.name}
                       </Text>
 
                       {item.ean && (
-                        <Text size="sm" c="gray.6">
+                        <Text size="sm" c="#667085">
                           EAN:{" "}
-                          <Text span fw={500}>
+                          <Text span fw={500} c="#1D2739">
                             {item.ean}
                           </Text>
                         </Text>
                       )}
 
                       {item.sku && (
-                        <Text size="sm" c="gray.6">
+                        <Text size="sm" c="#667085">
                           SKU:{" "}
-                          <Text span fw={500}>
+                          <Text span fw={500} c="#1D2739">
                             {item.sku}
                           </Text>
                         </Text>
@@ -482,18 +485,18 @@ const SearchProduct = ({
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:flex gap-3 w-full">
-                    <div className="flex flex-col items-center">
-                      <Text size="xs" c="dark.7">
+                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+                    <div className="flex flex-col gap-1">
+                      <Text size="xs" c="#667085" fw={500}>
                         Unit Price
                       </Text>
-                      <Text fw={500}>
+                      <Text fw={600} c="#1D2739">
                         ₦ {formatMoney(unitPrice.toFixed(2))}
                       </Text>
                     </div>
 
-                    <div className="flex flex-col">
-                      <Text size="xs" c="dark.7">
+                    <div className="flex flex-col gap-1">
+                      <Text size="xs" c="#667085" fw={500}>
                         Negotiated Price
                       </Text>
                       <FormInput
@@ -508,8 +511,8 @@ const SearchProduct = ({
                       />
                     </div>
 
-                    <div className="flex flex-col">
-                      <Text size="xs" c="dark.7">
+                    <div className="flex flex-col gap-1">
+                      <Text size="xs" c="#667085" fw={500}>
                         Quantity
                       </Text>
                       <FormInput
@@ -530,32 +533,34 @@ const SearchProduct = ({
                       />
                     </div>
 
-                    <div className="flex flex-col items-center">
-                      <Text size="xs" c="dark.9">
+                    <div className="flex flex-col gap-1">
+                      <Text size="xs" c="#667085" fw={500}>
                         Total Price
                       </Text>
-                      <Text fw={600} c="#2E90FA">
+                      <Text fw={700} c="#F16722" size="lg">
                         ₦ {formatMoney(totalPrice.toFixed(2))}
                       </Text>
                     </div>
                   </div>
 
                   <Button
-                    variant="subtle"
-                    color="dark"
-                    size="md"
-                    fullWidth
+                    variant="outline"
+                    color="red"
+                    size="sm"
                     aria-label="Remove selected item"
                     styles={(theme) => ({
                       root: {
                         fontFamily: '"DM Sans", sans-serif',
-                        fontWeight: 400,
+                        fontWeight: 500,
                         fontSize: "14px",
-                        cursor: "pointer",
-                        color: "red",
+                        borderRadius: "8px",
+                        padding: "0.5rem 1rem",
+                        borderColor: theme.colors.red[3],
+                        color: theme.colors.red[6],
                         "&:hover": {
-                          color: theme.colors.orange[5],
-                          backgroundColor: "transparent",
+                          backgroundColor: theme.colors.red[0],
+                          borderColor: theme.colors.red[5],
+                          color: theme.colors.red[7],
                         },
                       },
                     })}
@@ -569,7 +574,7 @@ const SearchProduct = ({
                       );
                     }}
                   >
-                    &times; Remove
+                    Remove
                   </Button>
                 </li>
               );
