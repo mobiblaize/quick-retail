@@ -5,10 +5,8 @@ import {
   Group,
   Select,
   Skeleton,
-  Menu,
-  Button,
 } from "@mantine/core";
-import { ChevronLeft, Download } from "lucide-react";
+import { ChevronLeft } from "lucide-react";
 import { useNavigate, useParams } from "react-router-dom";
 import PageContainer from "../../../layout/pageContainer";
 import GenericTable from "../../../components/General/genericTable";
@@ -211,34 +209,34 @@ const ViewBilling = () => {
         <div className="flex sm:hidden gap-2 items-center">{backButton}</div>
       </div>
     </>,
-    <div key="2" className="flex justify-end">
-      <Group gap="sm">
-        <Menu>
-          <Menu.Target>
-            <Button
-              variant="filled-primary"
-              rightSection={<Download size={16} />}
-            >
-              Export
-            </Button>
-          </Menu.Target>
-          {/* <Menu.Dropdown>
-            <Menu.Item
-              onClick={() => handleExport("excel")}
-              disabled={exportMutation.isPending}
-            >
-              Export Excel
-            </Menu.Item>
-            <Menu.Item
-              onClick={() => handleExport("pdf")}
-              disabled={exportMutation.isPending}
-            >
-              Export PDF
-            </Menu.Item>
-          </Menu.Dropdown> */}
-        </Menu>
-      </Group>
-    </div>,
+    // <div key="2" className="flex justify-end">
+    //   {/* <Group gap="sm">
+    //     {/* <Menu>
+    //       <Menu.Target>
+    //         <Button
+    //           variant="filled-primary"
+    //           rightSection={<Download size={16} />}
+    //         >
+    //           Export
+    //         </Button>
+    //       </Menu.Target>
+    //       {/* <Menu.Dropdown>
+    //         <Menu.Item
+    //           onClick={() => handleExport("excel")}
+    //           disabled={exportMutation.isPending}
+    //         >
+    //           Export Excel
+    //         </Menu.Item>
+    //         <Menu.Item
+    //           onClick={() => handleExport("pdf")}
+    //           disabled={exportMutation.isPending}
+    //         >
+    //           Export PDF
+    //         </Menu.Item>
+    //       </Menu.Dropdown> */}
+    //     </Menu> */}
+    //   </Group> */}
+    // </div>,
   ];
 
   return (
