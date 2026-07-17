@@ -3,7 +3,7 @@ import { axiosInstance, baseUrl } from "../../../utils/axios-instance";
 import {
   useFetchData,
   useGetData,
-  useGetExportData,
+  // useGetExportData,
   useCreateExportData,
 } from "../../useApis";
 import { defaultPayload2 } from "../../../types";
