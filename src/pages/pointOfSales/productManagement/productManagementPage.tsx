@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 import PageContainer from "../../../layout/pageContainer";
 import ProductTable from "../../../components/dashboard/pointOfSales/productManagement/productTable";
 import AddProduct from "../../../components/dashboard/pointOfSales/productManagement/modal/addProductModal";
@@ -6,7 +7,7 @@ import ProductOverview from "../../../components/dashboard/pointOfSales/productM
 import { FilterValues } from "../../../components/General/table/reuseableFilter";
 import { useFetchAllProducts } from "../../../hooks/backendApis/pos/inventory";
 import { Menu, Button, Text, Skeleton } from "@mantine/core";
-import { ChevronDown, Plus } from "lucide-react";
+import { Plus } from "lucide-react";
 import { useNavigate } from "react-router";
 
 // --- Simple skeletons (in-file; you can move them out later) ---
@@ -153,7 +154,13 @@ const ProductManagementPage = () => {
           <Button variant="outline" className="!h-12 !rounded-xl"  onClick={handleDrafts}>
                 Drafts
               </Button>
-          <Menu>
+               <Button variant="filled-primary"className="!h-12 !rounded-xl"  onClick={() => setIsLogComplaintsOpen(true)}>
+                Add a product
+              </Button>
+                <Button variant="filled-primary"  className="!h-12 !rounded-xl"  onClick={handleAddBulkProducts}>
+                Add bulk products
+              </Button>
+          {/* <Menu>
             <Menu.Target>
               <Button variant="filled-primary">
                 Add New Product
@@ -175,7 +182,7 @@ const ProductManagementPage = () => {
                 Add bulk products
               </Menu.Item>
             </Menu.Dropdown>
-          </Menu>
+          </Menu> */}
         </div>
 
         <div className="block sm:hidden">
