@@ -35,6 +35,8 @@ interface CreateOrderFormProps {
   paymentItems: { label: string; amount: string }[];
   total: string;
   orderId?: string | number;
+  includeTax: boolean;
+  setIncludeTax: (val: boolean) => void;
 }
 
 const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
@@ -43,6 +45,8 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
   paymentItems,
   total,
   orderId,
+  includeTax,
+  setIncludeTax,
 }) => {
   const safeOrderId = orderId ?? "";
 
@@ -158,7 +162,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         initialCustomerId={paymentDetails.customerId}
         initialCustomerName={saleData?.data?.customer?.customer_name || ""}
       />
-      <PaymentDetails1 items={paymentItems} total={total} />
+      <PaymentDetails1 items={paymentItems} total={total} includeTax={includeTax} onTaxToggle={setIncludeTax} />
     </main>
   );
 };

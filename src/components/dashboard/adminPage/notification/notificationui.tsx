@@ -1,20 +1,18 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { Badge, Paper, Text, Group, Stack, Loader } from "@mantine/core";
-import { Circle } from 'lucide-react';
+import { Circle } from "lucide-react";
 import { useNotifications } from "../../../../hooks/backendApis/admin/settings";
 import { useMarkAllNotificationsAsRead } from "../../../../hooks/backendApis/admin/settings";
 import { showNotification } from "@mantine/notifications";
 import { useQueryClient } from "@tanstack/react-query";
-import * as dayjs from "dayjs"; 
-import * as relativeTimeModule from "dayjs/plugin/relativeTime"; 
+import * as dayjs from "dayjs";
+import * as relativeTimeModule from "dayjs/plugin/relativeTime";
 
-
-const relativeTimePlugin = (relativeTimeModule as any).default || relativeTimeModule;
-
+const relativeTimePlugin =
+  (relativeTimeModule as any).default || relativeTimeModule;
 
 const dayjsInstance = (dayjs as any).default || dayjs;
 dayjsInstance.extend(relativeTimePlugin);
-
 
 const getCategoryColor = (category: string) => {
   switch (category.toLowerCase()) {
@@ -47,9 +45,31 @@ const getIndicatorColor = (category: string) => {
 };
 
 export default function NotificationsPanel() {
-  const { data: notifications = [], isLoading, isError, refetch: refetchNotifications } = useNotifications();
+  const {
+    data: notifications = [],
+    isLoading,
+    isError,
+    refetch: refetchNotifications,
+  } = useNotifications();
   const markAllRead = useMarkAllNotificationsAsRead();
   const queryClient = useQueryClient();
+
+  const handleNotificationClick = (notification: any) => {
+    showNotification({
+      title: notification.title,
+      message: notification.message || "No additional details",
+      color: getCategoryColor(notification.category),
+      autoClose: 6000,
+    });
+
+    queryClient.setQueryData(["notifications/all", undefined], (old: any) =>
+      Array.isArray(old)
+        ? old.map((n: any) =>
+            n.id === notification.id ? { ...n, is_read: 1 } : n,
+          )
+        : old,
+    );
+  };
 
   return (
     <Paper className="w-full max-w-6xl bg-white" shadow="sm" radius="md" p="lg">
@@ -66,10 +86,12 @@ export default function NotificationsPanel() {
             markAllRead.mutate(undefined, {
               onSuccess: () => {
                 // Update local cache so all dots disappear
-                queryClient.setQueryData(["notifications/all", undefined], (old: any) =>
-                  Array.isArray(old)
-                    ? old.map((n: any) => ({ ...n, is_read: 1 }))
-                    : old
+                queryClient.setQueryData(
+                  ["notifications/all", undefined],
+                  (old: any) =>
+                    Array.isArray(old)
+                      ? old.map((n: any) => ({ ...n, is_read: 1 }))
+                      : old,
                 );
 
                 showNotification({
@@ -103,7 +125,13 @@ export default function NotificationsPanel() {
       ) : (
         <Stack gap="md">
           {notifications.map((notification: any) => (
-            <Group key={notification.id} align="flex-start" gap="sm" className="py-2">
+            <Group
+              key={notification.id}
+              align="flex-start"
+              gap="sm"
+              className={`py-2 cursor-pointer rounded-md px-2 transition-colors hover:bg-gray-50 ${!notification.is_read ? "bg-orange-50/40" : ""}`}
+              onClick={() => handleNotificationClick(notification)}
+            >
               {/* Status Indicator */}
               <div className="flex items-center justify-center w-4 h-4 mt-1">
                 {!notification.is_read && (

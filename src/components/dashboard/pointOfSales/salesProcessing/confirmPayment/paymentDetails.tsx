@@ -1,4 +1,4 @@
-import { Divider, Text } from "@mantine/core";
+import { Divider, Text, Switch, Group } from "@mantine/core";
 import FormInput from "../../../../General/formInput";
 import { CircleHelp } from "lucide-react";
 import Dropdown2 from "../../../../General/dropdown2";
@@ -18,6 +18,8 @@ interface PaymentDetailsProps {
   items: PaymentItem[];
   total: string;
   orderId?: string | number;
+  includeTax: boolean;
+  onTaxToggle: (val: boolean) => void;
 }
 
 const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
@@ -27,6 +29,8 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
   items,
   total,
   orderId,
+  includeTax,
+  onTaxToggle,
 }) => {
   const paymentMethodOptions = [
     { label: "Pay with Cash", value: "cash" },
@@ -35,55 +39,58 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     { label: "Pay with Transfer", value: "transfer" },
   ];
 
-  const [balance, setBalance] = useState<string>("");
-  const [selectedMethod, setSelectedMethod] = useState<string>(method);
-  const [localAmount, setLocalAmount] = useState<string>(amount);
-  const [amountError, setAmountError] = useState<string>("");
+  const [balance, setBalance] = useState("");
+  const [selectedMethod, setSelectedMethod] = useState(method);
+  const [localAmount, setLocalAmount] = useState(amount);
+  const [amountError, setAmountError] = useState("");
 
   const safeOrderId = orderId ?? "";
   const { data: fetchedOrderData } = useFetchSingleSale(safeOrderId);
 
-  useEffect(() => {
-    if (fetchedOrderData) {
-      const saleData = fetchedOrderData;
-      const normalizedMethod = normalizePaymentMethod(
-        saleData.data.payment_method
-      );
-      setSelectedMethod(normalizedMethod);
-    }
-  }, [fetchedOrderData]);
-
   const normalizePaymentMethod = (method: string | undefined) => {
     if (!method) return "";
     const lower = method.toLowerCase();
+
     if (lower.includes("cash")) return "cash";
     if (lower.includes("debit")) return "debit_card";
     if (lower.includes("credit")) return "credit_card";
     if (lower.includes("transfer")) return "transfer";
+
     return "";
   };
 
-  const handleMethodChange = (val: string) => {
-    setSelectedMethod(val);
-    onPaymentChange(val, localAmount);
+  useEffect(() => {
+    if (fetchedOrderData) {
+      const normalizedMethod = normalizePaymentMethod(
+        fetchedOrderData.data.payment_method
+      );
+
+      setSelectedMethod(normalizedMethod);
+
+      // Optional: initialize VAT from fetched order
+      if (typeof fetchedOrderData.data.vat_inclusive === "boolean") {
+        onTaxToggle(fetchedOrderData.data.vat_inclusive);
+      }
+    }
+  }, [fetchedOrderData]);
+
+  const handleMethodChange = (value: string) => {
+    setSelectedMethod(value);
+    onPaymentChange(value, localAmount);
   };
 
-  const sanitizeAmount = (str: string) => {
-    if (!str) return "0";
-    return str.replace(/[₦,]/g, "").trim();
+  const sanitizeAmount = (value: string) => {
+    if (!value) return "0";
+    return value.replace(/[₦,]/g, "").trim();
   };
 
   useEffect(() => {
     const numericTotal = parseFloat(sanitizeAmount(total));
     const numericAmount = parseFloat(localAmount || "0");
 
-    if (!isNaN(numericTotal)) {
+    if (selectedMethod === "cash" && !isNaN(numericTotal)) {
       const calcBalance = numericAmount - numericTotal;
-      if (selectedMethod === "cash") {
-        setBalance(calcBalance.toFixed(2));
-      } else {
-        setBalance("");
-      }
+      setBalance(calcBalance.toFixed(2));
     } else {
       setBalance("");
     }
@@ -97,19 +104,38 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
     setSelectedMethod(method);
   }, [method]);
 
-  useEffect(() => { }, [localAmount, selectedMethod, total]);
-
   return (
     <main className="w-full h-auto rounded-lg bg-white">
-      <header className="px-6 py-2 cursor-pointer">
+      <header className="px-6 py-2">
         <div className="flex items-center justify-between">
-          <Text size="lg" fw={500} c="textSecondary.9" tt={"uppercase"}>
+          <Text
+            size="lg"
+            fw={500}
+            c="textSecondary.9"
+            tt="uppercase"
+          >
             Payment Details
           </Text>
+
+          {/* VAT Toggle */}
+          <Group gap="xs">
+            <Text size="sm" fw={500} c="dimmed">
+              VAT (7.5%)
+            </Text>
+
+            <Switch
+              checked={includeTax}
+              onChange={(event) =>
+                onTaxToggle(event.currentTarget.checked)
+              }
+              color="blue"
+              size="sm"
+            />
+          </Group>
         </div>
       </header>
 
-      <Divider size="sm" className="mt-3" color="#E4E7EC" />
+      <Divider size="sm" mt="md" color="#E4E7EC" />
 
       <section className="grid grid-cols-1 md:grid-cols-2 pt-8 pb-6 items-center gap-4 md:gap-10 px-3.5">
         <Dropdown2
@@ -133,20 +159,21 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
 
         {selectedMethod === "cash" && (
           <>
-
             <FormInput
               type="text"
               label="Amount Collected"
               placeholder="Enter the amount customer paid in cash"
               value={localAmount}
               onChange={(val: string) => {
-                // Remove non-numeric chars except decimal
                 const rawValue = val.replace(/[^\d.]/g, "");
+
                 const numericAmount = parseFloat(rawValue || "0");
                 const numericTotal = parseFloat(sanitizeAmount(total));
 
                 if (numericAmount < numericTotal) {
-                  setAmountError("Collected amount cannot be less than total");
+                  setAmountError(
+                    "Collected amount cannot be less than total"
+                  );
                 } else {
                   setAmountError("");
                 }
@@ -159,17 +186,16 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
               paddingY="0.7rem"
             />
 
-
             <FormInput
               type="text"
               label="Customer Balance"
               className="w-full"
               paddingY="0.7rem"
               value={
-                balance !== ""
+                balance
                   ? `${parseFloat(balance) > 0 ? "+" : ""}${formatMoney(
-                    balance
-                  )}`
+                      balance
+                    )}`
                   : ""
               }
               readOnly
@@ -179,31 +205,65 @@ const PaymentDetails2: React.FC<PaymentDetailsProps> = ({
         )}
       </section>
 
-      <Divider size="sm" className="mt-3" color="#E4E7EC" />
+      <Divider size="sm" mt="md" color="#E4E7EC" />
 
       <section>
         <div className="pt-8 pb-6 max-w-md px-6">
           <div className="flex flex-col gap-2.5">
-            {items.map((item, index) => (
-              <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center gap-2">
-                  <Text fw={500}>
-                    {item.label}
-                    {item.label === "Service fee" && (
-                      <CircleHelp
-                        size={16}
-                        className="inline-block ml-2 text-[#2E90FA]"
-                      />
-                    )}
+            {items.map((item, index) => {
+              const isTaxRow = item.label.toLowerCase().includes("tax");
+
+              return (
+                <div
+                  key={index}
+                  className="flex items-center justify-between"
+                >
+                  <div className="flex items-center gap-2">
+                    <Text
+                      fw={500}
+                      c={
+                        isTaxRow && !includeTax
+                          ? "dimmed"
+                          : "black"
+                      }
+                    >
+                      {item.label}
+
+                      {item.label === "Service fee" && (
+                        <CircleHelp
+                          size={16}
+                          className="inline-block ml-2 text-[#2E90FA]"
+                        />
+                      )}
+                    </Text>
+                  </div>
+
+                  <Text
+                    fw={500}
+                    c={
+                      isTaxRow && !includeTax
+                        ? "dimmed"
+                        : "black"
+                    }
+                  >
+                    {item.amount}
                   </Text>
                 </div>
-                <Text fw={500}>{item.amount}</Text>
-              </div>
-            ))}
+              );
+            })}
+
+            <Divider my="xs" variant="dashed" />
+
             <div className="flex items-center justify-between">
               <Text c="black" fw={700}>
-                Total <span className="text-sm text-gray-500">(VAT Included)</span>
+                Total{" "}
+                <span className="text-sm text-gray-500">
+                  {includeTax
+                    ? "(VAT Included)"
+                    : "(VAT Excluded)"}
+                </span>
               </Text>
+
               <Text c="black" fw={700}>
                 {total}
               </Text>
