@@ -5,7 +5,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { useCallback, useEffect, useMemo, useState } from "react";
 import PageContainer from "../../../layout/pageContainer";
 import { useOrderCreation } from "../../../components/General/orderContext/orderCreationContext";
-import CustomerReceipt from "./customerReceipt";
+// import CustomerReceipt from "./customerReceipt";
 import { OrderCreationStep } from "../../../utils/orderCreationTypes";
 import { motion, AnimatePresence } from "framer-motion";
 import PaymentDetails2 from "../../../components/dashboard/pointOfSales/salesProcessing/confirmPayment/paymentDetails";
@@ -41,6 +41,9 @@ const CreateOrderPageContent: React.FC = () => {
   const saleData = location.state?.saleData;
   const orderId = location.state?.saleData?.data?.orderID;
 
+  // ---- VAT Toggle State ----
+  const [includeTax, setIncludeTax] = useState(false);
+
   // ---- Payment details state ----
   const [paymentDetails, setPaymentDetails] = useState<{
     method: string;
@@ -48,8 +51,6 @@ const CreateOrderPageContent: React.FC = () => {
     items: any[];
     customerId: string | null;
   }>({ method: "", amount: "", items: [], customerId: null });
-
-  console.log("Create Order Page Content");
 
   useEffect(() => {
     if (!saleData) return;
@@ -91,7 +92,7 @@ const CreateOrderPageContent: React.FC = () => {
     }, 500);
   };
 
-  // ---- Backend breakdown (subtotal/discount/tax/total/etc) ----
+  // ---- Backend breakdown ----
   const [breakdown, setBreakdown] = useState<{
     originalAmount: number;
     subtotal: number;
@@ -141,9 +142,11 @@ const CreateOrderPageContent: React.FC = () => {
           items: parsed,
         });
 
-        // { error:false, message:"Payment Details", data:{ originalAmount, subtotal, itemCount, discount, taxRate, taxValue, total } }
         const envelope = (res as any)?.data ?? res;
         const apiData = envelope?.data ?? envelope;
+
+        // Set VAT from backend
+        setIncludeTax(Boolean(apiData?.vat_inclusive));
 
         if (!cancelled) {
           setBreakdown({
@@ -154,12 +157,12 @@ const CreateOrderPageContent: React.FC = () => {
             discount: Number(apiData?.discount ?? 0),
             tax: Number(apiData?.taxValue ?? apiData?.tax ?? 0),
             total: Number(apiData?.total ?? 0),
-            itemCount: Number(apiData?.itemCount ?? parsed.length ?? 0),
+            itemCount: Number(apiData?.itemCount ?? parsed.length),
             taxRate: Number(apiData?.taxRate ?? 7.5),
           });
         }
       } catch {
-        // swallow; we'll use local fallback below
+        // fallbacks handled in 'effective' logic
       }
     })();
 
@@ -193,15 +196,14 @@ const CreateOrderPageContent: React.FC = () => {
     [localSubtotal, localTax],
   );
 
-  // Check if any item has a negotiated price different from the regular price
   const hasNegotiatedPrices = useMemo(
     () =>
       paymentDetails.items.some(
         (item: any) =>
           Number(item.negotiated_price) !== Number(item.selling_price) &&
-          Number(item.negotiated_price) !== Number(item.price)
+          Number(item.negotiated_price) !== Number(item.price),
       ),
-    [paymentDetails.items]
+    [paymentDetails.items],
   );
 
   const usingApi =
@@ -212,12 +214,19 @@ const CreateOrderPageContent: React.FC = () => {
       breakdown.tax > 0 ||
       breakdown.total > 0);
 
+  // ---- RECALCULATION LOGIC BASED ON TOGGLE ----
   const effective = {
     originalAmount: usingApi ? breakdown.originalAmount : localSubtotal,
     subtotal: localSubtotal,
     discount: usingApi ? breakdown.discount : 0,
-    tax: usingApi ? breakdown.tax : localTax,
-    total: usingApi ? breakdown.total : localTotal,
+    tax: includeTax ? (usingApi ? breakdown.tax : localTax) : 0,
+    total: includeTax
+      ? usingApi
+        ? breakdown.total
+        : localTotal
+      : usingApi
+        ? breakdown.total - breakdown.tax
+        : localSubtotal,
     itemCount: usingApi
       ? breakdown.itemCount || paymentDetails.items.length
       : paymentDetails.items.length,
@@ -225,8 +234,6 @@ const CreateOrderPageContent: React.FC = () => {
   };
 
   const paymentItems = [
-    // { label: "Items", amount: String(effective.itemCount) },
-    // { label: "Original Amount", amount: formatCurrency(effective.originalAmount) },
     { label: "Subtotal", amount: formatCurrency(effective.subtotal) },
     {
       label: "Discount",
@@ -248,8 +255,6 @@ const CreateOrderPageContent: React.FC = () => {
   const updateDraftMutation = useUpdateDraft(orderId);
 
   // ---- Validation ----
-  const hasCustomer = Boolean(paymentDetails.customerId);
-
   const validItems = useMemo(
     () =>
       (paymentDetails.items || []).filter(
@@ -257,11 +262,8 @@ const CreateOrderPageContent: React.FC = () => {
       ),
     [paymentDetails.items],
   );
-
   const hasProducts = validItems.length > 0;
-
   const isOrderValid = hasProducts;
-
   const numericTotal = Number(effective.total || 0);
   const numericAmount = Number(paymentDetails.amount || 0);
 
@@ -280,21 +282,6 @@ const CreateOrderPageContent: React.FC = () => {
       });
       return;
     }
-    if (
-      status === "completed" &&
-      (!paymentDetails.method ||
-        (paymentDetails.method === "cash" && numericAmount < numericTotal))
-    ) {
-      notifications.show({
-        title: "Payment Incomplete",
-        message:
-          paymentDetails.method === "cash"
-            ? "Collected cash cannot be less than total."
-            : "Select a payment method.",
-        color: "red",
-      });
-      return;
-    }
 
     const payload = {
       status,
@@ -302,6 +289,8 @@ const CreateOrderPageContent: React.FC = () => {
       payment_method: paymentDetails.method,
       amount_collected:
         paymentDetails.method === "cash" ? paymentDetails.amount : "",
+        vat_inclusive: includeTax,
+      // Note: If your backend calculates tax automatically, you might need to send a flag about includeTax
       items: paymentDetails.items.map((item) => ({
         variationId: item.variationId || item.variationID,
         quantity: Number(item.quantity),
@@ -321,9 +310,7 @@ const CreateOrderPageContent: React.FC = () => {
       notifications.show({
         title: "Order Successful",
         message:
-          status === "completed"
-            ? "Payment confirmed by cashier"
-            : "Payment for this order wasn't confirmed by cashier",
+          status === "completed" ? "Payment confirmed" : "Order saved as draft",
         color: "green",
       });
 
@@ -339,40 +326,16 @@ const CreateOrderPageContent: React.FC = () => {
     }
   };
 
-  // ---- Updaters ----
-  const updatePaymentDetails = useCallback(
-    (
-      updater:
-        | ((prev: {
-            method: string;
-            amount: string;
-            items: any[];
-            customerId: string | null;
-          }) => {
-            method: string;
-            amount: string;
-            items: any[];
-            customerId: string | null;
-          })
-        | {
-            method: string;
-            amount: string;
-            items: any[];
-            customerId: string | null;
-          },
-    ) => {
-      setPaymentDetails((prev) =>
-        typeof updater === "function" ? (updater as any)(prev) : updater,
-      );
-    },
-    [],
-  );
+  const updatePaymentDetails = useCallback((updater: any) => {
+    setPaymentDetails((prev) =>
+      typeof updater === "function" ? updater(prev) : updater,
+    );
+  }, []);
 
   const handlePaymentChange = useCallback((method: string, amount: string) => {
     setPaymentDetails((prev) => ({ ...prev, method, amount }));
   }, []);
 
-  // ---- Headers & bottom buttons ----
   const getSubHeaders = () => {
     const backButton = (
       <button
@@ -385,11 +348,9 @@ const CreateOrderPageContent: React.FC = () => {
         </Text>
       </button>
     );
-
     return [
       <div key="1" className="py-2.5">
-        <div className="hidden sm:flex gap-8 items-center">{backButton}</div>
-        <div className="flex sm:hidden">{backButton}</div>
+        {backButton}
       </div>,
       <div key="2">
         <Text fw={500} size="xl" c="black">
@@ -413,21 +374,13 @@ const CreateOrderPageContent: React.FC = () => {
             </Button>
             <Button
               variant="filled-primary"
-              onClick={() => {
-                if (isOrderValid && !isConfirmingOrder) {
-                  setIsConfirmingOrder(true);
-                  nextStep();
-                }
-              }}
+              onClick={() =>
+                isOrderValid &&
+                !isConfirmingOrder &&
+                (setIsConfirmingOrder(true), nextStep())
+              }
               disabled={!isOrderValid || isConfirmingOrder}
               w={150}
-              title={
-                !hasCustomer
-                  ? "Select a customer"
-                  : !hasProducts
-                    ? "Add at least one product with quantity"
-                    : undefined
-              }
             >
               Confirm Order
             </Button>
@@ -440,51 +393,20 @@ const CreateOrderPageContent: React.FC = () => {
               variant="outline-primary"
               onClick={() => isOrderValid && handleSubmit("draft")}
               disabled={!isOrderValid}
-              className="btn btn-secondary"
-              title={
-                !hasCustomer
-                  ? "Select a customer"
-                  : !hasProducts
-                    ? "Add at least one product with quantity"
-                    : undefined
-              }
             >
               Save as Draft
             </Button>
-
             <Button
               variant="filled-primary"
-              onClick={() => {
-                if (canConfirmPayment && !isConfirmingPayment) {
-                  setIsConfirmingPayment(true);
-                  handleSubmit("completed");
-                }
-              }}
-              disabled={!canConfirmPayment || isConfirmingPayment}
-              title={
-                !hasCustomer
-                  ? "Select a customer"
-                  : !hasProducts
-                    ? "Add at least one product with quantity"
-                    : !paymentDetails.method
-                      ? "Choose a payment method"
-                      : paymentDetails.method === "cash" &&
-                          numericAmount < numericTotal
-                        ? "Collected cash cannot be less than total"
-                        : undefined
+              onClick={() =>
+                canConfirmPayment &&
+                !isConfirmingPayment &&
+                (setIsConfirmingPayment(true), handleSubmit("completed"))
               }
+              disabled={!canConfirmPayment || isConfirmingPayment}
             >
               Confirm Payment
             </Button>
-          </div>,
-        ];
-      case OrderCreationStep.CUSTOMER_RECEIPT:
-        return [
-          <div
-            key="customer-receipt-buttons"
-            className="flex gap-4 justify-end"
-          >
-            <Button variant="filled-primary">Download Receipt</Button>
           </div>,
         ];
       default:
@@ -503,23 +425,24 @@ const CreateOrderPageContent: React.FC = () => {
             initial="initial"
             animate="animate"
             exit="exit"
-            className="flex flex-col gap-4"
           >
             <CreateOrderForm
               paymentDetails={paymentDetails}
-              updatePaymentDetails={updatePaymentDetails as any}
+              updatePaymentDetails={updatePaymentDetails}
               paymentItems={paymentItems}
               total={total}
               orderId={orderId}
+              // Pass VAT props
+              includeTax={includeTax}
+              setIncludeTax={setIncludeTax}
             />
           </motion.div>
         );
-
       case OrderCreationStep.CONFIRM_PAYMENT:
         return (
           <motion.div
             key={OrderCreationStep.CONFIRM_PAYMENT}
-            custom={currentStep > OrderCreationStep.SEARCH_PRODUCT ? 1 : -1}
+            custom={1}
             variants={slideVariants}
             initial="initial"
             animate="animate"
@@ -529,34 +452,21 @@ const CreateOrderPageContent: React.FC = () => {
               method={paymentDetails.method}
               amount={paymentDetails.amount}
               onPaymentChange={handlePaymentChange}
-              // If your PaymentDetails2 supports showing the rows:
               items={paymentItems as any}
               total={total}
               orderId={orderId}
+              // Pass VAT props if PaymentDetails2 supports it
+              includeTax={includeTax}
+              onTaxToggle={setIncludeTax}
             />
           </motion.div>
         );
-
-      case OrderCreationStep.CUSTOMER_RECEIPT:
-        return (
-          <motion.div
-            key={OrderCreationStep.CUSTOMER_RECEIPT}
-            custom={1}
-            variants={slideVariants}
-            initial="initial"
-            animate="animate"
-            exit="exit"
-          >
-            <CustomerReceipt />
-          </motion.div>
-        );
-
       default:
         return null;
     }
   };
 
-  if (isRedirecting) {
+  if (isRedirecting)
     return (
       <div className="flex h-screen items-center justify-center bg-white">
         <Text fw={500} size="lg">
@@ -564,7 +474,6 @@ const CreateOrderPageContent: React.FC = () => {
         </Text>
       </div>
     );
-  }
 
   return (
     <PageContainer
