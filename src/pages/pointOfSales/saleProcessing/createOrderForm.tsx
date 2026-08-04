@@ -162,7 +162,7 @@ const CreateOrderForm: React.FC<CreateOrderFormProps> = ({
         initialCustomerId={paymentDetails.customerId}
         initialCustomerName={saleData?.data?.customer?.customer_name || ""}
       />
-      <PaymentDetails1 items={paymentItems} total={total} includeTax={includeTax} onTaxToggle={setIncludeTax} />
+      <PaymentDetails1 items={paymentItems} total={total} vat_inclusive={includeTax} onTaxToggle={setIncludeTax} />
     </main>
   );
 };
