@@ -428,14 +428,14 @@ const SearchProduct = ({
       )}
 
       {selectedItems.length > 0 && (
-        <section className="px-2 md:px-6 py-6 mt-8 border-t border-orange-200 w-full">
-          <div className="flex items-center gap-3 mb-4">
-            <div className="w-2 h-6 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full" />
-            <Text size="lg" fw={700} c="#1D2739">
+        <section className="px-2 sm:px-4 md:px-6 py-4 sm:py-5 md:py-6 mt-6 sm:mt-8 border-t border-orange-200 w-full">
+          <div className="flex items-center gap-2 sm:gap-3 mb-3 sm:mb-4">
+            <div className="w-1.5 sm:w-2 h-5 sm:h-6 bg-gradient-to-b from-orange-500 to-orange-600 rounded-full" />
+            <Text size="md" fw={700} c="#1D2739">
               Selected Products ({selectedItems.length})
             </Text>
           </div>
-          <ul className="space-y-3">
+          <ul className="space-y-2 sm:space-y-3">
             {selectedItems.map((item) => {
               const itemKey = item.custom
                 ? `custom-${item.name}`
@@ -450,47 +450,55 @@ const SearchProduct = ({
               return (
                 <li
                   key={itemKey}
-                  className="flex flex-col md:flex-row items-start md:items-center gap-4 p-4 rounded-xl bg-gradient-to-r from-orange-50 to-orange-100/50 border border-orange-200 mb-3 transition-all duration-200 hover:shadow-sm"
+                  className="flex flex-col xl:flex-row items-start xl:items-stretch gap-3 sm:gap-4 p-3 sm:p-4 rounded-xl bg-gradient-to-r from-orange-50 to-orange-100/50 border border-orange-200 mb-2 sm:mb-3 transition-all duration-200 hover:shadow-sm"
                 >
-                  <div className="flex items-center gap-4 w-full md:w-auto">
+                  {/* Product Info Section */}
+                  <div className="flex items-center gap-3 sm:gap-4 w-full xl:w-72 2xl:w-80 flex-shrink-0">
                     {!item.custom && (
                       <img
                         src={item.image_path}
-                        className="w-16 h-16 md:w-20 md:h-20 object-cover rounded-xl flex-shrink-0 border border-orange-200 shadow-sm"
+                        className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 object-cover rounded-lg sm:rounded-xl flex-shrink-0 border border-orange-200 shadow-sm"
                       />
                     )}
 
                     <div className="flex flex-col flex-1 min-w-0">
-                      <Text fw={600} c="#1D2739" className="truncate text-base">
+                      <Text
+                        fw={600}
+                        c="#1D2739"
+                        className="truncate text-sm sm:text-base"
+                      >
                         {item.name}
                       </Text>
 
-                      {item.ean && (
-                        <Text size="sm" c="#667085">
-                          EAN:{" "}
-                          <Text span fw={500} c="#1D2739">
-                            {item.ean}
+                      <div className="mt-0.5 sm:mt-1 space-y-0.5">
+                        {item.ean && (
+                          <Text size="xs" c="#667085">
+                            EAN:{" "}
+                            <Text span fw={500} c="#1D2739">
+                              {item.ean}
+                            </Text>
                           </Text>
-                        </Text>
-                      )}
+                        )}
 
-                      {item.sku && (
-                        <Text size="sm" c="#667085">
-                          SKU:{" "}
-                          <Text span fw={500} c="#1D2739">
-                            {item.sku}
+                        {item.sku && (
+                          <Text size="xs" c="#667085">
+                            SKU:{" "}
+                            <Text span fw={500} c="#1D2739">
+                              {item.sku}
+                            </Text>
                           </Text>
-                        </Text>
-                      )}
+                        )}
+                      </div>
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 md:grid-cols-4 gap-3 w-full">
+                  {/* Price & Quantity Fields */}
+                  <div className="grid grid-cols-2 md:grid-cols-2 xl:grid-cols-4 gap-3 w-full xl:flex-1">
                     <div className="flex flex-col gap-1">
                       <Text size="xs" c="#667085" fw={500}>
                         Unit Price
                       </Text>
-                      <Text fw={600} c="#1D2739">
+                      <Text fw={600} c="#1D2739" size="sm">
                         ₦ {formatMoney(unitPrice.toFixed(2))}
                       </Text>
                     </div>
@@ -533,49 +541,54 @@ const SearchProduct = ({
                       />
                     </div>
 
-                    <div className="flex flex-col gap-1">
+                    <div className="flex flex-col gap-1 bg-white/60 rounded-lg md:bg-transparent md:border-0 border border-orange-100 p-2 md:p-0">
                       <Text size="xs" c="#667085" fw={500}>
                         Total Price
                       </Text>
-                      <Text fw={700} c="#F16722" size="lg">
+                      <Text fw={700} c="#F16722" size="md">
                         ₦ {formatMoney(totalPrice.toFixed(2))}
                       </Text>
                     </div>
                   </div>
 
-                  <Button
-                    variant="outline"
-                    color="red"
-                    size="sm"
-                    aria-label="Remove selected item"
-                    styles={(theme) => ({
-                      root: {
-                        fontFamily: '"DM Sans", sans-serif',
-                        fontWeight: 500,
-                        fontSize: "14px",
-                        borderRadius: "8px",
-                        padding: "0.5rem 1rem",
-                        borderColor: theme.colors.red[3],
-                        color: theme.colors.red[6],
-                        "&:hover": {
-                          backgroundColor: theme.colors.red[0],
-                          borderColor: theme.colors.red[5],
-                          color: theme.colors.red[7],
+                  {/* Remove Button */}
+                  <div className="w-full md:w-auto xl:self-center md:mx-auto">
+                    <Button
+                      variant="outline"
+                      color="red"
+                      size="sm"
+                      fullWidth
+                      aria-label="Remove selected item"
+                      styles={(theme) => ({
+                        root: {
+                          fontFamily: '"DM Sans", sans-serif',
+                          fontWeight: 500,
+                          fontSize: "13px",
+                          borderRadius: "8px",
+                          padding: "0.5rem 1rem",
+                          minWidth: "100px",
+                          borderColor: theme.colors.red[3],
+                          color: theme.colors.red[6],
+                          "&:hover": {
+                            backgroundColor: theme.colors.red[0],
+                            borderColor: theme.colors.red[5],
+                            color: theme.colors.red[7],
+                          },
                         },
-                      },
-                    })}
-                    onClick={() => {
-                      setSelectedItems((prev) =>
-                        prev.filter((i) =>
-                          item.custom
-                            ? !(i.custom && i.name === item.name)
-                            : i.variationID !== item.variationID,
-                        ),
-                      );
-                    }}
-                  >
-                    Remove
-                  </Button>
+                      })}
+                      onClick={() => {
+                        setSelectedItems((prev) =>
+                          prev.filter((i) =>
+                            item.custom
+                              ? !(i.custom && i.name === item.name)
+                              : i.variationID !== item.variationID,
+                          ),
+                        );
+                      }}
+                    >
+                      Remove
+                    </Button>
+                  </div>
                 </li>
               );
             })}
