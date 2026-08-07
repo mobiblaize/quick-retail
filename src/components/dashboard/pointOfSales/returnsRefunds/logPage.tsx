@@ -1,3 +1,4 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 /* eslint-disable @typescript-eslint/no-explicit-any */
 import { useState, useEffect } from "react";
 import {
@@ -70,7 +71,7 @@ const LogOrder = () => {
 
   const handleQuantityReturnedChange = (
     orderDetailId: string,
-    value: number
+    value: number,
   ) => {
     setQuantitiesReturned((prev) => ({ ...prev, [orderDetailId]: value }));
   };
@@ -102,9 +103,10 @@ const LogOrder = () => {
         const quantityReturned = quantitiesReturned[orderDetailId] || 0;
 
         if (isSelected && quantityReturned > 0) {
-          const unitPrice = Number(
-            salesOrder.product_variation?.selling_price || 0
-          );
+          const quantityOrdered = Number(salesOrder.quantity_ordered || 1);
+          const lineTotal = Number(salesOrder.total_price || 0);
+          const unitPrice =
+            quantityOrdered > 0 ? lineTotal / quantityOrdered : 0;
           subtotal += unitPrice * quantityReturned;
         }
       });
@@ -142,7 +144,7 @@ const LogOrder = () => {
     const order_detail = Object.entries(selectedItems)
       .filter(
         ([orderDetailId, isSelected]) =>
-          isSelected && (quantitiesReturned[orderDetailId] ?? 0) > 0
+          isSelected && (quantitiesReturned[orderDetailId] ?? 0) > 0,
       )
       .map(([orderDetailId]) => ({
         order_detail_id: orderDetailId,
@@ -162,7 +164,7 @@ const LogOrder = () => {
     let defect_image: string[] = [];
     try {
       defect_image = await Promise.all(defectImages.map(fileToBase64));
-    } catch (error) {
+    } catch {
       notifications.show({
         title: "Error",
         message: "Failed to process images",
@@ -274,7 +276,7 @@ const LogOrder = () => {
                             onChange={(e) =>
                               handleSelectItem(
                                 salesOrder.order_detail_id,
-                                e.target.checked
+                                e.target.checked,
                               )
                             }
                             className="w-5 h-5"
@@ -312,9 +314,19 @@ const LogOrder = () => {
                             </Text>
                             <Text fw={500} c="dark">
                               ₦{" "}
-                              {Number(
-                                product?.selling_price || 0
-                              ).toLocaleString()}
+                              {(() => {
+                                const quantityOrdered = Number(
+                                  salesOrder?.quantity_ordered || 1,
+                                );
+                                const lineTotal = Number(
+                                  salesOrder?.total_price || 0,
+                                );
+                                const unitPrice =
+                                  quantityOrdered > 0
+                                    ? lineTotal / quantityOrdered
+                                    : 0;
+                                return Math.round(unitPrice).toLocaleString();
+                              })()}
                             </Text>
                           </Stack>
 
@@ -396,7 +408,7 @@ const LogOrder = () => {
                                 if (inputQty <= orderedQty) {
                                   handleQuantityReturnedChange(
                                     salesOrder.order_detail_id,
-                                    inputQty
+                                    inputQty,
                                   );
                                 } else {
                                   notifications.show({
@@ -424,7 +436,7 @@ const LogOrder = () => {
                         </div>
                       </li>
                     );
-                  }
+                  },
                 )}
               </ul>
             </div>
@@ -506,7 +518,7 @@ const LogOrder = () => {
                       type="button"
                       onClick={() => {
                         setDefectImages((prev) =>
-                          prev.filter((_, i) => i !== index)
+                          prev.filter((_, i) => i !== index),
                         );
                       }}
                       className="absolute top-1 right-1 bg-white text-red-600 border border-red-500 rounded-full w-6 h-6 flex items-center justify-center shadow-sm hover:bg-red-500 hover:text-white transition"
