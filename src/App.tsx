@@ -3,7 +3,7 @@ import {
   Route,
   Routes,
   useLocation,
-  // Navigate,
+  Navigate,
 } from "react-router-dom";
 import DashboardLayout from "./layout/layout";
 import ProductManagementPage from "./pages/pointOfSales/productManagement/productManagementPage";
@@ -204,7 +204,6 @@ import PreviewTransactionDownloadPage from "./pages/pointOfSales/transaction/Pre
 import DefaultLayout from "./layout/defaultLayout";
 import Home from "./pages/landingPages/home";
 import Contact from "./pages/landingPages/contact";
-import Pricing from "./pages/landingPages/pricing";
 import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
 import LogPage from "./pages/pointOfSales/returns/logPage";
 import SignupPage from "./pages/auth/Signup";
@@ -250,9 +249,7 @@ export default function App() {
         <Route path={ROUTES.CONTACT} element={<DefaultLayout />}>
           <Route index element={<Contact />} />
         </Route>
-        <Route path={ROUTES.SIGNUP} element={<DefaultLayout />}>
-          <Route index element={<Pricing />} />
-        </Route>
+        <Route path="/signup" element={<Navigate to="/payment-summary" replace />} />
         <Route path="/login" element={<Login />} />
         <Route path="/signupapp" element={<SignupPage />} />
         <Route path="/create-password" element={<CreatePassword />} />

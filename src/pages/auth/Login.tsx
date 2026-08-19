@@ -202,7 +202,7 @@ const Login = () => {
           Don't have an account?
           <span
             className="ml-1 text-sm font-semibold no-underline text-[#F16722] cursor-pointer"
-            onClick={() => navigate("/signup")}
+            onClick={() => navigate("/payment-summary")}
           >
             Create Account
           </span>

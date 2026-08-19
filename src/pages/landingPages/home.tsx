@@ -7,6 +7,7 @@ import Consolidate from "../../components/landingComponent/home/consolidate";
 const Home = () => {
   useEffect(() => {
     window.scrollTo(0, 0);
+    document.getElementById("root")?.scrollTo({ top: 0, left: 0 });
   }, []);
   return (
     <main>

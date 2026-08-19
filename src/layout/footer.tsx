@@ -1,7 +1,15 @@
 import logo from "../assets/images/logo.png";
-import { Facebook, Linkedin, X } from "../assets/svg";
+import { Instagram, Linkedin, X } from "../assets/svg";
+import { useNavigate } from "react-router-dom";
+
+const SOCIAL_LINKS = {
+  x: "https://x.com/Quickretail2026",
+  // linkedin: "https://www.linkedin.com/company/quickretail",
+  instagram: "https://www.instagram.com/quickkretail?igsh=cHlobXV5bzQ2YTcy",
+};
 
 const Footer = () => {
+  const navigate = useNavigate();
   return (
     <main className="text-white bg-inherit pt-7">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -14,27 +22,58 @@ const Footer = () => {
 
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mt-3 sm:mt-1 gap-4 sm:gap-0">
           <div className="flex flex-wrap font-sans text-[#98A2B3] gap-3 sm:gap-3.5 text-sm sm:text-base">
-            <span className="hover:text-[#F16722] transition-colors cursor-pointer">
+            <button
+              type="button"
+              onClick={() => {
+                if (window.location.pathname !== "/") {
+                  navigate("/");
+                }
+                const options: ScrollToOptions = { top: 0, left: 0, behavior: "smooth" };
+                document.getElementById("root")?.scrollTo(options);
+                document.documentElement.scrollTo(options);
+                document.body.scrollTo(options);
+                window.scrollTo(options);
+              }}
+              className="bg-transparent border-0 p-0 font-sans text-inherit hover:text-[#F16722] transition-colors cursor-pointer"
+            >
               Company
-            </span>
-            <span className="hover:text-[#F16722] transition-colors cursor-pointer">
+            </button>
+            <button type="button" onClick={() => navigate("/payment-summary")} className="bg-transparent border-0 p-0 font-sans text-inherit hover:text-[#F16722] transition-colors cursor-pointer">
               Pricing
-            </span>
-            <span className="hover:text-[#F16722] transition-colors cursor-pointer">
+            </button>
+            <button type="button" onClick={() => navigate("/policy")} className="hover:text-[#F16722] transition-colors cursor-pointer">
               Policy
-            </span>
+            </button>
           </div>
 
           <div className="flex gap-3 sm:gap-3.5">
-            <div className="hover:opacity-80 transition-opacity cursor-pointer">
+            <a
+              href={SOCIAL_LINKS.x}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="X"
+              className="hover:opacity-80 transition-opacity"
+            >
               <X />
-            </div>
-            <div className="hover:opacity-80 transition-opacity cursor-pointer">
+            </a>
+            {/* <a
+              href={SOCIAL_LINKS.linkedin}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="LinkedIn"
+              className="hover:opacity-80 transition-opacity"
+            >
               <Linkedin />
-            </div>
-            <div className="hover:opacity-80 transition-opacity cursor-pointer">
-              <Facebook />
-            </div>
+            </a> */}
+            <a
+              href={SOCIAL_LINKS.instagram}
+              target="_blank"
+              rel="noopener noreferrer"
+              aria-label="Instagram"
+              className="hover:opacity-80 transition-opacity"
+            >
+              <Instagram />
+            </a>
           </div>
         </div>
 

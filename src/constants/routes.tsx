@@ -1,7 +1,7 @@
 export const ROUTES = {
   //LANDING PGE
   HOME: "/",
-  SIGNUP: "/signup",
+  SIGNUP: "/payment-summary",
   CONTACT: "/payment-summary",
   dashboard: "/dashboard",
   productManagement: "/dashboard/product-management",

@@ -10,15 +10,14 @@ const Contact = () => {
       {/* Back Button */}
       <ArrowLeft
         className="mb-8 hover:opacity-70 cursor-pointer"
-        onClick={() => navigate("/signup")}
+        onClick={() => navigate("/")}
       />
       <h3 className="text-[#48464E] text-xl sm:text-2xl font-semibold">
-        Complete Your Subscription Plan
+        Complete Your Setup
       </h3>
       <p className="text-[#6C6975] mt-2 sm:mt-3 text-sm sm:text-md tracking-wider">
-        Fill the information below and pay to access now and unlock powerful{" "}
-        <br className="hidden sm:block" />
-        tools to streamline your workforce and business operations effortlessly!
+        Fill in your business details to start your 30-day trial. No payment
+        method is required.
       </p>
       <PaymentSummary />
     </main>
