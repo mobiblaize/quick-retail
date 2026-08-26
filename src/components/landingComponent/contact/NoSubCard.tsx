@@ -19,7 +19,7 @@ const NoSubCard = () => {
           <Text c="#6C6975">
             Please select at least one subscription to proceed with payment.
           </Text>
-          <Link to="/signup">
+          <Link to="/payment-summary">
             <Button
               color="#F56630"
               radius="xl"
