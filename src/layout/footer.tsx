@@ -1,6 +1,7 @@
 import logo from "../assets/images/logo.png";
-import { Instagram, Linkedin, X } from "../assets/svg";
+import { Instagram, X } from "../assets/svg";
 import { useNavigate } from "react-router-dom";
+import { ROUTES } from "../constants/routes";
 
 const SOCIAL_LINKS = {
   x: "https://x.com/Quickretail2026",
@@ -41,7 +42,11 @@ const Footer = () => {
             <button type="button" onClick={() => navigate("/payment-summary")} className="bg-transparent border-0 p-0 font-sans text-inherit hover:text-[#F16722] transition-colors cursor-pointer">
               Pricing
             </button>
-            <button type="button" onClick={() => navigate("/policy")} className="hover:text-[#F16722] transition-colors cursor-pointer">
+            <button
+              type="button"
+              onClick={() => navigate(ROUTES.POLICY)}
+              className="bg-transparent border-0 p-0 font-sans text-inherit hover:text-[#F16722] transition-colors cursor-pointer"
+            >
               Policy
             </button>
           </div>

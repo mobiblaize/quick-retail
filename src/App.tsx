@@ -204,6 +204,7 @@ import PreviewTransactionDownloadPage from "./pages/pointOfSales/transaction/Pre
 import DefaultLayout from "./layout/defaultLayout";
 import Home from "./pages/landingPages/home";
 import Contact from "./pages/landingPages/contact";
+import PrivacyPolicy from "./pages/landingPages/privacyPolicy";
 import ViewStoreProduct from "./components/dashboard/pointOfSales/stores/viewProductStores";
 import LogPage from "./pages/pointOfSales/returns/logPage";
 import SignupPage from "./pages/auth/Signup";
@@ -248,6 +249,9 @@ export default function App() {
         </Route>
         <Route path={ROUTES.CONTACT} element={<DefaultLayout />}>
           <Route index element={<Contact />} />
+        </Route>
+        <Route path={ROUTES.POLICY} element={<DefaultLayout />}>
+          <Route index element={<PrivacyPolicy />} />
         </Route>
         <Route path="/signup" element={<Navigate to="/payment-summary" replace />} />
         <Route path="/login" element={<Login />} />
