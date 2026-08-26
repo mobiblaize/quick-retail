@@ -59,8 +59,8 @@ const NavBar = () => {
             </Link>
 
             <NavLink
-              to={ROUTES.SIGNUP}
-              className={getLinkClassName(ROUTES.SIGNUP)}
+              to={ROUTES.CONTACT}
+              className={getLinkClassName(ROUTES.CONTACT)}
               // onClick={closeDropdown}
             >
               <Button
@@ -124,7 +124,7 @@ const NavBar = () => {
             </Button>
             <Button
               component={Link}
-              to="/signup"
+              to="/payment-summary"
               variant="filled"
               color="#F16722"
               radius="md"

@@ -27,10 +27,10 @@ const Consolidate = () => {
 
           <div className="flex-shrink-0">
             <button
-              onClick={() => navigate("/signup")}
+              onClick={() => navigate("/payment-summary")}
               className="bg-[#F16722] z-20 cursor-pointer rounded-xl text-white px-4 sm:px-5 py-2.5 sm:py-2 text-base sm:text-lg font-medium font-clash-light hover:bg-[#e55a1f] transition-colors duration-300 w-full sm:w-auto sm:whitespace-nowrap"
             >
-              Get your 30 Days Free Trial
+              Get Started
             </button>
           </div>
         </div>
