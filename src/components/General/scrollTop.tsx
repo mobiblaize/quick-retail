@@ -8,9 +8,12 @@ const ScrollToTop = () => {
     window.scrollTo({
       top: 0,
       left: 0,
-    //   @ts-ignore
-      behavior: "instant", 
+      //   @ts-ignore
+      behavior: "instant",
     });
+    document.getElementById("root")?.scrollTo({ top: 0, left: 0 });
+    document.documentElement.scrollTop = 0;
+    document.body.scrollTop = 0;
   }, [pathname]);
 
   return null;

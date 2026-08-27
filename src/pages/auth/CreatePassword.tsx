@@ -17,10 +17,10 @@ import AuthLayout from "../../layout/AuthLayout";
 
 const CreatePassword = () => {
   const navigate = useNavigate();
-  // get token and email from url
-  const token = new URLSearchParams(window.location.search).get("token");
-  const email = new URLSearchParams(window.location.search).get("email");
-  const company = new URLSearchParams(window.location.search).get("company");
+  const searchParams = new URLSearchParams(window.location.search);
+  const token = searchParams.get("token");
+  const email = searchParams.get("email");
+  const company = searchParams.get("company");
 
   const { mutateAsync: createPassword, isPending } = usePostData(
     "auth/signup/add-password"
@@ -88,7 +88,7 @@ const CreatePassword = () => {
           <Button variant="outline" onClick={() => navigate("/login")}>
             Go to Login
           </Button>
-          <Button onClick={() => navigate("/signup")}>Go to Signup</Button>
+          <Button onClick={() => navigate("/payment-summary")}>Go to Signup</Button>
         </div>
       </div>
     );
