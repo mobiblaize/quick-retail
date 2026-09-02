@@ -16,7 +16,7 @@ const Contact = () => {
         Complete Your Setup
       </h3>
       <p className="text-[#6C6975] mt-2 sm:mt-3 text-sm sm:text-md tracking-wider">
-        Fill in your business details to start your 30-day trial. No payment
+        Fill in your business details. No payment
         method is required.
       </p>
       <PaymentSummary />

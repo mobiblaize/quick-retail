@@ -9,12 +9,18 @@ const AuthLayout = ({
   title = "One Platform for all your",
   titleOrange = "Business Needs.",
   description = "Customizable solutions that cater to the unique needs of retail businesses.",
+  showTextOverlay = true,
+  imageFit = "cover",
+  imageBackgroundClassName = "bg-white",
 }: {
   children: React.ReactNode;
   image?: string;
   title?: string;
   titleOrange?: string;
   description?: string;
+  showTextOverlay?: boolean;
+  imageFit?: "cover" | "contain";
+  imageBackgroundClassName?: string;
 }) => {
   const navigate = useNavigate();
   return (
@@ -33,27 +39,37 @@ const AuthLayout = ({
         {children}
       </div>
       {/* Right Side - Image and Text */}
-      <div className="flex-1 relative hidden md:flex items-end justify-center min-h-screen overflow-hidden">
+      <div
+        className={`flex-1 relative hidden md:flex items-end justify-center min-h-screen overflow-hidden ${
+          showTextOverlay ? "" : imageBackgroundClassName
+        }`}
+      >
         <img
           src={image}
           alt="Retail background"
-          className="absolute top-0 left-0 w-full h-full object-cover z-0"
+          className={`absolute top-0 left-0 w-full h-full z-0 ${
+            imageFit === "contain" ? "object-contain" : "object-cover"
+          }`}
         />
-        <div
-          className="absolute top-0 left-0 w-full h-full z-10"
-          style={{
-            background:
-              "linear-gradient(90deg, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.2) 100%)",
-          }}
-        />
-        <div className="relative z-20 text-white max-w-2xl p-12 ">
-          <div className="text-3xl md:text-5xl font-bold leading-tight mb-4 ">
-            {title} <span className="text-orange-500">{titleOrange}</span>
-          </div>
-          <div className="text-lg md:text-xl font-normal text-gray-200">
-            {description}
-          </div>
-        </div>
+        {showTextOverlay && (
+          <>
+            <div
+              className="absolute top-0 left-0 w-full h-full z-10"
+              style={{
+                background:
+                  "linear-gradient(90deg, rgba(0,0,0,0.7) 60%, rgba(0,0,0,0.2) 100%)",
+              }}
+            />
+            <div className="relative z-20 text-white max-w-2xl p-12 ">
+              <div className="text-3xl md:text-5xl font-bold leading-tight mb-4 ">
+                {title} <span className="text-orange-500">{titleOrange}</span>
+              </div>
+              <div className="text-lg md:text-xl font-normal text-gray-200">
+                {description}
+              </div>
+            </div>
+          </>
+        )}
       </div>
     </div>
   );

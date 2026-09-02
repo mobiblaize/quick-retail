@@ -14,9 +14,7 @@ import { Link, useNavigate } from "react-router-dom";
 import AuthLayout from "../../layout/AuthLayout";
 import { useUserStore } from "../../hooks/useUserStore";
 import { getFirstAccessibleRoute } from "../../utils/routeUtils";
-
-const placeholderImage =
-  "https://images.pexels.com/photos/3184183/pexels-photo-3184183.jpeg?auto=compress&w=800&q=80";
+import LoginImage from "../../assets/images/login.png";
 
 const schema = z.object({
   email: z.string().email({ message: "Invalid email address" }),
@@ -113,7 +111,12 @@ const Login = () => {
   // };
 
   return (
-    <AuthLayout image={placeholderImage}>
+    <AuthLayout
+      image={LoginImage}
+      showTextOverlay={false}
+      imageFit="contain"
+      imageBackgroundClassName="bg-[#FDF1E7]"
+    >
       <LoadingOverlay
         visible={isUserPending}
         zIndex={1000}
