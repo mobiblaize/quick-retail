@@ -193,7 +193,7 @@ const PaymentSummary = () => {
         <Stack gap="xl">
           <div className="text-center">
             <h1 className="text-2xl font-bold text-[#101828]">Complete Your Setup</h1>
-            <p className="text-gray-500 mt-2">Enter your business details to get started with your 30-day trial.</p>
+            <p className="text-gray-500 mt-2">Enter your business details to get started.</p>
           </div>
 
           <form onSubmit={paymentForm.onSubmit(handleSubmit)}>
